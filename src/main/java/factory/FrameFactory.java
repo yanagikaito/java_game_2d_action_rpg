@@ -1,5 +1,7 @@
-package frame;
+package factory;
 
+import frame.FrameSize;
+import frame.GameFrame;
 import window.GameWindow;
 
 import javax.swing.*;

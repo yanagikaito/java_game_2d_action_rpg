@@ -1,7 +1,9 @@
 package window;
 
-import frame.FrameFactory;
+import entity.Player;
+import factory.FrameFactory;
 import frame.GameFrame;
+import key.KeyHandler;
 
 import javax.swing.*;
 
@@ -12,6 +14,8 @@ import static frame.FrameApp.baseDisplay;
 public class GameWindow extends JPanel implements Window, Runnable {
 
     private GameFrame gameFrame = FrameFactory.createFrame(baseDisplay(), this);
+    private KeyHandler keyHandler = new KeyHandler(this);
+    private Player player = new Player(this, keyHandler);
     private static GameWindow instance;
     private Thread gameThread;
 
@@ -22,6 +26,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.startThread();
         this.setFocusable(true);
         this.setLayout(null);
+        this.addKeyListener(keyHandler);
     }
 
     public static synchronized GameWindow getInstance() {
@@ -74,5 +79,16 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     public void update() {
+
+        player.update();
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+
+        player.draw(g2);
+
+        g2.dispose();
     }
 }
