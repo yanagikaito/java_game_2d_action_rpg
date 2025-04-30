@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
+
     private GameWindow gameWindow;
     public boolean playerUp;
     public boolean playerDown;

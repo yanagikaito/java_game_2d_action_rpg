@@ -1,6 +1,6 @@
 package window;
 
-import entity.Player;
+import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
 import key.KeyHandler;
@@ -19,7 +19,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private static GameWindow instance;
     private Thread gameThread;
 
-    private GameWindow() {
+    protected GameWindow() {
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
