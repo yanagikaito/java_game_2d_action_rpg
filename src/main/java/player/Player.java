@@ -1,5 +1,6 @@
-package entity;
+package player;
 
+import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
 import window.GameWindow;
@@ -8,8 +9,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Player extends Entity {
+
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
@@ -29,10 +32,10 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
-        speed = 2;
-        direction = "down";
+        setWorldX(100);
+        setWorldY(100);
+        setSpeed(2);
+        setDirection("down");
     }
 
     public void loadPlayerImages() {
@@ -50,43 +53,47 @@ public class Player extends Entity {
 
     public void update() {
 
-        if (moving == false) {
-
+        if (!moving) {
             if (keyHandler.playerUp || keyHandler.playerDown || keyHandler.playerLeft || keyHandler.playerRight) {
-
                 if (keyHandler.playerUp) {
-                    direction = "up";
+                    setDirection("up");
                 } else if (keyHandler.playerDown) {
-                    direction = "down";
+                    setDirection("down");
                 } else if (keyHandler.playerRight) {
-                    direction = "right";
+                    setDirection("right");
                 } else if (keyHandler.playerLeft) {
-                    direction = "left";
+                    setDirection("left");
                 }
-
                 moving = true;
             }
         }
-        if (moving == true) {
 
-            if (collision == false) {
-
-                switch (direction) {
-                    case "up" -> y -= speed;
-                    case "down" -> y += speed;
-                    case "right" -> x += speed;
-                    case "left" -> x -= speed;
+        if (moving) {
+            if (!isCollision()) {
+                switch (getDirection()) {
+                    case "up":
+                        setWorldY(getWorldY() - getSpeed());
+                        break;
+                    case "down":
+                        setWorldY(getWorldY() + getSpeed());
+                        break;
+                    case "right":
+                        setWorldX(getWorldX() + getSpeed());
+                        break;
+                    case "left":
+                        setWorldX(getWorldX() - getSpeed());
+                        break;
                 }
             }
 
-            spriteCounter++;
-            if (spriteCounter > 10) {
-                spriteNum = (spriteNum % SPRITE_COUNT) + 1;
-                spriteCounter = 0;
+            setSpriteCounter(getSpriteCounter() + 1);
+            if (getSpriteCounter() > 10) {
+                setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
+                setSpriteCounter(0);
             }
-            pixelCounter += speed;
 
-            if (pixelCounter == FrameApp.createSize()) {
+            pixelCounter += getSpeed();
+            if (pixelCounter == FrameApp.getTileSize()) {
                 moving = false;
                 pixelCounter = 0;
             }
@@ -96,10 +103,10 @@ public class Player extends Entity {
     @Override
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
-        int dirIndex = java.util.Arrays.asList(DIRECTIONS).indexOf(direction);
+        int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
         if (dirIndex != -1) {
-            image = sprites[dirIndex][spriteNum - 1];
+            image = sprites[dirIndex][getSpriteNum() - 1];
         }
-        g2.drawImage(image, x, y, FrameApp.createSize(), FrameApp.createSize(), null);
+        g2.drawImage(image, getWorldX(), getWorldY(), FrameApp.getTileSize(), FrameApp.getTileSize(), null);
     }
 }
