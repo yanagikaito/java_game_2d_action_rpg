@@ -17,6 +17,7 @@ public class KeyHandler implements KeyListener {
         this.gameWindow = gameWindow;
     }
 
+
     public boolean isPlayerUp() {
         return playerUp;
     }
@@ -32,6 +33,7 @@ public class KeyHandler implements KeyListener {
     public boolean isPlayerRight() {
         return playerRight;
     }
+
 
     public void setPlayerUp(boolean playerUp) {
         this.playerUp = playerUp;

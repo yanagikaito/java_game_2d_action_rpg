@@ -49,7 +49,6 @@ public class TileManager {
 
             tiles[5] = new Tile();
             tiles[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/earth.png"));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,6 +73,7 @@ public class TileManager {
             e.printStackTrace();
         }
     }
+
 
     public void draw(Graphics2D g2) {
 
