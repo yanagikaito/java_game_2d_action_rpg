@@ -4,6 +4,7 @@ import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
 import key.KeyHandler;
+import tile.TileManager;
 
 import javax.swing.*;
 
@@ -16,6 +17,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private GameFrame gameFrame = FrameFactory.createFrame(baseDisplay(), this);
     private KeyHandler keyHandler = new KeyHandler(this);
     private Player player = new Player(this, keyHandler);
+    private TileManager tileManager = new TileManager(this);
     private static GameWindow instance;
     private Thread gameThread;
 
@@ -87,8 +89,17 @@ public class GameWindow extends JPanel implements Window, Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        tileManager.draw(g2);
         player.draw(g2);
 
         g2.dispose();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public KeyHandler getKeyHandler() {
+        return keyHandler;
     }
 }
