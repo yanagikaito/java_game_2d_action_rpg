@@ -1,5 +1,6 @@
 package entity;
 
+import frame.FrameApp;
 import window.GameWindow;
 
 import java.awt.*;
@@ -16,6 +17,9 @@ public class Entity {
     private boolean collision;
     private int spriteCounter;
     private int spriteNum;
+    private Rectangle solidArea;
+    private int solidAreaDefaultX;
+    private int solidAreaDefaultY;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -26,15 +30,10 @@ public class Entity {
         this.collision = false;
         this.spriteCounter = 0;
         this.spriteNum = 1;
+        this.solidArea = new Rectangle(0, 0, FrameApp.getTileSize(), FrameApp.getTileSize());
+        this.solidAreaDefaultX = 0;
+        this.solidAreaDefaultY = 0;
         this.sprites = new BufferedImage[4][3];
-    }
-
-    public GameWindow getGameWindow() {
-        return gameWindow;
-    }
-
-    public void setGameWindow(GameWindow gameWindow) {
-        this.gameWindow = gameWindow;
     }
 
     public int getWorldX() {
@@ -69,14 +68,6 @@ public class Entity {
         this.direction = direction;
     }
 
-    public BufferedImage[][] getSprites() {
-        return sprites;
-    }
-
-    public void setSprites(BufferedImage[][] sprites) {
-        this.sprites = sprites;
-    }
-
     public boolean isCollision() {
         return collision;
     }
@@ -99,6 +90,22 @@ public class Entity {
 
     public void setSpriteNum(int spriteNum) {
         this.spriteNum = spriteNum;
+    }
+
+    public Rectangle getSolidArea() {
+        return solidArea;
+    }
+
+    public void setSolidArea(Rectangle solidArea) {
+        this.solidArea = solidArea;
+    }
+
+    public void setSolidAreaDefaultX(int solidAreaDefaultX) {
+        this.solidAreaDefaultX = solidAreaDefaultX;
+    }
+
+    public void setSolidAreaDefaultY(int solidAreaDefaultY) {
+        this.solidAreaDefaultY = solidAreaDefaultY;
     }
 
     public void draw(Graphics2D g2) {

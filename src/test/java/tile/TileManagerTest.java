@@ -30,11 +30,13 @@ public class TileManagerTest {
             return FrameApp.getTileSize() * 21;
         }
 
+        // スクリーンのX座標が288
         @Override
         public int getScreenX() {
             return FrameApp.getScreenWidth() / 2 - (FrameApp.getTileSize() / 2);
         }
 
+        // スクリーンのY座標が480
         @Override
         public int getScreenY() {
             return FrameApp.getScreenHeight() / 2 - (FrameApp.getTileSize() / 2);

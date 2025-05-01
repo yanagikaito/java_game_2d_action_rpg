@@ -1,5 +1,6 @@
 package window;
 
+import collision.CollisionChecker;
 import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
@@ -18,6 +19,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private KeyHandler keyHandler = new KeyHandler(this);
     private Player player = new Player(this, keyHandler);
     private TileManager tileManager = new TileManager(this);
+    private CollisionChecker collisionChecker = new CollisionChecker(this);
     private static GameWindow instance;
     private Thread gameThread;
 
@@ -101,5 +103,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public KeyHandler getKeyHandler() {
         return keyHandler;
+    }
+
+    public TileManager getTileManager() {
+        return tileManager;
+    }
+
+    public CollisionChecker getCollisionChecker() {
+        return collisionChecker;
     }
 }

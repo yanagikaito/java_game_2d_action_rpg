@@ -36,6 +36,7 @@ public class TileManager {
 
             tiles[1] = new Tile();
             tiles[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/wall.png"));
+            tiles[1].collision = true;
 
             tiles[2] = new Tile();
             tiles[2].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/pond.png"));
@@ -46,6 +47,7 @@ public class TileManager {
 
             tiles[4] = new Tile();
             tiles[4].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree.gif"));
+            tiles[4].collision = true;
 
             tiles[5] = new Tile();
             tiles[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/earth.png"));
@@ -95,6 +97,8 @@ public class TileManager {
                     g2.drawImage(tiles[tileNum].image, screenX, screenY,
                             FrameApp.getTileSize(), FrameApp.getTileSize(), null);
                 }
+                g2.drawImage(tiles[tileNum].image, screenX, screenY,
+                        FrameApp.getTileSize(), FrameApp.getTileSize(), null);
             }
         }
     }

@@ -23,6 +23,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent pressW = new KeyEvent(source, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
 
         keyHandler.keyPressed(pressW);
@@ -39,6 +41,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent pressS = new KeyEvent(source, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_S, 'S');
 
         keyHandler.keyPressed(pressS);
@@ -55,6 +59,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent pressA = new KeyEvent(source, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_A, 'A');
 
         keyHandler.keyPressed(pressA);
@@ -71,6 +77,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent pressD = new KeyEvent(source, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_D, 'D');
 
         keyHandler.keyPressed(pressD);
@@ -87,6 +95,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent releaseW = new KeyEvent(source, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
 
         keyHandler.keyReleased(releaseW);
@@ -103,6 +113,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent releaseS = new KeyEvent(source, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_S, 'S');
 
         keyHandler.keyReleased(releaseS);
@@ -119,6 +131,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent releaseA = new KeyEvent(source, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_A, 'A');
 
         keyHandler.keyReleased(releaseA);
@@ -135,6 +149,8 @@ public class KeyHandlerTest {
 
         Component source = new JPanel();
 
+        // int modifiers は、修飾キー（Shift、Ctrl、Alt など）が押されているかどうかを示す
+        // 押されていない場合はmodifiersの値は通常 0
         KeyEvent releaseD = new KeyEvent(source, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_D, 'D');
 
         keyHandler.keyReleased(releaseD);
