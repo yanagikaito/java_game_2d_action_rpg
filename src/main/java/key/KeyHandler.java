@@ -8,13 +8,45 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     private GameWindow gameWindow;
-    public boolean playerUp;
-    public boolean playerDown;
-    public boolean playerLeft;
-    public boolean playerRight;
+    private boolean playerUp;
+    private boolean playerDown;
+    private boolean playerLeft;
+    private boolean playerRight;
 
     public KeyHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
+    }
+
+    public boolean isPlayerUp() {
+        return playerUp;
+    }
+
+    public boolean isPlayerDown() {
+        return playerDown;
+    }
+
+    public boolean isPlayerLeft() {
+        return playerLeft;
+    }
+
+    public boolean isPlayerRight() {
+        return playerRight;
+    }
+
+    public void setPlayerUp(boolean playerUp) {
+        this.playerUp = playerUp;
+    }
+
+    public void setPlayerDown(boolean playerDown) {
+        this.playerDown = playerDown;
+    }
+
+    public void setPlayerLeft(boolean playerLeft) {
+        this.playerLeft = playerLeft;
+    }
+
+    public void setPlayerRight(boolean playerRight) {
+        this.playerRight = playerRight;
     }
 
     @Override
@@ -27,33 +59,34 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_W) {
-            playerUp = true;
+            setPlayerUp(true);
         }
         if (code == KeyEvent.VK_S) {
-            playerDown = true;
+            setPlayerDown(true);
         }
         if (code == KeyEvent.VK_A) {
-            playerLeft = true;
+            setPlayerLeft(true);
         }
         if (code == KeyEvent.VK_D) {
-            playerRight = true;
+            setPlayerRight(true);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
+
         if (code == KeyEvent.VK_W) {
-            playerUp = false;
+            setPlayerUp(false);
         }
         if (code == KeyEvent.VK_S) {
-            playerDown = false;
+            setPlayerDown(false);
         }
         if (code == KeyEvent.VK_A) {
-            playerLeft = false;
+            setPlayerLeft(false);
         }
         if (code == KeyEvent.VK_D) {
-            playerRight = false;
+            setPlayerRight(false);
         }
     }
 }

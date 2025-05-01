@@ -19,6 +19,8 @@ public class Player extends Entity {
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
+    private final int screenX;
+    private final int screenY;
     private boolean moving = false;
     private int pixelCounter = 0;
 
@@ -27,14 +29,17 @@ public class Player extends Entity {
         this.gameWindow = gameWindow;
         this.keyHandler = keyHandler;
 
+        screenX = FrameApp.getScreenWidth() / 2 - (FrameApp.getTileSize() / 2);
+        screenY = FrameApp.getScreenHeight() / 2 - (FrameApp.getTileSize() / 2);
+
         setDefaultValues();
         loadPlayerImages();
     }
 
     public void setDefaultValues() {
-        setWorldX(100);
-        setWorldY(100);
-        setSpeed(2);
+        setWorldX(FrameApp.getTileSize() * 23);
+        setWorldY(FrameApp.getTileSize() * 21);
+        setSpeed(4);
         setDirection("down");
     }
 
@@ -54,14 +59,19 @@ public class Player extends Entity {
     public void update() {
 
         if (!moving) {
-            if (keyHandler.playerUp || keyHandler.playerDown || keyHandler.playerLeft || keyHandler.playerRight) {
-                if (keyHandler.playerUp) {
+
+            if (gameWindow.getKeyHandler().isPlayerUp()
+                    || gameWindow.getKeyHandler().isPlayerDown()
+                    || gameWindow.getKeyHandler().isPlayerLeft()
+                    || gameWindow.getKeyHandler().isPlayerRight()) {
+
+                if (gameWindow.getKeyHandler().isPlayerUp()) {
                     setDirection("up");
-                } else if (keyHandler.playerDown) {
+                } else if (gameWindow.getKeyHandler().isPlayerDown()) {
                     setDirection("down");
-                } else if (keyHandler.playerRight) {
+                } else if (gameWindow.getKeyHandler().isPlayerRight()) {
                     setDirection("right");
-                } else if (keyHandler.playerLeft) {
+                } else if (gameWindow.getKeyHandler().isPlayerLeft()) {
                     setDirection("left");
                 }
                 moving = true;
@@ -107,6 +117,14 @@ public class Player extends Entity {
         if (dirIndex != -1) {
             image = sprites[dirIndex][getSpriteNum() - 1];
         }
-        g2.drawImage(image, getWorldX(), getWorldY(), FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+        g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+    }
+
+    public int getScreenX() {
+        return screenX;
+    }
+
+    public int getScreenY() {
+        return screenY;
     }
 }
