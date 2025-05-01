@@ -23,6 +23,8 @@ public class Player extends Entity {
     private final int screenY;
     private boolean moving = false;
     private int pixelCounter = 0;
+    private final int playerSolidAreaX = 1;
+    private final int playerSolidAreaY = 1;
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
@@ -31,6 +33,16 @@ public class Player extends Entity {
 
         screenX = FrameApp.getScreenWidth() / 2 - (FrameApp.getTileSize() / 2);
         screenY = FrameApp.getScreenHeight() / 2 - (FrameApp.getTileSize() / 2);
+
+        setSolidArea(new Rectangle());
+        getSolidArea().x = playerSolidAreaX;
+        getSolidArea().y = playerSolidAreaY;
+
+        setSolidAreaDefaultX(getSolidArea().x);
+        setSolidAreaDefaultY(getSolidArea().y);
+
+        getSolidArea().width = FrameApp.getTileSize() - 2;
+        getSolidArea().height = FrameApp.getTileSize() - 2;
 
         setDefaultValues();
         loadPlayerImages();
@@ -95,6 +107,9 @@ public class Player extends Entity {
                         break;
                 }
             }
+
+            setCollision(false);
+            gameWindow.getCollisionChecker().checkTile(this);
 
             setSpriteCounter(getSpriteCounter() + 1);
             if (getSpriteCounter() > 10) {
