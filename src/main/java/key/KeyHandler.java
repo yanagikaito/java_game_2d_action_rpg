@@ -7,7 +7,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    private GameWindow gameWindow;
+    private final GameWindow gameWindow;
     private boolean playerUp;
     private boolean playerDown;
     private boolean playerLeft;
@@ -16,7 +16,6 @@ public class KeyHandler implements KeyListener {
     public KeyHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
     }
-
 
     public boolean isPlayerUp() {
         return playerUp;
@@ -33,7 +32,6 @@ public class KeyHandler implements KeyListener {
     public boolean isPlayerRight() {
         return playerRight;
     }
-
 
     public void setPlayerUp(boolean playerUp) {
         this.playerUp = playerUp;
@@ -58,37 +56,41 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+
         int code = e.getKeyCode();
 
-        if (code == KeyEvent.VK_W) {
-            setPlayerUp(true);
-        }
-        if (code == KeyEvent.VK_S) {
-            setPlayerDown(true);
-        }
-        if (code == KeyEvent.VK_A) {
-            setPlayerLeft(true);
-        }
-        if (code == KeyEvent.VK_D) {
-            setPlayerRight(true);
+        switch (code) {
+            case KeyEvent.VK_W -> setPlayerUp(true);
+            case KeyEvent.VK_S -> setPlayerDown(true);
+            case KeyEvent.VK_A -> setPlayerLeft(true);
+            case KeyEvent.VK_D -> setPlayerRight(true);
+            case KeyEvent.VK_P -> togglePause();
+            default -> {
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+
         int code = e.getKeyCode();
 
-        if (code == KeyEvent.VK_W) {
-            setPlayerUp(false);
+        switch (code) {
+            case KeyEvent.VK_W -> setPlayerUp(false);
+            case KeyEvent.VK_S -> setPlayerDown(false);
+            case KeyEvent.VK_A -> setPlayerLeft(false);
+            case KeyEvent.VK_D -> setPlayerRight(false);
+            default -> {
+            }
         }
-        if (code == KeyEvent.VK_S) {
-            setPlayerDown(false);
-        }
-        if (code == KeyEvent.VK_A) {
-            setPlayerLeft(false);
-        }
-        if (code == KeyEvent.VK_D) {
-            setPlayerRight(false);
+    }
+
+
+    private void togglePause() {
+        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+            gameWindow.setGameState(gameWindow.getPauseState());
+        } else if (gameWindow.getGameState() == gameWindow.getPauseState()) {
+            gameWindow.setGameState(gameWindow.getPlayState());
         }
     }
 }
