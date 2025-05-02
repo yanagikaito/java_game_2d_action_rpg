@@ -41,8 +41,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = FrameApp.getTileSize() - 2;
-        getSolidArea().height = FrameApp.getTileSize() - 2;
+        getSolidArea().width = FrameApp.getTileSize() - 6;
+        getSolidArea().height = FrameApp.getTileSize() - 4;
 
         setDefaultValues();
         loadPlayerImages();
@@ -133,6 +133,11 @@ public class Player extends Entity {
             image = sprites[dirIndex][getSpriteNum() - 1];
         }
         g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+
+//        // デバッグ
+//        g2.setColor(Color.RED);
+//        g2.drawRect(screenX + getSolidArea().x, screenY + getSolidArea().y, getSolidArea().width, getSolidArea().height);
+
     }
 
     public int getScreenX() {
