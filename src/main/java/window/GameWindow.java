@@ -6,6 +6,7 @@ import factory.FrameFactory;
 import frame.GameFrame;
 import key.KeyHandler;
 import tile.TileManager;
+import ui.UI;
 
 import javax.swing.*;
 
@@ -20,8 +21,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Player player = new Player(this, keyHandler);
     private TileManager tileManager = new TileManager(this);
     private CollisionChecker collisionChecker = new CollisionChecker(this);
+    private UI ui = new UI(this);
     private static GameWindow instance;
     private Thread gameThread;
+    private int gameState;
+    private final int playState = 1;
+    private final int pauseState = 2;
 
     protected GameWindow() {
         this.setBackground(Color.BLACK);
@@ -31,6 +36,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.setFocusable(true);
         this.setLayout(null);
         this.addKeyListener(keyHandler);
+        this.setUpGame();
+    }
+
+    public void setUpGame() {
+        gameState = playState;
     }
 
     public static synchronized GameWindow getInstance() {
@@ -84,15 +94,23 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void update() {
 
-        player.update();
+        if (gameState == playState) {
+            player.update();
+        }
+        if (gameState == pauseState) {
+
+        }
     }
 
     public void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
         tileManager.draw(g2);
         player.draw(g2);
+
+        ui.draw(g2);
 
         g2.dispose();
     }
@@ -111,5 +129,21 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public CollisionChecker getCollisionChecker() {
         return collisionChecker;
+    }
+
+    public int getGameState() {
+        return gameState;
+    }
+
+    public int getPauseState() {
+        return pauseState;
+    }
+
+    public int getPlayState() {
+        return playState;
+    }
+
+    public void setGameState(int gameState) {
+        this.gameState = gameState;
     }
 }
