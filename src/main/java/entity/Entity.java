@@ -5,6 +5,7 @@ import window.GameWindow;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class Entity {
 
@@ -20,6 +21,7 @@ public class Entity {
     private Rectangle solidArea;
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
+    private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -62,6 +64,15 @@ public class Entity {
 
     public String getDirection() {
         return direction;
+    }
+
+    public BufferedImage[][] getSprites() {
+        return sprites;
+    }
+
+    public BufferedImage[][] setSprites(BufferedImage[][] sprites) {
+        this.sprites = sprites;
+        return this.sprites;
     }
 
     public void setDirection(String direction) {
@@ -110,5 +121,23 @@ public class Entity {
 
     public void draw(Graphics2D g2) {
 
+        BufferedImage image = null;
+
+        int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
+        if (dirIndex != -1) {
+            image = sprites[dirIndex][getSpriteNum() - 1];
+        }
+
+        int screenX = worldX - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
+        int screenY = worldY - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+
+        if (worldX > gameWindow.getPlayer().getWorldX() - gameWindow.getPlayer().getScreenX() &&
+                worldX < gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX() &&
+                worldY > gameWindow.getPlayer().getWorldY() - gameWindow.getPlayer().getScreenY() &&
+                worldY < gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY()) {
+
+            g2.drawImage(image, screenX, screenY,
+                    FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+        }
     }
 }

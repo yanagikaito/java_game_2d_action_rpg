@@ -1,6 +1,8 @@
 package window;
 
+import asset.AssetSetter;
 import collision.CollisionChecker;
+import entity.Entity;
 import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
@@ -21,6 +23,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Player player = new Player(this, keyHandler);
     private TileManager tileManager = new TileManager(this);
     private CollisionChecker collisionChecker = new CollisionChecker(this);
+    private AssetSetter assetSetter = new AssetSetter(this);
+    private Entity[] npc = new Entity[10];
     private UI ui = new UI(this);
     private static GameWindow instance;
     private Thread gameThread;
@@ -40,6 +44,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     public void setUpGame() {
+
+        assetSetter.setNPC();
         gameState = playState;
     }
 
@@ -108,6 +114,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         tileManager.draw(g2);
+
+        for (Entity entity : npc) {
+            if (entity != null) {
+                entity.draw(g2);
+            }
+        }
         player.draw(g2);
 
         ui.draw(g2);
@@ -145,5 +157,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setGameState(int gameState) {
         this.gameState = gameState;
+    }
+
+    public Entity[] getNPC() {
+        return npc;
+    }
+
+    public void setNPC(Entity[] npc) {
+        this.npc = npc;
     }
 }
