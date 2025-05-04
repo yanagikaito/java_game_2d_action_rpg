@@ -15,6 +15,7 @@ public class Player extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
+    private static final int SPRITE_ANIMATION_THRESHOLD = 10;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
 
     private GameWindow gameWindow;
@@ -112,7 +113,7 @@ public class Player extends Entity {
             gameWindow.getCollisionChecker().checkTile(this);
 
             setSpriteCounter(getSpriteCounter() + 1);
-            if (getSpriteCounter() > 10) {
+            if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
                 setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
                 setSpriteCounter(0);
             }

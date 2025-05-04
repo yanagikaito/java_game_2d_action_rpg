@@ -102,9 +102,15 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         if (gameState == playState) {
             player.update();
-        }
-        if (gameState == pauseState) {
 
+            for (Entity entity : npc) {
+                if (entity != null) {
+                    entity.update();
+                }
+            }
+            if (gameState == pauseState) {
+
+            }
         }
     }
 
