@@ -22,6 +22,9 @@ public class Entity {
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private static final int SPRITE_COUNT = 3;
+    private static final int SPRITE_ANIMATION_THRESHOLD = 10;
+    private int pixelCounter = 0;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -36,6 +39,44 @@ public class Entity {
         this.solidAreaDefaultX = 0;
         this.solidAreaDefaultY = 0;
         this.sprites = new BufferedImage[4][3];
+    }
+
+    public void setAction() {
+
+    }
+
+    public void update() {
+        setAction();
+        setCollision(false);
+        gameWindow.getCollisionChecker().checkTile(this);
+
+        if (!isCollision()) {
+            switch (getDirection()) {
+                case "up":
+                    setWorldY(getWorldY() - getSpeed());
+                    break;
+                case "down":
+                    setWorldY(getWorldY() + getSpeed());
+                    break;
+                case "right":
+                    setWorldX(getWorldX() + getSpeed());
+                    break;
+                case "left":
+                    setWorldX(getWorldX() - getSpeed());
+                    break;
+            }
+        }
+
+        setSpriteCounter(getSpriteCounter() + 1);
+        if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
+            setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
+            setSpriteCounter(0);
+        }
+
+        pixelCounter += getSpeed();
+        if (pixelCounter == FrameApp.getTileSize()) {
+            pixelCounter = 0;
+        }
     }
 
     public int getWorldX() {
