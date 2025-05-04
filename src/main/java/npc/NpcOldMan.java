@@ -13,7 +13,7 @@ public class NpcOldMan extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
-    private static final int ACTION_LOCK_THRESHOLD = 60;
+    private static final int ACTION_LOCK_THRESHOLD = 120;
     private static final int MAX_RANDOM_VALUE = 100;
     private static final int THRESHOLD_UP = 25;
     private static final int THRESHOLD_DOWN = 50;
