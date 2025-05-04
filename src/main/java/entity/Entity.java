@@ -6,6 +6,7 @@ import window.GameWindow;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Entity {
 
@@ -45,26 +46,18 @@ public class Entity {
 
     }
 
+
     public void update() {
+
         setAction();
+
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
 
         if (!isCollision()) {
-            switch (getDirection()) {
-                case "up":
-                    setWorldY(getWorldY() - getSpeed());
-                    break;
-                case "down":
-                    setWorldY(getWorldY() + getSpeed());
-                    break;
-                case "right":
-                    setWorldX(getWorldX() + getSpeed());
-                    break;
-                case "left":
-                    setWorldX(getWorldX() - getSpeed());
-                    break;
-            }
+            move();
+        } else {
+            chooseNewDirection();
         }
 
         setSpriteCounter(getSpriteCounter() + 1);
@@ -76,6 +69,36 @@ public class Entity {
         pixelCounter += getSpeed();
         if (pixelCounter == FrameApp.getTileSize()) {
             pixelCounter = 0;
+        }
+    }
+
+    private void move() {
+        switch (getDirection()) {
+            case "up":
+                setWorldY(getWorldY() - getSpeed());
+                break;
+            case "down":
+                setWorldY(getWorldY() + getSpeed());
+                break;
+            case "left":
+                setWorldX(getWorldX() - getSpeed());
+                break;
+            case "right":
+                setWorldX(getWorldX() + getSpeed());
+                break;
+        }
+    }
+
+    private void chooseNewDirection() {
+        int i = (new Random()).nextInt(100) + 1; // 1～100 の乱数
+        if (i <= 25) {
+            setDirection("up");
+        } else if (i <= 50) {
+            setDirection("down");
+        } else if (i <= 75) {
+            setDirection("left");
+        } else {
+            setDirection("right");
         }
     }
 
