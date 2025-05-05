@@ -111,6 +111,8 @@ public class Player extends Entity {
 
             setCollision(false);
             gameWindow.getCollisionChecker().checkTile(this);
+            int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
+            interactNPC(npcIndex);
 
             setSpriteCounter(getSpriteCounter() + 1);
             if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
@@ -123,6 +125,13 @@ public class Player extends Entity {
                 moving = false;
                 pixelCounter = 0;
             }
+        }
+    }
+
+    public void interactNPC(int i) {
+
+        if (i != 999) {
+            System.out.println("hit");
         }
     }
 

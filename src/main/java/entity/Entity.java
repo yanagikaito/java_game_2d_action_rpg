@@ -25,7 +25,14 @@ public class Entity {
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
+    private static final int MAX_RANDOM_VALUE = 100;
+    private static final int THRESHOLD_UP = 25;
+    private static final int THRESHOLD_DOWN = 50;
+    private static final int THRESHOLD_LEFT = 75;
     private int pixelCounter = 0;
+    private int actionLockCounter = 0;
+    private static final int COLLISION_COOLDOWN_FRAMES = 30;
+    private int collisionCooldown = 0;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -53,11 +60,18 @@ public class Entity {
 
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
+        gameWindow.getCollisionChecker().checkPlayer(this);
 
         if (!isCollision()) {
             move();
+            collisionCooldown = 0;
         } else {
-            chooseNewDirection();
+            if (collisionCooldown == 0) {
+                chooseNewDirection();
+                collisionCooldown = COLLISION_COOLDOWN_FRAMES;
+            } else {
+                collisionCooldown--;
+            }
         }
 
         setSpriteCounter(getSpriteCounter() + 1);
@@ -90,16 +104,20 @@ public class Entity {
     }
 
     private void chooseNewDirection() {
-        int i = (new Random()).nextInt(100) + 1; // 1～100 の乱数
-        if (i <= 25) {
+
+        actionLockCounter++;
+
+        int i = (new Random()).nextInt(MAX_RANDOM_VALUE) + 1;
+        if (i <= THRESHOLD_UP) {
             setDirection("up");
-        } else if (i <= 50) {
+        } else if (i <= THRESHOLD_DOWN) {
             setDirection("down");
-        } else if (i <= 75) {
+        } else if (i <= THRESHOLD_LEFT) {
             setDirection("left");
         } else {
             setDirection("right");
         }
+        actionLockCounter = 0;
     }
 
     public int getWorldX() {
@@ -161,6 +179,14 @@ public class Entity {
 
     public int getSpriteNum() {
         return spriteNum;
+    }
+
+    public int getSolidAreaDefaultX() {
+        return solidAreaDefaultX;
+    }
+
+    public int getSolidAreaDefaultY() {
+        return solidAreaDefaultY;
     }
 
     public void setSpriteNum(int spriteNum) {

@@ -8,7 +8,7 @@ import window.GameWindow;
 
 public class CollisionChecker {
 
-    private GameWindow gameWindow;
+    private final GameWindow gameWindow;
 
     public CollisionChecker(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -17,7 +17,6 @@ public class CollisionChecker {
     public void checkTile(Entity entity) {
 
         int tileSize = FrameApp.getTileSize();
-
         TileManager tileManager = gameWindow.getTileManager();
         int[][] mapTileNum = tileManager.getMapTileNum();
         Tile[] tiles = tileManager.getTiles();
@@ -33,7 +32,6 @@ public class CollisionChecker {
         int entityBottomRow = entityBottomY / tileSize;
 
         int tileNum1, tileNum2;
-
         switch (entity.getDirection()) {
             case "up" -> {
                 int newTopRow = (entityTopY - entity.getSpeed()) / tileSize;
@@ -70,5 +68,97 @@ public class CollisionChecker {
             default -> {
             }
         }
+    }
+
+    public int checkEntity(Entity entity, Entity[] targets) {
+
+        int index = 999;
+
+        for (int i = 0; i < targets.length; i++) {
+
+            if (targets[i] != null) {
+                updateSolidArea(entity);
+                updateSolidArea(targets[i]);
+
+                switch (entity.getDirection()) {
+                    case "up" -> {
+                        entity.getSolidArea().y -= entity.getSpeed();
+                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
+                            entity.setCollision(true);
+                            index = i;
+                        }
+                    }
+                    case "down" -> {
+                        entity.getSolidArea().y += entity.getSpeed();
+                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
+                            entity.setCollision(true);
+                            index = i;
+                        }
+                    }
+                    case "left" -> {
+                        entity.getSolidArea().x -= entity.getSpeed();
+                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
+                            entity.setCollision(true);
+                            index = i;
+                        }
+                    }
+                    case "right" -> {
+                        entity.getSolidArea().x += entity.getSpeed();
+                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
+                            entity.setCollision(true);
+                            index = i;
+                        }
+                    }
+                }
+                resetSolidArea(entity);
+                resetSolidArea(targets[i]);
+            }
+        }
+        return index;
+    }
+
+    public void checkPlayer(Entity entity) {
+
+        updateSolidArea(entity);
+        updateSolidArea(gameWindow.getPlayer());
+
+        switch (entity.getDirection()) {
+            case "up" -> {
+                entity.getSolidArea().y -= entity.getSpeed();
+                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
+                    entity.setCollision(true);
+                }
+            }
+            case "down" -> {
+                entity.getSolidArea().y += entity.getSpeed();
+                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
+                    entity.setCollision(true);
+                }
+            }
+            case "left" -> {
+                entity.getSolidArea().x -= entity.getSpeed();
+                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
+                    entity.setCollision(true);
+                }
+            }
+            case "right" -> {
+                entity.getSolidArea().x += entity.getSpeed();
+                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
+                    entity.setCollision(true);
+                }
+            }
+        }
+        resetSolidArea(entity);
+        resetSolidArea(gameWindow.getPlayer());
+    }
+
+    private void updateSolidArea(Entity entity) {
+        entity.getSolidArea().x = entity.getWorldX() + entity.getSolidAreaDefaultX();
+        entity.getSolidArea().y = entity.getWorldY() + entity.getSolidAreaDefaultY();
+    }
+
+    private void resetSolidArea(Entity entity) {
+        entity.getSolidArea().x = entity.getSolidAreaDefaultX();
+        entity.getSolidArea().y = entity.getSolidAreaDefaultY();
     }
 }
