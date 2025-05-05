@@ -30,6 +30,9 @@ public class Entity {
     private static final int THRESHOLD_DOWN = 50;
     private static final int THRESHOLD_LEFT = 75;
     private int pixelCounter = 0;
+    private int actionLockCounter = 0;
+    private static final int COLLISION_COOLDOWN_FRAMES = 30;
+    private int collisionCooldown = 0;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -57,11 +60,18 @@ public class Entity {
 
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
+        gameWindow.getCollisionChecker().checkPlayer(this);
 
         if (!isCollision()) {
             move();
+            collisionCooldown = 0;
         } else {
-            chooseNewDirection();
+            if (collisionCooldown == 0) {
+                chooseNewDirection();
+                collisionCooldown = COLLISION_COOLDOWN_FRAMES;
+            } else {
+                collisionCooldown--;
+            }
         }
 
         setSpriteCounter(getSpriteCounter() + 1);
@@ -94,6 +104,9 @@ public class Entity {
     }
 
     private void chooseNewDirection() {
+
+        actionLockCounter++;
+
         int i = (new Random()).nextInt(MAX_RANDOM_VALUE) + 1;
         if (i <= THRESHOLD_UP) {
             setDirection("up");
@@ -104,6 +117,7 @@ public class Entity {
         } else {
             setDirection("right");
         }
+        actionLockCounter = 0;
     }
 
     public int getWorldX() {
@@ -165,6 +179,14 @@ public class Entity {
 
     public int getSpriteNum() {
         return spriteNum;
+    }
+
+    public int getSolidAreaDefaultX() {
+        return solidAreaDefaultX;
+    }
+
+    public int getSolidAreaDefaultY() {
+        return solidAreaDefaultY;
     }
 
     public void setSpriteNum(int spriteNum) {
