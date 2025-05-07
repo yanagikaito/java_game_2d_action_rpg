@@ -1,5 +1,7 @@
 package frame;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FrameApp {
 
     private static final int maxScreenRow = 16;
@@ -10,6 +12,7 @@ public class FrameApp {
     private static final int maxWorldRow = 50;
     private static final int maxWorldCol = 50;
 
+    @NotNull
     public static FrameSize baseDisplay() {
 
         return new FrameSize(screenWidth, screenHeight);

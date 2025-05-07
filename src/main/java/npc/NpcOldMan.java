@@ -26,6 +26,7 @@ public class NpcOldMan extends Entity {
         setDirection("down");
         setSpeed(1);
         loadNPCImages();
+        setDialogue();
     }
 
     public void loadNPCImages() {
@@ -45,6 +46,16 @@ public class NpcOldMan extends Entity {
         }
     }
 
+    public void setDialogue() {
+
+        getDialogue()[0] = "ここに何しに来た";
+        getDialogue()[1] = "お前は誰だ?";
+        getDialogue()[2] = "ここで何をしておる";
+        getDialogue()[3] = "モンスターでも倒してみろ";
+        getDialogue()[4] = "たぶん無理だがな";
+
+    }
+
     public void setAction() {
 
         actionLockCounter++;
@@ -61,6 +72,45 @@ public class NpcOldMan extends Entity {
                 setDirection("right");
             }
             actionLockCounter = 0;
+        }
+    }
+
+    @Override
+    public void speak() {
+
+        // ダイアログ配列を取得
+        String[] dialogues = getDialogue();
+
+        // 現在のdialogueIndexを取得
+        int dialogueIndex = getDialogueIndex();
+
+        // 現在のdialogueIndexが範囲外または該当するダイアログがnullの場合、インデックスを0にリセット
+        if (dialogues[dialogueIndex] == null) {
+            dialogueIndex = 0; // リセット
+        }
+
+        // 現在のダイアログをUIに設定
+        getGameWindow().getUi().setCurrentDialogueMessage(dialogues[dialogueIndex]);
+
+        // dialogueIndexをインクリメントし、範囲内に収める
+        dialogueIndex++;
+
+        // 更新されたdialogueIndexを設定
+        setDialogueIndex(dialogueIndex);
+
+        switch (getGameWindow().getPlayer().getDirection()) {
+            case "up" -> {
+                setDirection("down");
+            }
+            case "down" -> {
+                setDirection("up");
+            }
+            case "left" -> {
+                setDirection("right");
+            }
+            case "right" -> {
+                setDirection("left");
+            }
         }
     }
 }

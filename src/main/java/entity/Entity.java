@@ -23,6 +23,7 @@ public class Entity {
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
     private static final int MAX_RANDOM_VALUE = 100;
@@ -33,6 +34,7 @@ public class Entity {
     private int actionLockCounter = 0;
     private static final int COLLISION_COOLDOWN_FRAMES = 30;
     private int collisionCooldown = 0;
+    private int dialogueIndex = 0;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -84,6 +86,9 @@ public class Entity {
         if (pixelCounter == FrameApp.getTileSize()) {
             pixelCounter = 0;
         }
+    }
+
+    public void speak() {
     }
 
     private void move() {
@@ -207,6 +212,22 @@ public class Entity {
 
     public void setSolidAreaDefaultY(int solidAreaDefaultY) {
         this.solidAreaDefaultY = solidAreaDefaultY;
+    }
+
+    public String[] getDialogue() {
+        return dialogue;
+    }
+
+    public GameWindow getGameWindow() {
+        return gameWindow;
+    }
+
+    public int getDialogueIndex() {
+        return dialogueIndex;
+    }
+
+    public void setDialogueIndex(int dialogueIndex) {
+        this.dialogueIndex = dialogueIndex;
     }
 
     public void draw(Graphics2D g2) {

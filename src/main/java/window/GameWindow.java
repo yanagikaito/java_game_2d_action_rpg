@@ -31,6 +31,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private int gameState;
     private final int playState = 1;
     private final int pauseState = 2;
+    private final int dialogueState = 3;
 
     protected GameWindow() {
         this.setBackground(Color.BLACK);
@@ -171,5 +172,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setNPC(Entity[] npc) {
         this.npc = npc;
+    }
+
+    public int getDialogueState() {
+        return dialogueState;
+    }
+
+    public UI getUi() {
+        return ui;
     }
 }
