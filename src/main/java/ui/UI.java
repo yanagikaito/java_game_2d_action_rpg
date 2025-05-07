@@ -1,6 +1,7 @@
 package ui;
 
 import frame.FrameApp;
+import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.*;
@@ -15,32 +16,28 @@ public class UI {
 
     // メッセージ表示用
     private boolean messageOn;
-    private String message;
+    private String currentDialogueMessage;
 
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
-        this.message = "";
+        this.currentDialogueMessage = "";
     }
 
-
-    public void showMessage(String text) {
-        this.message = text;
-        this.messageOn = true;
-    }
-
-
-    public void draw(Graphics2D g2) {
+    public void draw(@NotNull Graphics2D g2) {
 
         g2.setFont(arial40);
         g2.setColor(Color.white);
 
         int gameState = gameWindow.getGameState();
+
         if (gameState == gameWindow.getPlayState()) {
         } else if (gameState == gameWindow.getPauseState()) {
             drawPauseScreen(g2);
+        } else if (gameState == gameWindow.getDialogueState()) {
+            drawDialogueScreen(g2);
         }
 
         if (messageOn == true) {
@@ -48,7 +45,7 @@ public class UI {
         }
     }
 
-    private void drawPauseScreen(Graphics2D g2) {
+    private void drawPauseScreen(@NotNull Graphics2D g2) {
         g2.setFont(arial80Bold.deriveFont(Font.PLAIN, 80F));
         String text = "PAUSED";
         int x = getXForCenteredText(g2, text);
@@ -56,16 +53,53 @@ public class UI {
         g2.drawString(text, x, y);
     }
 
+    private void drawDialogueScreen(@NotNull Graphics2D g2) {
 
-    private void drawMessage(Graphics2D g2) {
-        g2.setFont(arial40.deriveFont(Font.PLAIN, 40F));
-        int x = getXForCenteredText(g2, message);
-        int y = (int) (FrameApp.getScreenHeight() * 0.8);
-        g2.drawString(message, x, y);
+        int tileSize = FrameApp.getTileSize();
+
+        int x = tileSize * 2;
+        int y = tileSize / 2;
+        int width = FrameApp.getScreenWidth() - (FrameApp.getTileSize() * 4);
+        int height = tileSize * 4;
+
+        drawSubWindow(g2, x, y, width, height);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+        x += tileSize;
+        y += tileSize;
+        g2.drawString(currentDialogueMessage, x, y);
     }
 
-    private int getXForCenteredText(Graphics2D g2, String text) {
+    private void drawSubWindow(@NotNull Graphics2D g2, int x, int y, int width, int height) {
+
+        Color color = new Color(0, 0, 0, 210);
+        g2.setColor(color);
+        g2.fillRoundRect(x, y, width, height, 35, 35);
+
+        color = new Color(255, 255, 255);
+        g2.setColor(color);
+        g2.setStroke(new BasicStroke(5));
+        g2.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);
+    }
+
+
+    private void drawMessage(@NotNull Graphics2D g2) {
+        g2.setFont(arial40.deriveFont(Font.PLAIN, 40F));
+        int x = getXForCenteredText(g2, currentDialogueMessage);
+        int y = (int) (FrameApp.getScreenHeight() * 0.8);
+        g2.drawString(currentDialogueMessage, x, y);
+    }
+
+    private int getXForCenteredText(@NotNull Graphics2D g2, String text) {
         int textWidth = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return FrameApp.getScreenWidth() / 2 - textWidth / 2;
+    }
+
+    public String getCurrentDialogueMessage() {
+        return currentDialogueMessage;
+    }
+
+    public void setCurrentDialogueMessage(String currentDialogueMessage) {
+        this.currentDialogueMessage = currentDialogueMessage;
     }
 }

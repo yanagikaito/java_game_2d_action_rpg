@@ -23,12 +23,15 @@
             <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- JetBrains Annotations ライブラリ -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
+
     </dependencies>
 
 </project>

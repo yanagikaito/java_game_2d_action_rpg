@@ -1,5 +1,6 @@
 package key;
 
+import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.event.KeyEvent;
@@ -55,7 +56,7 @@ public class KeyHandler implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(@NotNull KeyEvent e) {
 
         int code = e.getKeyCode();
 
@@ -65,13 +66,14 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_A -> setPlayerLeft(true);
             case KeyEvent.VK_D -> setPlayerRight(true);
             case KeyEvent.VK_P -> togglePause();
+            case KeyEvent.VK_ENTER -> speakDialogue();
             default -> {
             }
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(@NotNull KeyEvent e) {
 
         int code = e.getKeyCode();
 
@@ -90,6 +92,12 @@ public class KeyHandler implements KeyListener {
         if (gameWindow.getGameState() == gameWindow.getPlayState()) {
             gameWindow.setGameState(gameWindow.getPauseState());
         } else if (gameWindow.getGameState() == gameWindow.getPauseState()) {
+            gameWindow.setGameState(gameWindow.getPlayState());
+        }
+    }
+
+    private void speakDialogue() {
+        if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
             gameWindow.setGameState(gameWindow.getPlayState());
         }
     }
