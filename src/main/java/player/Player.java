@@ -131,9 +131,12 @@ public class Player extends Entity {
     public void interactNPC(int i) {
 
         if (i != 999) {
-            gameWindow.setGameState(gameWindow.getDialogueState());
-            gameWindow.getNPC()[i].speak();
+            if (gameWindow.getKeyHandler().isPlayerEnter() == true) {
+                gameWindow.setGameState(gameWindow.getDialogueState());
+                gameWindow.getNPC()[i].speak();
+            }
         }
+        gameWindow.getKeyHandler().setPlayerEnter(false);
     }
 
     @Override

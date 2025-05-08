@@ -13,6 +13,7 @@ public class KeyHandler implements KeyListener {
     private boolean playerDown;
     private boolean playerLeft;
     private boolean playerRight;
+    private boolean playerEnter;
 
     public KeyHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -34,6 +35,10 @@ public class KeyHandler implements KeyListener {
         return playerRight;
     }
 
+    public boolean isPlayerEnter() {
+        return playerEnter;
+    }
+
     public void setPlayerUp(boolean playerUp) {
         this.playerUp = playerUp;
     }
@@ -48,6 +53,10 @@ public class KeyHandler implements KeyListener {
 
     public void setPlayerRight(boolean playerRight) {
         this.playerRight = playerRight;
+    }
+
+    public void setPlayerEnter(boolean playerEnter) {
+        this.playerEnter = playerEnter;
     }
 
     @Override
@@ -66,7 +75,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_A -> setPlayerLeft(true);
             case KeyEvent.VK_D -> setPlayerRight(true);
             case KeyEvent.VK_P -> togglePause();
-            case KeyEvent.VK_ENTER -> speakDialogue();
+            case KeyEvent.VK_ENTER -> speakDialogue(true);
             default -> {
             }
         }
@@ -96,8 +105,13 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    private void speakDialogue() {
-        if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
+    public void speakDialogue(boolean playerEnter) {
+        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+            this.playerEnter = playerEnter;
+        } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
+            gameWindow.setGameState(gameWindow.getPlayState());
+        }
+        if (this.playerEnter == false) {
             gameWindow.setGameState(gameWindow.getPlayState());
         }
     }
