@@ -35,6 +35,8 @@ public class Entity {
     private static final int COLLISION_COOLDOWN_FRAMES = 30;
     private int collisionCooldown = 0;
     private int dialogueIndex = 0;
+    private int maxLife;
+    private int life;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -228,6 +230,22 @@ public class Entity {
 
     public void setDialogueIndex(int dialogueIndex) {
         this.dialogueIndex = dialogueIndex;
+    }
+
+    public int getMaxLife() {
+        return maxLife;
+    }
+
+    public void setMaxLife(int maxLife) {
+        this.maxLife = maxLife;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
     }
 
     public void draw(Graphics2D g2) {

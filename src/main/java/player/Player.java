@@ -54,6 +54,9 @@ public class Player extends Entity {
         setWorldY(FrameApp.getTileSize() * 21);
         setSpeed(4);
         setDirection("down");
+
+        setMaxLife(6);
+        setLife(getMaxLife());
     }
 
     public void loadPlayerImages() {

@@ -1,10 +1,13 @@
 package ui;
 
 import frame.FrameApp;
+import object.ObjHeart;
+import object.SuperObject;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class UI {
 
@@ -18,12 +21,21 @@ public class UI {
     private boolean messageOn;
     private String currentDialogueMessage;
 
+    private BufferedImage heartFull;
+    private BufferedImage heartHalf;
+    private BufferedImage heartBlank;
+
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
         this.currentDialogueMessage = "";
+
+        SuperObject heart = new ObjHeart(gameWindow);
+        heartFull = heart.getImage();
+        heartHalf = heart.getImage2();
+        heartBlank = heart.getImage3();
     }
 
     public void draw(@NotNull Graphics2D g2) {
@@ -34,14 +46,42 @@ public class UI {
         int gameState = gameWindow.getGameState();
 
         if (gameState == gameWindow.getPlayState()) {
+            drawPlayerLife(g2);
         } else if (gameState == gameWindow.getPauseState()) {
+            drawPlayerLife(g2);
             drawPauseScreen(g2);
         } else if (gameState == gameWindow.getDialogueState()) {
+            drawPlayerLife(g2);
             drawDialogueScreen(g2);
         }
 
         if (messageOn == true) {
             drawMessage(g2);
+        }
+    }
+
+    public void drawPlayerLife(Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+        int startX = tileSize / 2;
+        int y = tileSize / 2;
+
+        var player = gameWindow.getPlayer();
+
+        int maxHearts = player.getMaxLife() / 2;
+        int life = player.getLife();
+        int fullHearts = life / 2;
+        int halfHearts = life % 2;
+
+        for (int i = 0; i < maxHearts; i++) {
+            int x = startX + i * tileSize;
+            if (i < fullHearts) {
+                g2.drawImage(heartFull, x, y, tileSize, tileSize, null);
+            } else if (i == fullHearts && halfHearts == 1) {
+                g2.drawImage(heartHalf, x, y, tileSize, tileSize, null);
+            } else {
+                g2.drawImage(heartBlank, x, y, tileSize, tileSize, null);
+            }
         }
     }
 
