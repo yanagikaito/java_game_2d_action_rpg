@@ -25,6 +25,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private CollisionChecker collisionChecker = new CollisionChecker(this);
     private AssetSetter assetSetter = new AssetSetter(this);
     private Entity[] npc = new Entity[10];
+    private Entity[] monster = new Entity[20];
     private UI ui = new UI(this);
     private static GameWindow instance;
     private Thread gameThread;
@@ -47,6 +48,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void setUpGame() {
 
         assetSetter.setNPC();
+        assetSetter.setMonster();
         gameState = playState;
     }
 
@@ -109,6 +111,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     entity.update();
                 }
             }
+            for (Entity entity : monster) {
+                if (entity != null) {
+                    entity.update();
+                }
+            }
             if (gameState == pauseState) {
 
             }
@@ -123,6 +130,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         tileManager.draw(g2);
 
         for (Entity entity : npc) {
+            if (entity != null) {
+                entity.draw(g2);
+            }
+        }
+        for (Entity entity : monster) {
             if (entity != null) {
                 entity.draw(g2);
             }
@@ -170,8 +182,16 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return npc;
     }
 
+    public Entity[] getMonster() {
+        return monster;
+    }
+
     public void setNPC(Entity[] npc) {
         this.npc = npc;
+    }
+
+    public void setMonster(Entity[] monster) {
+        this.monster = monster;
     }
 
     public int getDialogueState() {

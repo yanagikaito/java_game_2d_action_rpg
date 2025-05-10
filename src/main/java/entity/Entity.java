@@ -13,9 +13,13 @@ public class Entity {
     private GameWindow gameWindow;
     private int worldX;
     private int worldY;
+    private int width;
+    private int height;
     private int speed;
     private String direction;
     private BufferedImage[][] sprites;
+    private BufferedImage image;
+    private BufferedImage image2;
     private boolean collision;
     private int spriteCounter;
     private int spriteNum;
@@ -37,6 +41,7 @@ public class Entity {
     private int dialogueIndex = 0;
     private int maxLife;
     private int life;
+    private String name;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -44,6 +49,7 @@ public class Entity {
         this.worldY = 0;
         this.speed = 0;
         this.direction = "";
+        this.name = "";
         this.collision = false;
         this.spriteCounter = 0;
         this.spriteNum = 1;
@@ -246,6 +252,14 @@ public class Entity {
 
     public void setLife(int life) {
         this.life = life;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void draw(Graphics2D g2) {
