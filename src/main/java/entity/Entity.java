@@ -43,6 +43,9 @@ public class Entity {
     private int maxLife;
     private int life;
     private String name;
+    private boolean invincible = false;
+    private int invincibleCounter = 0;
+    private int type;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -71,7 +74,16 @@ public class Entity {
 
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
-        gameWindow.getCollisionChecker().checkPlayer(this);
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
+        boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
+
+        if (this.type == 2 && contactPlayer == true) {
+            if (gameWindow.getPlayer().getInvincible() == false) {
+                gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - 1);
+                gameWindow.getPlayer().setInvincible(true);
+            }
+        }
 
         if (!isCollision()) {
             move();
@@ -273,6 +285,30 @@ public class Entity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getInvincible() {
+        return invincible;
+    }
+
+    public void setInvincible(boolean invincible) {
+        this.invincible = invincible;
+    }
+
+    public int getInvincibleCounter() {
+        return invincibleCounter;
+    }
+
+    public void setInvincibleCounter(int invincibleCounter) {
+        this.invincibleCounter = invincibleCounter;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public void setImage(BufferedImage image, int width, int height) {

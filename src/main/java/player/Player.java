@@ -75,58 +75,81 @@ public class Player extends Entity {
     public void update() {
 
         if (!moving) {
-
-            if (gameWindow.getKeyHandler().isPlayerUp()
-                    || gameWindow.getKeyHandler().isPlayerDown()
-                    || gameWindow.getKeyHandler().isPlayerLeft()
-                    || gameWindow.getKeyHandler().isPlayerRight()) {
-
-                if (gameWindow.getKeyHandler().isPlayerUp()) {
-                    setDirection("up");
-                } else if (gameWindow.getKeyHandler().isPlayerDown()) {
-                    setDirection("down");
-                } else if (gameWindow.getKeyHandler().isPlayerRight()) {
-                    setDirection("right");
-                } else if (gameWindow.getKeyHandler().isPlayerLeft()) {
-                    setDirection("left");
-                }
-                moving = true;
-            }
+            processInput();
         }
 
         if (moving) {
-            if (!isCollision()) {
-                switch (getDirection()) {
-                    case "up":
-                        setWorldY(getWorldY() - getSpeed());
-                        break;
-                    case "down":
-                        setWorldY(getWorldY() + getSpeed());
-                        break;
-                    case "right":
-                        setWorldX(getWorldX() + getSpeed());
-                        break;
-                    case "left":
-                        setWorldX(getWorldX() - getSpeed());
-                        break;
-                }
+            updateMovement();
+            updateCollision();
+            updateAnimation();
+            updateTileMovement();
+        }
+
+        updateInvincibility();
+    }
+
+    private void processInput() {
+        var keyHandler = gameWindow.getKeyHandler();
+        if (keyHandler.isPlayerUp() || keyHandler.isPlayerDown()
+                || keyHandler.isPlayerLeft() || keyHandler.isPlayerRight()) {
+            if (keyHandler.isPlayerUp()) {
+                setDirection("up");
+            } else if (keyHandler.isPlayerDown()) {
+                setDirection("down");
+            } else if (keyHandler.isPlayerRight()) {
+                setDirection("right");
+            } else if (keyHandler.isPlayerLeft()) {
+                setDirection("left");
             }
+            moving = true;
+        }
+    }
 
-            setCollision(false);
-            gameWindow.getCollisionChecker().checkTile(this);
-            int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
-            interactNPC(npcIndex);
-
-            setSpriteCounter(getSpriteCounter() + 1);
-            if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
-                setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
-                setSpriteCounter(0);
+    private void updateMovement() {
+        if (!isCollision()) {
+            switch (getDirection()) {
+                case "up" -> setWorldY(getWorldY() - getSpeed());
+                case "down" -> setWorldY(getWorldY() + getSpeed());
+                case "right" -> setWorldX(getWorldX() + getSpeed());
+                case "left" -> setWorldX(getWorldX() - getSpeed());
             }
+        }
+    }
 
-            pixelCounter += getSpeed();
-            if (pixelCounter == FrameApp.getTileSize()) {
-                moving = false;
-                pixelCounter = 0;
+    private void updateCollision() {
+        setCollision(false);
+        gameWindow.getCollisionChecker().checkTile(this);
+
+        int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
+        interactNPC(npcIndex);
+
+        int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
+        contactMonster(monsterIndex);
+    }
+
+    private void updateAnimation() {
+        setSpriteCounter(getSpriteCounter() + 1);
+        if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
+            setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
+            setSpriteCounter(0);
+        }
+    }
+
+    private void updateTileMovement() {
+        pixelCounter += getSpeed();
+        if (pixelCounter >= FrameApp.getTileSize()) {
+            moving = false;
+            pixelCounter = 0;
+        }
+    }
+
+    private void updateInvincibility() {
+        // 無敵状態の更新
+        if (getInvincible()) {
+            setInvincibleCounter(getInvincibleCounter() + 1);
+            if (getInvincibleCounter() > 60) {
+                setInvincible(false);
+                setInvincibleCounter(0);
             }
         }
     }
@@ -140,6 +163,17 @@ public class Player extends Entity {
             }
         }
         gameWindow.getKeyHandler().setPlayerEnter(false);
+    }
+
+    public void contactMonster(int i) {
+
+        if (i != 999) {
+            if (getInvincible() == false) {
+                int life = getLife() - 1;
+                setLife(life);
+                setInvincible(true);
+            }
+        }
     }
 
     @Override
