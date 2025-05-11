@@ -13,6 +13,9 @@ import ui.UI;
 import javax.swing.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static frame.FrameApp.baseDisplay;
 
@@ -27,6 +30,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
     private UI ui = new UI(this);
+    private ArrayList<Entity> entityList = new ArrayList<>();
     private static GameWindow instance;
     private Thread gameThread;
     private int gameState;
@@ -129,17 +133,24 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         tileManager.draw(g2);
 
+        entityList.add(player);
+
         for (Entity entity : npc) {
             if (entity != null) {
-                entity.draw(g2);
+                entityList.add(entity);
             }
         }
         for (Entity entity : monster) {
             if (entity != null) {
-                entity.draw(g2);
+                entityList.add(entity);
             }
         }
-        player.draw(g2);
+
+        entityList.sort(Comparator.comparingInt(Entity::getWorldY));
+
+        for (Entity entity : entityList) {
+            entity.draw(g2);
+        }
 
         ui.draw(g2);
 

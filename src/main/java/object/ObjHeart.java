@@ -1,16 +1,18 @@
 package object;
 
+import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
-public class ObjHeart extends SuperObject {
+public class ObjHeart extends Entity {
 
     private GameWindow gameWindow;
 
     public ObjHeart(GameWindow gameWindow) {
+        super(gameWindow);
         this.gameWindow = gameWindow;
         setName("ハート");
         try {

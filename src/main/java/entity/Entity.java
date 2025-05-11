@@ -20,6 +20,7 @@ public class Entity {
     private BufferedImage[][] sprites;
     private BufferedImage image;
     private BufferedImage image2;
+    private BufferedImage image3;
     private boolean collision;
     private int spriteCounter;
     private int spriteNum;
@@ -258,8 +259,47 @@ public class Entity {
         return name;
     }
 
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public BufferedImage getImage2() {
+        return image2;
+    }
+
+    public BufferedImage getImage3() {
+        return image3;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setImage(BufferedImage image, int width, int height) {
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.width = width;
+        this.height = height;
+        Graphics2D graphics2D = this.image.createGraphics();
+        graphics2D.drawImage(image, 0, 0, width, height, null);
+        graphics2D.dispose();
+    }
+
+    public void setImage2(BufferedImage image2, int width, int height) {
+        this.image2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.width = width;
+        this.height = height;
+        Graphics2D graphics2D = this.image2.createGraphics();
+        graphics2D.drawImage(image2, 0, 0, width, height, null);
+        graphics2D.dispose();
+    }
+
+    public void setImage3(BufferedImage image3, int width, int height) {
+        this.image3 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.width = width;
+        this.height = height;
+        Graphics2D graphics2D = this.image3.createGraphics();
+        graphics2D.drawImage(image3, 0, 0, width, height, null);
+        graphics2D.dispose();
     }
 
     public void draw(Graphics2D g2) {
