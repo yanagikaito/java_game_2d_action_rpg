@@ -1,8 +1,8 @@
 package ui;
 
+import entity.Entity;
 import frame.FrameApp;
 import object.ObjHeart;
-import object.SuperObject;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -32,7 +32,7 @@ public class UI {
         this.messageOn = false;
         this.currentDialogueMessage = "";
 
-        SuperObject heart = new ObjHeart(gameWindow);
+        Entity heart = new ObjHeart(gameWindow);
         heartFull = heart.getImage();
         heartHalf = heart.getImage2();
         heartBlank = heart.getImage3();
