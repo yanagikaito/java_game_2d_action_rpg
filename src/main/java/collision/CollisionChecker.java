@@ -71,7 +71,7 @@ public class CollisionChecker {
         }
     }
 
-    public int checkEntity(@NotNull Entity entity, Entity[] targets) {
+    public int checkEntity(@NotNull Entity entity, Entity @NotNull [] targets) {
 
         int index = 999;
 
@@ -81,36 +81,26 @@ public class CollisionChecker {
                 updateSolidArea(entity);
                 updateSolidArea(targets[i]);
 
+                int offsetX = 0;
+                int offsetY = 0;
                 switch (entity.getDirection()) {
-                    case "up" -> {
-                        entity.getSolidArea().y -= entity.getSpeed();
-                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
-                            entity.setCollision(true);
-                            index = i;
-                        }
-                    }
-                    case "down" -> {
-                        entity.getSolidArea().y += entity.getSpeed();
-                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
-                            entity.setCollision(true);
-                            index = i;
-                        }
-                    }
-                    case "left" -> {
-                        entity.getSolidArea().x -= entity.getSpeed();
-                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
-                            entity.setCollision(true);
-                            index = i;
-                        }
-                    }
-                    case "right" -> {
-                        entity.getSolidArea().x += entity.getSpeed();
-                        if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
-                            entity.setCollision(true);
-                            index = i;
-                        }
+                    case "up" -> offsetY = -entity.getSpeed();
+                    case "down" -> offsetY = entity.getSpeed();
+                    case "left" -> offsetX = -entity.getSpeed();
+                    case "right" -> offsetX = entity.getSpeed();
+                }
+
+                entity.getSolidArea().x += offsetX;
+                entity.getSolidArea().y += offsetY;
+
+                if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
+                    // 自分自身との衝突ではないことを確認
+                    if (targets[i] != entity) {
+                        entity.setCollision(true);
+                        index = i;
                     }
                 }
+
                 resetSolidArea(entity);
                 resetSolidArea(targets[i]);
             }
@@ -118,44 +108,39 @@ public class CollisionChecker {
         return index;
     }
 
-    public void checkPlayer(Entity entity) {
+    public boolean checkPlayer(Entity entity) {
+
+        boolean contactPlayer = false;
 
         updateSolidArea(entity);
         updateSolidArea(gameWindow.getPlayer());
 
+        int offsetX = 0;
+        int offsetY = 0;
         switch (entity.getDirection()) {
-            case "up" -> {
-                entity.getSolidArea().y -= entity.getSpeed();
-                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
-                    entity.setCollision(true);
-                }
-            }
-            case "down" -> {
-                entity.getSolidArea().y += entity.getSpeed();
-                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
-                    entity.setCollision(true);
-                }
-            }
-            case "left" -> {
-                entity.getSolidArea().x -= entity.getSpeed();
-                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
-                    entity.setCollision(true);
-                }
-            }
-            case "right" -> {
-                entity.getSolidArea().x += entity.getSpeed();
-                if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
-                    entity.setCollision(true);
-                }
-            }
+            case "up" -> offsetY = -entity.getSpeed();
+            case "down" -> offsetY = entity.getSpeed();
+            case "left" -> offsetX = -entity.getSpeed();
+            case "right" -> offsetX = entity.getSpeed();
         }
+
+        entity.getSolidArea().x += offsetX;
+        entity.getSolidArea().y += offsetY;
+
+        if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
+            entity.setCollision(true);
+            contactPlayer = true;
+        }
+
         resetSolidArea(entity);
         resetSolidArea(gameWindow.getPlayer());
+
+        return contactPlayer;
     }
 
     private void updateSolidArea(@NotNull Entity entity) {
-        entity.getSolidArea().x = entity.getWorldX() + entity.getSolidAreaDefaultX();
-        entity.getSolidArea().y = entity.getWorldY() + entity.getSolidAreaDefaultY();
+        entity.getSolidArea().x = entity.getWorldX() + entity.getSolidArea().x;
+        entity.getSolidArea().y = entity.getWorldY() + entity.getSolidArea().y;
     }
 
     private void resetSolidArea(@NotNull Entity entity) {

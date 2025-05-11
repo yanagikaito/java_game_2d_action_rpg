@@ -25,6 +25,7 @@ public class MonGreenSlime extends Entity {
     public MonGreenSlime(GameWindow gameWindow) {
         super(gameWindow);
 
+        setType(2);
         setName("Green Slime");
         setSpeed(1);
         setMaxLife(4);
