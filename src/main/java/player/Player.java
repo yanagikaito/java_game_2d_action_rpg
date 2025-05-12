@@ -61,10 +61,14 @@ public class Player extends Entity {
 
     public void loadPlayerImages() {
         try {
+            int tileSize = FrameApp.getTileSize();
             for (int dir = 0; dir < DIRECTIONS.length; dir++) {
                 for (int i = 0; i < SPRITE_COUNT; i++) {
-                    sprites[dir][i] = ImageIO.read(getClass().getClassLoader()
-                            .getResourceAsStream("player/image-" + DIRECTIONS[dir] + "-" + (i + 1) + ".png"));
+                    BufferedImage original = ImageIO.read(
+                            getClass().getClassLoader()
+                                    .getResourceAsStream("player/image-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif"));
+                    BufferedImage processed = createImage(original, tileSize, tileSize);
+                    sprites[dir][i] = processed;
                 }
             }
         } catch (IOException e) {
@@ -166,12 +170,11 @@ public class Player extends Entity {
     }
 
     public void contactMonster(int i) {
-
         if (i != 999) {
-            if (getInvincible() == false) {
-                int life = getLife() - 1;
-                setLife(life);
+            if (!getInvincible()) {
+                setLife(getLife() - 1);
                 setInvincible(true);
+                System.out.println(i);
             }
         }
     }
@@ -183,12 +186,24 @@ public class Player extends Entity {
         if (dirIndex != -1) {
             image = sprites[dirIndex][getSpriteNum() - 1];
         }
+        if (getInvincible()) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+        }
         g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
 //        // デバッグ
 //        g2.setColor(Color.RED);
 //        g2.drawRect(screenX + getSolidArea().x, screenY + getSolidArea().y, getSolidArea().width, getSolidArea().height);
 
+    }
+
+    private BufferedImage createImage(BufferedImage original, int width, int height) {
+        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = result.createGraphics();
+        g2.drawImage(original, 0, 0, width, height, null);
+        g2.dispose();
+        return result;
     }
 
     public int getScreenX() {
