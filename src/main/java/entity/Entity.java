@@ -178,9 +178,8 @@ public class Entity {
         return sprites;
     }
 
-    public BufferedImage[][] setSprites(BufferedImage[][] sprites) {
+    public void setSprites(BufferedImage[][] sprites) {
         this.sprites = sprites;
-        return this.sprites;
     }
 
     public void setDirection(String direction) {
