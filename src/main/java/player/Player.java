@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class Player extends Entity {
 
-    private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private static final String[] DIRECTIONS = {"up" , "down" , "left" , "right"};
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
@@ -129,6 +129,7 @@ public class Player extends Entity {
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         contactMonster(monsterIndex);
+        System.out.println("モンスター衝突判定: " + monsterIndex);
     }
 
     private void updateAnimation() {
@@ -153,6 +154,7 @@ public class Player extends Entity {
             setInvincibleCounter(getInvincibleCounter() + 1);
             if (getInvincibleCounter() > 60) {
                 setInvincible(false);
+                System.out.println("無敵状態が解除されました。");
                 setInvincibleCounter(0);
             }
         }
@@ -174,7 +176,11 @@ public class Player extends Entity {
             if (!getInvincible()) {
                 setLife(getLife() - 1);
                 setInvincible(true);
+                System.out.println("モンスター衝突: " + i);
+                System.out.println("無敵状態: " + getInvincible());
                 System.out.println(i);
+                System.out.println("衝突時の無敵状態: " + getInvincible());
+                System.out.println("プレイヤーのHP: " + getLife());
             }
         }
     }
@@ -187,15 +193,13 @@ public class Player extends Entity {
             image = sprites[dirIndex][getSpriteNum() - 1];
         }
         if (getInvincible()) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         }
-        g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
-//        // デバッグ
-//        g2.setColor(Color.RED);
-//        g2.drawRect(screenX + getSolidArea().x, screenY + getSolidArea().y, getSolidArea().width, getSolidArea().height);
-
+        if (!getInvincible()) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+        }
     }
 
     private BufferedImage createImage(BufferedImage original, int width, int height) {

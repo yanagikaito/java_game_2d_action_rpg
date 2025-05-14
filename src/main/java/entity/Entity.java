@@ -27,7 +27,7 @@ public class Entity {
     private Rectangle solidArea;
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
-    private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private static final String[] DIRECTIONS = {"up" , "down" , "left" , "right"};
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -315,6 +315,7 @@ public class Entity {
         this.width = width;
         this.height = height;
         Graphics2D graphics2D = this.image.createGraphics();
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         graphics2D.drawImage(image, 0, 0, width, height, null);
         graphics2D.dispose();
     }
@@ -324,6 +325,7 @@ public class Entity {
         this.width = width;
         this.height = height;
         Graphics2D graphics2D = this.image2.createGraphics();
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         graphics2D.drawImage(image2, 0, 0, width, height, null);
         graphics2D.dispose();
     }
@@ -333,6 +335,8 @@ public class Entity {
         this.width = width;
         this.height = height;
         Graphics2D graphics2D = this.image3.createGraphics();
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        System.out.println("Composite状態: " + graphics2D.getComposite());
         graphics2D.drawImage(image3, 0, 0, width, height, null);
         graphics2D.dispose();
     }
