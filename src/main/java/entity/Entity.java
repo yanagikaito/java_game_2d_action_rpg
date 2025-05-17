@@ -17,7 +17,9 @@ public class Entity {
     private int height;
     private int speed;
     private String direction;
+    private String attackDirection;
     private BufferedImage[][] sprites;
+    private BufferedImage[][] attackSprites;
     private BufferedImage image;
     private BufferedImage image2;
     private BufferedImage image3;
@@ -27,7 +29,8 @@ public class Entity {
     private Rectangle solidArea;
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
-    private static final String[] DIRECTIONS = {"up" , "down" , "left" , "right"};
+    private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -46,6 +49,7 @@ public class Entity {
     private boolean invincible = false;
     private int invincibleCounter = 0;
     private int type;
+    private boolean attacking = false;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -53,6 +57,7 @@ public class Entity {
         this.worldY = 0;
         this.speed = 0;
         this.direction = "";
+        this.attackDirection = "";
         this.name = "";
         this.collision = false;
         this.spriteCounter = 0;
@@ -61,6 +66,7 @@ public class Entity {
         this.solidAreaDefaultX = 0;
         this.solidAreaDefaultY = 0;
         this.sprites = new BufferedImage[4][3];
+        this.attackSprites = new BufferedImage[4][3];
     }
 
     public void setAction() {
@@ -308,6 +314,26 @@ public class Entity {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public boolean getAttacking() {
+        return attacking;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
+    }
+
+    public String[] getAttackDirections() {
+        return ATTACK_DIRECTIONS;
+    }
+
+    public String getAttackDirection() {
+        return attackDirection;
+    }
+
+    public void setAttackDirection(String attackDirection) {
+        this.attackDirection = attackDirection;
     }
 
     public void setImage(BufferedImage image, int width, int height) {

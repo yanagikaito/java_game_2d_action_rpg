@@ -13,10 +13,13 @@ import java.util.Arrays;
 
 public class Player extends Entity {
 
-    private static final String[] DIRECTIONS = {"up" , "down" , "left" , "right"};
+    private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
+    private static final int SPRITE_ATTACKING_THRESHOLD = 5;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
+    private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
@@ -47,6 +50,7 @@ public class Player extends Entity {
 
         setDefaultValues();
         loadPlayerImages();
+        loadAttackPlayerImages();
     }
 
     public void setDefaultValues() {
@@ -76,9 +80,47 @@ public class Player extends Entity {
         }
     }
 
+    public void loadAttackPlayerImages() {
+        try {
+            int tileSize = FrameApp.getTileSize();
+            for (int dir = 0; dir < ATTACK_DIRECTIONS.length; dir++) {
+                for (int i = 0; i < SPRITE_COUNT; i++) {
+                    // リソースパスの生成
+                    String path = "player/image-" + ATTACK_DIRECTIONS[dir] + "-" + (i + 1) + ".gif";
+                    BufferedImage original = ImageIO.read(
+                            getClass().getClassLoader().getResourceAsStream(path));
+
+                    BufferedImage processed;
+                    // 攻撃方向ごとにサイズを切り替える
+                    switch (ATTACK_DIRECTIONS[dir]) {
+                        case "attackUp":
+                        case "attackDown":
+                            // 縦方向の攻撃は高さを2倍に
+                            processed = createImage(original, tileSize, tileSize * 2);
+                            break;
+                        case "attackLeft":
+                        case "attackRight":
+                            // 横方向の攻撃は幅を2倍に
+                            processed = createImage(original, tileSize * 2, tileSize);
+                            break;
+                        default:
+                            // 万一その他の方向の場合は通常サイズで作成
+                            processed = createImage(original, tileSize, tileSize);
+                            break;
+                    }
+                    attackSprites[dir][i] = processed;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void update() {
 
-        if (!moving) {
+        if (getAttacking()) {
+            playerAttacking();
+        } else if (!moving) {
             processInput();
         }
 
@@ -105,6 +147,7 @@ public class Player extends Entity {
             } else if (keyHandler.isPlayerLeft()) {
                 setDirection("left");
             }
+
             moving = true;
         }
     }
@@ -149,7 +192,6 @@ public class Player extends Entity {
     }
 
     private void updateInvincibility() {
-        // 無敵状態の更新
         if (getInvincible()) {
             setInvincibleCounter(getInvincibleCounter() + 1);
             if (getInvincibleCounter() > 60) {
@@ -160,15 +202,35 @@ public class Player extends Entity {
         }
     }
 
+    public void playerAttacking() {
+        setSpriteCounter(getSpriteCounter() + 1);
+
+        if (getSpriteCounter() > SPRITE_ATTACKING_THRESHOLD) {
+            setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
+            setSpriteCounter(0);
+        }
+
+        if (getSpriteNum() == SPRITE_COUNT) {
+            setAttacking(false);
+            setSpriteNum(1);
+        }
+    }
+
     public void interactNPC(int i) {
 
-        if (i != 999) {
-            if (gameWindow.getKeyHandler().isPlayerEnter() == true) {
+        var keyHandler = gameWindow.getKeyHandler();
+
+        if (keyHandler.isPlayerEnter()) {
+            if (i != 999) {
                 gameWindow.setGameState(gameWindow.getDialogueState());
                 gameWindow.getNPC()[i].speak();
+            } else {
+                setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
+                        + getDirection().substring(1));
+                setAttacking(true);
             }
         }
-        gameWindow.getKeyHandler().setPlayerEnter(false);
+        keyHandler.setPlayerEnter(false);
     }
 
     public void contactMonster(int i) {
@@ -187,18 +249,44 @@ public class Player extends Entity {
 
     @Override
     public void draw(Graphics2D g2) {
+
         BufferedImage image = null;
-        int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
-        if (dirIndex != -1) {
-            image = sprites[dirIndex][getSpriteNum() - 1];
-        }
-        if (getInvincible()) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        int tempScreenX = screenX;
+        int tempScreenY = screenY;
+
+        if (!getAttacking()) {
+            int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
+            if (dirIndex != -1) {
+                image = sprites[dirIndex][getSpriteNum() - 1];
+            }
+        } else {
+            int attackDirIndex = Arrays.asList(ATTACK_DIRECTIONS).indexOf(getAttackDirection());
+            System.out.println("attackDirIndex:" + attackDirIndex);
+            if (attackDirIndex != -1) {
+                image = attackSprites[attackDirIndex][getSpriteNum() - 1];
+                System.out.println("image:" + image);
+            }
         }
 
-        if (!getInvincible()) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        if (getInvincible()) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+        }
+        if (!getAttacking()) {
+            g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+        } else {
+            if (getAttackDirection().equals("attackUp")) {
+                tempScreenY = screenY - FrameApp.getTileSize();
+                g2.drawImage(image, screenX, tempScreenY, FrameApp.getTileSize(), FrameApp.getTileSize() * 2, null);
+            } else if (getAttackDirection().equals("attackDown")) {
+                g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize() * 2, null);
+            } else if (getAttackDirection().equals("attackLeft")) {
+                tempScreenX = screenX - FrameApp.getTileSize();
+                g2.drawImage(image, tempScreenX, screenY, FrameApp.getTileSize() * 2, FrameApp.getTileSize(), null);
+            } else if (getAttackDirection().equals("attackRight")) {
+                g2.drawImage(image, screenX, screenY, FrameApp.getTileSize() * 2, FrameApp.getTileSize(), null);
+            }
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }
     }
 

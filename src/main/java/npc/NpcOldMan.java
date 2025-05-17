@@ -1,17 +1,19 @@
 package npc;
 
 import entity.Entity;
+import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 
 public class NpcOldMan extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private static final int SPRITE_COUNT = 3;
     private static final int ACTION_LOCK_THRESHOLD = 120;
     private static final int MAX_RANDOM_VALUE = 100;
@@ -31,14 +33,16 @@ public class NpcOldMan extends Entity {
 
     public void loadNPCImages() {
 
+        setSprites(sprites);
         try {
-
-            setSprites(new BufferedImage[DIRECTIONS.length][SPRITE_COUNT]);
+            int tileSize = FrameApp.getTileSize();
             for (int dir = 0; dir < DIRECTIONS.length; dir++) {
                 for (int i = 0; i < SPRITE_COUNT; i++) {
-                    String path = "npc/oldman-" + DIRECTIONS[dir] + "-" + (i + 1) + ".png";
-                    InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-                    getSprites()[dir][i] = ImageIO.read(is);
+                    BufferedImage original = ImageIO.read(
+                            getClass().getClassLoader()
+                                    .getResourceAsStream("npc/oldman-" + DIRECTIONS[dir] + "-" + (i + 1) + ".png"));
+                    BufferedImage processed = createImage(original, tileSize, tileSize);
+                    sprites[dir][i] = processed;
                 }
             }
         } catch (IOException e) {
@@ -96,5 +100,13 @@ public class NpcOldMan extends Entity {
             case "left" -> setDirection("right");
             case "right" -> setDirection("left");
         }
+    }
+
+    private BufferedImage createImage(BufferedImage original, int width, int height) {
+        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = result.createGraphics();
+        g2.drawImage(original, 0, 0, width, height, null);
+        g2.dispose();
+        return result;
     }
 }
