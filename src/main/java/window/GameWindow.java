@@ -150,9 +150,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         for (Entity entity : entityList) {
             entity.draw(g2);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }
 
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        entityList.clear();
 
         ui.draw(g2);
 
