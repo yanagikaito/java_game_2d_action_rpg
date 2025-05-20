@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 
 public class MonGreenSlime extends Entity {
@@ -24,8 +23,6 @@ public class MonGreenSlime extends Entity {
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private Random random = new Random();
     private int actionLockCounter = 0;
-    private boolean invincible = false;
-    private int invincibleCounter = 0;
 
     public MonGreenSlime(GameWindow gameWindow) {
         super(gameWindow);
@@ -74,6 +71,8 @@ public class MonGreenSlime extends Entity {
 
     public void setAction() {
 
+        updateMonsterInvincibility();
+
         actionLockCounter++;
 
         if (actionLockCounter >= ACTION_LOCK_THRESHOLD) {
@@ -88,6 +87,20 @@ public class MonGreenSlime extends Entity {
                 setDirection("right");
             }
             actionLockCounter = 0;
+        }
+    }
+
+    private void updateMonsterInvincibility() {
+        if (getInvincible()) {
+            setInvincibleCounter(getInvincibleCounter() + 1);
+            System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
+            if (getInvincibleCounter() > 40) {
+                System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
+                setInvincible(false);
+                System.out.println("スライムの無敵状態が解除されました。");
+                System.out.println("getInvincible() :" + getInvincible());
+                setInvincibleCounter(0);
+            }
         }
     }
 }

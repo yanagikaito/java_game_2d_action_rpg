@@ -233,8 +233,6 @@ public class Player extends Entity {
         setSpriteCounter(0);
         setAttacking(false);
         setSpriteNum(1);
-
-        updateMonsterInvincibility();
     }
 
     public void interactNPC(int i) {
@@ -279,20 +277,6 @@ public class Player extends Entity {
                 if (gameWindow.getMonster()[i].getLife() <= 0) {
                     gameWindow.getMonster()[i] = null;
                 }
-            }
-        }
-    }
-
-    private void updateMonsterInvincibility() {
-        if (getInvincible()) {
-            setInvincibleCounter(getInvincibleCounter() + 1);
-            System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
-            if (getInvincibleCounter() > 40) {
-                System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
-                setInvincible(false);
-                System.out.println("スライムの無敵状態が解除されました。");
-                System.out.println("getInvincible() :" + getInvincible());
-                setInvincibleCounter(0);
             }
         }
     }
