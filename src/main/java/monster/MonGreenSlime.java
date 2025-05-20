@@ -1,12 +1,15 @@
 package monster;
 
 import entity.Entity;
+import frame.FrameApp;
+import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Random;
 
 public class MonGreenSlime extends Entity {
@@ -21,6 +24,8 @@ public class MonGreenSlime extends Entity {
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private Random random = new Random();
     private int actionLockCounter = 0;
+    private boolean invincible = false;
+    private int invincibleCounter = 0;
 
     public MonGreenSlime(GameWindow gameWindow) {
         super(gameWindow);
@@ -43,17 +48,28 @@ public class MonGreenSlime extends Entity {
 
     public void loadMonsterImages() {
         try {
+            int tileSize = FrameApp.getTileSize();
             setSprites(new BufferedImage[DIRECTIONS.length][SPRITE_COUNT]);
             for (int dir = 0; dir < DIRECTIONS.length; dir++) {
                 for (int i = 0; i < SPRITE_COUNT; i++) {
-                    String path = "monster/greenSlime-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif";
-                    InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-                    getSprites()[dir][i] = ImageIO.read(is);
+                    BufferedImage original = ImageIO.read(
+                            getClass().getClassLoader()
+                                    .getResourceAsStream("monster/greenSlime-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif"));
+                    BufferedImage processed = createImage(original, tileSize, tileSize);
+                    getSprites()[dir][i] = processed;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private @NotNull BufferedImage createImage(BufferedImage original, int width, int height) {
+        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = result.createGraphics();
+        g2.drawImage(original, 0, 0, width, height, null);
+        g2.dispose();
+        return result;
     }
 
     public void setAction() {

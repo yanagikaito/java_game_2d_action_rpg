@@ -27,6 +27,7 @@ public class Entity {
     private int spriteCounter;
     private int spriteNum;
     private Rectangle solidArea;
+    private Rectangle attackArea;
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
@@ -63,6 +64,7 @@ public class Entity {
         this.spriteCounter = 0;
         this.spriteNum = 1;
         this.solidArea = new Rectangle(0, 0, FrameApp.getTileSize(), FrameApp.getTileSize());
+        this.attackArea = new Rectangle(0, 0, 0, 0);
         this.solidAreaDefaultX = 0;
         this.solidAreaDefaultY = 0;
         this.sprites = new BufferedImage[4][3];
@@ -336,6 +338,14 @@ public class Entity {
         this.attackDirection = attackDirection;
     }
 
+    public Rectangle getAttackArea() {
+        return attackArea;
+    }
+
+    public void setAttackArea(Rectangle attackArea) {
+        this.attackArea = attackArea;
+    }
+
     public void setImage(BufferedImage image, int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
@@ -384,8 +394,15 @@ public class Entity {
                 worldY > gameWindow.getPlayer().getWorldY() - gameWindow.getPlayer().getScreenY() &&
                 worldY < gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY()) {
 
-            g2.drawImage(image, screenX, screenY,
-                    FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+            if (getInvincible()) {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            } else {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            }
+
+            g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+            
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
     }
 }
