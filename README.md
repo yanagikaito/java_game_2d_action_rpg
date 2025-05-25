@@ -6,3 +6,6 @@ SwingでインターフェースやjavaのデザインパターンのFactory Met
 
 # 参考
 https://refactoring.guru/ja/design-patterns/factory-method/java/example
+
+# BGM：魔王魂
+# 効果音：魔王魂
