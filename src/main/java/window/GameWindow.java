@@ -7,6 +7,7 @@ import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
 import key.KeyHandler;
+import sound.SoundManager;
 import tile.TileManager;
 import ui.UI;
 
@@ -14,7 +15,6 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 import static frame.FrameApp.baseDisplay;
@@ -27,6 +27,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private TileManager tileManager = new TileManager(this);
     private CollisionChecker collisionChecker = new CollisionChecker(this);
     private AssetSetter assetSetter = new AssetSetter(this);
+    private SoundManager soundManager = new SoundManager(this);
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
     private UI ui = new UI(this);
@@ -115,9 +116,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     entity.update();
                 }
             }
-            for (Entity entity : monster) {
-                if (entity != null) {
-                    entity.update();
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    if (monster[i].getAlive() && !monster[i].getDying()) {
+                        monster[i].update();
+                    }
+                    if (!monster[i].getAlive()) {
+                        monster[i] = null;
+                    }
                 }
             }
             if (gameState == pauseState) {
@@ -214,5 +220,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public UI getUi() {
         return ui;
+    }
+
+    public SoundManager getSoundmanager() {
+        return soundManager;
     }
 }

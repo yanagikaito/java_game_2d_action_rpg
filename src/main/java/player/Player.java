@@ -247,6 +247,7 @@ public class Player extends Entity {
                 setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
                         + getDirection().substring(1));
                 setAttacking(true);
+                gameWindow.getSoundmanager().defeatedWAV("res/sound/thrust-sound.wav");
             }
         }
         keyHandler.setPlayerEnter(false);
@@ -255,6 +256,7 @@ public class Player extends Entity {
     public void contactMonster(int i) {
         if (i != 999) {
             if (!getInvincible()) {
+                gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
                 setLife(getLife() - 1);
                 setInvincible(true);
 //                System.out.println("モンスター衝突: " + i);
@@ -270,12 +272,14 @@ public class Player extends Entity {
 
         if (i != 999) {
             if (!gameWindow.getMonster()[i].getInvincible()) {
+                gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
                 gameWindow.getMonster()[i].setLife(gameWindow.getMonster()[i].getLife() - 1);
                 gameWindow.getMonster()[i].setInvincible(true);
                 System.out.println("スライムのHP:" + gameWindow.getMonster()[i].getLife());
 
                 if (gameWindow.getMonster()[i].getLife() <= 0) {
-                    gameWindow.getMonster()[i] = null;
+                    gameWindow.getMonster()[i].setDying(true);
+                    gameWindow.getSoundmanager().defeatedWAV("res/sound/defeated-sound.wav");
                 }
             }
         }

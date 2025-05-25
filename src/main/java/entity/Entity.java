@@ -1,6 +1,7 @@
 package entity;
 
 import frame.FrameApp;
+import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.*;
@@ -35,6 +36,7 @@ public class Entity {
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
+    private static final int SPRITE_DYING_COUNT = 5;
     private static final int MAX_RANDOM_VALUE = 100;
     private static final int THRESHOLD_UP = 25;
     private static final int THRESHOLD_DOWN = 50;
@@ -51,6 +53,9 @@ public class Entity {
     private int invincibleCounter = 0;
     private int type;
     private boolean attacking = false;
+    private boolean alive = true;
+    private boolean dying = false;
+    private int dyingCounter = 0;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -88,6 +93,7 @@ public class Entity {
 
         if (this.type == 2 && contactPlayer == true) {
             if (gameWindow.getPlayer().getInvincible() == false) {
+                gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
                 gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - 1);
                 gameWindow.getPlayer().setInvincible(true);
             }
@@ -346,6 +352,22 @@ public class Entity {
         this.attackArea = attackArea;
     }
 
+    public boolean getDying() {
+        return dying;
+    }
+
+    public void setDying(boolean dying) {
+        this.dying = dying;
+    }
+
+    public boolean getAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
     public void setImage(BufferedImage image, int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
@@ -394,15 +416,62 @@ public class Entity {
                 worldY > gameWindow.getPlayer().getWorldY() - gameWindow.getPlayer().getScreenY() &&
                 worldY < gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY()) {
 
+            if (type == 2) {
+
+                double oneScale = (double) FrameApp.getTileSize() / maxLife;
+                double hpBarValue = oneScale * life;
+
+                g2.setColor(new Color(35, 35, 35));
+                g2.fillRect(screenX + 4, screenY - 21, FrameApp.getTileSize(), 12);
+
+                g2.setColor(new Color(255, 0, 30));
+                g2.fillRect(screenX + 5, screenY - 20, (int) hpBarValue, 10);
+            }
+
             if (getInvincible()) {
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
             } else {
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            }
+
+            if (getDying()) {
+                dyingAnimation(g2);
             }
 
             g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
 
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
+    }
+
+    public void dyingAnimation(Graphics2D g2) {
+        dyingCounter++;
+
+        if (dyingCounter <= SPRITE_DYING_COUNT) {
+            changeAlpha(g2, 0f);
+        } else if (dyingCounter <= SPRITE_DYING_COUNT * 2) {
+            changeAlpha(g2, 1f);
+        } else if (dyingCounter <= SPRITE_DYING_COUNT * 3) {
+            changeAlpha(g2, 0f);
+        } else if (dyingCounter <= SPRITE_DYING_COUNT * 4) {
+            changeAlpha(g2, 1f);
+        } else if (dyingCounter <= SPRITE_DYING_COUNT * 5) {
+            changeAlpha(g2, 0f);
+        } else if (dyingCounter <= SPRITE_DYING_COUNT * 6) {
+            changeAlpha(g2, 1f);
+        } else if (dyingCounter <= SPRITE_DYING_COUNT * 7) {
+            changeAlpha(g2, 0f);
+        } else if (dyingCounter <= SPRITE_DYING_COUNT * 8) {
+            changeAlpha(g2, 1f);
+        } else {
+            dying = false;
+            alive = false;
+        }
+    }
+
+    public void changeAlpha(@NotNull Graphics2D g2, float alphaValue) {
+
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
+
     }
 }
