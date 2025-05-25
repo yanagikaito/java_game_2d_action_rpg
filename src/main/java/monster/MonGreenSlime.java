@@ -90,6 +90,12 @@ public class MonGreenSlime extends Entity {
         }
     }
 
+    public void damageReaction() {
+
+        actionLockCounter = 0;
+        setDirection(getGameWindow().getPlayer().getDirection());
+    }
+
     private void updateMonsterInvincibility() {
         if (getInvincible()) {
             setInvincibleCounter(getInvincibleCounter() + 1);
