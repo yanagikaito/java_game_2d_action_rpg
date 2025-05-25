@@ -275,6 +275,7 @@ public class Player extends Entity {
                 gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
                 gameWindow.getMonster()[i].setLife(gameWindow.getMonster()[i].getLife() - 1);
                 gameWindow.getMonster()[i].setInvincible(true);
+                gameWindow.getMonster()[i].damageReaction();
                 System.out.println("スライムのHP:" + gameWindow.getMonster()[i].getLife());
 
                 if (gameWindow.getMonster()[i].getLife() <= 0) {
