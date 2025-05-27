@@ -214,13 +214,14 @@ public class Player extends Entity {
 
         switch (getDirection()) {
             case "up" -> setWorldY(getWorldY() - getAttackArea().height);
-            case "down" -> setWorldY(getWorldY() + getAttackArea().height);
+            case "down" -> setWorldY(getWorldY() + FrameApp.getTileSize());
             case "left" -> setWorldX(getWorldX() - getAttackArea().width);
-            case "right" -> setWorldX(getWorldX() + getAttackArea().width);
+            case "right" -> setWorldX(getWorldX() + FrameApp.getTileSize());
         }
 
-        getSolidArea().width = getAttackArea().width;
-        getSolidArea().height = getAttackArea().height;
+        // 下と右は次のタイルをチェックしている
+        getSolidArea().width = FrameApp.getTileSize();
+        getSolidArea().height = FrameApp.getTileSize();
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         damageMonster(monsterIndex);
@@ -232,7 +233,7 @@ public class Player extends Entity {
 
         setSpriteCounter(0);
         setAttacking(false);
-        setSpriteNum(1);
+        setSpriteNum(3);
     }
 
     public void interactNPC(int i) {
