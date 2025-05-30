@@ -58,6 +58,18 @@ public class Entity {
     private boolean hpBarOn = false;
     private int dyingCounter = 0;
     private int hpBarCounter = 0;
+    private int level;
+    private int strength;
+    private int dexterity;
+    private int attack;
+    private int defense;
+    private int exp;
+    private int nextLevelExp;
+    private int coin;
+    private Entity currentWeapon;
+    private Entity currentShield;
+    private int attackValue;
+    private int defenseValue;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -76,6 +88,16 @@ public class Entity {
         this.solidAreaDefaultY = 0;
         this.sprites = new BufferedImage[4][3];
         this.attackSprites = new BufferedImage[4][3];
+        this.attackValue = 0;
+        this.defenseValue = 0;
+        this.level = 0;
+        this.strength = 0;
+        this.dexterity = 0;
+        this.attack = 0;
+        this.defense = 0;
+        this.exp = 0;
+        this.nextLevelExp = 0;
+        this.coin = 0;
     }
 
     public void setAction() {
@@ -371,6 +393,102 @@ public class Entity {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public int getAttackValue() {
+        return attackValue;
+    }
+
+    public void setAttackValue(int attackValue) {
+        this.attackValue = attackValue;
+    }
+
+    public int getDefenseValue() {
+        return defenseValue;
+    }
+
+    public void setDefenseValue(int defenseValue) {
+        this.defenseValue = defenseValue;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public int getDexterity() {
+        return dexterity;
+    }
+
+    public void setDexterity(int dexterity) {
+        this.dexterity = dexterity;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public int setAttack(int attack) {
+        return this.attack = attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public int setDefense(int defense) {
+        return this.defense = defense;
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    public int getNextLevelExp() {
+        return nextLevelExp;
+    }
+
+    public void setNextLevelExp(int nextLevelExp) {
+        this.nextLevelExp = nextLevelExp;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
+    }
+
+    public Entity getCurrentWeapon() {
+        return currentWeapon;
+    }
+
+    public void setCurrentWeapon(Entity currentWeapon) {
+        this.currentWeapon = currentWeapon;
+    }
+
+    public Entity getCurrentShield() {
+        return currentShield;
+    }
+
+    public void setCurrentShield(Entity currentShield) {
+        this.currentShield = currentShield;
     }
 
     public void setImage(BufferedImage image, int width, int height) {
