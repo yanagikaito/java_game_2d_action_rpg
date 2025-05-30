@@ -38,6 +38,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int playState = 1;
     private final int pauseState = 2;
     private final int dialogueState = 3;
+    private final int characterState = 4;
 
     protected GameWindow() {
         this.setBackground(Color.BLACK);
@@ -224,5 +225,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public SoundManager getSoundmanager() {
         return soundManager;
+    }
+
+    public int getCharacterState() {
+        return characterState;
+    }
+
+    public void setCharacterState(int characterState) {
+        this.gameState = characterState;
     }
 }

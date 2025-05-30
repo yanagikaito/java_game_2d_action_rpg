@@ -3,6 +3,8 @@ package player;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
+import object.ObjShieldWood;
+import object.ObjSwordNormal;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -65,8 +67,28 @@ public class Player extends Entity {
         setSpeed(4);
         setDirection("down");
 
+        setLevel(1);
         setMaxLife(6);
         setLife(getMaxLife());
+        setStrength(1);
+        setDexterity(1);
+        setExp(0);
+        setNextLevelExp(5);
+        setCoin(0);
+        setCurrentWeapon(new ObjSwordNormal(gameWindow));
+        setCurrentShield(new ObjShieldWood(gameWindow));
+        setAttack(getAttack());
+        setDefense(getDefense());
+    }
+
+    @Override
+    public int getAttack() {
+        return setAttack(getStrength() * getCurrentWeapon().getAttackValue());
+    }
+
+    @Override
+    public int getDefense() {
+        return setDefense(getDexterity() * getCurrentShield().getDefenseValue());
     }
 
     public void loadPlayerImages() {
