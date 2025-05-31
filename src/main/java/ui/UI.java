@@ -8,6 +8,7 @@ import window.GameWindow;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class UI {
 
@@ -20,6 +21,8 @@ public class UI {
     // メッセージ表示用
     private boolean messageOn;
     private String currentDialogueMessage;
+    private ArrayList<String> message = new ArrayList<>();
+    private ArrayList<Integer> messageCounter = new ArrayList<>();
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -38,6 +41,11 @@ public class UI {
         heartBlank = heart.getImage3();
     }
 
+    public void addMessage(String text) {
+        message.add(text);
+        messageCounter.add(0);
+    }
+
     public void draw(@NotNull Graphics2D g2) {
 
         g2.setFont(arial40);
@@ -47,6 +55,7 @@ public class UI {
 
         if (gameState == gameWindow.getPlayState()) {
             drawPlayerLife(g2);
+            drawBattleLogMessage(g2);
         } else if (gameState == gameWindow.getPauseState()) {
             drawPlayerLife(g2);
             drawPauseScreen(g2);
@@ -205,6 +214,35 @@ public class UI {
         textY += tileSize;
 
         g2.drawImage(gameWindow.getPlayer().getCurrentShield().getImage(), tailX - tileSize, textY - 10, null);
+    }
+
+    public void drawBattleLogMessage(@NotNull Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+        int messageX = tileSize;
+        int messageY = tileSize * 4;
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
+
+        for (int i = 0; i < message.size(); i++) {
+
+            if (message.get(i) != null) {
+
+                g2.setColor(Color.BLACK);
+                g2.drawString(message.get(i), messageX + 2, messageY + 2);
+
+                g2.setColor(Color.white);
+                g2.drawString(message.get(i), messageX, messageY);
+
+                int counter = messageCounter.get(i) + 1;
+                messageCounter.set(i, counter);
+                messageY += 50;
+
+                if (messageCounter.get(i) > 180) {
+                    message.remove(i);
+                    messageCounter.remove(i);
+                }
+            }
+        }
     }
 
     private void drawSubWindow(@NotNull Graphics2D g2, int x, int y, int width, int height) {

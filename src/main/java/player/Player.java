@@ -217,42 +217,51 @@ public class Player extends Entity {
     }
 
     public void playerAttacking() {
+        // スプライトカウンターを更新し、現在のカウンター値をローカル変数に格納
+        int counter = getSpriteCounter() + 1;
+        setSpriteCounter(counter);
 
-        setSpriteCounter(getSpriteCounter() + 1);
-
-        if (getSpriteCounter() < 5) {
+        // カウンターの値に応じてアニメーションのフレームを切り替える
+        if (counter <= 10) {
             setSpriteNum(1);
-        }
-        if (getSpriteCounter() > 5 && getSpriteCounter() <= 25) {
+        } else if (counter <= 30) {
             setSpriteNum(2);
-        }
-        if (getSpriteCounter() > 25) {
+        } else {
             setSpriteNum(3);
         }
-        int currentWorldX = getWorldX();
-        int currentWorldY = getWorldY();
-        int solidAreaWidth = getSolidArea().width;
-        int solidAreaHeight = getSolidArea().height;
 
+        // 現在のワールド座標と衝突領域のサイズを保存する
+        final int originalWorldX = getWorldX();
+        final int originalWorldY = getWorldY();
+        final int originalSolidWidth = getSolidArea().width;
+        final int originalSolidHeight = getSolidArea().height;
+
+        // 攻撃方向に応じ、ワールド座標を一時的に変更する
         switch (getDirection()) {
             case "up" -> setWorldY(getWorldY() - getAttackArea().height);
             case "down" -> setWorldY(getWorldY() + FrameApp.getTileSize());
             case "left" -> setWorldX(getWorldX() - getAttackArea().width);
             case "right" -> setWorldX(getWorldX() + FrameApp.getTileSize());
+            default -> {
+                // 必要に応じて、未対応の方向への対応を検討
+            }
         }
 
-        // 下と右は次のタイルをチェックしている
+        // 衝突判定用の領域をタイルサイズに調整する
         getSolidArea().width = FrameApp.getTileSize();
         getSolidArea().height = FrameApp.getTileSize();
 
+        // 攻撃範囲内にいるモンスターをチェックし、ダメージ処理を実行
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         damageMonster(monsterIndex);
 
-        setWorldX(currentWorldX);
-        setWorldY(currentWorldY);
-        getSolidArea().width = solidAreaWidth;
-        getSolidArea().height = solidAreaHeight;
+        // ワールド座標と衝突領域のサイズを元に戻す
+        setWorldX(originalWorldX);
+        setWorldY(originalWorldY);
+        getSolidArea().width = originalSolidWidth;
+        getSolidArea().height = originalSolidHeight;
 
+        // 攻撃状態とアニメーションをリセットする
         setSpriteCounter(0);
         setAttacking(false);
         setSpriteNum(3);
@@ -280,7 +289,14 @@ public class Player extends Entity {
         if (i != 999) {
             if (!getInvincible()) {
                 gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
-                setLife(getLife() - 1);
+
+                // スライムのダメージ量
+                int damage = setAttack(gameWindow.getMonster()[i].getAttack() - getDefense());
+                if (damage < 0) {
+                    damage = 0;
+                }
+
+                setLife(getLife() - damage);
                 setInvincible(true);
 //                System.out.println("モンスター衝突: " + i);
 //                System.out.println("無敵状態: " + getInvincible());
@@ -296,16 +312,45 @@ public class Player extends Entity {
         if (i != 999) {
             if (!gameWindow.getMonster()[i].getInvincible()) {
                 gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
-                gameWindow.getMonster()[i].setLife(gameWindow.getMonster()[i].getLife() - 1);
+
+                // プレイヤーのダメージ量
+                int damage = setAttack(getAttack() - gameWindow.getMonster()[i].getDefense());
+                if (damage < 0) {
+                    damage = 0;
+                }
+                gameWindow.getMonster()[i].setLife(gameWindow.getMonster()[i].getLife() - damage);
+                gameWindow.getUi().addMessage(damage + "ダメージ!");
                 gameWindow.getMonster()[i].setInvincible(true);
                 gameWindow.getMonster()[i].damageReaction();
                 System.out.println("スライムのHP:" + gameWindow.getMonster()[i].getLife());
 
                 if (gameWindow.getMonster()[i].getLife() <= 0) {
                     gameWindow.getMonster()[i].setDying(true);
+                    gameWindow.getUi().addMessage(gameWindow.getMonster()[i].getName() + "を倒した!");
+                    setExp(gameWindow.getMonster()[i].getExp());
+                    gameWindow.getUi().addMessage("経験値" + gameWindow.getMonster()[i].getExp() + " 入手!");
+                    checkLevelUp();
                     gameWindow.getSoundmanager().defeatedWAV("res/sound/defeated-sound.wav");
                 }
             }
+        }
+    }
+
+    public void checkLevelUp() {
+
+        if (getExp() >= getNextLevelExp()) {
+
+            setLevel(getLevel() + 1);
+            setNextLevelExp(getNextLevelExp() * 2);
+            setMaxLife(getMaxLife() + 2);
+            setStrength(getStrength() + 1);
+            setDexterity(getDexterity() + 1);
+            setAttack(getAttack());
+            setDefense(getDefense());
+            gameWindow.getSoundmanager().levelWAV("res/sound/level-up-sound.wav");
+            gameWindow.setGameState(gameWindow.getDialogueState());
+            gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");
+            gameWindow.getPlayer().setLife(gameWindow.getPlayer().getMaxLife());
         }
     }
 
@@ -350,18 +395,18 @@ public class Player extends Entity {
             }
 
             // デバッグ
-            tempScreenX = screenX + getSolidArea().x;
-            tempScreenY = screenY + getSolidArea().y;
-            switch (getDirection()) {
-                case "up" -> tempScreenY = screenY - getAttackArea().height;
-                case "down" -> tempScreenY = screenY + FrameApp.getTileSize();
-                case "left" -> tempScreenX = screenX - getAttackArea().width;
-                case "right" -> tempScreenX = screenX + FrameApp.getTileSize();
-            }
-            g2.setColor(Color.RED);
-            g2.setStroke(new BasicStroke(1));
-            g2.drawRect(tempScreenX, tempScreenY, getAttackArea().width, getAttackArea().height);
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+//            tempScreenX = screenX + getSolidArea().x;
+//            tempScreenY = screenY + getSolidArea().y;
+//            switch (getDirection()) {
+//                case "up" -> tempScreenY = screenY - getAttackArea().height;
+//                case "down" -> tempScreenY = screenY + FrameApp.getTileSize();
+//                case "left" -> tempScreenX = screenX - getAttackArea().width;
+//                case "right" -> tempScreenX = screenX + FrameApp.getTileSize();
+//            }
+//            g2.setColor(Color.RED);
+//            g2.setStroke(new BasicStroke(1));
+//            g2.drawRect(tempScreenX, tempScreenY, getAttackArea().width, getAttackArea().height);
+//            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }
     }
 

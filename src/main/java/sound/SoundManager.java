@@ -26,6 +26,10 @@ public class SoundManager {
         playWAV(filePath);
     }
 
+    public void levelWAV(String filePath) {
+        playWAV(filePath);
+    }
+
     private void playWAV(String filePath) {
 
         try {
