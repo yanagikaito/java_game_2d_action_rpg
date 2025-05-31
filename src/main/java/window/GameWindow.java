@@ -234,4 +234,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void setCharacterState(int characterState) {
         this.gameState = characterState;
     }
+
+    public AssetSetter getAssetSetter() {
+        return assetSetter;
+    }
+
+    public void setAssetSetter(AssetSetter assetSetter) {
+        this.assetSetter = assetSetter;
+    }
 }

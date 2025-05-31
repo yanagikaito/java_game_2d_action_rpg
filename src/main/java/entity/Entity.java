@@ -121,7 +121,13 @@ public class Entity {
         if (this.type == 2 && contactPlayer == true) {
             if (gameWindow.getPlayer().getInvincible() == false) {
                 gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
-                gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - 1);
+
+                int damage = setAttack(getAttack() - gameWindow.getPlayer().getDefense());
+                if (damage < 0) {
+                    damage = 0;
+                }
+
+                gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - damage);
                 gameWindow.getPlayer().setInvincible(true);
             }
         }

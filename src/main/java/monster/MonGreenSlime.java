@@ -32,6 +32,9 @@ public class MonGreenSlime extends Entity {
         setSpeed(1);
         setMaxLife(4);
         setLife(getMaxLife());
+        setAttack(5);
+        setDefense(0);
+        setExp(5);
 
         getSolidArea().x = 1;
         getSolidArea().y = 1;
