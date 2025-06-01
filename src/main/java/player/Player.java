@@ -18,10 +18,11 @@ public class Player extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
-    private static final int ATTACK_HOLD_DELAY = 10;
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
-    private static final int SPRITE_ATTACKING_THRESHOLD = 5;
+    private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 5;
+    private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 15;
+    private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 25;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
 
@@ -217,54 +218,50 @@ public class Player extends Entity {
     }
 
     public void playerAttacking() {
-        // スプライトカウンターを更新し、現在のカウンター値をローカル変数に格納
+
         int counter = getSpriteCounter() + 1;
         setSpriteCounter(counter);
 
-        // カウンターの値に応じてアニメーションのフレームを切り替える
-        if (counter <= 10) {
+        if (counter <= SPRITE_ATTACKING_THRESHOLD_NUM1) {
             setSpriteNum(1);
-        } else if (counter <= 30) {
+//            System.out.println("counter:" + counter + " num:" + getSpriteNum());
+        } else if (counter <= SPRITE_ATTACKING_THRESHOLD_NUM2) {
             setSpriteNum(2);
-        } else {
+//            System.out.println("counter:" + counter + " num:" + getSpriteNum());
+        } else if (counter <= SPRITE_ATTACKING_THRESHOLD_NUM3) {
             setSpriteNum(3);
+//            System.out.println("counter:" + counter + " num:" + getSpriteNum());
+        } else {
+            setSpriteCounter(0);
+            setAttacking(false);
+            setSpriteNum(1);
+            return;
         }
 
-        // 現在のワールド座標と衝突領域のサイズを保存する
         final int originalWorldX = getWorldX();
         final int originalWorldY = getWorldY();
         final int originalSolidWidth = getSolidArea().width;
         final int originalSolidHeight = getSolidArea().height;
 
-        // 攻撃方向に応じ、ワールド座標を一時的に変更する
         switch (getDirection()) {
             case "up" -> setWorldY(getWorldY() - getAttackArea().height);
             case "down" -> setWorldY(getWorldY() + FrameApp.getTileSize());
             case "left" -> setWorldX(getWorldX() - getAttackArea().width);
             case "right" -> setWorldX(getWorldX() + FrameApp.getTileSize());
             default -> {
-                // 必要に応じて、未対応の方向への対応を検討
             }
         }
 
-        // 衝突判定用の領域をタイルサイズに調整する
         getSolidArea().width = FrameApp.getTileSize();
         getSolidArea().height = FrameApp.getTileSize();
 
-        // 攻撃範囲内にいるモンスターをチェックし、ダメージ処理を実行
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         damageMonster(monsterIndex);
 
-        // ワールド座標と衝突領域のサイズを元に戻す
         setWorldX(originalWorldX);
         setWorldY(originalWorldY);
         getSolidArea().width = originalSolidWidth;
         getSolidArea().height = originalSolidHeight;
-
-        // 攻撃状態とアニメーションをリセットする
-        setSpriteCounter(0);
-        setAttacking(false);
-        setSpriteNum(3);
     }
 
     public void interactNPC(int i) {
@@ -365,10 +362,11 @@ public class Player extends Entity {
             int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
             if (dirIndex != -1) {
                 image = sprites[dirIndex][getSpriteNum() - 1];
+//                System.out.println("dirIndex:" + dirIndex);
             }
         } else {
             int attackDirIndex = Arrays.asList(ATTACK_DIRECTIONS).indexOf(getAttackDirection());
-//            System.out.println("attackDirIndex:" + attackDirIndex);
+            System.out.println("attackDirIndex:" + attackDirIndex);
             if (attackDirIndex != -1) {
                 image = attackSprites[attackDirIndex][getSpriteNum() - 1];
 //                System.out.println("image:" + image);
