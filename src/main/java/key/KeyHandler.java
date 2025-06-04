@@ -15,6 +15,7 @@ public class KeyHandler implements KeyListener {
     private boolean playerRight;
     private boolean playerEnter;
     private boolean playerStatus;
+    private boolean showDebugText;
 
     public KeyHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -40,8 +41,8 @@ public class KeyHandler implements KeyListener {
         return playerEnter;
     }
 
-    public boolean isPlayerStatus() {
-        return playerStatus;
+    public boolean isShowDebugText() {
+        return showDebugText;
     }
 
     public void setPlayerUp(boolean playerUp) {
@@ -64,10 +65,6 @@ public class KeyHandler implements KeyListener {
         this.playerEnter = playerEnter;
     }
 
-    public void setPlayerStatus(boolean playerStatus) {
-        this.playerStatus = playerStatus;
-    }
-
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -85,6 +82,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_D -> setPlayerRight(true);
             case KeyEvent.VK_P -> togglePause();
             case KeyEvent.VK_C -> characterStatus(true);
+            case KeyEvent.VK_T -> debugText(true);
             case KeyEvent.VK_ENTER -> speakDialogue(true);
             default -> {
             }
@@ -133,5 +131,9 @@ public class KeyHandler implements KeyListener {
         } else if (gameWindow.getGameState() == gameWindow.getCharacterState()) {
             gameWindow.setGameState(gameWindow.getPlayState());
         }
+    }
+
+    public void debugText(boolean showDebugText) {
+        this.showDebugText = showDebugText;
     }
 }

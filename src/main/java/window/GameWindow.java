@@ -3,6 +3,7 @@ package window;
 import asset.AssetSetter;
 import collision.CollisionChecker;
 import entity.Entity;
+import frame.FrameApp;
 import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
@@ -133,7 +134,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
+    @Override
     public void paintComponent(Graphics g) {
+
+        long drawStart = System.nanoTime();
 
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -159,10 +163,39 @@ public class GameWindow extends JPanel implements Window, Runnable {
             entity.draw(g2);
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }
-
         entityList.clear();
 
         ui.draw(g2);
+
+        if (keyHandler.isShowDebugText()) {
+
+            int tileSize = FrameApp.getTileSize();
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+
+            g2.setFont(new Font("アリアル", Font.PLAIN, 20));
+            g2.setColor(Color.WHITE);
+
+            int debugX = 10;
+            int debugY = 400;
+            int lineHeight = 20;
+            double nanosecond = 1000000000.0;
+
+            g2.drawString("描画時間: " + passed / nanosecond + "秒", debugX, debugY);
+            debugY += lineHeight;
+
+            g2.drawString("WorldX: " + player.getWorldX(), debugX, debugY);
+            debugY += lineHeight;
+            g2.drawString("WorldY: " + player.getWorldY(), debugX, debugY);
+            debugY += lineHeight;
+
+            int col = player.getWorldX() / tileSize;
+            int row = player.getWorldY() / tileSize;
+
+            g2.drawString("Col  : " + col, debugX, debugY);
+            debugY += lineHeight;
+            g2.drawString("Row: " + row, debugX, debugY);
+        }
 
         g2.dispose();
     }
