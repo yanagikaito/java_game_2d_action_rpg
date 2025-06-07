@@ -70,6 +70,8 @@ public class Entity {
     private Entity currentShield;
     private int attackValue;
     private int defenseValue;
+    private boolean respawning = false;
+    private boolean visible = false;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -495,6 +497,22 @@ public class Entity {
 
     public void setCurrentShield(Entity currentShield) {
         this.currentShield = currentShield;
+    }
+
+    public boolean isRespawning() {
+        return respawning;
+    }
+
+    public void setRespawning(boolean respawning) {
+        this.respawning = respawning;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public void setImage(BufferedImage image, int width, int height) {

@@ -56,7 +56,7 @@ public class TileManager {
         }
     }
 
-    private void loadMap(String filePath) {
+    public void loadMap(String filePath) {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(filePath);
              BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 

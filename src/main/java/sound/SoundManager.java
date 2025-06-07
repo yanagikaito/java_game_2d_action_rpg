@@ -8,14 +8,9 @@ import java.io.File;
 public class SoundManager {
 
     private GameWindow gameWindow;
-    private Clip clip;
 
     public SoundManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-    }
-
-    public void attackWAV(String filePath) {
-        playWAV(filePath);
     }
 
     public void damageWAV(String filePath) {
@@ -33,6 +28,8 @@ public class SoundManager {
     private void playWAV(String filePath) {
 
         try {
+
+            Clip clip = AudioSystem.getClip();
 
             if (clip != null && clip.isRunning()) {
                 clip.stop();

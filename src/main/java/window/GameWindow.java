@@ -40,6 +40,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int pauseState = 2;
     private final int dialogueState = 3;
     private final int characterState = 4;
+    private final int debugState = 5;
 
     protected GameWindow() {
         this.setBackground(Color.BLACK);
@@ -189,12 +190,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
             g2.drawString("WorldY: " + player.getWorldY(), debugX, debugY);
             debugY += lineHeight;
 
-            int col = player.getWorldX() / tileSize;
-            int row = player.getWorldY() / tileSize;
+            int row = player.getWorldX() / tileSize;
+            int col = player.getWorldY() / tileSize;
 
-            g2.drawString("Col  : " + col, debugX, debugY);
+            g2.drawString("Row  : " + row, debugX, debugY);
             debugY += lineHeight;
-            g2.drawString("Row: " + row, debugX, debugY);
+            g2.drawString("Col    : " + col, debugX, debugY);
         }
 
         g2.dispose();
@@ -266,6 +267,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setCharacterState(int characterState) {
         this.gameState = characterState;
+    }
+
+    public int getDebugState() {
+        return debugState;
+    }
+
+    public void setDebugState(int debugState) {
+        this.gameState = debugState;
     }
 
     public AssetSetter getAssetSetter() {

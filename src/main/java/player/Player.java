@@ -3,6 +3,7 @@ package player;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
+import monster.MonGreenSlime;
 import object.ObjShieldWood;
 import object.ObjSwordNormal;
 import org.jetbrains.annotations.NotNull;
@@ -10,9 +11,14 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Player extends Entity {
 
@@ -306,9 +312,15 @@ public class Player extends Entity {
 
     public void damageMonster(int i) {
 
+        long start = System.nanoTime();
+
         if (i != 999) {
             if (!gameWindow.getMonster()[i].getInvincible()) {
                 gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
+
+                long end = System.nanoTime();
+
+                System.out.println("サウンド再生にかかった時間: " + (end - start) + " ns");
 
                 // プレイヤーのダメージ量
                 int damage = setAttack(getAttack() - gameWindow.getMonster()[i].getDefense());
@@ -322,15 +334,41 @@ public class Player extends Entity {
                 System.out.println("スライムのHP:" + gameWindow.getMonster()[i].getLife());
 
                 if (gameWindow.getMonster()[i].getLife() <= 0) {
+                    Entity monster = gameWindow.getMonster()[i];
                     gameWindow.getMonster()[i].setDying(true);
                     gameWindow.getUi().addMessage(gameWindow.getMonster()[i].getName() + "を倒した!");
-                    setExp(gameWindow.getMonster()[i].getExp());
-                    gameWindow.getUi().addMessage("経験値" + gameWindow.getMonster()[i].getExp() + " 入手!");
+                    int gainedExp = gameWindow.getMonster()[i].getExp();
+                    setExp(getExp() + gainedExp);
+                    gameWindow.getUi().addMessage("経験値" + gainedExp + " 入手!");
                     checkLevelUp();
                     gameWindow.getSoundmanager().defeatedWAV("res/sound/defeated-sound.wav");
+
+                    int aliveCount = 0;
+                    for (Entity m : gameWindow.getMonster()) {
+                        if (m != null && !m.getDying() && m.getLife() > 0) {
+                            aliveCount++;
+                        }
+                    }
+
+                    if (aliveCount == 0 && !monster.isRespawning()) {
+                        monster.setRespawning(true);
+
+                        Timer respawnTimer = getTimer(monster);
+                        respawnTimer.start();
+                    }
                 }
             }
         }
+    }
+
+    private @NotNull Timer getTimer(Entity monster) {
+        Timer respawnTimer = new Timer(5000, e -> {
+            gameWindow.getAssetSetter().setMonster();
+            monster.setRespawning(false);
+            ((Timer) e.getSource()).stop();
+        });
+        respawnTimer.setRepeats(false); // 1回だけ実行
+        return respawnTimer;
     }
 
     public void checkLevelUp() {
