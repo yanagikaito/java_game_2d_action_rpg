@@ -25,8 +25,8 @@ public class MonGreenSlime extends Entity {
     private int actionLockCounter = 0;
 
     public MonGreenSlime(GameWindow gameWindow) {
-        super(gameWindow);
 
+        super(gameWindow);
         setType(2);
         setName("Green Slime");
         setSpeed(1);
@@ -42,7 +42,6 @@ public class MonGreenSlime extends Entity {
         getSolidArea().height = 46;
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
-
         loadMonsterImages();
     }
 

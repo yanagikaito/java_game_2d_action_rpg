@@ -216,7 +216,7 @@ public class UI {
         g2.drawImage(gameWindow.getPlayer().getCurrentShield().getImage(), tailX - tileSize, textY - 10, null);
     }
 
-    public void drawBattleLogMessage(@NotNull Graphics2D g2) {
+    private void drawBattleLogMessage(@NotNull Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
         int messageX = tileSize;

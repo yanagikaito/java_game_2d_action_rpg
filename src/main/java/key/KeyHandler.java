@@ -65,6 +65,10 @@ public class KeyHandler implements KeyListener {
         this.playerEnter = playerEnter;
     }
 
+    public void setShowDebugText(boolean showDebugText) {
+        this.showDebugText = showDebugText;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -82,7 +86,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_D -> setPlayerRight(true);
             case KeyEvent.VK_P -> togglePause();
             case KeyEvent.VK_C -> characterStatus(true);
-            case KeyEvent.VK_T -> debugText(true);
+            case KeyEvent.VK_T -> debugText();
             case KeyEvent.VK_ENTER -> speakDialogue(true);
             default -> {
             }
@@ -133,7 +137,11 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    public void debugText(boolean showDebugText) {
-        this.showDebugText = showDebugText;
+    public void debugText() {
+        if (this.showDebugText == false) {
+            setShowDebugText(true);
+        } else if (this.showDebugText == true) {
+            setShowDebugText(false);
+        }
     }
 }
