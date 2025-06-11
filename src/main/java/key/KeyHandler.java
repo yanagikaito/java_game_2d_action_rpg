@@ -1,6 +1,5 @@
 package key;
 
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.event.KeyEvent;
@@ -14,8 +13,9 @@ public class KeyHandler implements KeyListener {
     private boolean playerLeft;
     private boolean playerRight;
     private boolean playerEnter;
-    private boolean playerStatus;
     private boolean showDebugText;
+    private static final int MAX_COL = 3;
+    private static final int MAX_ROW = 4;
 
     public KeyHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -75,9 +75,38 @@ public class KeyHandler implements KeyListener {
     }
 
     @Override
-    public void keyPressed(@NotNull KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
 
         int code = e.getKeyCode();
+
+        if (gameWindow.getGameState() == gameWindow.getCharacterState()) {
+
+            int row = gameWindow.getUi().getSlotRow();
+            int col = gameWindow.getUi().getSlotCol();
+
+            switch (code) {
+                case KeyEvent.VK_W -> {
+                    if (col > 0) gameWindow.getUi().setSlotCol(col - 1);
+                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_S -> {
+                    if (col < MAX_COL) gameWindow.getUi().setSlotCol(col + 1);
+                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_A -> {
+                    if (row > 0) gameWindow.getUi().setSlotRow(row - 1);
+                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_D -> {
+                    if (row < MAX_ROW) gameWindow.getUi().setSlotRow(row + 1);
+                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_C -> {
+                    gameWindow.setGameState(gameWindow.getPlayState());
+                }
+            }
+            return;
+        }
 
         switch (code) {
             case KeyEvent.VK_W -> setPlayerUp(true);
@@ -85,29 +114,27 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_A -> setPlayerLeft(true);
             case KeyEvent.VK_D -> setPlayerRight(true);
             case KeyEvent.VK_P -> togglePause();
-            case KeyEvent.VK_C -> characterStatus(true);
             case KeyEvent.VK_T -> debugText();
+            case KeyEvent.VK_C -> gameWindow.setGameState(gameWindow.getCharacterState());
             case KeyEvent.VK_ENTER -> speakDialogue(true);
-            default -> {
-            }
         }
     }
 
     @Override
-    public void keyReleased(@NotNull KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
 
         int code = e.getKeyCode();
 
-        switch (code) {
-            case KeyEvent.VK_W -> setPlayerUp(false);
-            case KeyEvent.VK_S -> setPlayerDown(false);
-            case KeyEvent.VK_A -> setPlayerLeft(false);
-            case KeyEvent.VK_D -> setPlayerRight(false);
-            default -> {
+        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+
+            switch (code) {
+                case KeyEvent.VK_W -> setPlayerUp(false);
+                case KeyEvent.VK_S -> setPlayerDown(false);
+                case KeyEvent.VK_A -> setPlayerLeft(false);
+                case KeyEvent.VK_D -> setPlayerRight(false);
             }
         }
     }
-
 
     private void togglePause() {
         if (gameWindow.getGameState() == gameWindow.getPlayState()) {
@@ -118,21 +145,13 @@ public class KeyHandler implements KeyListener {
     }
 
     public void speakDialogue(boolean playerEnter) {
-        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
-            this.playerEnter = playerEnter;
+        if (gameWindow.getGameState() == gameWindow.getPlayState() && playerEnter) {
+            this.playerEnter = true;
+            setPlayerUp(false);
+            setPlayerDown(false);
+            setPlayerLeft(false);
+            setPlayerRight(false);
         } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
-            gameWindow.setGameState(gameWindow.getPlayState());
-        }
-        if (this.playerEnter == false) {
-            gameWindow.setGameState(gameWindow.getPlayState());
-        }
-    }
-
-    public void characterStatus(boolean playerStatus) {
-        this.playerStatus = playerStatus;
-        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
-            gameWindow.setCharacterState(gameWindow.getCharacterState());
-        } else if (gameWindow.getGameState() == gameWindow.getCharacterState()) {
             gameWindow.setGameState(gameWindow.getPlayState());
         }
     }

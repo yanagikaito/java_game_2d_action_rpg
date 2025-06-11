@@ -25,6 +25,10 @@ public class SoundManager {
         playWAV(filePath);
     }
 
+    public void cursorWAV(String filePath) {
+        playWAV(filePath);
+    }
+
     private void playWAV(String filePath) {
 
         try {

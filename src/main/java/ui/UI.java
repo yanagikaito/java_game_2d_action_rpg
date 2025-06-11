@@ -28,6 +28,9 @@ public class UI {
     private BufferedImage heartHalf;
     private BufferedImage heartBlank;
 
+    private int slotCol = 0;
+    private int slotRow = 0;
+
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
@@ -64,6 +67,7 @@ public class UI {
             drawDialogueScreen(g2);
         } else if (gameState == gameWindow.getCharacterState()) {
             drawCharacterScreen(g2);
+            drawInventory(g2);
         }
 
         if (messageOn == true) {
@@ -245,6 +249,30 @@ public class UI {
         }
     }
 
+    private void drawInventory(@NotNull Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+        int frameX = tileSize * 9;
+        int frameY = tileSize;
+        int frameWidth = tileSize * 6;
+        int frameHeight = tileSize * 5;
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
+
+        final int slotXstart = frameX + (tileSize / 2) - 4;
+        final int slotYstart = frameY + (tileSize / 2) - 4;
+        int slotX = slotXstart;
+        int slotY = slotYstart;
+
+        int cursorX = slotXstart + (tileSize * slotRow);
+        int cursorY = slotYstart + (tileSize * slotCol);
+        int cursorWidth = tileSize;
+        int cursorHeight = tileSize;
+
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
+    }
+
     private void drawSubWindow(@NotNull Graphics2D g2, int x, int y, int width, int height) {
 
         Color color = new Color(0, 0, 0, 210);
@@ -282,5 +310,21 @@ public class UI {
 
     public void setCurrentDialogueMessage(String currentDialogueMessage) {
         this.currentDialogueMessage = currentDialogueMessage;
+    }
+
+    public int getSlotRow() {
+        return slotRow;
+    }
+
+    public void setSlotRow(int slotRow) {
+        this.slotRow = slotRow;
+    }
+
+    public int getSlotCol() {
+        return slotCol;
+    }
+
+    public void setSlotCol(int slotCol) {
+        this.slotCol = slotCol;
     }
 }
