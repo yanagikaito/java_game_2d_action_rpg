@@ -3,7 +3,7 @@ package player;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
-import monster.MonGreenSlime;
+import object.ObjRedPotion;
 import object.ObjShieldWood;
 import object.ObjSwordNormal;
 import org.jetbrains.annotations.NotNull;
@@ -11,14 +11,11 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Player extends Entity {
 
@@ -40,6 +37,8 @@ public class Player extends Entity {
     private int pixelCounter = 0;
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
+    private ArrayList<Entity> inventory = new ArrayList<>();
+    private final int maxInventorySize = 20;
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
@@ -66,6 +65,7 @@ public class Player extends Entity {
         setDefaultValues();
         loadPlayerImages();
         loadAttackPlayerImages();
+        setItems();
     }
 
     public void setDefaultValues() {
@@ -86,6 +86,30 @@ public class Player extends Entity {
         setCurrentShield(new ObjShieldWood(gameWindow));
         setAttack(getAttack());
         setDefense(getDefense());
+    }
+
+    public void setItems() {
+
+        inventory.add(getCurrentWeapon());
+        inventory.add(getCurrentShield());
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
+        inventory.add(new ObjRedPotion(gameWindow));
     }
 
     @Override
@@ -460,5 +484,13 @@ public class Player extends Entity {
 
     public int getScreenY() {
         return screenY;
+    }
+
+    public int getMaxInventorySize() {
+        return maxInventorySize;
+    }
+
+    public ArrayList<Entity> getInventory() {
+        return inventory;
     }
 }

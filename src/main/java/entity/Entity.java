@@ -72,6 +72,7 @@ public class Entity {
     private int defenseValue;
     private boolean respawning = false;
     private boolean visible = false;
+    private String description = "";
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -513,6 +514,14 @@ public class Entity {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setImage(BufferedImage image, int width, int height) {

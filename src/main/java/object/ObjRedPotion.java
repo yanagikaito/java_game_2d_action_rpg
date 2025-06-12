@@ -7,19 +7,18 @@ import window.GameWindow;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
-public class ObjShieldWood extends Entity {
+public class ObjRedPotion extends Entity {
 
     private GameWindow gameWindow;
 
-    public ObjShieldWood(GameWindow gameWindow) {
+    public ObjRedPotion(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setName("木の盾");
-        setDefenseValue(1);
-        setDescription("[" + getName() + "]\n 木で,できた盾");
+        setName("レッドポーション");
+        setDescription("[" + getName() + "]\n 体力を1回復する");
         try {
 
-            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/shield-wood.gif")),
+            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/red-potion.gif")),
                     FrameApp.getTileSize(), FrameApp.getTileSize());
 
         } catch (IOException e) {
