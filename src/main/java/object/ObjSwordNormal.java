@@ -16,6 +16,7 @@ public class ObjSwordNormal extends Entity {
         this.gameWindow = gameWindow;
         setName("普通の剣");
         setAttackValue(1);
+        setDescription("[" + getName() + "]\n 古くからある剣");
         try {
 
             setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/sword-normal.gif")),

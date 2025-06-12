@@ -263,14 +263,51 @@ public class UI {
         int slotX = slotXstart;
         int slotY = slotYstart;
 
-        int cursorX = slotXstart + (tileSize * slotRow);
-        int cursorY = slotYstart + (tileSize * slotCol);
+        int slotSize = tileSize + 3;
+        int cursorX = slotXstart + (slotSize * slotRow);
+        int cursorY = slotYstart + (slotSize * slotCol);
         int cursorWidth = tileSize;
         int cursorHeight = tileSize;
 
         g2.setColor(Color.WHITE);
         g2.setStroke(new BasicStroke(3));
-        g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
+        g2.drawRoundRect(cursorX, cursorY - 2, cursorWidth, cursorHeight, 10, 10);
+
+        for (int i = 0; i < gameWindow.getPlayer().getInventory().size(); i++) {
+
+            g2.drawImage(gameWindow.getPlayer().getInventory().get(i).getImage(), slotX, slotY, null);
+
+            slotX += slotSize;
+
+            if (i == 4 || i == 9 || i == 14) {
+                slotX = slotXstart;
+                slotY += slotSize;
+            }
+        }
+
+        int dFrameX = frameX;
+        int dFrameY = frameY + frameHeight;
+        int dFrameWidth = frameWidth;
+        int dFrameHeight = tileSize * 3;
+        drawSubWindow(g2, dFrameX, dFrameY, dFrameWidth, dFrameHeight);
+
+        int textX = dFrameX + 20;
+        int textY = dFrameY + tileSize;
+        g2.setFont(g2.getFont().deriveFont(28F));
+
+        int itemIndex = getItemIndexOnSlot();
+
+        if (itemIndex < gameWindow.getPlayer().getInventory().size()) {
+            for (String line : gameWindow.getPlayer().getInventory().get(itemIndex).getDescription().split("\n")) {
+                g2.drawString(line, textX, textY);
+                textY += 32;
+            }
+        }
+    }
+
+    public int getItemIndexOnSlot() {
+        int itemIndex = slotRow + (slotCol * 5);
+        return itemIndex;
     }
 
     private void drawSubWindow(@NotNull Graphics2D g2, int x, int y, int width, int height) {
