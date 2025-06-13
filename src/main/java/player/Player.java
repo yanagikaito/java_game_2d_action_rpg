@@ -109,7 +109,6 @@ public class Player extends Entity {
         inventory.add(new ObjRedPotion(gameWindow));
         inventory.add(new ObjRedPotion(gameWindow));
         inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
     }
 
     @Override
@@ -158,6 +157,31 @@ public class Player extends Entity {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void useRedPotion(int index) {
+        System.out.println("useRedPotion が呼ばれた index=" + index
+                + " invSize=" + inventory.size());
+
+        if (index < 0 || index >= inventory.size()) {
+            System.out.println("index 範囲外で return");
+            return;
+        }
+
+        Entity e = inventory.get(index);
+
+        if (e instanceof ObjRedPotion) {
+            System.out.println("アイテムは RedPotion です。処理続行");
+            ObjRedPotion potion = (ObjRedPotion) e;
+            int heal = potion.getHealAmount();
+            setLife(Math.min(getLife() + heal, getMaxLife()));
+            gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
+            gameWindow.getSoundmanager().redPotionWAV("res/sound/redPotion-sound.wav");
+            inventory.remove(index);
+            return;
+        } else {
+            System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
         }
     }
 
@@ -325,6 +349,7 @@ public class Player extends Entity {
 
                 setLife(getLife() - damage);
                 setInvincible(true);
+
 //                System.out.println("モンスター衝突: " + i);
 //                System.out.println("無敵状態: " + getInvincible());
 //                System.out.println(i);

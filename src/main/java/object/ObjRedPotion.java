@@ -10,12 +10,14 @@ import java.io.IOException;
 public class ObjRedPotion extends Entity {
 
     private GameWindow gameWindow;
+    private int healAmount = 2;
+    private int stackSize = 1;
 
     public ObjRedPotion(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
         setName("レッドポーション");
-        setDescription("[" + getName() + "]\n 体力を1回復する");
+        setDescription("[" + getName() + "]\n 体力を2回復する");
         try {
 
             setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/red-potion.gif")),
@@ -24,5 +26,13 @@ public class ObjRedPotion extends Entity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getHealAmount() {
+        return healAmount;
+    }
+
+    public int getStackSize() {
+        return stackSize;
     }
 }

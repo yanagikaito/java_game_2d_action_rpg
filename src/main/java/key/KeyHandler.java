@@ -83,6 +83,8 @@ public class KeyHandler implements KeyListener {
 
             int row = gameWindow.getUi().getSlotRow();
             int col = gameWindow.getUi().getSlotCol();
+            int maxCol = MAX_COL;
+            int maxRow = (gameWindow.getPlayer().getInventory().size() + maxCol - 1) / maxCol;
 
             switch (code) {
                 case KeyEvent.VK_W -> {
@@ -103,6 +105,14 @@ public class KeyHandler implements KeyListener {
                 }
                 case KeyEvent.VK_C -> {
                     gameWindow.setGameState(gameWindow.getPlayState());
+                }
+                case KeyEvent.VK_ENTER -> {
+                    int index = col * maxRow + row;
+                    System.out.println("useRedPotion index=" + index
+                            + " (row=" + row + ", col=" + col + ")"
+                            + " inventorySize=" + gameWindow.getPlayer().getInventory().size()
+                    );
+                    gameWindow.getPlayer().useRedPotion(index);
                 }
             }
             return;
