@@ -125,7 +125,7 @@ public class UI {
         g2.drawString(currentDialogueMessage, x, y);
     }
 
-    private void drawCharacterScreen(Graphics2D g2) {
+    private void drawCharacterScreen(@NotNull Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
 
@@ -289,7 +289,6 @@ public class UI {
         int dFrameY = frameY + frameHeight;
         int dFrameWidth = frameWidth;
         int dFrameHeight = tileSize * 3;
-        drawSubWindow(g2, dFrameX, dFrameY, dFrameWidth, dFrameHeight);
 
         int textX = dFrameX + 20;
         int textY = dFrameY + tileSize;
@@ -298,6 +297,7 @@ public class UI {
         int itemIndex = getItemIndexOnSlot();
 
         if (itemIndex < gameWindow.getPlayer().getInventory().size()) {
+            drawSubWindow(g2, dFrameX, dFrameY, dFrameWidth, dFrameHeight);
             for (String line : gameWindow.getPlayer().getInventory().get(itemIndex).getDescription().split("\n")) {
                 g2.drawString(line, textX, textY);
                 textY += 32;
