@@ -14,6 +14,7 @@ public class KeyHandler implements KeyListener {
     private boolean playerRight;
     private boolean playerEnter;
     private boolean showDebugText;
+    private boolean shotKeyPressed;
     private static final int MAX_COL = 3;
     private static final int MAX_ROW = 4;
 
@@ -45,6 +46,10 @@ public class KeyHandler implements KeyListener {
         return showDebugText;
     }
 
+    public boolean isShotKeyPressed() {
+        return shotKeyPressed;
+    }
+
     public void setPlayerUp(boolean playerUp) {
         this.playerUp = playerUp;
     }
@@ -67,6 +72,10 @@ public class KeyHandler implements KeyListener {
 
     public void setShowDebugText(boolean showDebugText) {
         this.showDebugText = showDebugText;
+    }
+
+    public void setShotKeyPressed(boolean shotKeyPressed) {
+        this.shotKeyPressed = shotKeyPressed;
     }
 
     @Override
@@ -127,6 +136,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_T -> debugText();
             case KeyEvent.VK_C -> gameWindow.setGameState(gameWindow.getCharacterState());
             case KeyEvent.VK_ENTER -> speakDialogue(true);
+            case KeyEvent.VK_F -> setShotKeyPressed(true);
         }
     }
 
@@ -142,6 +152,7 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_S -> setPlayerDown(false);
                 case KeyEvent.VK_A -> setPlayerLeft(false);
                 case KeyEvent.VK_D -> setPlayerRight(false);
+                case KeyEvent.VK_F -> setShotKeyPressed(false);
             }
         }
     }

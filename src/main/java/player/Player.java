@@ -3,6 +3,7 @@ package player;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
+import object.ObjFireball;
 import object.ObjRedPotion;
 import object.ObjShieldWood;
 import object.ObjSwordNormal;
@@ -69,6 +70,7 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
+
         setWorldX(FrameApp.getTileSize() * 23);
         setWorldY(FrameApp.getTileSize() * 21);
         setSpeed(4);
@@ -84,6 +86,7 @@ public class Player extends Entity {
         setCoin(0);
         setCurrentWeapon(new ObjSwordNormal(gameWindow));
         setCurrentShield(new ObjShieldWood(gameWindow));
+        setProjectile(new ObjFireball(gameWindow));
         setAttack(getAttack());
         setDefense(getDefense());
     }
@@ -189,8 +192,11 @@ public class Player extends Entity {
 
         if (getAttacking()) {
             playerAttacking();
-        } else if (!moving) {
-            processInput();
+        } else {
+            playerAttackingFireball();
+            if (!moving) {
+                processInput();
+            }
         }
 
         if (moving) {
@@ -204,7 +210,9 @@ public class Player extends Entity {
     }
 
     private void processInput() {
+
         var keyHandler = gameWindow.getKeyHandler();
+
         if (keyHandler.isPlayerUp() || keyHandler.isPlayerDown()
                 || keyHandler.isPlayerLeft() || keyHandler.isPlayerRight()) {
             if (keyHandler.isPlayerUp()) {
@@ -222,7 +230,9 @@ public class Player extends Entity {
     }
 
     private void updateMovement() {
+
         if (!isCollision()) {
+
             switch (getDirection()) {
                 case "up" -> setWorldY(getWorldY() - getSpeed());
                 case "down" -> setWorldY(getWorldY() + getSpeed());
@@ -233,6 +243,7 @@ public class Player extends Entity {
     }
 
     private void updateCollision() {
+
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
 
@@ -245,7 +256,9 @@ public class Player extends Entity {
     }
 
     private void updateAnimation() {
+
         setSpriteCounter(getSpriteCounter() + 1);
+
         if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
             setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
             setSpriteCounter(0);
@@ -253,7 +266,9 @@ public class Player extends Entity {
     }
 
     private void updateTileMovement() {
+
         pixelCounter += getSpeed();
+
         if (pixelCounter >= FrameApp.getTileSize()) {
             moving = false;
             pixelCounter = 0;
@@ -261,6 +276,7 @@ public class Player extends Entity {
     }
 
     private void updateInvincibility() {
+
         if (getInvincible()) {
             setInvincibleCounter(getInvincibleCounter() + 1);
             if (getInvincibleCounter() > 60) {
@@ -318,6 +334,32 @@ public class Player extends Entity {
         getSolidArea().height = originalSolidHeight;
     }
 
+    public void playerAttackingFireball() {
+        // Fキーが押された瞬間だけ発射フラグを立てる（連打防止）
+        if (gameWindow.getKeyHandler().isShotKeyPressed() && !getProjectile().getAlive()) {
+
+            System.out.println("DEBUG: Fキーが押されている");
+
+            // 1) 毎回新しいインスタンスを作る
+            ObjFireball fb = new ObjFireball(gameWindow);
+            // 2) set() で位置・向き・alive・life・spriteを完全リセット
+            fb.set(
+                    getWorldX(),
+                    getWorldY(),
+                    getDirection(),
+                    true,
+                    this
+            );
+            fb.setLife(fb.getMaxLife());
+            fb.setSpriteNum(1);
+            fb.setSpriteCounter(0);
+
+            // 3) リストに追加
+            gameWindow.getProjectileList().add(fb);
+            System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
+        }
+    }
+
     public void interactNPC(int i) {
 
         var keyHandler = gameWindow.getKeyHandler();
@@ -337,6 +379,7 @@ public class Player extends Entity {
     }
 
     public void contactMonster(int i) {
+
         if (i != 999) {
             if (!getInvincible()) {
                 gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");

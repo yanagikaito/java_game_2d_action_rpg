@@ -4,6 +4,7 @@ import asset.AssetSetter;
 import collision.CollisionChecker;
 import entity.Entity;
 import frame.FrameApp;
+import object.Projectile;
 import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
@@ -17,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import static frame.FrameApp.baseDisplay;
 
@@ -32,6 +34,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
     private UI ui = new UI(this);
+    private ArrayList<Entity> projectileList = new ArrayList<>();
     private ArrayList<Entity> entityList = new ArrayList<>();
     private static GameWindow instance;
     private Thread gameThread;
@@ -129,6 +132,16 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     }
                 }
             }
+            for (int i = 0; i < projectileList.size(); i++) {
+                if (projectileList.get(i) != null) {
+                    if (projectileList.get(i).getAlive()) {
+                        projectileList.get(i).update();
+                    }
+                    if (!projectileList.get(i).getAlive()) {
+                        projectileList.remove(i--);
+                    }
+                }
+            }
             if (gameState == pauseState) {
 
             }
@@ -155,6 +168,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         for (Entity entity : monster) {
             if (entity != null) {
                 entityList.add(entity);
+            }
+        }
+        for (Entity p : projectileList) {
+            if (p != null && p.getAlive()) {
+                entityList.add(p);
             }
         }
 
@@ -283,5 +301,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setAssetSetter(AssetSetter assetSetter) {
         this.assetSetter = assetSetter;
+    }
+
+    public ArrayList<Entity> getProjectileList() {
+        return projectileList;
+    }
+
+    public void setProjectileList(ArrayList<Entity> projectileList) {
+        this.projectileList = projectileList;
     }
 }

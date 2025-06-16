@@ -1,6 +1,7 @@
 package entity;
 
 import frame.FrameApp;
+import object.Projectile;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -33,6 +34,7 @@ public class Entity {
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
+    private static final String[] FIREBALL_DIRECTIONS = {"fireballUp", "fireballDown", "fireballLeft", "fireballRight"};
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -68,11 +70,15 @@ public class Entity {
     private int coin;
     private Entity currentWeapon;
     private Entity currentShield;
+    private Projectile projectile;
     private int attackValue;
     private int defenseValue;
     private boolean respawning = false;
     private boolean visible = false;
     private String description = "";
+    private int maxMana;
+    private int mana;
+    private int useCost;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -522,6 +528,22 @@ public class Entity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getUseCost() {
+        return useCost;
+    }
+
+    public void setUseCost(int useCost) {
+        this.useCost = useCost;
+    }
+
+    public Projectile getProjectile() {
+        return projectile;
+    }
+
+    public void setProjectile(Projectile projectile) {
+        this.projectile = projectile;
     }
 
     public void setImage(BufferedImage image, int width, int height) {
