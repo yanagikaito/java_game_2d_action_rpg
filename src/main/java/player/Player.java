@@ -29,6 +29,8 @@ public class Player extends Entity {
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 25;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
+    private static final long FIRE_COOLDOWN_MS = 1000;
+    private long lastFireTime = 0;
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
@@ -335,28 +337,34 @@ public class Player extends Entity {
     }
 
     public void playerAttackingFireball() {
-        // Fキーが押された瞬間だけ発射フラグを立てる（連打防止）
-        if (gameWindow.getKeyHandler().isShotKeyPressed() && !getProjectile().getAlive()) {
 
-            System.out.println("DEBUG: Fキーが押されている");
+        KeyHandler kh = gameWindow.getKeyHandler();
 
-            // 1) 毎回新しいインスタンスを作る
-            ObjFireball fb = new ObjFireball(gameWindow);
-            // 2) set() で位置・向き・alive・life・spriteを完全リセット
-            fb.set(
-                    getWorldX(),
-                    getWorldY(),
-                    getDirection(),
-                    true,
-                    this
-            );
-            fb.setLife(fb.getMaxLife());
-            fb.setSpriteNum(1);
-            fb.setSpriteCounter(0);
+        if (kh.isShotKeyPressed() &&
+                !getProjectile().getAlive()) {
 
-            // 3) リストに追加
-            gameWindow.getProjectileList().add(fb);
-            System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
+            long now = System.currentTimeMillis();
+
+            if (now - lastFireTime >= FIRE_COOLDOWN_MS) {
+                lastFireTime = now;
+
+                System.out.println("DEBUG: Fキーが押されている");
+
+                ObjFireball fb = new ObjFireball(gameWindow);
+                fb.set(
+                        getWorldX(),
+                        getWorldY(),
+                        getDirection(),
+                        true,
+                        this
+                );
+                fb.setLife(fb.getMaxLife());
+                fb.setSpriteNum(1);
+                fb.setSpriteCounter(0);
+
+                gameWindow.getProjectileList().add(fb);
+                System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
+            }
         }
     }
 
