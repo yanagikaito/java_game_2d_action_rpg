@@ -35,6 +35,24 @@ public abstract class Projectile extends Entity {
     public void update() {
         if (!getAlive()) return;
         updateAnimation();
+        move();
+    }
+
+    private void move() {
+        switch (getDirection()) {
+            case "up":
+                setWorldY(getWorldY() - getSpeed());
+                break;
+            case "down":
+                setWorldY(getWorldY() + getSpeed());
+                break;
+            case "left":
+                setWorldX(getWorldX() - getSpeed());
+                break;
+            case "right":
+                setWorldX(getWorldX() + getSpeed());
+                break;
+        }
     }
 
     private void updateAnimation() {
