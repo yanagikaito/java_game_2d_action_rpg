@@ -33,6 +33,10 @@ public class SoundManager {
         playWAV(filePath);
     }
 
+    public void explosionWAV(String filePath) {
+        playWAV(filePath);
+    }
+
     private void playWAV(String filePath) {
 
         try {

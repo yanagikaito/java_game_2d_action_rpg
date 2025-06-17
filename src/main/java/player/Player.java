@@ -363,6 +363,7 @@ public class Player extends Entity {
                 fb.setSpriteCounter(0);
 
                 gameWindow.getProjectileList().add(fb);
+                gameWindow.getSoundmanager().explosionWAV("res/sound/explosion-sound.wav");
                 System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
             }
         }
