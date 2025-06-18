@@ -79,6 +79,7 @@ public class Entity {
     private int maxMana;
     private int mana;
     private int useCost;
+    private int shotAvailableCounter = 0;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -544,6 +545,14 @@ public class Entity {
 
     public void setProjectile(Projectile projectile) {
         this.projectile = projectile;
+    }
+
+    public int getShotAvailableCounter() {
+        return shotAvailableCounter;
+    }
+
+    public void setShotAvailableCounter(int shotAvailableCounter) {
+        this.shotAvailableCounter = shotAvailableCounter;
     }
 
     public void setImage(BufferedImage image, int width, int height) {
