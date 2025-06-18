@@ -31,6 +31,8 @@ public class Player extends Entity {
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private static final long FIRE_COOLDOWN_MS = 1000;
     private long lastFireTime = 0;
+    private int fireCooldown = 0;
+    private static final int COOLDOWN_FRAMES = 60 * 3;
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
@@ -192,10 +194,15 @@ public class Player extends Entity {
 
     public void update() {
 
+        if (fireCooldown > 0) fireCooldown--;
+
         if (getAttacking()) {
             playerAttacking();
         } else {
-            playerAttackingFireball();
+            if (gameWindow.getKeyHandler().isShotKeyPressed() && fireCooldown == 0) {
+                fireCooldown = COOLDOWN_FRAMES;
+                playerAttackingFireball();
+            }
             if (!moving) {
                 processInput();
             }
@@ -287,6 +294,9 @@ public class Player extends Entity {
                 setInvincibleCounter(0);
             }
         }
+        if (getShotAvailableCounter() < 30) {
+            setShotAvailableCounter(getShotAvailableCounter() + 1);
+        }
     }
 
     public void playerAttacking() {
@@ -328,7 +338,7 @@ public class Player extends Entity {
         getSolidArea().height = FrameApp.getTileSize();
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-        damageMonster(monsterIndex);
+        damageMonster(monsterIndex, getAttack());
 
         setWorldX(originalWorldX);
         setWorldY(originalWorldY);
@@ -341,7 +351,7 @@ public class Player extends Entity {
         KeyHandler kh = gameWindow.getKeyHandler();
 
         if (kh.isShotKeyPressed() &&
-                !getProjectile().getAlive()) {
+                !getProjectile().getAlive() && getShotAvailableCounter() == 30) {
 
             long now = System.currentTimeMillis();
 
@@ -363,6 +373,7 @@ public class Player extends Entity {
                 fb.setSpriteCounter(0);
 
                 gameWindow.getProjectileList().add(fb);
+                setShotAvailableCounter(0);
                 gameWindow.getSoundmanager().explosionWAV("res/sound/explosion-sound.wav");
                 System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
             }
@@ -411,7 +422,7 @@ public class Player extends Entity {
         }
     }
 
-    public void damageMonster(int i) {
+    public void damageMonster(int i, int attack) {
 
         long start = System.nanoTime();
 
@@ -424,7 +435,7 @@ public class Player extends Entity {
                 System.out.println("サウンド再生にかかった時間: " + (end - start) + " ns");
 
                 // プレイヤーのダメージ量
-                int damage = setAttack(getAttack() - gameWindow.getMonster()[i].getDefense());
+                int damage = setAttack(attack - gameWindow.getMonster()[i].getDefense());
                 if (damage < 0) {
                     damage = 0;
                 }

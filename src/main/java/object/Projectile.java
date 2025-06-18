@@ -5,12 +5,14 @@ import window.GameWindow;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public abstract class Projectile extends Entity {
 
     protected BufferedImage[][] sprites;
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 12;
+    private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private Entity user;
 
     public Projectile(GameWindow gw, int dirCount, int spriteCount) {
@@ -33,25 +35,29 @@ public abstract class Projectile extends Entity {
 
     @Override
     public void update() {
+
         if (!getAlive()) return;
+
+        if (user == getGameWindow().getPlayer()) {
+            int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
+            if (monsterIndex != 999) {
+                getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack());
+                setAlive(false);
+            }
+        }
+        if (user != getGameWindow().getPlayer()) {
+
+        }
         updateAnimation();
         move();
     }
 
     private void move() {
         switch (getDirection()) {
-            case "up":
-                setWorldY(getWorldY() - getSpeed());
-                break;
-            case "down":
-                setWorldY(getWorldY() + getSpeed());
-                break;
-            case "left":
-                setWorldX(getWorldX() - getSpeed());
-                break;
-            case "right":
-                setWorldX(getWorldX() + getSpeed());
-                break;
+            case "up" -> setWorldY(getWorldY() - getSpeed());
+            case "down" -> setWorldY(getWorldY() + getSpeed());
+            case "left" -> setWorldX(getWorldX() - getSpeed());
+            case "right" -> setWorldX(getWorldX() + getSpeed());
         }
     }
 
@@ -65,27 +71,19 @@ public abstract class Projectile extends Entity {
 
     @Override
     public void draw(Graphics2D g2) {
-        if (!getAlive()) return;
-        int idx;
-        switch (getDirection()) {
-            case "up":
-                idx = 0;
-                break;
-            case "down":
-                idx = 1;
-                break;
-            case "left":
-                idx = 2;
-                break;
-            default:
-                idx = 3;
-                break;
+        BufferedImage image = null;
+        if (!getAttacking()) {
+            int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
+            if (dirIndex != -1) {
+                image = sprites[dirIndex][getSpriteNum() - 1];
+//                System.out.println("dirIndex:" + dirIndex);
+            }
+            BufferedImage img = sprites[dirIndex][getSpriteNum() - 1];
+            int sx = getWorldX() - getGameWindow().getPlayer().getWorldX()
+                    + getGameWindow().getPlayer().getScreenX();
+            int sy = getWorldY() - getGameWindow().getPlayer().getWorldY()
+                    + getGameWindow().getPlayer().getScreenY();
+            g2.drawImage(image, sx, sy, null);
         }
-        BufferedImage img = sprites[idx][getSpriteNum() - 1];
-        int screenX = getWorldX() - getGameWindow().getPlayer().getWorldX()
-                + getGameWindow().getPlayer().getScreenX();
-        int screenY = getWorldY() - getGameWindow().getPlayer().getWorldY()
-                + getGameWindow().getPlayer().getScreenY();
-        g2.drawImage(img, screenX, screenY, null);
     }
 }
