@@ -4,20 +4,19 @@ import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import java.awt.Graphics2D;
-
-public class ObjFireball extends Projectile {
+public class ObjStone extends Projectile {
 
     private static final String[] DIRS = {"Up", "Down", "Left", "Right"};
     private static final int SPRITE_COUNT = 3;
 
-    public ObjFireball(GameWindow gw) {
+    public ObjStone(GameWindow gw) {
         super(gw, DIRS.length, SPRITE_COUNT);
-        setName("ファイアーボール");
-        setSpeed(5);
+        setName("ストーン");
+        setSpeed(8);
         setMaxLife(80);
         setAttack(2);
         setUseCost(1);
@@ -32,7 +31,7 @@ public class ObjFireball extends Projectile {
             for (int i = 0; i < DIRS.length; i++) {
                 for (int j = 0; j < SPRITE_COUNT; j++) {
                     String path = String.format(
-                            "projectile/image-fireball%s-%d.gif",
+                            "projectile/image-stone%s-%d.gif",
                             DIRS[i], j + 1);
                     BufferedImage ori = ImageIO.read(
                             getClass().getClassLoader().getResourceAsStream(path)
