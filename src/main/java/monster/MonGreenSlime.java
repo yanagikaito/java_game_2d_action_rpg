@@ -95,7 +95,10 @@ public class MonGreenSlime extends Entity {
             actionLockCounter = 0;
         }
 
-        if (getShotAvailableCounter() == 30) {
+        int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
+
+        if (i < 99 && getShotAvailableCounter() == 30) {
+            
             getProjectile().set(getWorldX(), getWorldY(), getDirection(), true, this);
             getGameWindow().getProjectileList().add(getProjectile());
 
