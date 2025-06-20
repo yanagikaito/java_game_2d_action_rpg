@@ -260,7 +260,10 @@ public class Player extends Entity {
         interactNPC(npcIndex);
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-        contactMonster(monsterIndex);
+        if (monsterIndex != 999 && !getInvincible()) {
+            contactMonster(monsterIndex);
+            setInvincible(true);
+        }
 //        System.out.println("モンスター衝突判定: " + monsterIndex);
     }
 

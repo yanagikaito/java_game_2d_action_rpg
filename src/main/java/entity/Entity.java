@@ -54,6 +54,7 @@ public class Entity {
     private boolean invincible = false;
     private int invincibleCounter = 0;
     private int type;
+    private int type_monster = 2;
     private boolean attacking = false;
     private boolean alive = true;
     private boolean dying = false;
@@ -128,18 +129,9 @@ public class Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
-        if (this.type == 2 && contactPlayer == true) {
-            if (gameWindow.getPlayer().getInvincible() == false) {
-                gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
-
-                int damage = setAttack(getAttack() - gameWindow.getPlayer().getDefense());
-                if (damage < 0) {
-                    damage = 0;
-                }
-
-                gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - damage);
-                gameWindow.getPlayer().setInvincible(true);
-            }
+        if (this.type == type_monster && contactPlayer == true && !gameWindow.getPlayer().getInvincible()) {
+            damagePlayer(attack);
+            gameWindow.getPlayer().setInvincible(true);
         }
 
         if (!isCollision()) {
@@ -163,6 +155,25 @@ public class Entity {
         pixelCounter += getSpeed();
         if (pixelCounter == FrameApp.getTileSize()) {
             pixelCounter = 0;
+        }
+
+        if (shotAvailableCounter < 30) {
+            shotAvailableCounter++;
+        }
+    }
+
+    public void damagePlayer(int attack) {
+
+        if (gameWindow.getPlayer().getInvincible() == false) {
+            gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
+
+            int damage = setAttack(attack - gameWindow.getPlayer().getDefense());
+            if (damage < 0) {
+                damage = 0;
+            }
+
+            gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - damage);
+            gameWindow.getPlayer().setInvincible(true);
         }
     }
 

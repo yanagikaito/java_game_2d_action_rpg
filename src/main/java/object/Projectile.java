@@ -46,7 +46,11 @@ public abstract class Projectile extends Entity {
             }
         }
         if (user != getGameWindow().getPlayer()) {
-
+            boolean contactPlayer = getGameWindow().getCollisionChecker().checkPlayer(this);
+            if (getGameWindow().getPlayer().getInvincible() == false && contactPlayer == true) {
+                damagePlayer(getAttack());
+                setAlive(false);
+            }
         }
         updateAnimation();
         move();
@@ -78,7 +82,6 @@ public abstract class Projectile extends Entity {
                 image = sprites[dirIndex][getSpriteNum() - 1];
 //                System.out.println("dirIndex:" + dirIndex);
             }
-            BufferedImage img = sprites[dirIndex][getSpriteNum() - 1];
             int sx = getWorldX() - getGameWindow().getPlayer().getWorldX()
                     + getGameWindow().getPlayer().getScreenX();
             int sy = getWorldY() - getGameWindow().getPlayer().getWorldY()

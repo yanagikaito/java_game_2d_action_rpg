@@ -2,6 +2,7 @@ package monster;
 
 import entity.Entity;
 import frame.FrameApp;
+import object.ObjStone;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -23,6 +24,8 @@ public class MonGreenSlime extends Entity {
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private Random random = new Random();
     private int actionLockCounter = 0;
+    private static final int ROCK_COOLDOWN_FRAMES = 180;
+    private int shotAvailableCounter = ROCK_COOLDOWN_FRAMES;
 
     public MonGreenSlime(GameWindow gameWindow) {
 
@@ -35,6 +38,7 @@ public class MonGreenSlime extends Entity {
         setAttack(5);
         setDefense(0);
         setExp(5);
+        setProjectile(new ObjStone(gameWindow));
 
         getSolidArea().x = 1;
         getSolidArea().y = 1;
@@ -90,6 +94,35 @@ public class MonGreenSlime extends Entity {
             }
             actionLockCounter = 0;
         }
+
+        if (getShotAvailableCounter() == 30) {
+            getProjectile().set(getWorldX(), getWorldY(), getDirection(), true, this);
+            getGameWindow().getProjectileList().add(getProjectile());
+
+            if (shotAvailableCounter < ROCK_COOLDOWN_FRAMES) {
+                shotAvailableCounter++;
+            }
+            if (shotAvailableCounter >= ROCK_COOLDOWN_FRAMES) {
+                shootRandomStone();
+                shotAvailableCounter = 0;
+            }
+        }
+    }
+
+    private void shootRandomStone() {
+
+        int idx = new java.util.Random().nextInt(DIRECTIONS.length);
+        String dir = DIRECTIONS[idx];
+
+        ObjStone rock = new ObjStone(getGameWindow());
+        rock.set(
+                getWorldX(),
+                getWorldY(),
+                dir,
+                true,
+                this
+        );
+        getGameWindow().getProjectileList().add(rock);
     }
 
     public void damageReaction() {
