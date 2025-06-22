@@ -176,7 +176,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
 
-        entityList.sort(Comparator.comparingInt(Entity::getWorldY));
+        entityList.sort(
+                Comparator.comparingInt(Entity::getWorldY)
+                        .thenComparingInt(Entity::getWorldX)
+        );
 
         for (Entity entity : entityList) {
             entity.draw(g2);
