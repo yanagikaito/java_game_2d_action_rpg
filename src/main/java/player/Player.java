@@ -44,6 +44,7 @@ public class Player extends Entity {
     private final int playerSolidAreaY = 1;
     private ArrayList<Entity> inventory = new ArrayList<>();
     private final int maxInventorySize = 20;
+    private static final int FIREBALL_MANA_COST = 20;
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
@@ -83,6 +84,8 @@ public class Player extends Entity {
         setLevel(1);
         setMaxLife(6);
         setLife(getMaxLife());
+        setMaxMana(100);
+        setMana(getMaxMana());
         setStrength(1);
         setDexterity(1);
         setExp(0);
@@ -354,7 +357,11 @@ public class Player extends Entity {
         KeyHandler kh = gameWindow.getKeyHandler();
 
         if (kh.isShotKeyPressed() &&
-                !getProjectile().getAlive() && getShotAvailableCounter() == 30) {
+                !getProjectile().getAlive() &&
+                getShotAvailableCounter() == 30 &&
+                consumeMana(FIREBALL_MANA_COST)) {
+
+            fireCooldown = COOLDOWN_FRAMES;
 
             long now = System.currentTimeMillis();
 
@@ -583,5 +590,11 @@ public class Player extends Entity {
 
     public ArrayList<Entity> getInventory() {
         return inventory;
+    }
+
+    public boolean consumeMana(int cost) {
+        if (getMana() < cost) return false; // 足りなければ false を返す
+        setMana(getMana() - cost);
+        return true;
     }
 }

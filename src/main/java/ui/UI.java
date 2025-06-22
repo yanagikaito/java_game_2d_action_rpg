@@ -4,6 +4,7 @@ import entity.Entity;
 import frame.FrameApp;
 import object.ObjHeart;
 import org.jetbrains.annotations.NotNull;
+import player.Player;
 import window.GameWindow;
 
 import java.awt.*;
@@ -17,6 +18,11 @@ public class UI {
     // 使用するフォント
     private final Font arial40;
     private final Font arial80Bold;
+
+    private final int MANA_BAR_X = 5;
+    private final int MANA_BAR_Y = 60;
+    private final int MANA_BAR_WIDTH = 20;
+    private final int MANA_BAR_HEIGHT = 200;
 
     // メッセージ表示用
     private boolean messageOn;
@@ -59,6 +65,7 @@ public class UI {
         if (gameState == gameWindow.getPlayState()) {
             drawPlayerLife(g2);
             drawBattleLogMessage(g2);
+            drawManaBar(g2);
         } else if (gameState == gameWindow.getPauseState()) {
             drawPlayerLife(g2);
             drawPauseScreen(g2);
@@ -98,6 +105,35 @@ public class UI {
                 g2.drawImage(heartBlank, x, y, tileSize, tileSize, null);
             }
         }
+    }
+
+    private void drawManaBar(@NotNull Graphics2D g2) {
+
+        Player p = gameWindow.getPlayer();
+
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+
+        int x = MANA_BAR_X;
+        int y = MANA_BAR_Y;
+        int w = MANA_BAR_WIDTH;
+        int h = MANA_BAR_HEIGHT;
+        int arc = 20;
+
+        g2.setColor(Color.BLACK);
+        g2.fillRoundRect(x, y, w, h, arc, arc);
+
+        double ratio = (double) p.getMana() / p.getMaxMana();
+        int filledH = (int) (h * ratio);
+        int filledY = y + (h - filledH);
+        g2.setColor(Color.GREEN);
+        g2.fillRoundRect(x, filledY, w, filledH, arc, arc);
+
+        Color offWhite = new Color(255, 255, 255);
+        g2.setColor(offWhite);
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRoundRect(x, y, w, h, arc, arc);
     }
 
     private void drawPauseScreen(@NotNull Graphics2D g2) {
