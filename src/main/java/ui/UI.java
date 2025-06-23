@@ -290,7 +290,7 @@ public class UI {
         int tileSize = FrameApp.getTileSize();
         int frameX = tileSize * 9;
         int frameY = tileSize;
-        int frameWidth = tileSize * 6;
+        int frameWidth = (tileSize * 6) + tileSize / 2;
         int frameHeight = tileSize * 5;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 

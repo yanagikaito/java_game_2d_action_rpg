@@ -34,8 +34,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
     private UI ui = new UI(this);
-    private ArrayList<Entity> projectileList = new ArrayList<>();
-    private ArrayList<Entity> entityList = new ArrayList<>();
+    private ArrayList<Projectile> projectileList = new ArrayList<>();
     private static GameWindow instance;
     private Thread gameThread;
     private int gameState;
@@ -156,6 +155,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        List<Entity> entityList = new ArrayList<>();
+
         tileManager.draw(g2);
 
         entityList.add(player);
@@ -170,16 +171,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 entityList.add(entity);
             }
         }
-        for (Entity p : projectileList) {
+        for (Projectile p : projectileList) {
             if (p != null && p.getAlive()) {
                 entityList.add(p);
             }
         }
 
-        entityList.sort(
-                Comparator.comparingInt(Entity::getWorldY)
-                        .thenComparingInt(Entity::getWorldX)
-        );
+        entityList.sort(Comparator.comparingInt(Entity::getWorldY));
 
         for (Entity entity : entityList) {
             entity.draw(g2);
@@ -306,11 +304,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.assetSetter = assetSetter;
     }
 
-    public ArrayList<Entity> getProjectileList() {
+    public ArrayList<Projectile> getProjectileList() {
         return projectileList;
     }
 
-    public void setProjectileList(ArrayList<Entity> projectileList) {
+    public void setProjectileList(ArrayList<Projectile> projectileList) {
         this.projectileList = projectileList;
     }
 }
