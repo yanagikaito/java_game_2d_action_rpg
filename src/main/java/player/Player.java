@@ -3,10 +3,7 @@ package player;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
-import object.ObjFireball;
-import object.ObjRedPotion;
-import object.ObjShieldWood;
-import object.ObjSwordNormal;
+import object.*;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -102,6 +99,8 @@ public class Player extends Entity {
 
         inventory.add(getCurrentWeapon());
         inventory.add(getCurrentShield());
+
+        // レッドポーション
         inventory.add(new ObjRedPotion(gameWindow));
         inventory.add(new ObjRedPotion(gameWindow));
         inventory.add(new ObjRedPotion(gameWindow));
@@ -112,13 +111,16 @@ public class Player extends Entity {
         inventory.add(new ObjRedPotion(gameWindow));
         inventory.add(new ObjRedPotion(gameWindow));
         inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
+
+        // グリーンポーション
+        inventory.add(new ObjGreenPotion(gameWindow));
+        inventory.add(new ObjGreenPotion(gameWindow));
+        inventory.add(new ObjGreenPotion(gameWindow));
+        inventory.add(new ObjGreenPotion(gameWindow));
+        inventory.add(new ObjGreenPotion(gameWindow));
+        inventory.add(new ObjGreenPotion(gameWindow));
+        inventory.add(new ObjGreenPotion(gameWindow));
+        inventory.add(new ObjGreenPotion(gameWindow));
     }
 
     @Override
@@ -187,6 +189,31 @@ public class Player extends Entity {
             int heal = potion.getHealAmount();
             setLife(Math.min(getLife() + heal, getMaxLife()));
             gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
+            gameWindow.getSoundmanager().redPotionWAV("res/sound/redPotion-sound.wav");
+            inventory.remove(index);
+            return;
+        } else {
+            System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
+        }
+    }
+
+    public void useGreenPotion(int index) {
+        System.out.println("useRedPotion が呼ばれた index=" + index
+                + " invSize=" + inventory.size());
+
+        if (index < 0 || index >= inventory.size()) {
+            System.out.println("index 範囲外で return");
+            return;
+        }
+
+        Entity e = inventory.get(index);
+
+        if (e instanceof ObjGreenPotion) {
+            System.out.println("アイテムは GreenPotion です。処理続行");
+            ObjGreenPotion potion = (ObjGreenPotion) e;
+            int heal = potion.getHealAmount();
+            setMana(Math.min(getMana() + heal, getMaxMana()));
+            gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
             gameWindow.getSoundmanager().redPotionWAV("res/sound/redPotion-sound.wav");
             inventory.remove(index);
             return;
