@@ -2,6 +2,9 @@ package monster;
 
 import entity.Entity;
 import frame.FrameApp;
+import object.ObjCoinBronze;
+import object.ObjGreenPotion;
+import object.ObjRedPotion;
 import object.ObjStone;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
@@ -14,7 +17,7 @@ import java.util.Random;
 
 public class MonGreenSlime extends Entity {
 
-    private static final int ACTION_LOCK_THRESHOLD = 120;
+    private static final int ACTION_LOCK_THRESHOLD = 180;
     private static final int MAX_RANDOM_VALUE = 100;
     private static final int THRESHOLD_UP = 25;
     private static final int THRESHOLD_DOWN = 50;
@@ -26,6 +29,7 @@ public class MonGreenSlime extends Entity {
     private int actionLockCounter = 0;
     private static final int ROCK_COOLDOWN_FRAMES = 180;
     private int shotAvailableCounter = ROCK_COOLDOWN_FRAMES;
+    private static final int SPRITE_ANIMATION_THRESHOLD = 10;
 
     public MonGreenSlime(GameWindow gameWindow) {
 
@@ -82,16 +86,7 @@ public class MonGreenSlime extends Entity {
         actionLockCounter++;
 
         if (actionLockCounter >= ACTION_LOCK_THRESHOLD) {
-            int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
-            if (i <= THRESHOLD_UP) {
-                setDirection("up");
-            } else if (i <= THRESHOLD_DOWN) {
-                setDirection("down");
-            } else if (i <= THRESHOLD_LEFT) {
-                setDirection("left");
-            } else {
-                setDirection("right");
-            }
+            chooseNewDirection();
             actionLockCounter = 0;
         }
 
@@ -112,19 +107,21 @@ public class MonGreenSlime extends Entity {
         }
     }
 
+    private void chooseNewDirection() {
+        int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
+        if (i <= THRESHOLD_UP) setDirection("up");
+        else if (i <= THRESHOLD_DOWN) setDirection("down");
+        else if (i <= THRESHOLD_LEFT) setDirection("left");
+        else setDirection("right");
+    }
+
     private void shootRandomStone() {
 
-        int idx = new java.util.Random().nextInt(DIRECTIONS.length);
-        String dir = DIRECTIONS[idx];
+        String[] dirs = {"up", "down", "left", "right"};
+        String dir = dirs[random.nextInt(dirs.length)];
 
         ObjStone rock = new ObjStone(getGameWindow());
-        rock.set(
-                getWorldX(),
-                getWorldY(),
-                dir,
-                true,
-                this
-        );
+        rock.set(getWorldX(), getWorldY(), dir, true, this);
         getGameWindow().getProjectileList().add(rock);
     }
 

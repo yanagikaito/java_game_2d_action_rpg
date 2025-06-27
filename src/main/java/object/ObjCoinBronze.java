@@ -7,23 +7,23 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class ObjRedPotion extends Entity {
+public class ObjCoinBronze extends Entity {
 
     private GameWindow gameWindow;
-    private int healAmount = 2;
-    private int stackSize = 1;
 
-    public ObjRedPotion(GameWindow gameWindow) {
+    public ObjCoinBronze(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
+        setValue(1);
         setType(getType_pickupOnly());
-        setName("レッドポーション");
-        setDescription("[" + getName() + "]\n 体力を2回復する");
+        setName("ブロンズコイン");
+
         try {
 
-            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/red-potion.gif")),
+            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/coin-bronze.gif")),
                     FrameApp.getTileSize(), FrameApp.getTileSize());
 
         } catch (IOException e) {
@@ -37,13 +37,5 @@ public class ObjRedPotion extends Entity {
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
         g2.drawImage(this.getImage(), screenX, screenY, null);
-    }
-
-    public int getHealAmount() {
-        return healAmount;
-    }
-
-    public int getStackSize() {
-        return stackSize;
     }
 }

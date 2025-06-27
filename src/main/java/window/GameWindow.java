@@ -4,7 +4,11 @@ import asset.AssetSetter;
 import collision.CollisionChecker;
 import entity.Entity;
 import frame.FrameApp;
+import object.ObjCoinBronze;
+import object.ObjGreenPotion;
+import object.ObjRedPotion;
 import object.Projectile;
+import org.jetbrains.annotations.NotNull;
 import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
@@ -35,6 +39,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Entity[] monster = new Entity[20];
     private UI ui = new UI(this);
     private ArrayList<Projectile> projectileList = new ArrayList<>();
+    public ArrayList<Entity> itemList = new ArrayList<>();
     private static GameWindow instance;
     private Thread gameThread;
     private int gameState;
@@ -131,19 +136,38 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     }
                 }
             }
-            for (int i = 0; i < projectileList.size(); i++) {
-                if (projectileList.get(i) != null) {
-                    if (projectileList.get(i).getAlive()) {
-                        projectileList.get(i).update();
+            for (int i = 0; i < itemList.size(); i++) {
+                Entity item = itemList.get(i);
+                if (item == null) continue;
+
+                if (item.getAlive() && collisionChecker.checkPlayer(item)) {
+                    if (item instanceof ObjCoinBronze) {
+                        player.addCoin(((ObjCoinBronze) item));
+                    } else if (item instanceof ObjRedPotion) {
+                        player.healRedPotion((ObjRedPotion) item);
+                    } else if (item instanceof ObjGreenPotion) {
+                        player.healGreenPotion((ObjGreenPotion) item);
                     }
-                    if (!projectileList.get(i).getAlive()) {
-                        projectileList.remove(i--);
-                    }
+                    item.setAlive(false);
+                }
+
+                if (!item.getAlive()) {
+                    itemList.remove(i--);
                 }
             }
-            if (gameState == pauseState) {
-
+        }
+        for (int i = 0; i < projectileList.size(); i++) {
+            if (projectileList.get(i) != null) {
+                if (projectileList.get(i).getAlive()) {
+                    projectileList.get(i).update();
+                }
+                if (!projectileList.get(i).getAlive()) {
+                    projectileList.remove(i--);
+                }
             }
+        }
+        if (gameState == pauseState) {
+
         }
     }
 
@@ -155,9 +179,15 @@ public class GameWindow extends JPanel implements Window, Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        List<Entity> entityList = new ArrayList<>();
-
         tileManager.draw(g2);
+
+        for (Entity item : itemList) {
+            if (item != null && item.getAlive()) {
+                item.draw(g2);
+            }
+        }
+
+        List<Entity> entityList = new ArrayList<>();
 
         entityList.add(player);
 
@@ -171,7 +201,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 entityList.add(entity);
             }
         }
-        for (Projectile p : projectileList) {
+        for (Entity p : projectileList) {
             if (p != null && p.getAlive()) {
                 entityList.add(p);
             }
@@ -310,5 +340,22 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setProjectileList(ArrayList<Projectile> projectileList) {
         this.projectileList = projectileList;
+    }
+
+    public ArrayList<Entity> getItemList() {
+        return itemList;
+    }
+
+    public ArrayList<Entity> setItemList(ArrayList<Entity> itemList) {
+        return this.itemList = itemList;
+    }
+
+    public void dropItem(@NotNull Entity droppedItem, @NotNull Entity source) {
+        System.out.println("【dropItem】呼ばれた／itemList before=" + itemList.size());
+        droppedItem.setWorldX(source.getWorldX());
+        droppedItem.setWorldY(source.getWorldY());
+        droppedItem.setAlive(true);
+        itemList.add(droppedItem);
+        System.out.println("【dropItem】 今の itemList サイズ=" + itemList.size());
     }
 }

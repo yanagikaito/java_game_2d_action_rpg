@@ -56,7 +56,7 @@ public abstract class Projectile extends Entity {
         move();
     }
 
-    private void move() {
+    protected void move() {
         switch (getDirection()) {
             case "up" -> setWorldY(getWorldY() - getSpeed());
             case "down" -> setWorldY(getWorldY() + getSpeed());
@@ -82,11 +82,11 @@ public abstract class Projectile extends Entity {
                 image = sprites[dirIndex][getSpriteNum() - 1];
 //                System.out.println("dirIndex:" + dirIndex);
             }
-            int sx = getWorldX() - getGameWindow().getPlayer().getWorldX()
+            int screenX = getWorldX() - getGameWindow().getPlayer().getWorldX()
                     + getGameWindow().getPlayer().getScreenX();
-            int sy = getWorldY() - getGameWindow().getPlayer().getWorldY()
+            int screenY = getWorldY() - getGameWindow().getPlayer().getWorldY()
                     + getGameWindow().getPlayer().getScreenY();
-            g2.drawImage(image, sx, sy, null);
+            g2.drawImage(image, screenX, screenY, null);
         }
     }
 }
