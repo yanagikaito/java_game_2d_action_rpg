@@ -13,6 +13,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
 import javax.swing.Timer;
 
 public class Player extends Entity {
@@ -29,6 +32,7 @@ public class Player extends Entity {
     private static final long FIRE_COOLDOWN_MS = 1000;
     private long lastFireTime = 0;
     private int fireCooldown = 0;
+    private int coin = 0;
     private static final int COOLDOWN_FRAMES = 60 * 3;
 
     private GameWindow gameWindow;
@@ -214,7 +218,7 @@ public class Player extends Entity {
             int heal = potion.getHealAmount();
             setMana(Math.min(getMana() + heal, getMaxMana()));
             gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
-            gameWindow.getSoundmanager().redPotionWAV("res/sound/redPotion-sound.wav");
+            gameWindow.getSoundmanager().greenPotionWAV("res/sound/redPotion-sound.wav");
             inventory.remove(index);
             return;
         } else {
@@ -483,8 +487,24 @@ public class Player extends Entity {
                 System.out.println("スライムのHP:" + gameWindow.getMonster()[i].getLife());
 
                 if (gameWindow.getMonster()[i].getLife() <= 0) {
+
                     Entity monster = gameWindow.getMonster()[i];
+
+                    gameWindow.getMonster()[i].setAlive(false);
                     gameWindow.getMonster()[i].setDying(true);
+
+                    List<Supplier<Entity>> drops = Arrays.asList(
+                            () -> new ObjCoinBronze(gameWindow),
+                            () -> new ObjRedPotion(gameWindow),
+                            () -> new ObjGreenPotion(gameWindow)
+                    );
+
+                    Collections.shuffle(drops);
+                    Entity dropped = drops.get(0).get();
+
+                    gameWindow.dropItem(dropped, monster);
+                    System.out.println("drops = " + drops);
+
                     gameWindow.getUi().addMessage(gameWindow.getMonster()[i].getName() + "を倒した!");
                     int gainedExp = gameWindow.getMonster()[i].getExp();
                     setExp(getExp() + gainedExp);
@@ -620,8 +640,27 @@ public class Player extends Entity {
     }
 
     public boolean consumeMana(int cost) {
-        if (getMana() < cost) return false; // 足りなければ false を返す
+        if (getMana() < cost) return false;
         setMana(getMana() - cost);
         return true;
+    }
+
+    public void addCoin(@NotNull ObjCoinBronze coin) {
+        int value = coin.getValue();
+
+        setCoin(getCoin() + value);
+        gameWindow.getUi().addMessage("コインを拾った。所持金が" + value + "獲得！");
+    }
+
+    public void healRedPotion(@NotNull ObjRedPotion potion) {
+        int amount = potion.getHealAmount();
+        setLife(Math.min(getLife() + amount, getMaxLife()));
+        gameWindow.getUi().addMessage("レッドポーションを拾った。HPが" + amount + "回復！");
+    }
+
+    public void healGreenPotion(@NotNull ObjGreenPotion potion) {
+        int amount = potion.getHealAmount();
+        setMana(Math.min(getMana() + amount, getMaxMana()));
+        gameWindow.getUi().addMessage("グリーンポーションを拾った。MPが" + amount + "回復！");
     }
 }

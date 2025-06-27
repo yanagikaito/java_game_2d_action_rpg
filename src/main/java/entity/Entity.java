@@ -1,6 +1,7 @@
 package entity;
 
 import frame.FrameApp;
+import object.ObjCoinBronze;
 import object.Projectile;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
@@ -54,7 +55,15 @@ public class Entity {
     private boolean invincible = false;
     private int invincibleCounter = 0;
     private int type;
-    private int type_monster = 2;
+    private final int type_player = 0;
+    private final int type_npc = 1;
+    private final int type_monster = 2;
+    private final int type_sword = 3;
+    private final int type_axe = 4;
+    private final int type_shield = 5;
+    private final int type_consumable = 6;
+    private final int type_pickupOnly = 7;
+    private int value = 1;
     private boolean attacking = false;
     private boolean alive = true;
     private boolean dying = false;
@@ -180,7 +189,7 @@ public class Entity {
     public void speak() {
     }
 
-    private void move() {
+    protected void move() {
         switch (getDirection()) {
             case "up":
                 setWorldY(getWorldY() - getSpeed());
@@ -582,6 +591,26 @@ public class Entity {
         this.mana = mana;
     }
 
+    public int getCollisionCooldown() {
+        return collisionCooldown;
+    }
+
+    public void setCollisionCooldown(int collisionCooldown) {
+        this.collisionCooldown = collisionCooldown;
+    }
+
+    public int getType_pickupOnly() {
+        return type_pickupOnly;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     public void setImage(BufferedImage image, int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
@@ -630,7 +659,7 @@ public class Entity {
                 worldY > gameWindow.getPlayer().getWorldY() - gameWindow.getPlayer().getScreenY() &&
                 worldY < gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY()) {
 
-            if (type == 2 && hpBarOn) {
+            if (type == type_monster && hpBarOn) {
 
                 double oneScale = (double) FrameApp.getTileSize() / maxLife;
                 double hpBarValue = oneScale * life;
@@ -661,7 +690,7 @@ public class Entity {
                 dyingAnimation(g2);
             }
 
-            g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+            g2.drawImage(image, screenX, screenY, null);
 
             changeAlpha(g2, 1F);
         }
