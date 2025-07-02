@@ -90,17 +90,12 @@ public class MonGreenSlime extends Entity {
             actionLockCounter = 0;
         }
 
-        int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
-
-        if (i < 99 && getShotAvailableCounter() == 30) {
-
-            getProjectile().set(getWorldX(), getWorldY(), getDirection(), true, this);
-            getGameWindow().getProjectileList().add(getProjectile());
-
-            if (shotAvailableCounter < ROCK_COOLDOWN_FRAMES) {
-                shotAvailableCounter++;
-            }
-            if (shotAvailableCounter >= ROCK_COOLDOWN_FRAMES) {
+        if (shotAvailableCounter < ROCK_COOLDOWN_FRAMES) {
+            shotAvailableCounter++;
+        }
+        if (shotAvailableCounter >= ROCK_COOLDOWN_FRAMES) {
+            int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
+            if (i < 30) {
                 shootRandomStone();
                 shotAvailableCounter = 0;
             }

@@ -5,6 +5,7 @@ import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class ObjShieldWood extends Entity {
@@ -19,8 +20,8 @@ public class ObjShieldWood extends Entity {
         setDescription("[" + getName() + "]\n 木で,できた盾");
         try {
 
-            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/shield-wood.gif")),
-                    FrameApp.getTileSize(), FrameApp.getTileSize());
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/shield-wood.gif"));
+            setImage(raw,FrameApp.getTileSize());
 
         } catch (IOException e) {
             e.printStackTrace();

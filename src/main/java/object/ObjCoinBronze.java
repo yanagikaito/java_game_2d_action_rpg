@@ -23,8 +23,8 @@ public class ObjCoinBronze extends Entity {
 
         try {
 
-            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/coin-bronze.gif")),
-                    FrameApp.getTileSize(), FrameApp.getTileSize());
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/coin-bronze.gif"));
+            setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {
             e.printStackTrace();
