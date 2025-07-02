@@ -5,6 +5,7 @@ import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class ObjSwordNormal extends Entity {
@@ -19,8 +20,8 @@ public class ObjSwordNormal extends Entity {
         setDescription("[" + getName() + "]\n 古くからある剣");
         try {
 
-            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/sword-normal.gif")),
-                    FrameApp.getTileSize(), FrameApp.getTileSize());
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/sword-normal.gif"));
+            setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {
             e.printStackTrace();

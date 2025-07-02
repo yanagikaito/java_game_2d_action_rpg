@@ -1,17 +1,18 @@
 package entity;
 
 import frame.FrameApp;
-import object.ObjCoinBronze;
 import object.Projectile;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Entity {
+public abstract class Entity {
 
     private GameWindow gameWindow;
     private int worldX;
@@ -611,35 +612,37 @@ public class Entity {
         this.value = value;
     }
 
-    public void setImage(BufferedImage image, int width, int height) {
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        this.width = width;
-        this.height = height;
-        Graphics2D graphics2D = this.image.createGraphics();
-        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        graphics2D.drawImage(image, 0, 0, width, height, null);
-        graphics2D.dispose();
+    private static final ImageResizer DEFAULT_RESIZER = (src, w, h) -> {
+        BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = dst.createGraphics();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        g2.drawImage(src, 0, 0, w, h, null);
+        g2.dispose();
+        return dst;
+    };
+
+    protected void loadAnimationFrames(String path1,
+                                       String path2,
+                                       String path3,
+                                       int tileSize) throws IOException {
+        BufferedImage raw1 = ImageIO.read(
+                getClass().getClassLoader().getResourceAsStream(path1));
+        BufferedImage raw2 = ImageIO.read(
+                getClass().getClassLoader().getResourceAsStream(path2));
+        BufferedImage raw3 = ImageIO.read(
+                getClass().getClassLoader().getResourceAsStream(path3));
+
+        this.image = DEFAULT_RESIZER.resize(raw1, tileSize, tileSize);
+        this.image2 = DEFAULT_RESIZER.resize(raw2, tileSize, tileSize);
+        this.image3 = DEFAULT_RESIZER.resize(raw3, tileSize, tileSize);
+
+        this.width = tileSize;
+        this.height = tileSize;
     }
 
-    public void setImage2(BufferedImage image2, int width, int height) {
-        this.image2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        this.width = width;
-        this.height = height;
-        Graphics2D graphics2D = this.image2.createGraphics();
-        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        graphics2D.drawImage(image2, 0, 0, width, height, null);
-        graphics2D.dispose();
-    }
-
-    public void setImage3(BufferedImage image3, int width, int height) {
-        this.image3 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        this.width = width;
-        this.height = height;
-        Graphics2D graphics2D = this.image3.createGraphics();
-        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        System.out.println("Composite状態: " + graphics2D.getComposite());
-        graphics2D.drawImage(image3, 0, 0, width, height, null);
-        graphics2D.dispose();
+    protected void setImage(BufferedImage raw, int tileSize) {
+        this.image = DEFAULT_RESIZER.resize(raw, tileSize, tileSize);
+        this.width = this.height = tileSize;
     }
 
     public void draw(Graphics2D g2) {

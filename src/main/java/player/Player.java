@@ -34,6 +34,8 @@ public class Player extends Entity {
     private int fireCooldown = 0;
     private int coin = 0;
     private static final int COOLDOWN_FRAMES = 60 * 3;
+    private int invincibleCounter = 0;
+    private final int INVINCIBLE_DURATION = 60; // 60フレーム無敵
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
@@ -62,8 +64,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = FrameApp.getTileSize() - 6;
-        getSolidArea().height = FrameApp.getTileSize() - 4;
+        getSolidArea().width = FrameApp.getTileSize();
+        getSolidArea().height = FrameApp.getTileSize();
 
         setAttackArea(new Rectangle());
         getAttackArea().width = 36;
@@ -226,7 +228,22 @@ public class Player extends Entity {
         }
     }
 
+    public void damagePlayer(int dmg) {
+        if (getInvincible()) return;
+        setLife(getLife() - dmg);
+        setInvincible(true);
+        setInvincibleCounter(0);
+    }
+
     public void update() {
+
+        if (getInvincible()) {
+            invincibleCounter++;
+            if (invincibleCounter > INVINCIBLE_DURATION) {
+                setInvincible(false);
+                invincibleCounter = 0;
+            }
+        }
 
         if (fireCooldown > 0) fireCooldown--;
 
@@ -536,7 +553,7 @@ public class Player extends Entity {
             monster.setRespawning(false);
             ((Timer) e.getSource()).stop();
         });
-        respawnTimer.setRepeats(false); // 1回だけ実行
+        respawnTimer.setRepeats(false);
         return respawnTimer;
     }
 

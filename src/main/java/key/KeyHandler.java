@@ -1,5 +1,6 @@
 package key;
 
+import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.event.KeyEvent;
@@ -135,6 +136,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_D -> setPlayerRight(true);
             case KeyEvent.VK_P -> togglePause();
             case KeyEvent.VK_T -> debugText();
+            case KeyEvent.VK_R -> gameWindow.toggleHitBoxDebug();
             case KeyEvent.VK_C -> gameWindow.setGameState(gameWindow.getCharacterState());
             case KeyEvent.VK_ENTER -> speakDialogue(true);
             case KeyEvent.VK_F -> setShotKeyPressed(true);
@@ -142,7 +144,7 @@ public class KeyHandler implements KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(@NotNull KeyEvent e) {
 
         int code = e.getKeyCode();
 
@@ -175,6 +177,7 @@ public class KeyHandler implements KeyListener {
             setPlayerRight(false);
         } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
             gameWindow.setGameState(gameWindow.getPlayState());
+            gameWindow.getPlayer().setInvincible(false);
         }
     }
 

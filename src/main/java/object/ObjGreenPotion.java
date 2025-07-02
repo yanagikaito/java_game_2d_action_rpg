@@ -7,6 +7,7 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class ObjGreenPotion extends Entity {
@@ -23,8 +24,8 @@ public class ObjGreenPotion extends Entity {
         setDescription("[" + getName() + "]\n 魔力を20回復する");
         try {
 
-            setImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/green-potion.gif")),
-                    FrameApp.getTileSize(), FrameApp.getTileSize());
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/green-potion.gif"));
+            setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {
             e.printStackTrace();

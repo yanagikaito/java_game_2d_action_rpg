@@ -48,6 +48,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int dialogueState = 3;
     private final int characterState = 4;
     private final int debugState = 5;
+    private boolean showHitBoxes = false;
 
     protected GameWindow() {
         this.setBackground(Color.BLACK);
@@ -119,6 +120,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void update() {
 
         if (gameState == playState) {
+
             player.update();
 
             for (Entity entity : npc) {
@@ -155,14 +157,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     itemList.remove(i--);
                 }
             }
-        }
-        for (int i = 0; i < projectileList.size(); i++) {
-            if (projectileList.get(i) != null) {
-                if (projectileList.get(i).getAlive()) {
-                    projectileList.get(i).update();
-                }
-                if (!projectileList.get(i).getAlive()) {
-                    projectileList.remove(i--);
+            for (int i = 0; i < projectileList.size(); i++) {
+                if (projectileList.get(i) != null) {
+                    if (projectileList.get(i).getAlive()) {
+                        projectileList.get(i).update();
+                    }
+                    if (!projectileList.get(i).getAlive()) {
+                        projectileList.remove(i--);
+                    }
                 }
             }
         }
@@ -357,5 +359,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
         droppedItem.setAlive(true);
         itemList.add(droppedItem);
         System.out.println("【dropItem】 今の itemList サイズ=" + itemList.size());
+    }
+
+    public void toggleHitBoxDebug() {
+        showHitBoxes = !showHitBoxes;
+    }
+
+    public boolean isShowHitBoxes() {
+        return showHitBoxes;
     }
 }
