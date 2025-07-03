@@ -536,24 +536,12 @@ public abstract class Entity {
         this.respawning = respawning;
     }
 
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getUseCost() {
-        return useCost;
     }
 
     public void setUseCost(int useCost) {
@@ -590,14 +578,6 @@ public abstract class Entity {
 
     public void setMana(int mana) {
         this.mana = mana;
-    }
-
-    public int getCollisionCooldown() {
-        return collisionCooldown;
-    }
-
-    public void setCollisionCooldown(int collisionCooldown) {
-        this.collisionCooldown = collisionCooldown;
     }
 
     public int getType_pickupOnly() {

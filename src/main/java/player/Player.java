@@ -97,8 +97,8 @@ public class Player extends Entity {
         setCurrentWeapon(new ObjSwordNormal(gameWindow));
         setCurrentShield(new ObjShieldWood(gameWindow));
         setProjectile(new ObjFireball(gameWindow));
-        setAttack(getAttack());
-        setDefense(getDefense());
+        setAttack(calculateBaseAttack());
+        setDefense(calculateBaseDefense());
     }
 
     public void setItems() {
@@ -127,16 +127,6 @@ public class Player extends Entity {
         inventory.add(new ObjGreenPotion(gameWindow));
         inventory.add(new ObjGreenPotion(gameWindow));
         inventory.add(new ObjGreenPotion(gameWindow));
-    }
-
-    @Override
-    public int getAttack() {
-        return setAttack(getStrength() * getCurrentWeapon().getAttackValue());
-    }
-
-    @Override
-    public int getDefense() {
-        return setDefense(getDexterity() * getCurrentShield().getDefenseValue());
     }
 
     public void loadPlayerImages() {
@@ -392,7 +382,7 @@ public class Player extends Entity {
         getSolidArea().height = FrameApp.getTileSize();
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-        damageMonster(monsterIndex, getAttack());
+        damageMonster(monsterIndex, calculateTotalAttack());
 
         setWorldX(originalWorldX);
         setWorldY(originalWorldY);
@@ -463,7 +453,7 @@ public class Player extends Entity {
                 gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
 
                 // スライムのダメージ量
-                int damage = setAttack(gameWindow.getMonster()[i].getAttack() - getDefense());
+                int damage = setAttack(gameWindow.getMonster()[i].getAttack() - calculateTotalDefense());
                 if (damage < 0) {
                     damage = 0;
                 }
@@ -566,8 +556,8 @@ public class Player extends Entity {
             setMaxLife(getMaxLife() + 2);
             setStrength(getStrength() + 1);
             setDexterity(getDexterity() + 1);
-            setAttack(getAttack());
-            setDefense(getDefense());
+            setAttack(calculateBaseAttack());
+            setDefense(calculateBaseDefense());
             gameWindow.getSoundmanager().levelWAV("res/sound/level-up-sound.wav");
             gameWindow.setGameState(gameWindow.getDialogueState());
             gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");
@@ -648,12 +638,38 @@ public class Player extends Entity {
         return screenY;
     }
 
-    public int getMaxInventorySize() {
-        return maxInventorySize;
-    }
-
     public ArrayList<Entity> getInventory() {
         return inventory;
+    }
+
+    public int calculateBaseAttack() {
+        return getStrength();
+    }
+
+    public int calculateWeaponBonus() {
+        return getCurrentWeapon() != null
+                ? getCurrentWeapon().getAttackValue()
+                : 1;
+    }
+
+    public int calculateTotalAttack() {
+        return calculateBaseAttack()
+                * calculateWeaponBonus();
+    }
+
+    public int calculateBaseDefense() {
+        return getDexterity();
+    }
+
+    public int calculateShieldBonus() {
+        return getCurrentShield() != null
+                ? getCurrentShield().getDefenseValue()
+                : 1;
+    }
+
+    public int calculateTotalDefense() {
+        return calculateBaseDefense()
+                * calculateShieldBonus();
     }
 
     public boolean consumeMana(int cost) {
@@ -664,7 +680,6 @@ public class Player extends Entity {
 
     public void addCoin(@NotNull ObjCoinBronze coin) {
         int value = coin.getValue();
-
         setCoin(getCoin() + value);
         gameWindow.getUi().addMessage("コインを拾った。所持金が" + value + "獲得！");
     }
