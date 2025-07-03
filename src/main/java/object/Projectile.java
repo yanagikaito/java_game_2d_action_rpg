@@ -2,8 +2,6 @@ package object;
 
 import collision.CollisionChecker;
 import entity.Entity;
-import frame.FrameApp;
-import player.Player;
 import window.GameWindow;
 
 import java.awt.*;
@@ -43,53 +41,30 @@ public abstract class Projectile extends Entity {
 
         GameWindow gw = getGameWindow();
         CollisionChecker cc = gw.getCollisionChecker();
-        Player p = gw.getPlayer();
-
-        // 1) プレイヤーの当たり判定矩形（ワールド座標）
-        Rectangle playerArea = new Rectangle(
-                p.getWorldX() + p.getSolidArea().x,
-                p.getWorldY() + p.getSolidArea().y,
-                p.getSolidArea().width,
-                p.getSolidArea().height
-
-        );
-
-        // 2) この石ころ（Projectile）の当たり判定矩形
-        Rectangle stoneArea = new Rectangle(
-                getWorldX() + getSolidArea().x,
-                getWorldY() + getSolidArea().y,
-                getSolidArea().width,
-                getSolidArea().height
-        );
-
-        // 3) 重なりチェック
-        boolean overlap = playerArea.intersects(stoneArea);
-        System.out.printf(
-                "[DBG] playerArea=%s, stoneArea=%s, overlap=%b%n",
-                playerArea, stoneArea, overlap
-        );
 
         move();
 
-        if (user == getGameWindow().getPlayer()) {
-            int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
-            if (monsterIndex != 999) {
-                getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack());
-                setAlive(false);
-            }
-        } else {
-            boolean contactPlayer = getGameWindow().getCollisionChecker().checkPlayer(this);
-            System.out.printf("[DBG] cc.checkPlayer() → %b%n", contactPlayer);
-            System.out.println("Invincible = " + getInvincible());
-            System.out.println("contactPlayer = " + contactPlayer);
-            if (getGameWindow().getPlayer().getInvincible() == false && contactPlayer == true) {
-                damagePlayer(getAttack());
-                System.out.println("プレイヤ-に石ころの衝突判定がありダメージを与えた!");
-                setAlive(false);
+        // Entity間とPlayer間の衝突チェック
+        if (this instanceof Projectile proj) {
+
+            // 発射元によって判定先を切り分け
+            if (proj.user == getGameWindow().getPlayer()) {
+                int mi = cc.checkEntity(proj, getGameWindow().getMonster());
+                if (mi != 999) {
+                    getGameWindow().getPlayer().damageMonster(mi, proj.getAttack());
+                    setAlive(false);
+                }
+            } else {
+                boolean hit = cc.checkPlayer(proj);
+                if (hit && !getGameWindow().getPlayer().getInvincible()) {
+                    getGameWindow().getPlayer().damagePlayer(proj.getAttack());
+                    setAlive(false);
+                }
             }
         }
         updateAnimation();
     }
+
 
     protected void move() {
         switch (getDirection()) {
@@ -123,21 +98,22 @@ public abstract class Projectile extends Entity {
                     + getGameWindow().getPlayer().getScreenY();
             g2.drawImage(image, screenX, screenY, null);
 
-            // --- ここからデバッグ描画 ---
-            if (getGameWindow().isShowHitBoxes()) {
-                // 当たり判定領域をスクリーン座標に変換
-                int x = screenX + getSolidArea().x;
-                int y = screenY + getSolidArea().y;
-                int w = getSolidArea().width;
-                int h = getSolidArea().height;
-
-                // 色や線幅を設定して描画
-                g2.setColor(new Color(255, 0, 0, 180));      // 半透明の赤
-                g2.setStroke(new BasicStroke(2));
-                g2.drawRect(x, y, w, h);
-
-                g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
-            }
+            // デバッグ
+//            if (getGameWindow().isShowHitBoxes()) {
+//                // 当たり判定領域をスクリーン座標に変換
+//                int x = screenX + getSolidArea().x;
+//                int y = screenY + getSolidArea().y;
+//                int w = getSolidArea().width;
+//                int h = getSolidArea().height;
+//
+//                // 色や線幅を設定して描画
+//                g2.setColor(new Color(255, 0, 0, 180));
+//                g2.setStroke(new BasicStroke(2));
+//                g2.drawRect(x, y, w, h);
+//
+//                g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
+//            }
+//        }
         }
     }
 }
