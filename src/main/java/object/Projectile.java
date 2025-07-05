@@ -1,6 +1,5 @@
 package object;
 
-import collision.CollisionChecker;
 import entity.Entity;
 import window.GameWindow;
 
@@ -39,27 +38,20 @@ public abstract class Projectile extends Entity {
 
         if (!getAlive()) return;
 
-        GameWindow gw = getGameWindow();
-        CollisionChecker cc = gw.getCollisionChecker();
-
         move();
 
-        // Entity間とPlayer間の衝突チェック
-        if (this instanceof Projectile proj) {
-
-            // 発射元によって判定先を切り分け
-            if (proj.user == getGameWindow().getPlayer()) {
-                int mi = cc.checkEntity(proj, getGameWindow().getMonster());
-                if (mi != 999) {
-                    getGameWindow().getPlayer().damageMonster(mi, proj.getAttack());
-                    setAlive(false);
-                }
-            } else {
-                boolean hit = cc.checkPlayer(proj);
-                if (hit && !getGameWindow().getPlayer().getInvincible()) {
-                    getGameWindow().getPlayer().damagePlayer(proj.getAttack());
-                    setAlive(false);
-                }
+        if (user == getGameWindow().getPlayer()) {
+            int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
+            if (monsterIndex != 999) {
+                getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack());
+                setAlive(false);
+            }
+        } else {
+            boolean contactPlayer = getGameWindow().getCollisionChecker().checkPlayer(this);
+            if (getGameWindow().getPlayer().getInvincible() == false && contactPlayer == true) {
+                damagePlayer(getAttack());
+                System.out.println("プレイヤ-に石ころの衝突判定がありダメージを与えた!");
+                setAlive(false);
             }
         }
         updateAnimation();

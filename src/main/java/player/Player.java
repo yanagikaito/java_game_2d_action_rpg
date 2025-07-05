@@ -46,7 +46,6 @@ public class Player extends Entity {
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
     private ArrayList<Entity> inventory = new ArrayList<>();
-    private final int maxInventorySize = 20;
     private static final int FIREBALL_MANA_COST = 20;
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
@@ -216,13 +215,6 @@ public class Player extends Entity {
         } else {
             System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
         }
-    }
-
-    public void damagePlayer(int dmg) {
-        if (getInvincible()) return;
-        setLife(getLife() - dmg);
-        setInvincible(true);
-        setInvincibleCounter(0);
     }
 
     public void update() {
