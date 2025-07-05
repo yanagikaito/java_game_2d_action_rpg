@@ -175,9 +175,10 @@ public abstract class Entity {
     public void damagePlayer(int attack) {
 
         if (gameWindow.getPlayer().getInvincible() == false) {
+
             gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
 
-            int damage = setAttack(attack - gameWindow.getPlayer().getDefense());
+            int damage = setAttack(Math.max(attack - gameWindow.getPlayer().calculateTotalDefense(), 1));
             if (damage < 0) {
                 damage = 0;
             }
