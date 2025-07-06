@@ -15,6 +15,7 @@ import frame.GameFrame;
 import key.KeyHandler;
 import sound.SoundManager;
 import tile.TileManager;
+import tileInteractive.InteractiveTile;
 import ui.UI;
 
 import javax.swing.*;
@@ -37,6 +38,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private SoundManager soundManager = new SoundManager(this);
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
+    private Entity[] obj = new Entity[10];
+    private InteractiveTile[] iTile = new InteractiveTile[50];
     private UI ui = new UI(this);
     private ArrayList<Projectile> projectileList = new ArrayList<>();
     public ArrayList<Entity> itemList = new ArrayList<>();
@@ -65,6 +68,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         assetSetter.setNPC();
         assetSetter.setMonster();
+        assetSetter.setInteractiveTile();
+        assetSetter.setObjAxe();
         gameState = playState;
     }
 
@@ -167,6 +172,16 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     }
                 }
             }
+            for (int i = 0; i < iTile.length; i++) {
+                if (iTile[i] != null) {
+                    iTile[i].update();
+                }
+            }
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    obj[i].update();
+                }
+            }
         }
         if (gameState == pauseState) {
 
@@ -182,6 +197,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         tileManager.draw(g2);
+
+        for (int i = 0; i < iTile.length; i++) {
+            if (iTile[i] != null) {
+                iTile[i].draw(g2);
+            }
+        }
+
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2);
+            }
+        }
 
         for (Entity item : itemList) {
             if (item != null && item.getAlive()) {
@@ -350,6 +377,22 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public ArrayList<Entity> setItemList(ArrayList<Entity> itemList) {
         return this.itemList = itemList;
+    }
+
+    public InteractiveTile[] getItile() {
+        return iTile;
+    }
+
+    public void setItile(InteractiveTile[] iTile) {
+        this.iTile = iTile;
+    }
+
+    public Entity[] getObj() {
+        return obj;
+    }
+
+    public void setObj(Entity[] obj) {
+        this.obj = obj;
     }
 
     public void dropItem(@NotNull Entity droppedItem, @NotNull Entity source) {

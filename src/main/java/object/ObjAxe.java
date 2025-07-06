@@ -10,21 +10,24 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class ObjGreenPotion extends Entity {
+public class ObjAxe extends Entity {
 
     private GameWindow gameWindow;
-    private int healAmount = 20;
-    private int stackSize = 1;
 
-    public ObjGreenPotion(GameWindow gameWindow) {
+    public ObjAxe(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setType(getType_greenPotion());
-        setName("グリーンポーション");
-        setDescription("[" + getName() + "]\n 魔力を20回復する");
+
+        setType(getType_axe());
+        setName("木の斧");
+        setAttackValue(2);
+        getAttackArea().width = 30;
+        getAttackArea().height = 30;
+        setDescription("[" + getName() + "]\n木を切ることができる");
+
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/green-potion.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/axe.gif"));
             setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {
@@ -38,13 +41,5 @@ public class ObjGreenPotion extends Entity {
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
         g2.drawImage(this.getImage(), screenX, screenY, null);
-    }
-
-    public int getHealAmount() {
-        return healAmount;
-    }
-
-    public int getStackSize() {
-        return stackSize;
     }
 }

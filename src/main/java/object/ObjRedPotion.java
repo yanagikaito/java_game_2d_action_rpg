@@ -19,7 +19,7 @@ public class ObjRedPotion extends Entity {
     public ObjRedPotion(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setType(getType_pickupOnly());
+        setType(getType_redPotion());
         setName("レッドポーション");
         setDescription("[" + getName() + "]\n 体力を2回復する");
         try {
