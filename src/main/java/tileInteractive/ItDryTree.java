@@ -1,4 +1,4 @@
-package object;
+package tileInteractive;
 
 import entity.Entity;
 import frame.FrameApp;
@@ -10,26 +10,34 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class ObjGreenPotion extends Entity {
+public class ItDryTree extends InteractiveTile {
 
     private GameWindow gameWindow;
-    private int healAmount = 20;
-    private int stackSize = 1;
 
-    public ObjGreenPotion(GameWindow gameWindow) {
+    public ItDryTree(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setType(getType_greenPotion());
-        setName("グリーンポーション");
-        setDescription("[" + getName() + "]\n 魔力を20回復する");
+
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/green-potion.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tileInteractive/drytree.gif"));
             setImage(raw, FrameApp.getTileSize());
+
+            setDestructible(true);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isCorrectItem(@NotNull Entity entity) {
+
+        boolean isCorrectItem = false;
+
+        if (entity.getCurrentWeapon().getType() == getType_axe()) {
+            isCorrectItem = true;
+        }
+        return isCorrectItem;
     }
 
     public void draw(@NotNull Graphics2D g2) {
@@ -38,13 +46,5 @@ public class ObjGreenPotion extends Entity {
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
         g2.drawImage(this.getImage(), screenX, screenY, null);
-    }
-
-    public int getHealAmount() {
-        return healAmount;
-    }
-
-    public int getStackSize() {
-        return stackSize;
     }
 }

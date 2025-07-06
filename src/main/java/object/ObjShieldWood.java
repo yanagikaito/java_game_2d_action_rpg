@@ -15,13 +15,14 @@ public class ObjShieldWood extends Entity {
     public ObjShieldWood(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
+        setType(getType_shield());
         setName("木の盾");
         setDefenseValue(1);
         setDescription("[" + getName() + "]\n 木で,できた盾");
         try {
 
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/shield-wood.gif"));
-            setImage(raw,FrameApp.getTileSize());
+            setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {
             e.printStackTrace();

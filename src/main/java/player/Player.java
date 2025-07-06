@@ -46,7 +46,13 @@ public class Player extends Entity {
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
     private ArrayList<Entity> inventory = new ArrayList<>();
+    private final int maxInventorySize = 20;
     private static final int FIREBALL_MANA_COST = 20;
+    private static final int SLOT_WEAPON = 0;  // 武器スロット列
+    private static final int SLOT_SHIELD = 1;  // 盾スロット列
+    private static final int SLOT_CONSUMABLE = 2;  // 消費アイテムスロット列
+    private int cursorCol;  // カーソルの列  (0〜2)
+    private int cursorRow;  // カーソルの行  (0〜最大アイテム数-1)
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
@@ -63,12 +69,12 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = FrameApp.getTileSize();
-        getSolidArea().height = FrameApp.getTileSize();
+        getSolidArea().width = FrameApp.getTileSize() - 3;
+        getSolidArea().height = FrameApp.getTileSize() - 3;
 
         setAttackArea(new Rectangle());
-        getAttackArea().width = 36;
-        getAttackArea().height = 36;
+//        getAttackArea().width = 36;
+//        getAttackArea().height = 36;
 
         setDefaultValues();
         loadPlayerImages();
@@ -105,26 +111,7 @@ public class Player extends Entity {
         inventory.add(getCurrentWeapon());
         inventory.add(getCurrentShield());
 
-        // レッドポーション
         inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjRedPotion(gameWindow));
-
-        // グリーンポーション
-        inventory.add(new ObjGreenPotion(gameWindow));
-        inventory.add(new ObjGreenPotion(gameWindow));
-        inventory.add(new ObjGreenPotion(gameWindow));
-        inventory.add(new ObjGreenPotion(gameWindow));
-        inventory.add(new ObjGreenPotion(gameWindow));
-        inventory.add(new ObjGreenPotion(gameWindow));
-        inventory.add(new ObjGreenPotion(gameWindow));
         inventory.add(new ObjGreenPotion(gameWindow));
     }
 
@@ -292,12 +279,17 @@ public class Player extends Entity {
         int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         interactNPC(npcIndex);
 
+        int objIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
+        pickUpObject(objIndex);
+
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         if (monsterIndex != 999 && !getInvincible()) {
             contactMonster(monsterIndex);
             setInvincible(true);
         }
-//        System.out.println("モンスター衝突判定: " + monsterIndex);
+
+        int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+        damageInteractiveTile(iTileIndex);
     }
 
     private void updateAnimation() {
@@ -376,6 +368,9 @@ public class Player extends Entity {
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         damageMonster(monsterIndex, calculateTotalAttack());
 
+        int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+        damageInteractiveTile(iTileIndex);
+
         setWorldX(originalWorldX);
         setWorldY(originalWorldY);
         getSolidArea().width = originalSolidWidth;
@@ -419,6 +414,25 @@ public class Player extends Entity {
             }
         }
     }
+
+    public void pickUpObject(int i) {
+
+        if (i != 999) {
+
+            String text;
+
+            if (inventory.size() != maxInventorySize) {
+
+                inventory.add(gameWindow.getObj()[i]);
+                text = gameWindow.getObj()[i].getName() + "を手に入れた!";
+            } else {
+                text = "手に入れていない!";
+            }
+            gameWindow.getUi().addMessage(text);
+            gameWindow.getObj()[i] = null;
+        }
+    }
+
 
     public void interactNPC(int i) {
 
@@ -529,6 +543,16 @@ public class Player extends Entity {
         }
     }
 
+    public void damageInteractiveTile(int i) {
+
+        if (i != 999 && gameWindow.getItile()[i].isDestructible()
+                && gameWindow.getItile()[i].isCorrectItem(this) == true) {
+
+            gameWindow.getItile()[i] = null;
+
+        }
+    }
+
     private @NotNull Timer getTimer(Entity monster) {
         Timer respawnTimer = new Timer(5000, e -> {
             gameWindow.getAssetSetter().setMonster();
@@ -554,6 +578,34 @@ public class Player extends Entity {
             gameWindow.setGameState(gameWindow.getDialogueState());
             gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");
             gameWindow.getPlayer().setLife(gameWindow.getPlayer().getMaxLife());
+        }
+    }
+
+    public void selectItem(int index) {
+
+        int itemIndex = gameWindow.getUi().getItemIndexOnSlot();
+
+        if (itemIndex < inventory.size()) {
+
+            Entity selectedItem = inventory.get(itemIndex);
+            System.out.println("selectedItem = " + selectedItem);
+
+            if (selectedItem.getType() == getType_sword() || selectedItem.getType() == getType_axe()) {
+
+                setCurrentWeapon(selectedItem);
+                setAttack(calculateTotalAttack());
+            }
+            if (selectedItem.getType() == getType_shield()) {
+
+                setCurrentShield(selectedItem);
+                setDefense(calculateTotalDefense());
+            }
+            if (selectedItem.getType() == getType_redPotion()) {
+                useRedPotion(index);
+            }
+            if (selectedItem.getType() == getType_greenPotion()) {
+                useGreenPotion(index);
+            }
         }
     }
 
@@ -634,6 +686,10 @@ public class Player extends Entity {
         return inventory;
     }
 
+    public void calculateBaseAttackArea() {
+        setAttackArea(getCurrentWeapon().getAttackArea());
+    }
+
     public int calculateBaseAttack() {
         return getStrength();
     }
@@ -645,6 +701,7 @@ public class Player extends Entity {
     }
 
     public int calculateTotalAttack() {
+        calculateBaseAttackArea();
         return calculateBaseAttack()
                 * calculateWeaponBonus();
     }
@@ -669,6 +726,7 @@ public class Player extends Entity {
         setMana(getMana() - cost);
         return true;
     }
+
 
     public void addCoin(@NotNull ObjCoinBronze coin) {
         int value = coin.getValue();

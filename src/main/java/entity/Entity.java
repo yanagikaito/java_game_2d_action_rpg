@@ -62,8 +62,9 @@ public abstract class Entity {
     private final int type_sword = 3;
     private final int type_axe = 4;
     private final int type_shield = 5;
-    private final int type_consumable = 6;
-    private final int type_pickupOnly = 7;
+    private final int type_redPotion = 6;
+    private final int type_greenPotion = 7;
+    private final int type_pickupOnly = 8;
     private int value = 1;
     private boolean attacking = false;
     private boolean alive = true;
@@ -591,6 +592,38 @@ public abstract class Entity {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public int getType_axe() {
+        return type_axe;
+    }
+
+    public int getType_monster() {
+        return type_monster;
+    }
+
+    public int getType_player() {
+        return type_player;
+    }
+
+    public int getType_npc() {
+        return type_npc;
+    }
+
+    public int getType_sword() {
+        return type_sword;
+    }
+
+    public int getType_shield() {
+        return type_shield;
+    }
+
+    public int getType_redPotion() {
+        return type_redPotion;
+    }
+
+    public int getType_greenPotion() {
+        return type_greenPotion;
     }
 
     private static final ImageResizer DEFAULT_RESIZER = (src, w, h) -> {

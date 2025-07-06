@@ -2,9 +2,6 @@ package monster;
 
 import entity.Entity;
 import frame.FrameApp;
-import object.ObjCoinBronze;
-import object.ObjGreenPotion;
-import object.ObjRedPotion;
 import object.ObjStone;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
@@ -34,7 +31,7 @@ public class MonGreenSlime extends Entity {
     public MonGreenSlime(GameWindow gameWindow) {
 
         super(gameWindow);
-        setType(2);
+        setType(getType_monster());
         setName("Green Slime");
         setSpeed(1);
         setMaxLife(4);

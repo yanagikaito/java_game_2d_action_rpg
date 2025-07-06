@@ -122,8 +122,7 @@ public class KeyHandler implements KeyListener {
                             + " (row=" + row + ", col=" + col + ")"
                             + " inventorySize=" + gameWindow.getPlayer().getInventory().size()
                     );
-                    gameWindow.getPlayer().useRedPotion(index);
-                    gameWindow.getPlayer().useGreenPotion(index);
+                    gameWindow.getPlayer().selectItem(index);
                 }
             }
             return;

@@ -310,6 +310,11 @@ public class UI {
         g2.drawRoundRect(cursorX, cursorY - 2, cursorWidth, cursorHeight, 10, 10);
 
         for (int i = 0; i < gameWindow.getPlayer().getInventory().size(); i++) {
+            if (gameWindow.getPlayer().getInventory().get(i) == gameWindow.getPlayer().getCurrentWeapon()
+                    || gameWindow.getPlayer().getInventory().get(i) == gameWindow.getPlayer().getCurrentShield()) {
+                g2.setColor(new Color(240, 190, 90));
+                g2.fillRoundRect(slotX, slotY, FrameApp.getTileSize(), FrameApp.getTileSize(), 10, 10);
+            }
 
             g2.drawImage(gameWindow.getPlayer().getInventory().get(i).getImage(), slotX, slotY, null);
 
