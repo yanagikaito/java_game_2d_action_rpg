@@ -22,6 +22,7 @@ public abstract class Entity {
     private int speed;
     private String direction;
     private String attackDirection;
+    private String axeDirection;
     private BufferedImage[][] sprites;
     private BufferedImage[][] attackSprites;
     private BufferedImage image;
@@ -36,6 +37,7 @@ public abstract class Entity {
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
+    private static final String[] AXE_DIRECTIONS = {"axeUp", "axeDown", "axeLeft", "axeRight"};
     private static final String[] FIREBALL_DIRECTIONS = {"fireballUp", "fireballDown", "fireballLeft", "fireballRight"};
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;

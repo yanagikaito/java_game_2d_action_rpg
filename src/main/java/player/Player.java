@@ -22,6 +22,7 @@ public class Player extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
+    private static final String[] AXE_DIRECTIONS = {"axeUp", "axeDown", "axeLeft", "axeRight"};
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 5;
@@ -29,6 +30,8 @@ public class Player extends Entity {
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 25;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
+    private BufferedImage[][] axeSprites = new BufferedImage[AXE_DIRECTIONS.length][SPRITE_COUNT];
+    private BufferedImage[][] currentAttackSprites;
     private static final long FIRE_COOLDOWN_MS = 1000;
     private long lastFireTime = 0;
     private int fireCooldown = 0;
@@ -48,11 +51,6 @@ public class Player extends Entity {
     private ArrayList<Entity> inventory = new ArrayList<>();
     private final int maxInventorySize = 20;
     private static final int FIREBALL_MANA_COST = 20;
-    private static final int SLOT_WEAPON = 0;  // 武器スロット列
-    private static final int SLOT_SHIELD = 1;  // 盾スロット列
-    private static final int SLOT_CONSUMABLE = 2;  // 消費アイテムスロット列
-    private int cursorCol;  // カーソルの列  (0〜2)
-    private int cursorRow;  // カーソルの行  (0〜最大アイテム数-1)
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
@@ -78,7 +76,7 @@ public class Player extends Entity {
 
         setDefaultValues();
         loadPlayerImages();
-        loadAttackPlayerImages();
+        loadAllAttackSprites();
         setItems();
     }
 
@@ -132,25 +130,50 @@ public class Player extends Entity {
         }
     }
 
-    public void loadAttackPlayerImages() {
-        try {
-            int tileSize = FrameApp.getTileSize();
-            for (int dir = 0; dir < ATTACK_DIRECTIONS.length; dir++) {
-                for (int i = 0; i < SPRITE_COUNT; i++) {
-                    String path = "player/image-" + ATTACK_DIRECTIONS[dir] + "-" + (i + 1) + ".gif";
-                    BufferedImage original = ImageIO.read(
-                            getClass().getClassLoader().getResourceAsStream(path));
+    private void loadAllAttackSprites() {
 
-                    BufferedImage processed = switch (ATTACK_DIRECTIONS[dir]) {
-                        case "attackUp", "attackDown" -> createImage(original, tileSize, tileSize * 2);
-                        case "attackLeft", "attackRight" -> createImage(original, tileSize * 2, tileSize);
-                        default -> createImage(original, tileSize, tileSize);
-                    };
-                    attackSprites[dir][i] = processed;
+        int tileSize = FrameApp.getTileSize();
+
+        // 剣用
+        for (int d = 0; d < ATTACK_DIRECTIONS.length; d++) {
+            for (int i = 0; i < SPRITE_COUNT; i++) {
+                String path = "player/image-" + ATTACK_DIRECTIONS[d] + "-" + (i + 1) + ".gif";
+                try {
+                    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    if (d == 0 || d == 1) {
+                        attackSprites[d][i] = createImage(img, tileSize, tileSize * 2);
+                    } else {
+                        attackSprites[d][i] = createImage(img, tileSize * 2, tileSize);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+
+        // 斧用
+        for (int d = 0; d < AXE_DIRECTIONS.length; d++) {
+            for (int i = 0; i < SPRITE_COUNT; i++) {
+                String path = "player/image-" + AXE_DIRECTIONS[d] + "-" + (i + 1) + ".gif";
+                try {
+                    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    if (d == 0 || d == 1) {
+                        axeSprites[d][i] = createImage(img, tileSize, tileSize * 2);
+                    } else {
+                        axeSprites[d][i] = createImage(img, tileSize * 2, tileSize);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void updateCurrentAttackSprites() {
+        if (getCurrentWeapon().getType() == getType_axe()) {
+            currentAttackSprites = axeSprites;
+        } else {
+            currentAttackSprites = attackSprites;
         }
     }
 
@@ -204,6 +227,18 @@ public class Player extends Entity {
         }
     }
 
+    private void startAttack() {
+
+        String base = capitalize(getDirection());
+        if (getCurrentWeapon().getType() == getType_axe()) {
+            setAttackDirection("axe" + base);
+        } else {
+            setAttackDirection("attack" + base);
+        }
+
+        updateCurrentAttackSprites();
+    }
+
     public void update() {
 
         if (getInvincible()) {
@@ -217,6 +252,7 @@ public class Player extends Entity {
         if (fireCooldown > 0) fireCooldown--;
 
         if (getAttacking()) {
+            startAttack();
             playerAttacking();
         } else {
             if (gameWindow.getKeyHandler().isShotKeyPressed() && fireCooldown == 0) {
@@ -594,6 +630,7 @@ public class Player extends Entity {
 
                 setCurrentWeapon(selectedItem);
                 setAttack(calculateTotalAttack());
+                loadAllAttackSprites();
             }
             if (selectedItem.getType() == getType_shield()) {
 
@@ -611,59 +648,38 @@ public class Player extends Entity {
 
     @Override
     public void draw(Graphics2D g2) {
-
-        BufferedImage image = null;
-        int tempScreenX = screenX;
-        int tempScreenY = screenY;
+        
+        int tileSize = FrameApp.getTileSize();
+        BufferedImage img;
 
         if (!getAttacking()) {
-            int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
-            if (dirIndex != -1) {
-                image = sprites[dirIndex][getSpriteNum() - 1];
-//                System.out.println("dirIndex:" + dirIndex);
+            int walkDirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
+            if (walkDirIndex >= 0) {
+                img = sprites[walkDirIndex][getSpriteNum() - 1];
+                g2.drawImage(img, screenX, screenY, tileSize, tileSize, null);
             }
-        } else {
-            int attackDirIndex = Arrays.asList(ATTACK_DIRECTIONS).indexOf(getAttackDirection());
-            System.out.println("attackDirIndex:" + attackDirIndex);
-            if (attackDirIndex != -1) {
-                image = attackSprites[attackDirIndex][getSpriteNum() - 1];
-//                System.out.println("image:" + image);
-            }
+            return;
         }
 
-        if (getInvincible()) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-            g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
-        }
-        if (!getAttacking()) {
-            g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize(), null);
-        } else {
-            if (getAttackDirection().equals("attackUp")) {
-                tempScreenY = screenY - FrameApp.getTileSize();
-                g2.drawImage(image, screenX, tempScreenY, FrameApp.getTileSize(), FrameApp.getTileSize() * 2, null);
-            } else if (getAttackDirection().equals("attackDown")) {
-                g2.drawImage(image, screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize() * 2, null);
-            } else if (getAttackDirection().equals("attackLeft")) {
-                tempScreenX = screenX - FrameApp.getTileSize();
-                g2.drawImage(image, tempScreenX, screenY, FrameApp.getTileSize() * 2, FrameApp.getTileSize(), null);
-            } else if (getAttackDirection().equals("attackRight")) {
-                g2.drawImage(image, screenX, screenY, FrameApp.getTileSize() * 2, FrameApp.getTileSize(), null);
-            }
+        boolean isAxe = getCurrentWeapon().getType() == getType_axe();
+        String[] animationKeys = isAxe ? AXE_DIRECTIONS : ATTACK_DIRECTIONS;
+        BufferedImage[][] spriteSet = isAxe ? axeSprites : attackSprites;
 
-            // デバッグ
-//            tempScreenX = screenX + getSolidArea().x;
-//            tempScreenY = screenY + getSolidArea().y;
-//            switch (getDirection()) {
-//                case "up" -> tempScreenY = screenY - getAttackArea().height;
-//                case "down" -> tempScreenY = screenY + FrameApp.getTileSize();
-//                case "left" -> tempScreenX = screenX - getAttackArea().width;
-//                case "right" -> tempScreenX = screenX + FrameApp.getTileSize();
-//            }
-//            g2.setColor(Color.RED);
-//            g2.setStroke(new BasicStroke(1));
-//            g2.drawRect(tempScreenX, tempScreenY, getAttackArea().width, getAttackArea().height);
-//            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        }
+        int directionIndex = Arrays.asList(animationKeys)
+                .indexOf(getAttackDirection());
+        if (directionIndex < 0) return;
+
+        int frameIndex = getSpriteNum() - 1;
+        frameIndex = Math.max(0, Math.min(frameIndex, SPRITE_COUNT - 1));
+
+        img = spriteSet[directionIndex][frameIndex];
+
+        int drawWidth = (directionIndex == 2 || directionIndex == 3) ? tileSize * 2 : tileSize;
+        int drawHeight = (directionIndex == 0 || directionIndex == 1) ? tileSize * 2 : tileSize;
+        int drawX = animationKeys[directionIndex].endsWith("Left") ? screenX - tileSize : screenX;
+        int drawY = animationKeys[directionIndex].endsWith("Up") ? screenY - tileSize : screenY;
+
+        g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
     }
 
     private @NotNull BufferedImage createImage(BufferedImage original, int width, int height) {
@@ -744,5 +760,9 @@ public class Player extends Entity {
         int amount = potion.getHealAmount();
         setMana(Math.min(getMana() + amount, getMaxMana()));
         gameWindow.getUi().addMessage("グリーンポーションを拾った。MPが" + amount + "回復！");
+    }
+
+    private @NotNull String capitalize(@NotNull String s) {
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 }
