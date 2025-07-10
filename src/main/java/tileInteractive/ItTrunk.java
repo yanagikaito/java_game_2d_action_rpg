@@ -1,6 +1,5 @@
 package tileInteractive;
 
-import entity.Entity;
 import frame.FrameApp;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
@@ -10,11 +9,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class ItDryTree extends InteractiveTile {
+public class ItTrunk extends InteractiveTile {
 
     private GameWindow gameWindow;
 
-    public ItDryTree(GameWindow gameWindow, int row, int col) {
+    public ItTrunk(GameWindow gameWindow, int row, int col) {
         super(gameWindow, row, col);
         this.gameWindow = gameWindow;
         setWorldX(FrameApp.getTileSize() * row);
@@ -22,30 +21,19 @@ public class ItDryTree extends InteractiveTile {
 
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tileInteractive/drytree.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tileInteractive/trunk.gif"));
             setImage(raw, FrameApp.getTileSize());
-
-            setDestructible(true);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    public boolean isCorrectItem(@NotNull Entity entity) {
-
-        boolean isCorrectItem = false;
-
-        if (entity.getCurrentWeapon().getType() == getType_axe()) {
-            isCorrectItem = true;
-        }
-        return isCorrectItem;
-    }
-
-    public InteractiveTile createDestroyedForm() {
-        int tileSize = FrameApp.getTileSize();
-        InteractiveTile trunk = new ItTrunk(gameWindow, getWorldX() / tileSize, getWorldY() / tileSize);
-        return trunk;
+        getSolidArea().x = 0;
+        getSolidArea().y = 0;
+        getSolidArea().width = 0;
+        getSolidArea().height = 0;
+        setSolidAreaDefaultX(getSolidArea().x);
+        setSolidAreaDefaultY(getSolidArea().y);
     }
 
     public void draw(@NotNull Graphics2D g2) {
