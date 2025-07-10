@@ -51,24 +51,33 @@ public class AssetSetter {
     public void setInteractiveTile() {
 
         InteractiveTile[] iTile = gameWindow.getItile();
+
         int i = 0;
 
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 26, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 28, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 29, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 11);
         i++;
+
         iTile[i] = createInteractiveTile(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 11);
 
         gameWindow.setItile(iTile);
@@ -89,7 +98,7 @@ public class AssetSetter {
     }
 
     private @NotNull InteractiveTile createInteractiveTile(int worldX, int worldY) {
-        ItDryTree tree = new ItDryTree(gameWindow);
+        ItDryTree tree = new ItDryTree(gameWindow, worldX, worldY);
         tree.setWorldX(worldX);
         tree.setWorldY(worldY);
         return tree;

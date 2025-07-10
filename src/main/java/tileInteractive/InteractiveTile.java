@@ -1,6 +1,7 @@
 package tileInteractive;
 
 import entity.Entity;
+import frame.FrameApp;
 import window.GameWindow;
 
 public class InteractiveTile extends Entity {
@@ -8,14 +9,21 @@ public class InteractiveTile extends Entity {
     private GameWindow gameWindow;
     private boolean destructible = false;
 
-    public InteractiveTile(GameWindow gameWindow) {
+    public InteractiveTile(GameWindow gameWindow, int row, int col) {
         super(gameWindow);
         this.gameWindow = gameWindow;
+        setWorldX(FrameApp.getTileSize() * row);
+        setWorldY(FrameApp.getTileSize() * col);
     }
 
     public boolean isCorrectItem(Entity entity) {
         boolean isCorrectItem = false;
         return isCorrectItem;
+    }
+
+    public InteractiveTile createDestroyedForm() {
+        InteractiveTile trunk = null;
+        return trunk;
     }
 
     public void update() {

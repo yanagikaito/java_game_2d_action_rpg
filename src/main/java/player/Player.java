@@ -581,10 +581,12 @@ public class Player extends Entity {
 
     public void damageInteractiveTile(int i) {
 
+        if (!gameWindow.getPlayer().getAttacking()) return;
+
         if (i != 999 && gameWindow.getItile()[i].isDestructible()
                 && gameWindow.getItile()[i].isCorrectItem(this) == true) {
 
-            gameWindow.getItile()[i] = null;
+            gameWindow.getItile()[i] = gameWindow.getItile()[i].createDestroyedForm();
 
         }
     }
@@ -648,7 +650,7 @@ public class Player extends Entity {
 
     @Override
     public void draw(Graphics2D g2) {
-        
+
         int tileSize = FrameApp.getTileSize();
         BufferedImage img;
 
