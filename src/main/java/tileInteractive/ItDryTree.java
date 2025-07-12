@@ -26,6 +26,7 @@ public class ItDryTree extends InteractiveTile {
             setImage(raw, FrameApp.getTileSize());
 
             setDestructible(true);
+            setLife(6);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,11 +49,23 @@ public class ItDryTree extends InteractiveTile {
         return trunk;
     }
 
+    @Override
     public void draw(@NotNull Graphics2D g2) {
 
+        int ts = FrameApp.getTileSize();
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
-        g2.drawImage(this.getImage(), screenX, screenY, null);
+        Composite original = g2.getComposite();
+
+        if (getInvincible()) {
+            g2.setComposite(AlphaComposite.getInstance(
+                    AlphaComposite.SRC_OVER, 0.5f
+            ));
+        }
+
+        g2.drawImage(getImage(), screenX, screenY, ts, ts, null);
+
+        g2.setComposite(original);
     }
 }
