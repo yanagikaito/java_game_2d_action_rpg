@@ -8,6 +8,7 @@ public class InteractiveTile extends Entity {
 
     private GameWindow gameWindow;
     private boolean destructible = false;
+    private static final int SPRITE_ANIMATION_THRESHOLD = 20;
 
     public InteractiveTile(GameWindow gameWindow, int row, int col) {
         super(gameWindow);
@@ -28,6 +29,13 @@ public class InteractiveTile extends Entity {
 
     public void update() {
 
+        if (getInvincible()) {
+            setInvincibleCounter(getInvincibleCounter() + 1);
+            if (getInvincibleCounter() > SPRITE_ANIMATION_THRESHOLD) {
+                setInvincible(false);
+                setInvincibleCounter(0);
+            }
+        }
     }
 
     public boolean isDestructible() {

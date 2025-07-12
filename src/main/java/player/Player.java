@@ -584,10 +584,17 @@ public class Player extends Entity {
         if (!gameWindow.getPlayer().getAttacking()) return;
 
         if (i != 999 && gameWindow.getItile()[i].isDestructible()
-                && gameWindow.getItile()[i].isCorrectItem(this) == true) {
+                && gameWindow.getItile()[i].isCorrectItem(this) == true
+                && gameWindow.getItile()[i].getInvincible() == false) {
 
-            gameWindow.getItile()[i] = gameWindow.getItile()[i].createDestroyedForm();
+            gameWindow.getSoundmanager().damageWAV("res/sound/thrust-sound.wav");
+            gameWindow.getItile()[i].setLife(gameWindow.getItile()[i].getLife() - 1);
+            System.out.println("life = " + gameWindow.getItile()[i].getLife());
+            gameWindow.getItile()[i].setInvincible(true);
 
+            if (gameWindow.getItile()[i].getLife() == 0) {
+                gameWindow.getItile()[i] = gameWindow.getItile()[i].createDestroyedForm();
+            }
         }
     }
 
