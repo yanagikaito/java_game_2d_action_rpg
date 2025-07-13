@@ -10,11 +10,10 @@ public class InteractiveTile extends Entity {
     private boolean destructible = false;
     private static final int SPRITE_ANIMATION_THRESHOLD = 20;
 
-    public InteractiveTile(GameWindow gameWindow, int row, int col) {
-        super(gameWindow);
-        this.gameWindow = gameWindow;
-        setWorldX(FrameApp.getTileSize() * row);
-        setWorldY(FrameApp.getTileSize() * col);
+    public InteractiveTile(GameWindow gw, int row, int col) {
+        super(gw);
+        setWorldX(col * FrameApp.getTileSize());
+        setWorldY(row * FrameApp.getTileSize());
     }
 
     public boolean isCorrectItem(Entity entity) {
@@ -27,6 +26,7 @@ public class InteractiveTile extends Entity {
         return trunk;
     }
 
+    @Override
     public void update() {
 
         if (getInvincible()) {

@@ -140,6 +140,7 @@ public abstract class Entity {
         gameWindow.getCollisionChecker().checkTile(this);
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
         if (this.type == type_monster && contactPlayer == true && !gameWindow.getPlayer().getInvincible()) {
@@ -626,6 +627,43 @@ public abstract class Entity {
 
     public int getType_greenPotion() {
         return type_greenPotion;
+    }
+
+    public Color getParticleColor() {
+        Color color = null;
+        return color;
+    }
+
+    public int getParticleSize() {
+        int size = 0;
+        return size;
+    }
+
+    public int getParticleSpeed() {
+        int speed = 0;
+        return speed;
+    }
+
+    public int getParticleMaxLife() {
+        int maxLife = 0;
+        return maxLife;
+    }
+
+    public void generateParticle(@NotNull Entity generator, Entity target) {
+
+        Color color = generator.getParticleColor();
+        int size = generator.getParticleSize();
+        int speed = generator.getParticleSpeed();
+        int maxLife = generator.getParticleMaxLife();
+
+        Particle p1 = new Particle(gameWindow, generator, color, size, speed, maxLife, -1, -1);
+        Particle p2 = new Particle(gameWindow, generator, color, size, speed, maxLife, 1, -1);
+        Particle p3 = new Particle(gameWindow, generator, color, size, speed, maxLife, -1, 1);
+        Particle p4 = new Particle(gameWindow, generator, color, size, speed, maxLife, 1, 1);
+        gameWindow.getParticleList().add(p1);
+        gameWindow.getParticleList().add(p2);
+        gameWindow.getParticleList().add(p3);
+        gameWindow.getParticleList().add(p4);
     }
 
     private static final ImageResizer DEFAULT_RESIZER = (src, w, h) -> {

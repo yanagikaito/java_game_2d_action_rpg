@@ -7,28 +7,18 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class ItDryTree extends InteractiveTile {
-
-    private GameWindow gameWindow;
-
-    public ItDryTree(GameWindow gameWindow, int row, int col) {
-        super(gameWindow, row, col);
-        this.gameWindow = gameWindow;
-        setWorldX(FrameApp.getTileSize() * row);
-        setWorldY(FrameApp.getTileSize() * col);
+    public ItDryTree(GameWindow gw, int row, int col) {
+        super(gw, row, col);
+        setDestructible(true);
+        setLife(6);
 
         try {
-
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tileInteractive/drytree.gif"));
+            var raw = ImageIO.read(
+                    getClass().getResourceAsStream("/tileInteractive/drytree.gif"));
             setImage(raw, FrameApp.getTileSize());
-
-            setDestructible(true);
-            setLife(6);
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -45,16 +35,40 @@ public class ItDryTree extends InteractiveTile {
 
     public InteractiveTile createDestroyedForm() {
         int tileSize = FrameApp.getTileSize();
-        InteractiveTile trunk = new ItTrunk(gameWindow, getWorldX() / tileSize, getWorldY() / tileSize);
+        InteractiveTile trunk = new ItTrunk(getGameWindow(), getWorldX() / tileSize, getWorldY() / tileSize);
         return trunk;
+    }
+
+    @Override
+    public Color getParticleColor() {
+        Color color = new Color(65, 50, 30);
+        return color;
+    }
+
+    @Override
+    public int getParticleSize() {
+        int size = 6;
+        return size;
+    }
+
+    @Override
+    public int getParticleSpeed() {
+        int speed = 1;
+        return speed;
+    }
+
+    @Override
+    public int getParticleMaxLife() {
+        int maxLife = 20;
+        return maxLife;
     }
 
     @Override
     public void draw(@NotNull Graphics2D g2) {
 
         int ts = FrameApp.getTileSize();
-        int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
-        int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+        int screenX = getWorldX() - getGameWindow().getPlayer().getWorldX() + getGameWindow().getPlayer().getScreenX();
+        int screenY = getWorldY() - getGameWindow().getPlayer().getWorldY() + getGameWindow().getPlayer().getScreenY();
 
         Composite original = g2.getComposite();
 

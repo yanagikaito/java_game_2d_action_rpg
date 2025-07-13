@@ -1,5 +1,7 @@
 package player;
 
+import asset.AssetSetter;
+import collision.CollisionChecker;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
@@ -239,6 +241,7 @@ public class Player extends Entity {
         updateCurrentAttackSprites();
     }
 
+    @Override
     public void update() {
 
         if (getInvincible()) {
@@ -391,9 +394,9 @@ public class Player extends Entity {
 
         switch (getDirection()) {
             case "up" -> setWorldY(getWorldY() - getAttackArea().height);
-            case "down" -> setWorldY(getWorldY() + FrameApp.getTileSize());
+            case "down" -> setWorldY(getWorldY() + getAttackArea().height);
             case "left" -> setWorldX(getWorldX() - getAttackArea().width);
-            case "right" -> setWorldX(getWorldX() + FrameApp.getTileSize());
+            case "right" -> setWorldX(getWorldX() + getAttackArea().width);
             default -> {
             }
         }
@@ -589,8 +592,8 @@ public class Player extends Entity {
 
             gameWindow.getSoundmanager().damageWAV("res/sound/thrust-sound.wav");
             gameWindow.getItile()[i].setLife(gameWindow.getItile()[i].getLife() - 1);
-            System.out.println("life = " + gameWindow.getItile()[i].getLife());
             gameWindow.getItile()[i].setInvincible(true);
+            generateParticle(gameWindow.getItile()[i], gameWindow.getItile()[i]);
 
             if (gameWindow.getItile()[i].getLife() == 0) {
                 gameWindow.getItile()[i] = gameWindow.getItile()[i].createDestroyedForm();
