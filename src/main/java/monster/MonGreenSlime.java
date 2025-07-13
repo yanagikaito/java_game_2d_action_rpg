@@ -76,6 +76,7 @@ public class MonGreenSlime extends Entity {
         return result;
     }
 
+    @Override
     public void setAction() {
 
         updateMonsterInvincibility();

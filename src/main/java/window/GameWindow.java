@@ -3,6 +3,7 @@ package window;
 import asset.AssetSetter;
 import collision.CollisionChecker;
 import entity.Entity;
+import entity.Particle;
 import frame.FrameApp;
 import object.ObjCoinBronze;
 import object.ObjGreenPotion;
@@ -42,6 +43,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private InteractiveTile[] iTile = new InteractiveTile[50];
     private UI ui = new UI(this);
     private ArrayList<Projectile> projectileList = new ArrayList<>();
+    private ArrayList<Particle> particleList = new ArrayList<>();
     public ArrayList<Entity> itemList = new ArrayList<>();
     private static GameWindow instance;
     private Thread gameThread;
@@ -172,6 +174,16 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     }
                 }
             }
+            for (int i = 0; i < particleList.size(); i++) {
+                if (particleList.get(i) != null) {
+                    if (particleList.get(i).getAlive()) {
+                        particleList.get(i).update();
+                    }
+                    if (!particleList.get(i).getAlive()) {
+                        particleList.remove(i--);
+                    }
+                }
+            }
             for (int i = 0; i < iTile.length; i++) {
                 if (iTile[i] != null) {
                     iTile[i].update();
@@ -216,6 +228,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
 
+        for (Particle paList : particleList) {
+            if (paList != null) {
+                paList.draw(g2);
+            }
+        }
+
         List<Entity> entityList = new ArrayList<>();
 
         entityList.add(player);
@@ -230,9 +248,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 entityList.add(entity);
             }
         }
-        for (Entity p : projectileList) {
-            if (p != null && p.getAlive()) {
-                entityList.add(p);
+        for (Entity proList : projectileList) {
+            if (proList != null && proList.getAlive()) {
+                entityList.add(proList);
             }
         }
 
@@ -377,6 +395,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public ArrayList<Entity> setItemList(ArrayList<Entity> itemList) {
         return this.itemList = itemList;
+    }
+
+    public ArrayList<Particle> getParticleList() {
+        return particleList;
+    }
+
+    public void setParticleList(ArrayList<Particle> particleList) {
+        this.particleList = particleList;
     }
 
     public InteractiveTile[] getItile() {

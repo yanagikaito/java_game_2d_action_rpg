@@ -21,8 +21,8 @@ public class ObjAxe extends Entity {
         setType(getType_axe());
         setName("木の斧");
         setAttackValue(2);
-        getAttackArea().width = 30;
-        getAttackArea().height = 30;
+        getAttackArea().width = 25;
+        getAttackArea().height = 25;
         setDescription("[" + getName() + "]\n木を切ることができる");
 
         try {
@@ -35,6 +35,7 @@ public class ObjAxe extends Entity {
         }
     }
 
+    @Override
     public void draw(@NotNull Graphics2D g2) {
 
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
