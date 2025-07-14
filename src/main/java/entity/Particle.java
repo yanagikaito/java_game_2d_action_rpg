@@ -15,6 +15,9 @@ public class Particle extends Entity {
     private int speed;
     private int xd;
     private int yd;
+    private final int startY;
+    private final int tileSize;
+    private final double gravity = 1.0;
 
     public Particle(GameWindow gameWindow,
                     @NotNull Entity generator,
@@ -33,21 +36,28 @@ public class Particle extends Entity {
         this.speed = speed;
         this.xd = xd;
         this.yd = yd;
+        this.tileSize = FrameApp.getTileSize();
 
         int offset = (FrameApp.getTileSize() / 2) - (size / 2);
         setLife(maxLife);
         setWorldX(generator.getWorldX() + offset);
         setWorldY(generator.getWorldY() + offset);
+        this.startY = getWorldY();
     }
 
     @Override
     public void update() {
 
-        setWorldX(getWorldX() + xd * speed);
-        setWorldY(getWorldY() + yd * speed);
         setLife(getLife() - 1);
 
-        if (getLife() == 0) {
+        if (getLife() < getMaxLife() / 3) {
+            yd += gravity;
+        }
+
+        setWorldX(getWorldX() + xd * speed);
+        setWorldY(getWorldY() + yd * speed);
+
+        if (getWorldY() >= startY + tileSize) {
             setAlive(false);
         }
     }
