@@ -94,6 +94,12 @@ public abstract class Entity {
     private int mana;
     private int useCost;
     private int shotAvailableCounter = 0;
+    private static final int[][] PARTICLE_OFFSETS = {
+            {-1, -1},
+            {1, -1},
+            {-1, 1},
+            {1, 1}
+    };
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -656,14 +662,20 @@ public abstract class Entity {
         int speed = generator.getParticleSpeed();
         int maxLife = generator.getParticleMaxLife();
 
-        Particle p1 = new Particle(gameWindow, generator, color, size, speed, maxLife, -1, -1);
-        Particle p2 = new Particle(gameWindow, generator, color, size, speed, maxLife, 1, -1);
-        Particle p3 = new Particle(gameWindow, generator, color, size, speed, maxLife, -1, 1);
-        Particle p4 = new Particle(gameWindow, generator, color, size, speed, maxLife, 1, 1);
-        gameWindow.getParticleList().add(p1);
-        gameWindow.getParticleList().add(p2);
-        gameWindow.getParticleList().add(p3);
-        gameWindow.getParticleList().add(p4);
+        for (int[] offset : PARTICLE_OFFSETS) {
+            int dx = offset[0];
+            int dy = offset[1];
+            Particle p = new Particle(
+                    gameWindow,
+                    generator,
+                    color,
+                    size,
+                    speed,
+                    maxLife,
+                    dx, dy
+            );
+            gameWindow.getParticleList().add(p);
+        }
     }
 
     private static final ImageResizer DEFAULT_RESIZER = (src, w, h) -> {

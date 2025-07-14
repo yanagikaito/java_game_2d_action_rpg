@@ -66,20 +66,10 @@ public class ItDryTree extends InteractiveTile {
     @Override
     public void draw(@NotNull Graphics2D g2) {
 
-        int ts = FrameApp.getTileSize();
+        int tileSize = FrameApp.getTileSize();
         int screenX = getWorldX() - getGameWindow().getPlayer().getWorldX() + getGameWindow().getPlayer().getScreenX();
         int screenY = getWorldY() - getGameWindow().getPlayer().getWorldY() + getGameWindow().getPlayer().getScreenY();
 
-        Composite original = g2.getComposite();
-
-        if (getInvincible()) {
-            g2.setComposite(AlphaComposite.getInstance(
-                    AlphaComposite.SRC_OVER, 0.5f
-            ));
-        }
-
-        g2.drawImage(getImage(), screenX, screenY, ts, ts, null);
-
-        g2.setComposite(original);
+        g2.drawImage(getImage(), screenX, screenY, tileSize, tileSize, null);
     }
 }
