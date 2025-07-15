@@ -659,39 +659,64 @@ public class Player extends Entity {
     }
 
     @Override
-    public void draw(Graphics2D g2) {
+    public void draw(@NotNull Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
-        BufferedImage img;
 
+        int screenX = getWorldX()
+                - gameWindow.getPlayer().getWorldX()
+                + gameWindow.getPlayer().getScreenX();
+
+        int screenY = getWorldY()
+                - gameWindow.getPlayer().getWorldY()
+                + gameWindow.getPlayer().getScreenY();
+
+        Composite original = g2.getComposite();
+        if (getInvincible()) {
+            g2.setComposite(
+                    AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)
+            );
+        }
+
+        BufferedImage img;
         if (!getAttacking()) {
-            int walkDirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
+            int walkDirIndex = Arrays.asList(DIRECTIONS)
+                    .indexOf(getDirection());
             if (walkDirIndex >= 0) {
                 img = sprites[walkDirIndex][getSpriteNum() - 1];
                 g2.drawImage(img, screenX, screenY, tileSize, tileSize, null);
             }
-            return;
+        } else {
+            boolean isAxe = getCurrentWeapon().getType() == getType_axe();
+            String[] animationKeys = isAxe
+                    ? AXE_DIRECTIONS
+                    : ATTACK_DIRECTIONS;
+            BufferedImage[][] spriteSet = isAxe
+                    ? axeSprites
+                    : attackSprites;
+
+            int directionIndex = Arrays.asList(animationKeys)
+                    .indexOf(getAttackDirection());
+            if (directionIndex >= 0) {
+                int frameIndex = Math.max(0,
+                        Math.min(getSpriteNum() - 1, SPRITE_COUNT - 1)
+                );
+                img = spriteSet[directionIndex][frameIndex];
+
+                int drawWidth = (directionIndex == 2 || directionIndex == 3)
+                        ? tileSize * 2 : tileSize;
+                int drawHeight = (directionIndex == 0 || directionIndex == 1)
+                        ? tileSize * 2 : tileSize;
+                int drawX = animationKeys[directionIndex]
+                        .endsWith("Left") ? screenX - tileSize : screenX;
+                int drawY = animationKeys[directionIndex]
+                        .endsWith("Up") ? screenY - tileSize : screenY;
+
+                g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
+            }
         }
 
-        boolean isAxe = getCurrentWeapon().getType() == getType_axe();
-        String[] animationKeys = isAxe ? AXE_DIRECTIONS : ATTACK_DIRECTIONS;
-        BufferedImage[][] spriteSet = isAxe ? axeSprites : attackSprites;
-
-        int directionIndex = Arrays.asList(animationKeys)
-                .indexOf(getAttackDirection());
-        if (directionIndex < 0) return;
-
-        int frameIndex = getSpriteNum() - 1;
-        frameIndex = Math.max(0, Math.min(frameIndex, SPRITE_COUNT - 1));
-
-        img = spriteSet[directionIndex][frameIndex];
-
-        int drawWidth = (directionIndex == 2 || directionIndex == 3) ? tileSize * 2 : tileSize;
-        int drawHeight = (directionIndex == 0 || directionIndex == 1) ? tileSize * 2 : tileSize;
-        int drawX = animationKeys[directionIndex].endsWith("Left") ? screenX - tileSize : screenX;
-        int drawY = animationKeys[directionIndex].endsWith("Up") ? screenY - tileSize : screenY;
-
-        g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
+        g2.setComposite(original);
     }
 
     private @NotNull BufferedImage createImage(BufferedImage original, int width, int height) {

@@ -41,15 +41,27 @@ public abstract class Projectile extends Entity {
         move();
 
         if (user == getGameWindow().getPlayer()) {
+
             int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
+
             if (monsterIndex != 999) {
+
+                Entity target = getGameWindow().getMonster()[monsterIndex];
                 getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack());
+
+                generateParticle(this, target);
                 setAlive(false);
             }
+
         } else {
-            boolean contactPlayer = getGameWindow().getCollisionChecker().checkPlayer(this);
-            if (getGameWindow().getPlayer().getInvincible() == false && contactPlayer == true) {
+
+            boolean hit = getGameWindow().getCollisionChecker().checkPlayer(this);
+
+            if (getGameWindow().getPlayer().getInvincible() == false && hit == true) {
+
                 damagePlayer(getAttack());
+                // 衝突判定を起こした時の Projectile インスタンスを渡す
+                generateParticle(this, getGameWindow().getPlayer());
                 System.out.println("プレイヤ-に石ころの衝突判定がありダメージを与えた!");
                 setAlive(false);
             }
