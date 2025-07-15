@@ -47,4 +47,28 @@ public class ObjStone extends Projectile {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Color getParticleColor() {
+        Color color = new Color(120, 120, 120);
+        return color;
+    }
+
+    @Override
+    public int getParticleSize() {
+        int size = 10;
+        return size;
+    }
+
+    @Override
+    public int getParticleSpeed() {
+        int speed = 1;
+        return speed;
+    }
+
+    @Override
+    public int getParticleMaxLife() {
+        int maxLife = 20;
+        return maxLife;
+    }
 }

@@ -195,6 +195,7 @@ public abstract class Entity {
 
             gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - damage);
             gameWindow.getPlayer().setInvincible(true);
+            setInvincibleCounter(0);
         }
     }
 

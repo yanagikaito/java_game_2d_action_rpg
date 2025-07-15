@@ -4,10 +4,9 @@ import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import java.awt.Graphics2D;
 
 public class ObjFireball extends Projectile {
 
@@ -47,5 +46,29 @@ public class ObjFireball extends Projectile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Color getParticleColor() {
+        Color color = new Color(240, 50, 0);
+        return color;
+    }
+
+    @Override
+    public int getParticleSize() {
+        int size = 10;
+        return size;
+    }
+
+    @Override
+    public int getParticleSpeed() {
+        int speed = 1;
+        return speed;
+    }
+
+    @Override
+    public int getParticleMaxLife() {
+        int maxLife = 20;
+        return maxLife;
     }
 }
