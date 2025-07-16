@@ -1,6 +1,7 @@
 package asset;
 
 import entity.Entity;
+import entity.FireworkParticle;
 import entity.Particle;
 import frame.FrameApp;
 import monster.MonGreenSlime;
@@ -10,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
+
+import java.awt.*;
 
 public class AssetSetter {
 

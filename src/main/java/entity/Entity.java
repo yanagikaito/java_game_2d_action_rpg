@@ -679,6 +679,32 @@ public abstract class Entity {
         }
     }
 
+    public void spawnFireworkParticles(@NotNull Entity target) {
+
+        int count = 30;
+        int tileSize = FrameApp.getTileSize();
+        int originX = target.getWorldX() + tileSize / 2;
+        int originY = target.getWorldY() + tileSize / 2;
+        int size = tileSize / 5;
+        double gravity = 0.15;
+        Color color = new Color(255, 140, 0);
+
+        for (int i = 0; i < count; i++) {
+            double angle = Math.random() * Math.PI * 2;
+            double speed = 2 + Math.random() * 3;
+            FireworkParticle p = new FireworkParticle(
+                    gameWindow, this,
+                    originX, originY,
+                    color, size,
+                    maxLife,
+                    angle,
+                    speed,
+                    gravity
+            );
+            gameWindow.getParticleList().add(p);
+        }
+    }
+
     private static final ImageResizer DEFAULT_RESIZER = (src, w, h) -> {
         BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = dst.createGraphics();
