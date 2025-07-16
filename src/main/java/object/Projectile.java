@@ -42,14 +42,15 @@ public abstract class Projectile extends Entity {
 
         if (user == getGameWindow().getPlayer()) {
 
-            int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
+            int monsterHit = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
 
-            if (monsterIndex != 999) {
+            if (monsterHit != 999) {
 
-                Entity target = getGameWindow().getMonster()[monsterIndex];
-                getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack());
+                Entity target = getGameWindow().getMonster()[monsterHit];
+                getGameWindow().getPlayer().damageMonster(monsterHit, getAttack());
 
                 generateParticle(this, target);
+                spawnFireworkParticles(target);
                 setAlive(false);
             }
 

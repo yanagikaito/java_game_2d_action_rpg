@@ -3,7 +3,6 @@ package window;
 import asset.AssetSetter;
 import collision.CollisionChecker;
 import entity.Entity;
-import entity.Particle;
 import frame.FrameApp;
 import object.ObjCoinBronze;
 import object.ObjGreenPotion;
@@ -43,7 +42,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private InteractiveTile[] iTile = new InteractiveTile[50];
     private UI ui = new UI(this);
     private ArrayList<Projectile> projectileList = new ArrayList<>();
-    private ArrayList<Particle> particleList = new ArrayList<>();
+    private ArrayList<Entity> particleList = new ArrayList<>();
     public ArrayList<Entity> itemList = new ArrayList<>();
     private static GameWindow instance;
     private Thread gameThread;
@@ -228,7 +227,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
 
-        for (Particle paList : particleList) {
+        for (Entity paList : particleList) {
             if (paList != null) {
                 paList.draw(g2);
             }
@@ -397,11 +396,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return this.itemList = itemList;
     }
 
-    public ArrayList<Particle> getParticleList() {
+    public ArrayList<Entity> getParticleList() {
         return particleList;
     }
 
-    public void setParticleList(ArrayList<Particle> particleList) {
+    public void setParticleList(ArrayList<Entity> particleList) {
         this.particleList = particleList;
     }
 
