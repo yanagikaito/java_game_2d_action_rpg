@@ -59,7 +59,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.startThread();
-        this.setFocusable(true);
         this.setLayout(null);
         this.addKeyListener(keyHandler);
         this.setUpGame();
