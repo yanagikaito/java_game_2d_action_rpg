@@ -1,7 +1,5 @@
 package player;
 
-import asset.AssetSetter;
-import collision.CollisionChecker;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
@@ -196,7 +194,7 @@ public class Player extends Entity {
             int heal = potion.getHealAmount();
             setLife(Math.min(getLife() + heal, getMaxLife()));
             gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
-            gameWindow.getSoundmanager().redPotionWAV("res/sound/redPotion-sound.wav");
+            gameWindow.getSoundmanager().redPotionWAV("java_2d_game/res/sound/potion-sound.wav");
             inventory.remove(index);
             return;
         } else {
@@ -221,7 +219,7 @@ public class Player extends Entity {
             int heal = potion.getHealAmount();
             setMana(Math.min(getMana() + heal, getMaxMana()));
             gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
-            gameWindow.getSoundmanager().greenPotionWAV("res/sound/redPotion-sound.wav");
+            gameWindow.getSoundmanager().greenPotionWAV("java_2d_game/res/sound/potion-sound.wav");
             inventory.remove(index);
             return;
         } else {
@@ -448,7 +446,7 @@ public class Player extends Entity {
 
                 gameWindow.getProjectileList().add(fb);
                 setShotAvailableCounter(0);
-                gameWindow.getSoundmanager().explosionWAV("res/sound/explosion-sound.wav");
+                gameWindow.getSoundmanager().explosionWAV("java_2d_game/res/sound/explosion-sound.wav");
                 System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
             }
         }
@@ -485,7 +483,7 @@ public class Player extends Entity {
                 setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
                         + getDirection().substring(1));
                 setAttacking(true);
-                gameWindow.getSoundmanager().defeatedWAV("res/sound/thrust-sound.wav");
+                gameWindow.getSoundmanager().defeatedWAV("java_2d_game/res/sound/thrust-sound.wav");
             }
         }
         keyHandler.setPlayerEnter(false);
@@ -495,7 +493,7 @@ public class Player extends Entity {
 
         if (i != 999) {
             if (!getInvincible()) {
-                gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
+                gameWindow.getSoundmanager().damageWAV("java_2d_game/res/sound/damage-sound.wav");
 
                 // スライムのダメージ量
                 int damage = setAttack(gameWindow.getMonster()[i].getAttack() - calculateTotalDefense());
@@ -521,7 +519,7 @@ public class Player extends Entity {
 
         if (i != 999) {
             if (!gameWindow.getMonster()[i].getInvincible()) {
-                gameWindow.getSoundmanager().damageWAV("res/sound/damage-sound.wav");
+                gameWindow.getSoundmanager().damageWAV("java_2d_game/res/sound/damage-sound.wav");
 
                 long end = System.nanoTime();
 
@@ -562,7 +560,7 @@ public class Player extends Entity {
                     setExp(getExp() + gainedExp);
                     gameWindow.getUi().addMessage("経験値" + gainedExp + " 入手!");
                     checkLevelUp();
-                    gameWindow.getSoundmanager().defeatedWAV("res/sound/defeated-sound.wav");
+                    gameWindow.getSoundmanager().defeatedWAV("java_2d_game/res/sound/defeated-sound.wav");
 
                     int aliveCount = 0;
                     for (Entity m : gameWindow.getMonster()) {
@@ -590,7 +588,7 @@ public class Player extends Entity {
                 && gameWindow.getItile()[i].isCorrectItem(this) == true
                 && gameWindow.getItile()[i].getInvincible() == false) {
 
-            gameWindow.getSoundmanager().damageWAV("res/sound/thrust-sound.wav");
+            gameWindow.getSoundmanager().damageWAV("java_2d_game/res/sound/thrust-sound.wav");
             gameWindow.getItile()[i].setLife(gameWindow.getItile()[i].getLife() - 1);
             gameWindow.getItile()[i].setInvincible(true);
             generateParticle(gameWindow.getItile()[i], gameWindow.getItile()[i]);
@@ -622,7 +620,7 @@ public class Player extends Entity {
             setDexterity(getDexterity() + 1);
             setAttack(calculateBaseAttack());
             setDefense(calculateBaseDefense());
-            gameWindow.getSoundmanager().levelWAV("res/sound/level-up-sound.wav");
+            gameWindow.getSoundmanager().levelWAV("java_2d_game/res/sound/level-up-sound.wav");
             gameWindow.setGameState(gameWindow.getDialogueState());
             gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");
             gameWindow.getPlayer().setLife(gameWindow.getPlayer().getMaxLife());

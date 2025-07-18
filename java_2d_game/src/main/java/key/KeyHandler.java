@@ -99,19 +99,19 @@ public class KeyHandler implements KeyListener {
             switch (code) {
                 case KeyEvent.VK_W -> {
                     if (col > 0) gameWindow.getUi().setSlotCol(col - 1);
-                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_S -> {
                     if (col < MAX_COL) gameWindow.getUi().setSlotCol(col + 1);
-                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_A -> {
                     if (row > 0) gameWindow.getUi().setSlotRow(row - 1);
-                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_D -> {
                     if (row < MAX_ROW) gameWindow.getUi().setSlotRow(row + 1);
-                    gameWindow.getSoundmanager().cursorWAV("res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_C -> {
                     gameWindow.setGameState(gameWindow.getPlayState());
