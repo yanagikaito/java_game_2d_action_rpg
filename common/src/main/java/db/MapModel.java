@@ -1,4 +1,4 @@
-package map;
+package db;
 
 public class MapModel {
 

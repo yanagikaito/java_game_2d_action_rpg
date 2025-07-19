@@ -2,8 +2,9 @@
 <project
         xmlns="http://maven.apache.org/POM/4.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xsi:schemaLocation="
+      http://maven.apache.org/POM/4.0.0
+      http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,10 +12,12 @@
         <groupId>org.example</groupId>
         <artifactId>java_game_2d_action_rpg</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <!-- ルートの pom.xml を参照 -->
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>java_2d_game</artifactId>
+    <!-- common モジュールは JAR 出力 -->
+    <artifactId>common</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -24,18 +27,12 @@
     </properties>
 
     <dependencies>
-        <!-- 1. 共通モジュール（MapModel／DbManager などを配置） -->
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- 2. ゲーム側で H2 を使う場合のみ追加 -->
+        <!-- H2 を使う共通クラス（DbManager）を含む場合はドライバを依存 -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
         </dependency>
     </dependencies>
+
 </project>

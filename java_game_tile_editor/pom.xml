@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+      http://maven.apache.org/POM/4.0.0
+      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +15,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!-- ① 出力成果物は JAR -->
     <artifactId>java_game_tile_editor</artifactId>
     <packaging>jar</packaging>
 
@@ -22,28 +24,25 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- ② 依存ライブラリ -->
     <dependencies>
+        <!-- 1. ゲームとエディタで共通利用するクラスをまとめた common モジュール -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-        <!-- H2 組み込みDB -->
+        <!-- 2. H2 組み込みデータベースドライバ -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
         </dependency>
-
-
-        <!-- ③ ゲーム本体モジュールの共有クラスを使う場合 -->
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>java_2d_game</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
-    <!-- （任意）実行可能 JAR を作りたいときの Assembly プラグイン -->
     <build>
         <plugins>
+            <!-- 実行可能 JAR を作るなら Assembly プラグイン -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
@@ -53,7 +52,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.example.editor.MainFrame</mainClass>
+                            <mainClass>frame.MainFrame</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

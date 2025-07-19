@@ -1,10 +1,8 @@
-package db;
+package frame;
 
 import org.h2.tools.Server;
 
 import javax.swing.SwingUtilities;
-
-import frame.MainFrame;
 
 public class TileDbMain {
     public static void main(String[] args) throws Exception {

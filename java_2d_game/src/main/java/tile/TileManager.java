@@ -1,14 +1,16 @@
 package tile;
 
+import db.DbManager;
 import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TileManager {
 
@@ -23,7 +25,7 @@ public class TileManager {
         tiles = new Tile[6];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
-        loadMap("map/world01.txt");
+        loadMap(1);
     }
 
 
@@ -32,11 +34,10 @@ public class TileManager {
         try {
 
             tiles[0] = new Tile();
-            tiles[0].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/meadow.png"));
+            tiles[0].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/earth.png"));
 
             tiles[1] = new Tile();
-            tiles[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/wall.png"));
-            tiles[1].collision = true;
+            tiles[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/meadow.png"));
 
             tiles[2] = new Tile();
             tiles[2].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/pond.png"));
@@ -50,28 +51,29 @@ public class TileManager {
             tiles[4].collision = true;
 
             tiles[5] = new Tile();
-            tiles[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/earth.png"));
+            tiles[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/wall.png"));
+            tiles[5].collision = true;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void loadMap(String filePath) {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(filePath);
-             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-
-            for (int row = 0; row < FrameApp.getMaxWorldRow(); row++) {
-                String line = br.readLine();
-                if (line == null) {
-                    break;
-                }
-                String[] numbers = line.split(" ");
-                for (int col = 0; col < FrameApp.getMaxWorldCol(); col++) {
-                    int num = Integer.parseInt(numbers[col]);
-                    mapTileNum[col][row] = num;
+    public void loadMap(int mapId) {
+        try (Connection conn = DbManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT x, y, tile_id FROM map_tile WHERE map_id = ?"
+             )) {
+            ps.setInt(1, mapId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int x = rs.getInt("x");
+                    int y = rs.getInt("y");
+                    int tileId = rs.getInt("tile_id");
+                    mapTileNum[x][y] = tileId;
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
