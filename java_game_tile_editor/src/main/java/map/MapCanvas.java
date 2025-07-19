@@ -1,12 +1,12 @@
 package map;
 
+import db.MapModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.Map;
 
 public class MapCanvas extends JPanel implements Scrollable {
@@ -42,15 +42,26 @@ public class MapCanvas extends JPanel implements Scrollable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setFont(new Font("アリアル", Font.PLAIN, 12));
+        g2.setColor(Color.BLACK);
+
         for (int y = 0; y < model.getHeight(); y++) {
             for (int x = 0; x < model.getWidth(); x++) {
-                int id = model.getTile(x, y);
-                BufferedImage img = (BufferedImage) tileImages.get(id);
+                Image img = tileImages.get(model.getTile(x, y));
                 if (img != null) {
-                    g.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize, null);
+                    g2.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize, null);
                 }
-                g.setColor(Color.GRAY);
-                g.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                g2.setColor(Color.BLACK);
+                g2.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
+
+                g2.setColor(Color.BLACK);
+                String coord = x + "," + y;
+                int strX = x * tileSize + 2;
+                int strY = y * tileSize + tileSize - 4;
+                g2.drawString(coord, strX, strY);
+
+                g2.setColor(Color.BLACK);
             }
         }
     }

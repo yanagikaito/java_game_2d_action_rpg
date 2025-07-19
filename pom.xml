@@ -11,6 +11,7 @@
     <modules>
         <module>java_2d_game</module>
         <module>java_game_tile_editor</module>
+        <module>common</module>
     </modules>
 
     <properties>

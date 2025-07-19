@@ -1,7 +1,7 @@
 package frame;
 
 import db.DbManager;
-import map.MapModel;
+import db.MapModel;
 import map.MapCanvas;
 
 import javax.imageio.ImageIO;
@@ -52,7 +52,7 @@ public class MainFrame extends JFrame {
 
     private void loadTiles() {
 
-        for (int id = 0; id < 5; id++) {
+        for (int id = 0; id < 6; id++) {
 
             try (InputStream is = getClass().getResourceAsStream("/tiles/" + id + ".png")) {
                 if (is == null) {
