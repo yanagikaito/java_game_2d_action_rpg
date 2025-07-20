@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+      http://maven.apache.org/POM/4.0.0
+      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- 1. プロジェクトの基本情報 -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 2. 親 POM の継承 -->
+    <parent>
+        <groupId>org.example</groupId>
+        <artifactId>java_game_2d_action_rpg</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <!-- 3. このモジュールの出力成果物 -->
+    <artifactId>pathfinding_core</artifactId>
+    <packaging>jar</packaging>
+
+    <!-- 4. コンパイラ設定など（親 POM でまとめても可） -->
+    <properties>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- 5. 依存ライブラリ -->
+    <dependencies>
+        <!-- 5-1. 共通ドメイン（MapModel などを含む common モジュール） -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 5-2. （必要なら）JUnit やロギングなどのテスト／ユーティリティ依存 -->
+        <!--
+        <dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-api</artifactId>
+          <version>5.9.0</version>
+          <scope>test</scope>
+        </dependency>
+        -->
+    </dependencies>
+</project>

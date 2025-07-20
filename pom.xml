@@ -12,6 +12,8 @@
         <module>java_2d_game</module>
         <module>java_game_tile_editor</module>
         <module>common</module>
+        <module>pathfinding_core</module>
+        <module>pathfinding_editor</module>
     </modules>
 
     <properties>
