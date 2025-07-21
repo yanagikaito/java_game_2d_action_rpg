@@ -93,53 +93,68 @@ public class NpcOldMan extends Entity {
             return;
         }
 
-        Point tile = route.get(routeIndex);
-        int ts = FrameApp.getTileSize();
-        int targetX = tile.x * ts;
-        int targetY = tile.y * ts;
+        Point currentTargetTile = route.get(routeIndex);
+        int tileSize = FrameApp.getTileSize();
+        int targetX = currentTargetTile.x * tileSize;
+        int targetY = currentTargetTile.y * tileSize;
 
-        int wx = getWorldX();
-        int wy = getWorldY();
-        int dx = targetX - wx;
-        int dy = targetY - wy;
+        int npcPosX = getWorldX();
+        int npcPosY = getWorldY();
+        int diffX = targetX - npcPosX;
+        int diffY = targetY - npcPosY;
 
-        if (dx == 0 && dy == 0) {
+        int speed = getSpeed();
+
+        // 到達判定をspeed以内に緩和
+        if (Math.abs(diffX) <= speed && Math.abs(diffY) <= speed) {
+            setWorldX(targetX);
+            setWorldY(targetY);
             routeIndex++;
             return;
         }
 
-        int sp = getSpeed();
+        int stepX = Math.abs(diffX) > 0 ? Math.min(Math.abs(diffX), speed) : 0;
+        int stepY = Math.abs(diffY) > 0 ? Math.min(Math.abs(diffY), speed) : 0;
+        int newX = npcPosX + (diffX > 0 ? stepX : (diffX < 0 ? -stepX : 0));
+        int newY = npcPosY + (diffY > 0 ? stepY : (diffY < 0 ? -stepY : 0));
 
-        if (dx != 0) {
-            int step = Math.min(Math.abs(dx), sp);
-            int newX = wx + (dx > 0 ? step : -step);
-            setWorldX(newX);
-            setDirection(dx > 0 ? "right" : "left");
+        setWorldX(newX);
+        setWorldY(newY);
+
+        if (Math.abs(diffX) >= Math.abs(diffY)) {
+            setDirection(diffX > 0 ? "right" : "left");
         } else {
-            int step = Math.min(Math.abs(dy), sp);
-            int newY = wy + (dy > 0 ? step : -step);
-            setWorldY(newY);
-            setDirection(dy > 0 ? "down" : "up");
+            setDirection(diffY > 0 ? "down" : "up");
         }
     }
 
     public void startRouteFollow(int mapId, int pathId) {
-
-        List<Point> raw = PathManager.loadPath(mapId, pathId);
-        System.out.println("Loaded raw path: " + raw);
-        if (raw.isEmpty()) {
+        List<Point> loadedRoutePoints = PathManager.loadPath(mapId, pathId);
+        System.out.println("Loaded raw path: " + loadedRoutePoints);
+        if (loadedRoutePoints.isEmpty()) {
             following = false;
             return;
         }
 
-        Point startTile = raw.get(0);
-        int ts = FrameApp.getTileSize();
-        setWorldX(startTile.x * ts);
-        setWorldY(startTile.y * ts);
+        // 今いる場所から一番近いポイントを探す
+        int npcPosX = getWorldX();
+        int npcPosY = getWorldY();
+        int tileSize = FrameApp.getTileSize();
+        int minIndex = 0;
+        int minDist = Integer.MAX_VALUE;
+        for (int i = 0; i < loadedRoutePoints.size(); i++) {
+            Point routePoint = loadedRoutePoints.get(i);
+            int routePointWorldX = routePoint.x * tileSize;
+            int routePointWorldY = routePoint.y * tileSize;
+            int dist = Math.abs(npcPosX - routePointWorldX) + Math.abs(npcPosY - routePointWorldY);
+            if (dist < minDist) {
+                minDist = dist;
+                minIndex = i;
+            }
+        }
 
-        raw.remove(0);
-
-        this.route = raw;
+        // そのポイントからルートを開始
+        this.route = loadedRoutePoints.subList(minIndex, loadedRoutePoints.size());
         this.routeIndex = 0;
         this.following = true;
     }
