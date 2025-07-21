@@ -4,6 +4,7 @@ import asset.AssetSetter;
 import collision.CollisionChecker;
 import entity.Entity;
 import frame.FrameApp;
+import npc.NpcOldMan;
 import object.ObjCoinBronze;
 import object.ObjGreenPotion;
 import object.ObjRedPotion;
@@ -53,6 +54,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int characterState = 4;
     private final int debugState = 5;
     private boolean showHitBoxes = false;
+    private boolean dialogueActive = false;
 
     protected GameWindow() {
         this.setBackground(Color.BLACK);
@@ -78,6 +80,20 @@ public class GameWindow extends JPanel implements Window, Runnable {
             instance = new GameWindow();
         }
         return instance;
+    }
+
+    public boolean playerNearNpc() {
+        if (npc.length == 0) return false;
+
+        Entity target = npc[0];  // 例: 最初の NPC
+        int px = player.getWorldX() / FrameApp.getTileSize();
+        int py = player.getWorldY() / FrameApp.getTileSize();
+        int nx = target.getWorldX() / FrameApp.getTileSize();
+        int ny = target.getWorldY() / FrameApp.getTileSize();
+
+        // マンハッタン距離で近さ判定
+        int dist = Math.abs(px - nx) + Math.abs(py - ny);
+        return dist <= 1;
     }
 
     @Override
@@ -419,6 +435,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.obj = obj;
     }
 
+    public boolean isDialogueActive() {
+        return dialogueActive;
+    }
+
+    public void setDialogueActive(boolean active) {
+        this.dialogueActive = active;
+    }
+
     public void dropItem(@NotNull Entity droppedItem, @NotNull Entity source) {
         System.out.println("【dropItem】呼ばれた／itemList before=" + itemList.size());
         droppedItem.setWorldX(source.getWorldX());
@@ -426,6 +450,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
         droppedItem.setAlive(true);
         itemList.add(droppedItem);
         System.out.println("【dropItem】 今の itemList サイズ=" + itemList.size());
+    }
+
+    public void startNpcRoute(int npcIndex, int mapId, int pathId) {
+        if (npcIndex < 0 || npcIndex >= npc.length) return;
+        Entity e = npc[npcIndex];
+        if (e instanceof NpcOldMan oldMan) {
+            oldMan.startRouteFollow(mapId, pathId);
+        }
     }
 
     public void toggleHitBoxDebug() {

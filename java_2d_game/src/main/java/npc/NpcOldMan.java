@@ -1,11 +1,13 @@
 package npc;
 
+import db.PathManager;
 import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
@@ -22,6 +24,9 @@ public class NpcOldMan extends Entity {
     private static final int THRESHOLD_LEFT = 75;
     private Random random = new Random();
     private int actionLockCounter = 0;
+    private List<Point> route = List.of();
+    private int routeIndex = 0;
+    private boolean following = false;
 
     public NpcOldMan(GameWindow gameWindow) {
         super(gameWindow);
@@ -60,23 +65,83 @@ public class NpcOldMan extends Entity {
 
     }
 
+    @Override
     public void setAction() {
-
-        actionLockCounter++;
-
-        if (actionLockCounter >= ACTION_LOCK_THRESHOLD) {
-            int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
-            if (i <= THRESHOLD_UP) {
-                setDirection("up");
-            } else if (i <= THRESHOLD_DOWN) {
-                setDirection("down");
-            } else if (i <= THRESHOLD_LEFT) {
-                setDirection("left");
-            } else {
-                setDirection("right");
-            }
-            actionLockCounter = 0;
+        if (following) {
+            followRouteStep();
+        } else {
+            randomWalkStep();
         }
+    }
+
+    private void randomWalkStep() {
+        actionLockCounter++;
+        if (actionLockCounter < ACTION_LOCK_THRESHOLD) return;
+
+        int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
+        if (i <= THRESHOLD_UP) setDirection("up");
+        else if (i <= THRESHOLD_DOWN) setDirection("down");
+        else if (i <= THRESHOLD_LEFT) setDirection("left");
+        else setDirection("right");
+
+        actionLockCounter = 0;
+    }
+
+    private void followRouteStep() {
+        if (routeIndex >= route.size()) {
+            following = false;
+            return;
+        }
+
+        Point tile = route.get(routeIndex);
+        int ts = FrameApp.getTileSize();
+        int targetX = tile.x * ts;
+        int targetY = tile.y * ts;
+
+        int wx = getWorldX();
+        int wy = getWorldY();
+        int dx = targetX - wx;
+        int dy = targetY - wy;
+
+        if (dx == 0 && dy == 0) {
+            routeIndex++;
+            return;
+        }
+
+        int sp = getSpeed();
+
+        if (dx != 0) {
+            int step = Math.min(Math.abs(dx), sp);
+            int newX = wx + (dx > 0 ? step : -step);
+            setWorldX(newX);
+            setDirection(dx > 0 ? "right" : "left");
+        } else {
+            int step = Math.min(Math.abs(dy), sp);
+            int newY = wy + (dy > 0 ? step : -step);
+            setWorldY(newY);
+            setDirection(dy > 0 ? "down" : "up");
+        }
+    }
+
+    public void startRouteFollow(int mapId, int pathId) {
+
+        List<Point> raw = PathManager.loadPath(mapId, pathId);
+        System.out.println("Loaded raw path: " + raw);
+        if (raw.isEmpty()) {
+            following = false;
+            return;
+        }
+
+        Point startTile = raw.get(0);
+        int ts = FrameApp.getTileSize();
+        setWorldX(startTile.x * ts);
+        setWorldY(startTile.y * ts);
+
+        raw.remove(0);
+
+        this.route = raw;
+        this.routeIndex = 0;
+        this.following = true;
     }
 
     @Override

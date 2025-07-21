@@ -10,6 +10,7 @@ import window.GameWindow;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UI {
 
@@ -29,6 +30,8 @@ public class UI {
     private String currentDialogueMessage;
     private ArrayList<String> message = new ArrayList<>();
     private ArrayList<Integer> messageCounter = new ArrayList<>();
+    private List<String> currentDialogueList = List.of();
+    private int currentDialogueIndex = 0;
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -61,23 +64,40 @@ public class UI {
         g2.setColor(Color.white);
 
         int gameState = gameWindow.getGameState();
+        int playState = gameWindow.getPlayState();
+        int pauseState = gameWindow.getPauseState();
+        int dialogueState = gameWindow.getDialogueState();
+        int charState = gameWindow.getCharacterState();
 
-        if (gameState == gameWindow.getPlayState()) {
+        if (gameState == playState) {
+
+            gameWindow.setDialogueActive(false);
+
             drawPlayerLife(g2);
             drawBattleLogMessage(g2);
             drawManaBar(g2);
-        } else if (gameState == gameWindow.getPauseState()) {
+
+        } else if (gameState == pauseState) {
+            gameWindow.setDialogueActive(false);
+
             drawPlayerLife(g2);
             drawPauseScreen(g2);
-        } else if (gameState == gameWindow.getDialogueState()) {
+
+        } else if (gameState == dialogueState) {
+
+            gameWindow.setDialogueActive(true);
+
             drawPlayerLife(g2);
             drawDialogueScreen(g2);
-        } else if (gameState == gameWindow.getCharacterState()) {
+
+        } else if (gameState == charState) {
+            gameWindow.setDialogueActive(false);
+
             drawCharacterScreen(g2);
             drawInventory(g2);
         }
 
-        if (messageOn == true) {
+        if (messageOn) {
             drawMessage(g2);
         }
     }
@@ -380,10 +400,6 @@ public class UI {
         int textWidth = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = tailX - textWidth;
         return x;
-    }
-
-    public String getCurrentDialogueMessage() {
-        return currentDialogueMessage;
     }
 
     public void setCurrentDialogueMessage(String currentDialogueMessage) {

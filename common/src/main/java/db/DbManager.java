@@ -1,24 +1,40 @@
 package db;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DbManager {
+    private static final String JDBC_URL = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE";
+    private static final String JDBC_USER = "sa";
+    private static final String JDBC_PASS = "";
 
-    private static final String URL = "jdbc:h2:./data/tilemap";
-    private static final String USER = "sa", PASS = "";
+    public static void initSchema() throws SQLException {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement()) {
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASS);
+            // 既存の map_tile テーブル
+            stmt.execute(
+                    "CREATE TABLE IF NOT EXISTS map_tile (" +
+                            " map_id INT, x INT, y INT, tile_id INT, " +
+                            " PRIMARY KEY(map_id, x, y) )"
+            );
+
+            // ← ここで map_path テーブルを追加
+            stmt.execute(
+                    "CREATE TABLE IF NOT EXISTS map_path (" +
+                            " map_id   INT NOT NULL, " +
+                            " path_id  INT NOT NULL, " +
+                            " step     INT NOT NULL, " +
+                            " x        INT NOT NULL, " +
+                            " y        INT NOT NULL, " +
+                            " PRIMARY KEY(map_id, path_id, step) )"
+            );
+        }
     }
 
-    public static void initSchema() {
-        try (Connection conn = getConnection();
-             Statement st = conn.createStatement()) {
-            st.execute("CREATE TABLE IF NOT EXISTS map (id INT AUTO_INCREMENT, name VARCHAR, PRIMARY KEY(id))");
-            st.execute("CREATE TABLE IF NOT EXISTS tile (id INT PRIMARY KEY, image_path VARCHAR)");
-            st.execute("CREATE TABLE IF NOT EXISTS map_tile (map_id INT, x INT, y INT, tile_id INT, PRIMARY KEY(map_id,x,y))");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
     }
 }
