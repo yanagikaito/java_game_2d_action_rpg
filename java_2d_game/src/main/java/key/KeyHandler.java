@@ -176,6 +176,7 @@ public class KeyHandler implements KeyListener {
             setPlayerRight(false);
         } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
             gameWindow.setGameState(gameWindow.getPlayState());
+            gameWindow.startNpcRoute(0, 1, 0);
             gameWindow.getPlayer().setInvincible(false);
         }
     }

@@ -198,3 +198,7 @@ Invalid value "5" for parameter "parameterIndex" [90008-224]
 	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
 	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
 	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2025-07-20 21:44:41.201817+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: テーブル "MAP_PATH" が見つかりません
+Table "MAP_PATH" not found; SQL statement:
+DELETE FROM map_path WHERE map_id=? AND path_id=? [42102-224]

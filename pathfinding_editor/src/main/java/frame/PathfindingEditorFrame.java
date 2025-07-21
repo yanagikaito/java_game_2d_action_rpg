@@ -1,12 +1,14 @@
 package frame;
 
 import canvas.PathfindingCanvas;
+import core.Node;
 import db.DbManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class PathfindingEditorFrame extends JFrame {
 
@@ -43,6 +45,8 @@ public class PathfindingEditorFrame extends JFrame {
         panel.add(createButton("Set Start", e -> canvas.setMode(EditMode.SET_START)));
         panel.add(createButton("Set Goal", e -> canvas.setMode(EditMode.SET_GOAL)));
         panel.add(createButton("Set Block", e -> canvas.setMode(EditMode.SET_BLOCK)));
+        panel.add(createButton("Save", e -> onSavePath()));
+        panel.add(createButton("Load", e -> canvas.loadPathFromDb(1, 0)));
         panel.add(createButton("Run", e -> canvas.runPath()));
         return panel;
     }
@@ -51,6 +55,16 @@ public class PathfindingEditorFrame extends JFrame {
         JButton btn = new JButton(text);
         btn.addActionListener(listener);
         return btn;
+    }
+
+    private void onSavePath() {
+        List<Node> path = canvas.getPath();
+        if (path == null || path.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "先にRunで経路を生成してください");
+            return;
+        }
+        canvas.savePathToDb(1, 0, path);
+        JOptionPane.showMessageDialog(this, "Path saved to DB.");
     }
 
     public static void main(String[] args) {
