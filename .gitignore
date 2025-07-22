@@ -37,4 +37,4 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Store
+.DS_Store"data/mapdb.mv.db" 
