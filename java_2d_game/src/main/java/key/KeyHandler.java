@@ -16,6 +16,7 @@ public class KeyHandler implements KeyListener {
     private boolean playerEnter;
     private boolean showDebugText;
     private boolean shotKeyPressed;
+    private int commandNum;
     private static final int MAX_COL = 3;
     private static final int MAX_ROW = 4;
 
@@ -140,6 +141,34 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_ENTER -> speakDialogue(true);
             case KeyEvent.VK_F -> setShotKeyPressed(true);
         }
+
+        if (gameWindow.getGameState() == gameWindow.getGameOverState()) {
+            switch (code) {
+                case KeyEvent.VK_W -> {
+                    setCommandNum(getCommandNum() - 1);
+                    if (getCommandNum() < 0) {
+                        setCommandNum(1);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_S -> {
+                    setCommandNum(getCommandNum() + 1);
+                    if (getCommandNum() > 1) {
+                        setCommandNum(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_ENTER -> {
+                    if (getCommandNum() == 0) {
+                        gameWindow.setGameState(gameWindow.getPlayState());
+                        gameWindow.retry();
+                    } else {
+                        System.exit(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+            }
+        }
     }
 
     @Override
@@ -187,5 +216,13 @@ public class KeyHandler implements KeyListener {
         } else if (this.showDebugText == true) {
             setShowDebugText(false);
         }
+    }
+
+    public int getCommandNum() {
+        return commandNum;
+    }
+
+    public void setCommandNum(int commandNum) {
+        this.commandNum = commandNum;
     }
 }

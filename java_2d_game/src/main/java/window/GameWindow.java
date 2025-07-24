@@ -53,6 +53,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int dialogueState = 3;
     private final int characterState = 4;
     private final int debugState = 5;
+    private final int gameOverState = 6;
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
 
@@ -82,18 +83,25 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return instance;
     }
 
-    public boolean playerNearNpc() {
-        if (npc.length == 0) return false;
+    public void retry() {
 
-        Entity target = npc[0];  // 例: 最初の NPC
-        int px = player.getWorldX() / FrameApp.getTileSize();
-        int py = player.getWorldY() / FrameApp.getTileSize();
-        int nx = target.getWorldX() / FrameApp.getTileSize();
-        int ny = target.getWorldY() / FrameApp.getTileSize();
+        getPlayer().setDefaultPositions();
+        getPlayer().restoreLifeAndMan();
+        getPlayer().setMoving(false);
+        assetSetter.setNPC();
+        assetSetter.setMonster();
+    }
 
-        // マンハッタン距離で近さ判定
-        int dist = Math.abs(px - nx) + Math.abs(py - ny);
-        return dist <= 1;
+    public void restart() {
+
+        getPlayer().setDefaultValues();
+        getPlayer().setDefaultPositions();
+        getPlayer().restoreLifeAndMan();
+        getPlayer().setItems();
+        assetSetter.setNPC();
+        assetSetter.setMonster();
+        assetSetter.setInteractiveTile();
+        assetSetter.setObjAxe();
     }
 
     @Override
@@ -464,7 +472,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         showHitBoxes = !showHitBoxes;
     }
 
-    public boolean isShowHitBoxes() {
-        return showHitBoxes;
+    public int getGameOverState() {
+        return gameOverState;
     }
 }

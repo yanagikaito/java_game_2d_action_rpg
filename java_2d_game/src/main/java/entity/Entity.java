@@ -668,7 +668,7 @@ public abstract class Entity {
             int dy = offset[1];
             Particle p = new Particle(
                     gameWindow,
-                    generator,
+                    target,
                     color,
                     size,
                     speed,
