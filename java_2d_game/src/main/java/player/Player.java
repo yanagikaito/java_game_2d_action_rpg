@@ -104,8 +104,25 @@ public class Player extends Entity {
         setDefense(calculateBaseDefense());
     }
 
+    public void setDefaultPositions() {
+        setWorldX(FrameApp.getTileSize() * 23);
+        setWorldY(FrameApp.getTileSize() * 21);
+        setSpeed(4);
+        setDirection("down");
+    }
+
+    public void restoreLifeAndMan() {
+        setLevel(1);
+        setMaxLife(6);
+        setLife(getMaxLife());
+        setMaxMana(100);
+        setMana(getMaxMana());
+        setInvincible(false);
+    }
+
     public void setItems() {
 
+        inventory.clear();
         inventory.add(getCurrentWeapon());
         inventory.add(getCurrentShield());
 
@@ -504,6 +521,11 @@ public class Player extends Entity {
                 setLife(getLife() - damage);
                 setInvincible(true);
 
+                if (getLife() <= 0) {
+                    setLife(0);
+                    gameWindow.setGameState(gameWindow.getGameOverState());
+                }
+
 //                System.out.println("モンスター衝突: " + i);
 //                System.out.println("無敵状態: " + getInvincible());
 //                System.out.println(i);
@@ -735,6 +757,14 @@ public class Player extends Entity {
 
     public ArrayList<Entity> getInventory() {
         return inventory;
+    }
+
+    public boolean getMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     public void calculateBaseAttackArea() {

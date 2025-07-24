@@ -68,6 +68,7 @@ public class UI {
         int pauseState = gameWindow.getPauseState();
         int dialogueState = gameWindow.getDialogueState();
         int charState = gameWindow.getCharacterState();
+        int gameOverState = gameWindow.getGameOverState();
 
         if (gameState == playState) {
 
@@ -95,7 +96,11 @@ public class UI {
 
             drawCharacterScreen(g2);
             drawInventory(g2);
+
+        } else if (gameState == gameOverState) {
+            drawGameOverScreen(g2);
         }
+
 
         if (messageOn) {
             drawMessage(g2);
@@ -363,6 +368,44 @@ public class UI {
                 g2.drawString(line, textX, textY);
                 textY += 32;
             }
+        }
+    }
+
+    public void drawGameOverScreen(@NotNull Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRect(0, 0, FrameApp.getScreenWidth(), FrameApp.getScreenHeight());
+
+        int x;
+        int y;
+        String text;
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80f));
+
+        text = "ゲームオーバー";
+        g2.setColor(Color.BLACK);
+        x = getXForCenteredText(g2, text);
+        y = tileSize * 4;
+        g2.drawString(text, x, y);
+
+        g2.setColor(Color.WHITE);
+        g2.drawString(text, x - 4, y - 4);
+
+        g2.setFont(g2.getFont().deriveFont(50f));
+        text = "リトライ";
+        x = getXForCenteredText(g2, text);
+        y += tileSize * 4;
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 0) {
+            g2.drawString(">", x - 40, y);
+        }
+
+        text = "ゲーム終了";
+        x = getXForCenteredText(g2, text);
+        y += 55;
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 1) {
+            g2.drawString(">", x - 40, y);
         }
     }
 
