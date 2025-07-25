@@ -85,6 +85,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void retry() {
 
+        getKeyHandler().clearAllKeys();
         getPlayer().setDefaultPositions();
         getPlayer().restoreLifeAndMan();
         getPlayer().setMoving(false);
