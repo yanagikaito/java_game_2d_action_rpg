@@ -143,6 +143,7 @@ public class KeyHandler implements KeyListener {
         }
 
         if (gameWindow.getGameState() == gameWindow.getGameOverState()) {
+
             switch (code) {
                 case KeyEvent.VK_W -> {
                     setCommandNum(getCommandNum() - 1);
@@ -186,6 +187,14 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_F -> setShotKeyPressed(false);
             }
         }
+    }
+
+    public void clearAllKeys() {
+        setPlayerUp(false);
+        setPlayerDown(false);
+        setPlayerLeft(false);
+        setPlayerRight(false);
+        setShotKeyPressed(false);
     }
 
     private void togglePause() {
