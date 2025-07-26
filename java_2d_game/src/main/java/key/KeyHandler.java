@@ -138,8 +138,41 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_T -> debugText();
             case KeyEvent.VK_R -> gameWindow.toggleHitBoxDebug();
             case KeyEvent.VK_C -> gameWindow.setGameState(gameWindow.getCharacterState());
-            case KeyEvent.VK_ENTER -> speakDialogue(true);
+            case KeyEvent.VK_ENTER -> {
+                speakDialogue(true);
+                clearAllKeys();
+            }
             case KeyEvent.VK_F -> setShotKeyPressed(true);
+        }
+
+        if (gameWindow.getGameState() == gameWindow.getTitleState()) {
+
+            switch (code) {
+                case KeyEvent.VK_W -> {
+                    setCommandNum(getCommandNum() - 1);
+                    if (getCommandNum() < 0) {
+                        setCommandNum(1);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_S -> {
+                    setCommandNum(getCommandNum() + 1);
+                    if (getCommandNum() > 1) {
+                        setCommandNum(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_ENTER -> {
+                    if (getCommandNum() == 0) {
+                        gameWindow.setGameState(gameWindow.getPlayState());
+                        gameWindow.restart();
+                        clearAllKeys();
+                    } else {
+                        System.exit(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+            }
         }
 
         if (gameWindow.getGameState() == gameWindow.getGameOverState()) {
@@ -163,10 +196,10 @@ public class KeyHandler implements KeyListener {
                     if (getCommandNum() == 0) {
                         gameWindow.setGameState(gameWindow.getPlayState());
                         gameWindow.retry();
-                    } else {
-                        System.exit(0);
                     }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    if (getCommandNum() == 1) {
+                        gameWindow.setGameState(gameWindow.getTitleState());
+                    }
                 }
             }
         }

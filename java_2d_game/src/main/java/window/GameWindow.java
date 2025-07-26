@@ -48,6 +48,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private static GameWindow instance;
     private Thread gameThread;
     private int gameState;
+    private final int titleState = 0;
     private final int playState = 1;
     private final int pauseState = 2;
     private final int dialogueState = 3;
@@ -73,7 +74,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
-        gameState = playState;
+        gameState = titleState;
     }
 
     public static synchronized GameWindow getInstance() {
@@ -231,93 +232,100 @@ public class GameWindow extends JPanel implements Window, Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        tileManager.draw(g2);
+        if (gameState == titleState) {
 
-        for (int i = 0; i < iTile.length; i++) {
-            if (iTile[i] != null) {
-                iTile[i].draw(g2);
+            getUi().draw(g2);
+
+        } else {
+
+            tileManager.draw(g2);
+
+            for (int i = 0; i < iTile.length; i++) {
+                if (iTile[i] != null) {
+                    iTile[i].draw(g2);
+                }
             }
-        }
 
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2);
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    obj[i].draw(g2);
+                }
             }
-        }
 
-        for (Entity item : itemList) {
-            if (item != null && item.getAlive()) {
-                item.draw(g2);
+            for (Entity item : itemList) {
+                if (item != null && item.getAlive()) {
+                    item.draw(g2);
+                }
             }
-        }
 
-        for (Entity paList : particleList) {
-            if (paList != null) {
-                paList.draw(g2);
+            for (Entity paList : particleList) {
+                if (paList != null) {
+                    paList.draw(g2);
+                }
             }
-        }
 
-        List<Entity> entityList = new ArrayList<>();
+            List<Entity> entityList = new ArrayList<>();
 
-        entityList.add(player);
+            entityList.add(player);
 
-        for (Entity entity : npc) {
-            if (entity != null) {
-                entityList.add(entity);
+            for (Entity entity : npc) {
+                if (entity != null) {
+                    entityList.add(entity);
+                }
             }
-        }
-        for (Entity entity : monster) {
-            if (entity != null) {
-                entityList.add(entity);
+            for (Entity entity : monster) {
+                if (entity != null) {
+                    entityList.add(entity);
+                }
             }
-        }
-        for (Entity proList : projectileList) {
-            if (proList != null && proList.getAlive()) {
-                entityList.add(proList);
+            for (Entity proList : projectileList) {
+                if (proList != null && proList.getAlive()) {
+                    entityList.add(proList);
+                }
             }
+
+            entityList.sort(Comparator.comparingInt(Entity::getWorldY));
+
+            for (Entity entity : entityList) {
+                entity.draw(g2);
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            }
+            entityList.clear();
+
+            ui.draw(g2);
+
+            if (keyHandler.isShowDebugText()) {
+
+                int tileSize = FrameApp.getTileSize();
+                long drawEnd = System.nanoTime();
+                long passed = drawEnd - drawStart;
+
+                g2.setFont(new Font("アリアル", Font.PLAIN, 20));
+                g2.setColor(Color.WHITE);
+
+                int debugX = 10;
+                int debugY = 400;
+                int lineHeight = 20;
+                double nanosecond = 1000000000.0;
+
+                g2.drawString("描画時間: " + passed / nanosecond + "秒", debugX, debugY);
+                debugY += lineHeight;
+
+                g2.drawString("WorldX: " + player.getWorldX(), debugX, debugY);
+                debugY += lineHeight;
+                g2.drawString("WorldY: " + player.getWorldY(), debugX, debugY);
+                debugY += lineHeight;
+
+                int row = player.getWorldX() / tileSize;
+                int col = player.getWorldY() / tileSize;
+
+                g2.drawString("Row  : " + row, debugX, debugY);
+                debugY += lineHeight;
+                g2.drawString("Col    : " + col, debugX, debugY);
+            }
+
+            g2.dispose();
         }
-
-        entityList.sort(Comparator.comparingInt(Entity::getWorldY));
-
-        for (Entity entity : entityList) {
-            entity.draw(g2);
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        }
-        entityList.clear();
-
-        ui.draw(g2);
-
-        if (keyHandler.isShowDebugText()) {
-
-            int tileSize = FrameApp.getTileSize();
-            long drawEnd = System.nanoTime();
-            long passed = drawEnd - drawStart;
-
-            g2.setFont(new Font("アリアル", Font.PLAIN, 20));
-            g2.setColor(Color.WHITE);
-
-            int debugX = 10;
-            int debugY = 400;
-            int lineHeight = 20;
-            double nanosecond = 1000000000.0;
-
-            g2.drawString("描画時間: " + passed / nanosecond + "秒", debugX, debugY);
-            debugY += lineHeight;
-
-            g2.drawString("WorldX: " + player.getWorldX(), debugX, debugY);
-            debugY += lineHeight;
-            g2.drawString("WorldY: " + player.getWorldY(), debugX, debugY);
-            debugY += lineHeight;
-
-            int row = player.getWorldX() / tileSize;
-            int col = player.getWorldY() / tileSize;
-
-            g2.drawString("Row  : " + row, debugX, debugY);
-            debugY += lineHeight;
-            g2.drawString("Col    : " + col, debugX, debugY);
-        }
-
-        g2.dispose();
     }
 
     public Player getPlayer() {
@@ -446,6 +454,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public boolean isDialogueActive() {
         return dialogueActive;
+    }
+
+    public int getTitleState() {
+        return titleState;
     }
 
     public void setDialogueActive(boolean active) {
