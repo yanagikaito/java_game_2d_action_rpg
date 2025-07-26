@@ -197,6 +197,11 @@ public abstract class Entity {
             gameWindow.getPlayer().setInvincible(true);
             setInvincibleCounter(0);
         }
+
+        if (gameWindow.getPlayer().getLife() <= 0) {
+            gameWindow.getPlayer().setLife(0);
+            gameWindow.setGameState(gameWindow.getGameOverState());
+        }
     }
 
     public void speak() {

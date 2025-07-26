@@ -208,10 +208,7 @@ public class KeyHandler implements KeyListener {
     public void speakDialogue(boolean playerEnter) {
         if (gameWindow.getGameState() == gameWindow.getPlayState() && playerEnter) {
             this.playerEnter = true;
-            setPlayerUp(false);
-            setPlayerDown(false);
-            setPlayerLeft(false);
-            setPlayerRight(false);
+            clearAllKeys();
         } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
             gameWindow.setGameState(gameWindow.getPlayState());
             gameWindow.startNpcRoute(0, 1, 0);
