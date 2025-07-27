@@ -5,6 +5,7 @@ import frame.FrameApp;
 import key.KeyHandler;
 import object.*;
 import org.jetbrains.annotations.NotNull;
+import tile.TileManager;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -327,6 +328,10 @@ public class Player extends Entity {
 
     private void updateCollision() {
 
+        int tileSize = FrameApp.getTileSize();
+        int playerGridX = getWorldX() / tileSize;
+        int playerGridY = getWorldY() / tileSize;
+
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
 
@@ -344,6 +349,9 @@ public class Player extends Entity {
 
         int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         damageInteractiveTile(iTileIndex);
+
+        int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
+        gameWindow.changeMap(collidedTileId);
     }
 
     private void updateAnimation() {
