@@ -17,6 +17,8 @@ import java.util.Map;
 public class MainFrame extends JFrame {
 
     private final MapModel model = new MapModel(50, 50);
+    private final JComboBox<Integer> selector;
+    private int currentMapId = 1;
     private final Map<Integer, Image> tileImages = new HashMap<>();
     private final MapCanvas canvas;
 
@@ -33,10 +35,19 @@ public class MainFrame extends JFrame {
             control.add(b);
         }
 
+        selector = new JComboBox<>(new Integer[]{1, 2});
+        selector.setSelectedItem(currentMapId);
+        selector.addActionListener(e -> {
+            currentMapId = (Integer) selector.getSelectedItem();
+            loadMap(currentMapId);
+        });
+        control.add(new JLabel("Map ID:"));
+        control.add(selector);
+
         JButton save = new JButton("Save");
-        save.addActionListener(e -> saveMap(1));
+        save.addActionListener(e -> saveMap(currentMapId));
         JButton load = new JButton("Load");
-        load.addActionListener(e -> loadMap(1));
+        load.addActionListener(e -> loadMap(currentMapId));
         control.add(save);
         control.add(load);
 
@@ -52,7 +63,7 @@ public class MainFrame extends JFrame {
 
     private void loadTiles() {
 
-        for (int id = 0; id < 6; id++) {
+        for (int id = 0; id < 9; id++) {
 
             try (InputStream is = getClass().getResourceAsStream("/tiles/" + id + ".png")) {
                 if (is == null) {

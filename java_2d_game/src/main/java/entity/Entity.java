@@ -100,6 +100,7 @@ public abstract class Entity {
             {-1, 1},
             {1, 1}
     };
+    protected int mapId;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -659,6 +660,10 @@ public abstract class Entity {
     public int getParticleMaxLife() {
         int maxLife = 0;
         return maxLife;
+    }
+
+    public int getMapId() {
+        return mapId;
     }
 
     public void generateParticle(@NotNull Entity generator, Entity target) {

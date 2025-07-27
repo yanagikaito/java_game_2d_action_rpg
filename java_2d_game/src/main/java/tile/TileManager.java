@@ -20,14 +20,16 @@ public class TileManager {
 
     private int[][] mapTileNum;
 
+    public static final int MEADOW_TILE_ID = 1;
+    public static final int HUT_TILE_ID = 6;
+
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[6];
+        tiles = new Tile[9];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
     }
-
 
     private void loadTileImages() {
 
@@ -47,12 +49,22 @@ public class TileManager {
             tiles[3].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/sand.png"));
 
             tiles[4] = new Tile();
-            tiles[4].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree.gif"));
+            tiles[4].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree.png"));
             tiles[4].collision = true;
 
             tiles[5] = new Tile();
             tiles[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/wall.png"));
             tiles[5].collision = true;
+
+            tiles[6] = new Tile();
+            tiles[6].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/hut.png"));
+
+            tiles[7] = new Tile();
+            tiles[7].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/floor.png"));
+
+            tiles[8] = new Tile();
+            tiles[8].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/table.png"));
+            tiles[8].collision = true;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,7 +90,6 @@ public class TileManager {
         }
     }
 
-
     public void draw(Graphics2D g2) {
 
         for (int row = 0; row < FrameApp.getMaxWorldRow(); row++) {
@@ -103,6 +114,16 @@ public class TileManager {
                         FrameApp.getTileSize(), FrameApp.getTileSize(), null);
             }
         }
+    }
+
+    // マップ読み込み後のタイルIDを取得
+    public int getTileIdAt(int col, int row) {
+        // 範囲外チェックを入れても安全
+        if (col < 0 || col >= mapTileNum.length ||
+                row < 0 || row >= mapTileNum[0].length) {
+            return -1;
+        }
+        return mapTileNum[col][row];
     }
 
     public Tile[] getTiles() {

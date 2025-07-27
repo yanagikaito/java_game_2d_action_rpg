@@ -23,6 +23,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int characterState = 4;
     private final int debugState = 5;
     private final int gameOverState = 6;
+    private int currentMap = 1;
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
 
@@ -156,6 +158,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             for (Entity entity : npc) {
                 if (entity != null) {
+                    if (entity.getMapId() != currentMap) continue;
                     entity.update();
                 }
             }
@@ -221,6 +224,42 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
         if (gameState == pauseState) {
 
+        }
+    }
+
+    public void changeMap(int newMap) {
+
+        int tileSize = FrameApp.getTileSize();
+        currentMap = newMap;
+
+        if (currentMap == TileManager.HUT_TILE_ID) {
+
+            Arrays.fill(npc, null);
+            Arrays.fill(monster, null);
+            Arrays.fill(obj, null);
+            Arrays.fill(iTile, null);
+            itemList.clear();
+            projectileList.clear();
+            particleList.clear();
+
+            tileManager.loadMap(2);
+            getPlayer().setWorldX(tileSize * 29);
+            getPlayer().setWorldY(tileSize * 16);
+
+            repaint();
+
+        } else if (currentMap == TileManager.MEADOW_TILE_ID) {
+
+            tileManager.loadMap(1);
+            getPlayer().setWorldX(tileSize * 23);
+            getPlayer().setWorldY(tileSize * 16);
+
+            assetSetter.setNPC();
+            assetSetter.setMonster();
+            assetSetter.setInteractiveTile();
+            assetSetter.setObjAxe();
+
+            repaint();
         }
     }
 
@@ -462,6 +501,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setDialogueActive(boolean active) {
         this.dialogueActive = active;
+    }
+
+    public int getCurrentMap() {
+        return currentMap;
     }
 
     public void dropItem(@NotNull Entity droppedItem, @NotNull Entity source) {
