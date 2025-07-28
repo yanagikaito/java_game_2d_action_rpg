@@ -129,6 +129,8 @@ public class KeyHandler implements KeyListener {
             return;
         }
 
+        if (gameWindow.isOnTransition()) return;
+
         switch (code) {
             case KeyEvent.VK_W -> setPlayerUp(true);
             case KeyEvent.VK_S -> setPlayerDown(true);
