@@ -56,6 +56,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int characterState = 4;
     private final int debugState = 5;
     private final int gameOverState = 6;
+    private boolean onTransition = false;
+    private boolean fadingOut = true;
+    private float alpha = 0f;
+    private int frameCount = 0;
+    private final int TRANSITION_DURATION = 30;
+    private int pendingMapId;
     private int currentMap = 1;
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
@@ -108,6 +114,17 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setObjAxe();
     }
 
+    public void startMapTransition(int newMapId) {
+        this.pendingMapId = newMapId;
+        this.onTransition = true;
+        this.fadingOut = true;
+        this.frameCount = 0;
+        this.alpha = 0f;
+
+        keyHandler.clearAllKeys();
+        getPlayer().setMoving(false);
+    }
+
     @Override
     public void run() {
         int fps = 60;
@@ -150,9 +167,37 @@ public class GameWindow extends JPanel implements Window, Runnable {
         gameThread.start();
     }
 
+    private void updateTransition() {
+
+        frameCount++;
+
+        if (fadingOut) {
+            alpha = frameCount / (float) TRANSITION_DURATION;
+
+            if (frameCount >= TRANSITION_DURATION) {
+                changeMap(pendingMapId);
+                fadingOut = false;
+                frameCount = 0;
+            }
+        } else {
+            alpha = 1f - frameCount / (float) TRANSITION_DURATION;
+
+            if (frameCount >= TRANSITION_DURATION) {
+                alpha = 0f;
+                onTransition = false;
+                frameCount = 0;
+            }
+        }
+    }
+
     public void update() {
 
         if (gameState == playState) {
+
+            if (onTransition) {
+                updateTransition();
+                return;
+            }
 
             player.update();
 
@@ -242,7 +287,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
             projectileList.clear();
             particleList.clear();
 
+            getKeyHandler().clearAllKeys();
             tileManager.loadMap(2);
+            startMapTransition(2);
             getPlayer().setWorldX(tileSize * 29);
             getPlayer().setWorldY(tileSize * 16);
 
@@ -250,7 +297,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         } else if (currentMap == TileManager.MEADOW_TILE_ID) {
 
+            getKeyHandler().clearAllKeys();
             tileManager.loadMap(1);
+            startMapTransition(2);
             getPlayer().setWorldX(tileSize * 23);
             getPlayer().setWorldY(tileSize * 16);
 
@@ -332,6 +381,16 @@ public class GameWindow extends JPanel implements Window, Runnable {
             entityList.clear();
 
             ui.draw(g2);
+
+            if (onTransition) {
+                Composite old = g2.getComposite();
+                g2.setComposite(AlphaComposite.getInstance(
+                        AlphaComposite.SRC_OVER, Math.min(1f, Math.max(0f, alpha))
+                ));
+                g2.setColor(Color.black);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setComposite(old);
+            }
 
             if (keyHandler.isShowDebugText()) {
 
@@ -530,5 +589,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public int getGameOverState() {
         return gameOverState;
+    }
+
+    public boolean isOnTransition() {
+        return onTransition;
     }
 }
