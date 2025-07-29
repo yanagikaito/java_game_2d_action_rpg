@@ -1,18 +1,15 @@
 package asset;
 
 import entity.Entity;
-import entity.FireworkParticle;
-import entity.Particle;
 import frame.FrameApp;
 import monster.MonGreenSlime;
+import npc.MerChant;
 import npc.NpcOldMan;
 import object.ObjAxe;
 import org.jetbrains.annotations.NotNull;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
-
-import java.awt.*;
 
 public class AssetSetter {
 
@@ -28,6 +25,15 @@ public class AssetSetter {
         npcOldMan.setWorldY(FrameApp.getTileSize() * 21);
         Entity[] npcArray = gameWindow.getNPC();
         npcArray[0] = npcOldMan;
+        gameWindow.setNPC(npcArray);
+    }
+
+    public void setMerchant() {
+        MerChant npcMerChant = new MerChant(gameWindow);
+        npcMerChant.setWorldX(FrameApp.getTileSize() * 29);
+        npcMerChant.setWorldY(FrameApp.getTileSize() * 11);
+        Entity[] npcArray = gameWindow.getNPC();
+        npcArray[0] = npcMerChant;
         gameWindow.setNPC(npcArray);
     }
 

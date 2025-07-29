@@ -40,6 +40,8 @@ public class UI {
     private int slotCol = 0;
     private int slotRow = 0;
 
+    private boolean dialogueOn = false;
+
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
@@ -56,6 +58,16 @@ public class UI {
     public void addMessage(String text) {
         message.add(text);
         messageCounter.add(0);
+    }
+
+    public void addDialogue(String text) {
+        if (text == null || text.isEmpty()) {
+            dialogueOn = false;
+            currentDialogueMessage = "";
+        } else {
+            dialogueOn = true;
+            currentDialogueMessage = text;
+        }
     }
 
     public void draw(@NotNull Graphics2D g2) {
@@ -78,27 +90,25 @@ public class UI {
         } else if (gameState == playState) {
 
             gameWindow.setDialogueActive(false);
-
             drawPlayerLife(g2);
             drawBattleLogMessage(g2);
             drawManaBar(g2);
 
         } else if (gameState == pauseState) {
-            gameWindow.setDialogueActive(false);
 
+            gameWindow.setDialogueActive(false);
             drawPlayerLife(g2);
             drawPauseScreen(g2);
 
         } else if (gameState == dialogueState) {
 
             gameWindow.setDialogueActive(true);
-
             drawPlayerLife(g2);
             drawDialogueScreen(g2);
 
         } else if (gameState == charState) {
-            gameWindow.setDialogueActive(false);
 
+            gameWindow.setDialogueActive(false);
             drawCharacterScreen(g2);
             drawInventory(g2);
 
@@ -504,5 +514,13 @@ public class UI {
 
     public void setSlotCol(int slotCol) {
         this.slotCol = slotCol;
+    }
+
+    public boolean isDialogueOn() {
+        return dialogueOn;
+    }
+
+    public void setDialogueOn(boolean dialogueOn) {
+        this.dialogueOn = dialogueOn;
     }
 }
