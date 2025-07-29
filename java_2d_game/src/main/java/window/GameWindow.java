@@ -292,6 +292,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 29);
             getPlayer().setWorldY(tileSize * 16);
+            assetSetter.setMerchant();
 
             repaint();
 

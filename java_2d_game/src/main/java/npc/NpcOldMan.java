@@ -3,6 +3,7 @@ package npc;
 import db.PathManager;
 import entity.Entity;
 import frame.FrameApp;
+import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -182,7 +183,7 @@ public class NpcOldMan extends Entity {
         }
     }
 
-    private BufferedImage createImage(BufferedImage original, int width, int height) {
+    private @NotNull BufferedImage createImage(BufferedImage original, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = result.createGraphics();
         g2.drawImage(original, 0, 0, width, height, null);

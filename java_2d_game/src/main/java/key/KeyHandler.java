@@ -1,5 +1,6 @@
 package key;
 
+import npc.MerChant;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -143,6 +144,12 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_ENTER -> {
                 speakDialogue(true);
                 clearAllKeys();
+                int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
+                if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof MerChant) {
+                    startConversation(npcIdx);
+                } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
+                    gameWindow.setGameState(gameWindow.getPlayState());
+                }
             }
             case KeyEvent.VK_F -> setShotKeyPressed(true);
         }
@@ -207,6 +214,15 @@ public class KeyHandler implements KeyListener {
         }
     }
 
+    private void startConversation(int npcIdx) {
+        gameWindow.getUi().setDialogueOn(true);
+        MerChant mar = (MerChant) gameWindow.getNPC()[npcIdx];
+        gameWindow.getPlayer().setTalkNpcIndex(npcIdx);
+        gameWindow.setGameState(gameWindow.getDialogueState());
+        gameWindow.getUi().addDialogue(mar.getNextDialogue());
+        gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+    }
+
     @Override
     public void keyReleased(@NotNull KeyEvent e) {
 
@@ -245,6 +261,7 @@ public class KeyHandler implements KeyListener {
             this.playerEnter = true;
             clearAllKeys();
         } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
+            gameWindow.getUi().setDialogueOn(false);
             gameWindow.setGameState(gameWindow.getPlayState());
             gameWindow.startNpcRoute(0, 1, 0);
             gameWindow.getPlayer().setInvincible(false);

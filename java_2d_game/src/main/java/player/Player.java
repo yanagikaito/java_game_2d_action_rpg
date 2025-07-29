@@ -3,9 +3,9 @@ package player;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
+import npc.MerChant;
 import object.*;
 import org.jetbrains.annotations.NotNull;
-import tile.TileManager;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -52,6 +52,7 @@ public class Player extends Entity {
     private ArrayList<Entity> inventory = new ArrayList<>();
     private final int maxInventorySize = 20;
     private static final int FIREBALL_MANA_COST = 20;
+    private int talkNpcIndex = -1;
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
@@ -326,6 +327,38 @@ public class Player extends Entity {
         }
     }
 
+    public int checkNpcInFront(Entity[] npc, int range) {
+
+        int px = this.getWorldX();
+        int py = this.getWorldY();
+        int tx = 0, ty = 0;
+
+        // 向きに応じたベクトルを設定
+        switch (this.getDirection()) {
+            case "up":    ty = -FrameApp.getTileSize(); break;
+            case "down":  ty =  FrameApp.getTileSize(); break;
+            case "left":  tx = -FrameApp.getTileSize(); break;
+            case "right": tx =  FrameApp.getTileSize(); break;
+        }
+
+        // 1～range タイル先をチェック
+        for (int i = 1; i <= range; i++) {
+            int checkX = px + tx * i;
+            int checkY = py + ty * i;
+
+            for (int idx = 0; idx < npc.length; idx++) {
+                Entity e = npc[idx];
+                if (e != null
+                        && e.getMapId() == this.mapId
+                        && e.getWorldX() == checkX
+                        && e.getWorldY() == checkY) {
+                    return idx;
+                }
+            }
+        }
+        return -1;
+    }
+
     private void updateCollision() {
 
         int tileSize = FrameApp.getTileSize();
@@ -336,7 +369,17 @@ public class Player extends Entity {
         gameWindow.getCollisionChecker().checkTile(this);
 
         int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
-        interactNPC(npcIndex);
+        if (npcIndex != 999) {
+            Entity e = gameWindow.getNPC()[npcIndex];
+            if (e instanceof MerChant) {
+                // 商人との接触
+                talkNpcIndex = npcIndex;
+                gameWindow.setGameState(gameWindow.getDialogueState());
+                gameWindow.getUi().addDialogue(((MerChant) e).getNextDialogue());
+            } else {
+                interactNPC(npcIndex);
+            }
+        }
 
         int objIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
         pickUpObject(objIndex);
@@ -837,5 +880,13 @@ public class Player extends Entity {
 
     private @NotNull String capitalize(@NotNull String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+
+    public int getTalkNpcIndex() {
+        return talkNpcIndex;
+    }
+
+    public void setTalkNpcIndex(int talkNpcIndex) {
+        this.talkNpcIndex = talkNpcIndex;
     }
 }
