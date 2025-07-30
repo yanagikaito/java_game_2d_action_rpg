@@ -1,6 +1,6 @@
 package key;
 
-import npc.MerChant;
+import npc.NpcMerChant;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -142,13 +142,15 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_R -> gameWindow.toggleHitBoxDebug();
             case KeyEvent.VK_C -> gameWindow.setGameState(gameWindow.getCharacterState());
             case KeyEvent.VK_ENTER -> {
-                speakDialogue(true);
-                clearAllKeys();
-                int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
-                if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof MerChant) {
-                    startConversation(npcIdx);
-                } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
-                    gameWindow.setGameState(gameWindow.getPlayState());
+                if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+                    clearAllKeys();
+                    int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
+                    if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcMerChant) {
+                        startConversation(npcIdx);
+                        gameWindow.setGameState(gameWindow.getTradeState());
+                    } else if (gameWindow.getGameState() == gameWindow.getTradeState()) {
+                        speakDialogue();
+                    }
                 }
             }
             case KeyEvent.VK_F -> setShotKeyPressed(true);
@@ -212,15 +214,40 @@ public class KeyHandler implements KeyListener {
                 }
             }
         }
+
+        if (gameWindow.getGameState() == gameWindow.getTradeState()) {
+            switch (code) {
+                case KeyEvent.VK_W -> {
+                    setCommandNum(getCommandNum() - 1);
+                    if (getCommandNum() < 0) {
+                        setCommandNum(2);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_S -> {
+                    setCommandNum(getCommandNum() + 1);
+                    if (getCommandNum() > 2) {
+                        setCommandNum(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                }
+            }
+        }
     }
 
     private void startConversation(int npcIdx) {
-        gameWindow.getUi().setDialogueOn(true);
-        MerChant mar = (MerChant) gameWindow.getNPC()[npcIdx];
+
+        NpcMerChant mer = (NpcMerChant) gameWindow.getNPC()[npcIdx];
+
+        // ① インデックスをリセット
+        mer.resetDialogue();
+
+        // ② 会話状態へ移行
         gameWindow.getPlayer().setTalkNpcIndex(npcIdx);
         gameWindow.setGameState(gameWindow.getDialogueState());
-        gameWindow.getUi().addDialogue(mar.getNextDialogue());
-        gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+
+        // ③ 最初のセリフを出す
+        speakDialogue();
     }
 
     @Override
@@ -256,16 +283,30 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    public void speakDialogue(boolean playerEnter) {
-        if (gameWindow.getGameState() == gameWindow.getPlayState() && playerEnter) {
-            this.playerEnter = true;
-            clearAllKeys();
-        } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
-            gameWindow.getUi().setDialogueOn(false);
+    private void speakDialogue() {
+
+        int idx = gameWindow.getPlayer().getTalkNpcIndex();
+        if (idx < 0) return;
+
+        NpcMerChant mer = (NpcMerChant) gameWindow.getNPC()[idx];
+        String text = mer.getNextDialogue();
+
+        // セリフを UI にセット（null を渡すと閉じる実装と連携）
+        gameWindow.getUi().addDialogue(text);
+
+        if (text == null) {
+            // 会話終了：状態リセット
             gameWindow.setGameState(gameWindow.getPlayState());
-            gameWindow.startNpcRoute(0, 1, 0);
-            gameWindow.getPlayer().setInvincible(false);
+            gameWindow.getPlayer().setTalkNpcIndex(idx);
+
+            // ついでにもう一度リセットしておく
+            mer.resetDialogue();
         }
+
+        // SE は毎回鳴らしてもOK
+        gameWindow.getSoundmanager().cursorWAV(
+                "java_2d_game/res/sound/cursor-sound.wav"
+        );
     }
 
     public void debugText() {

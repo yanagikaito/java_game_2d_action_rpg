@@ -56,6 +56,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int characterState = 4;
     private final int debugState = 5;
     private final int gameOverState = 6;
+    private final int tradeState = 7;
     private boolean onTransition = false;
     private boolean fadingOut = true;
     private float alpha = 0f;
@@ -594,5 +595,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public boolean isOnTransition() {
         return onTransition;
+    }
+
+    public int getTradeState() {
+        return tradeState;
     }
 }

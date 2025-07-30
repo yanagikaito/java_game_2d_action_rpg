@@ -41,6 +41,8 @@ public class UI {
     private int slotRow = 0;
 
     private boolean dialogueOn = false;
+    private Entity npc;
+    private int subState;
 
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -82,6 +84,7 @@ public class UI {
         int dialogueState = gameWindow.getDialogueState();
         int charState = gameWindow.getCharacterState();
         int gameOverState = gameWindow.getGameOverState();
+        int tradeState = gameWindow.getTradeState();
 
         if (gameState == titleState) {
 
@@ -114,6 +117,9 @@ public class UI {
 
         } else if (gameState == gameOverState) {
             drawGameOverScreen(g2);
+
+        } else if (gameState == tradeState) {
+            drawTradeScreen(g2);
         }
 
 
@@ -460,6 +466,56 @@ public class UI {
         }
     }
 
+    public void drawTradeScreen(@NotNull Graphics2D g2) {
+
+        switch (subState) {
+            case 0 -> tradeSelect(g2);
+            case 1 -> tradeBuy();
+            case 2 -> tradeSell();
+        }
+        gameWindow.getKeyHandler().setPlayerEnter(false);
+    }
+
+    public void tradeSelect(@NotNull Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+        int commandNum = gameWindow.getKeyHandler().getCommandNum();
+        drawDialogueScreen(g2);
+
+        int x = tileSize * 12;
+        int y = tileSize * 5;
+        int width = tileSize * 3;
+        int height = (int) (tileSize * 3.5);
+        drawSubWindow(g2, x, y, width, height);
+
+        x += tileSize;
+        y += tileSize;
+        g2.drawString("買う", x, y);
+        if (commandNum == 0) {
+            g2.drawString(">", x - 24, y);
+        }
+
+        y += tileSize;
+        g2.drawString("売る", x, y);
+        if (commandNum == 1) {
+            g2.drawString(">", x - 24, y);
+        }
+
+        y += tileSize;
+        g2.drawString("去る", x, y);
+        if (commandNum == 2) {
+            g2.drawString(">", x - 24, y);
+        }
+    }
+
+    public void tradeBuy() {
+
+    }
+
+    public void tradeSell() {
+
+    }
+
     public int getItemIndexOnSlot() {
         int itemIndex = slotRow + (slotCol * 5);
         return itemIndex;
@@ -522,5 +578,13 @@ public class UI {
 
     public void setDialogueOn(boolean dialogueOn) {
         this.dialogueOn = dialogueOn;
+    }
+
+    public Entity getNpc() {
+        return npc;
+    }
+
+    public void setNpc(Entity npc) {
+        this.npc = npc;
     }
 }

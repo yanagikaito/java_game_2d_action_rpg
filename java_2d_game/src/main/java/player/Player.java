@@ -3,7 +3,7 @@ package player;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
-import npc.MerChant;
+import npc.NpcMerChant;
 import object.*;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
@@ -335,10 +335,18 @@ public class Player extends Entity {
 
         // 向きに応じたベクトルを設定
         switch (this.getDirection()) {
-            case "up":    ty = -FrameApp.getTileSize(); break;
-            case "down":  ty =  FrameApp.getTileSize(); break;
-            case "left":  tx = -FrameApp.getTileSize(); break;
-            case "right": tx =  FrameApp.getTileSize(); break;
+            case "up":
+                ty = -FrameApp.getTileSize();
+                break;
+            case "down":
+                ty = FrameApp.getTileSize();
+                break;
+            case "left":
+                tx = -FrameApp.getTileSize();
+                break;
+            case "right":
+                tx = FrameApp.getTileSize();
+                break;
         }
 
         // 1～range タイル先をチェック
@@ -371,11 +379,11 @@ public class Player extends Entity {
         int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         if (npcIndex != 999) {
             Entity e = gameWindow.getNPC()[npcIndex];
-            if (e instanceof MerChant) {
+            if (e instanceof NpcMerChant) {
                 // 商人との接触
                 talkNpcIndex = npcIndex;
                 gameWindow.setGameState(gameWindow.getDialogueState());
-                gameWindow.getUi().addDialogue(((MerChant) e).getNextDialogue());
+                gameWindow.getUi().addDialogue(((NpcMerChant) e).getNextDialogue());
             } else {
                 interactNPC(npcIndex);
             }
