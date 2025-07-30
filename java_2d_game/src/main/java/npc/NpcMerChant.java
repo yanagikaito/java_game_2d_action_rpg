@@ -2,6 +2,7 @@ package npc;
 
 import entity.Entity;
 import frame.FrameApp;
+import object.*;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
@@ -10,14 +11,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class MerChant extends Entity {
+public class NpcMerChant extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private int dialogueIndex = 0;
 
-    public MerChant(GameWindow gameWindow) {
+    public NpcMerChant(GameWindow gameWindow) {
         super(gameWindow);
         setDirection("down");
         setSpeed(1);
@@ -46,12 +47,26 @@ public class MerChant extends Entity {
 
     public void setDialogue() {
 
-        getDialogue()[0] = "いらっしゃい";
-        getDialogue()[1] = "何買うか？";
+        getDialogue()[0] = "いらっしゃい。何買う?";
+    }
+
+    public void setItems() {
+
+        getGameWindow().getPlayer().getInventory().add(new ObjRedPotion(getGameWindow()));
+        getGameWindow().getPlayer().getInventory().add(new ObjGreenPotion(getGameWindow()));
+        getGameWindow().getPlayer().getInventory().add(new ObjSwordNormal(getGameWindow()));
+        getGameWindow().getPlayer().getInventory().add(new ObjShieldWood(getGameWindow()));
+        getGameWindow().getPlayer().getInventory().add(new ObjAxe(getGameWindow()));
     }
 
     @Override
     public void speak() {
+
+        GameWindow gameWindow = getGameWindow();
+        int tradeState = gameWindow.getTradeState();
+        gameWindow.setGameState(tradeState);
+
+        gameWindow.getUi().setNpc(this);
 
         String[] dialogues = getDialogue();
 

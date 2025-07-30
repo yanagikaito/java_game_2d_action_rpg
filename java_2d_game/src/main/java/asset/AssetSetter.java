@@ -3,7 +3,7 @@ package asset;
 import entity.Entity;
 import frame.FrameApp;
 import monster.MonGreenSlime;
-import npc.MerChant;
+import npc.NpcMerChant;
 import npc.NpcOldMan;
 import object.ObjAxe;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,7 @@ public class AssetSetter {
     }
 
     public void setMerchant() {
-        MerChant npcMerChant = new MerChant(gameWindow);
+        NpcMerChant npcMerChant = new NpcMerChant(gameWindow);
         npcMerChant.setWorldX(FrameApp.getTileSize() * 29);
         npcMerChant.setWorldY(FrameApp.getTileSize() * 11);
         Entity[] npcArray = gameWindow.getNPC();
