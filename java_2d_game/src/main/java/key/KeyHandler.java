@@ -216,6 +216,7 @@ public class KeyHandler implements KeyListener {
         }
 
         if (gameWindow.getGameState() == gameWindow.getTradeState()) {
+
             switch (code) {
                 case KeyEvent.VK_W -> {
                     setCommandNum(getCommandNum() - 1);
@@ -231,6 +232,15 @@ public class KeyHandler implements KeyListener {
                     }
                     gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
+                case KeyEvent.VK_ENTER -> {
+                    if (getCommandNum() == 0) {
+                    }
+                    if (getCommandNum() == 1) {
+                    }
+                    if (getCommandNum() == 2) {
+                        setPlayerEnter(true);
+                    }
+                }
             }
         }
     }
@@ -239,14 +249,14 @@ public class KeyHandler implements KeyListener {
 
         NpcMerChant mer = (NpcMerChant) gameWindow.getNPC()[npcIdx];
 
-        // ① インデックスをリセット
+        // インデックスをリセット
         mer.resetDialogue();
 
-        // ② 会話状態へ移行
+        // 会話状態へ移行
         gameWindow.getPlayer().setTalkNpcIndex(npcIdx);
         gameWindow.setGameState(gameWindow.getDialogueState());
 
-        // ③ 最初のセリフを出す
+        // 最初のセリフを出す
         speakDialogue();
     }
 
@@ -291,7 +301,7 @@ public class KeyHandler implements KeyListener {
         NpcMerChant mer = (NpcMerChant) gameWindow.getNPC()[idx];
         String text = mer.getNextDialogue();
 
-        // セリフを UI にセット（null を渡すと閉じる実装と連携）
+        // セリフを UI にセット
         gameWindow.getUi().addDialogue(text);
 
         if (text == null) {
@@ -303,7 +313,6 @@ public class KeyHandler implements KeyListener {
             mer.resetDialogue();
         }
 
-        // SE は毎回鳴らしてもOK
         gameWindow.getSoundmanager().cursorWAV(
                 "java_2d_game/res/sound/cursor-sound.wav"
         );

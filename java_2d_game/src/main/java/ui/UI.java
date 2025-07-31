@@ -493,18 +493,30 @@ public class UI {
         g2.drawString("買う", x, y);
         if (commandNum == 0) {
             g2.drawString(">", x - 24, y);
+            if (gameWindow.getKeyHandler().isPlayerEnter()) {
+                subState = 1;
+            }
         }
 
         y += tileSize;
         g2.drawString("売る", x, y);
         if (commandNum == 1) {
             g2.drawString(">", x - 24, y);
+            if (gameWindow.getKeyHandler().isPlayerEnter()) {
+                subState = 2;
+            }
         }
 
         y += tileSize;
         g2.drawString("去る", x, y);
         if (commandNum == 2) {
             g2.drawString(">", x - 24, y);
+            if (gameWindow.getKeyHandler().isPlayerEnter()) {
+                gameWindow.getKeyHandler().setCommandNum(0);
+                gameWindow.setGameState(gameWindow.getDialogueState());
+                gameWindow.getKeyHandler().clearAllKeys();
+                gameWindow.setGameState(gameWindow.getPlayState());
+            }
         }
     }
 
