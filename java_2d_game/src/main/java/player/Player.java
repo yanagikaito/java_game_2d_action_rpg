@@ -49,8 +49,6 @@ public class Player extends Entity {
     private int pixelCounter = 0;
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
-    private ArrayList<Entity> inventory = new ArrayList<>();
-    private final int maxInventorySize = 20;
     private static final int FIREBALL_MANA_COST = 20;
     private int talkNpcIndex = -1;
 
@@ -124,12 +122,14 @@ public class Player extends Entity {
 
     public void setItems() {
 
-        inventory.clear();
-        inventory.add(getCurrentWeapon());
-        inventory.add(getCurrentShield());
+        getInventory().clear();
+        ArrayList<Entity> items = new ArrayList<>();
+        items.add(getCurrentWeapon());
+        items.add(getCurrentShield());
+        items.add(new ObjRedPotion(gameWindow));
+        items.add(new ObjGreenPotion(gameWindow));
 
-        inventory.add(new ObjRedPotion(gameWindow));
-        inventory.add(new ObjGreenPotion(gameWindow));
+        setInventory(items);
     }
 
     public void loadPlayerImages() {
@@ -198,14 +198,14 @@ public class Player extends Entity {
 
     public void useRedPotion(int index) {
         System.out.println("useRedPotion が呼ばれた index=" + index
-                + " invSize=" + inventory.size());
+                + " invSize=" + getInventory().size());
 
-        if (index < 0 || index >= inventory.size()) {
+        if (index < 0 || index >= getInventory().size()) {
             System.out.println("index 範囲外で return");
             return;
         }
 
-        Entity e = inventory.get(index);
+        Entity e = getInventory().get(index);
 
         if (e instanceof ObjRedPotion) {
             System.out.println("アイテムは RedPotion です。処理続行");
@@ -214,7 +214,7 @@ public class Player extends Entity {
             setLife(Math.min(getLife() + heal, getMaxLife()));
             gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
             gameWindow.getSoundmanager().redPotionWAV("java_2d_game/res/sound/potion-sound.wav");
-            inventory.remove(index);
+            getInventory().remove(index);
             return;
         } else {
             System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
@@ -223,14 +223,14 @@ public class Player extends Entity {
 
     public void useGreenPotion(int index) {
         System.out.println("useRedPotion が呼ばれた index=" + index
-                + " invSize=" + inventory.size());
+                + " invSize=" + getInventory().size());
 
-        if (index < 0 || index >= inventory.size()) {
+        if (index < 0 || index >= getInventory().size()) {
             System.out.println("index 範囲外で return");
             return;
         }
 
-        Entity e = inventory.get(index);
+        Entity e = getInventory().get(index);
 
         if (e instanceof ObjGreenPotion) {
             System.out.println("アイテムは GreenPotion です。処理続行");
@@ -239,7 +239,7 @@ public class Player extends Entity {
             setMana(Math.min(getMana() + heal, getMaxMana()));
             gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
             gameWindow.getSoundmanager().greenPotionWAV("java_2d_game/res/sound/potion-sound.wav");
-            inventory.remove(index);
+            getInventory().remove(index);
             return;
         } else {
             System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
@@ -377,6 +377,7 @@ public class Player extends Entity {
         gameWindow.getCollisionChecker().checkTile(this);
 
         int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
+        interactNPC(npcIndex);
         if (npcIndex != 999) {
             Entity e = gameWindow.getNPC()[npcIndex];
             if (e instanceof NpcMerChant) {
@@ -384,8 +385,6 @@ public class Player extends Entity {
                 talkNpcIndex = npcIndex;
                 gameWindow.setGameState(gameWindow.getDialogueState());
                 gameWindow.getUi().addDialogue(((NpcMerChant) e).getNextDialogue());
-            } else {
-                interactNPC(npcIndex);
             }
         }
 
@@ -534,9 +533,9 @@ public class Player extends Entity {
 
             String text;
 
-            if (inventory.size() != maxInventorySize) {
+            if (getInventory().size() != getMaxInventorySize()) {
 
-                inventory.add(gameWindow.getObj()[i]);
+                getInventory().add(gameWindow.getObj()[i]);
                 text = gameWindow.getObj()[i].getName() + "を手に入れた!";
             } else {
                 text = "手に入れていない!";
@@ -710,11 +709,12 @@ public class Player extends Entity {
 
     public void selectItem(int index) {
 
-        int itemIndex = gameWindow.getUi().getItemIndexOnSlot();
+        int itemIndex = gameWindow.getUi().getItemIndexOnSlot(gameWindow.getUi().getPlayerSlotRow()
+                , gameWindow.getUi().getPlayerSlotCol());
 
-        if (itemIndex < inventory.size()) {
+        if (itemIndex < getInventory().size()) {
 
-            Entity selectedItem = inventory.get(itemIndex);
+            Entity selectedItem = getInventory().get(itemIndex);
             System.out.println("selectedItem = " + selectedItem);
 
             if (selectedItem.getType() == getType_sword() || selectedItem.getType() == getType_axe()) {
@@ -812,10 +812,6 @@ public class Player extends Entity {
 
     public int getScreenY() {
         return screenY;
-    }
-
-    public ArrayList<Entity> getInventory() {
-        return inventory;
     }
 
     public boolean getMoving() {

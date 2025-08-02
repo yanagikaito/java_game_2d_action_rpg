@@ -87,42 +87,42 @@ public class KeyHandler implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(@NotNull KeyEvent e) {
 
         int code = e.getKeyCode();
 
         if (gameWindow.getGameState() == gameWindow.getCharacterState()) {
 
-            int row = gameWindow.getUi().getSlotRow();
-            int col = gameWindow.getUi().getSlotCol();
+            int playerSlotRow = gameWindow.getUi().getPlayerSlotRow();
+            int playerSlotCol = gameWindow.getUi().getPlayerSlotCol();
             int maxCol = MAX_COL;
             int maxRow = (gameWindow.getPlayer().getInventory().size() + maxCol - 1) / maxCol;
 
             switch (code) {
                 case KeyEvent.VK_W -> {
-                    if (col > 0) gameWindow.getUi().setSlotCol(col - 1);
+                    if (playerSlotCol > 0) gameWindow.getUi().setPlayerSlotCol(playerSlotCol - 1);
                     gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_S -> {
-                    if (col < MAX_COL) gameWindow.getUi().setSlotCol(col + 1);
+                    if (playerSlotCol < MAX_COL) gameWindow.getUi().setPlayerSlotCol(playerSlotCol + 1);
                     gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_A -> {
-                    if (row > 0) gameWindow.getUi().setSlotRow(row - 1);
+                    if (playerSlotRow > 0) gameWindow.getUi().setPlayerSlotRow(playerSlotRow - 1);
                     gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_D -> {
-                    if (row < MAX_ROW) gameWindow.getUi().setSlotRow(row + 1);
+                    if (playerSlotRow < MAX_ROW) gameWindow.getUi().setPlayerSlotRow(playerSlotRow + 1);
                     gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_C -> {
                     gameWindow.setGameState(gameWindow.getPlayState());
                 }
                 case KeyEvent.VK_ENTER -> {
-                    int index = col * maxRow + row;
+                    int index = playerSlotCol * maxRow + playerSlotRow;
                     System.out.println("useRedPotion index=" + index
-                            + " (row=" + row + ", col=" + col + ")"
-                            + " inventorySize=" + gameWindow.getPlayer().getInventory().size()
+                            + " (playerSlotRow =" + playerSlotRow + ", playerSlotCol =" + playerSlotCol + ")"
+                            + " inventorySize =" + gameWindow.getPlayer().getInventory().size()
                     );
                     gameWindow.getPlayer().selectItem(index);
                 }
@@ -142,15 +142,15 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_R -> gameWindow.toggleHitBoxDebug();
             case KeyEvent.VK_C -> gameWindow.setGameState(gameWindow.getCharacterState());
             case KeyEvent.VK_ENTER -> {
-                if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+                int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
+                if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcMerChant) {
+                    startConversation(npcIdx);
+                    gameWindow.setGameState(gameWindow.getTradeState());
+                } else if (gameWindow.getGameState() == gameWindow.getTradeState()) {
+                    npcMerChantSpeak();
+                } else {
+                    speakDialogue();
                     clearAllKeys();
-                    int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
-                    if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcMerChant) {
-                        startConversation(npcIdx);
-                        gameWindow.setGameState(gameWindow.getTradeState());
-                    } else if (gameWindow.getGameState() == gameWindow.getTradeState()) {
-                        speakDialogue();
-                    }
                 }
             }
             case KeyEvent.VK_F -> setShotKeyPressed(true);
@@ -234,6 +234,7 @@ public class KeyHandler implements KeyListener {
                 }
                 case KeyEvent.VK_ENTER -> {
                     if (getCommandNum() == 0) {
+                        setPlayerEnter(true);
                     }
                     if (getCommandNum() == 1) {
                     }
@@ -241,6 +242,73 @@ public class KeyHandler implements KeyListener {
                         setPlayerEnter(true);
                     }
                 }
+            }
+            if (gameWindow.getUi().getSubState() == 1) {
+                npcInventory(code);
+                playerInventory(code);
+                if (code == KeyEvent.VK_ESCAPE) {
+                    gameWindow.getUi().setSubState(0);
+                }
+            }
+            if (gameWindow.getUi().getSubState() == 2) {
+                npcInventory(code);
+            }
+            if (gameWindow.getUi().getSubState() == 3) {
+                npcInventory(code);
+            }
+        }
+    }
+
+    public void playerInventory(int code) {
+
+        int playerSlotRow = gameWindow.getUi().getPlayerSlotRow();
+        int playerSlotCol = gameWindow.getUi().getPlayerSlotCol();
+        int maxCol = MAX_COL;
+        int maxRow = (gameWindow.getPlayer().getInventory().size() + maxCol - 1) / maxCol;
+
+        switch (code) {
+            case KeyEvent.VK_W -> {
+                if (playerSlotCol > 0) gameWindow.getUi().setPlayerSlotCol(playerSlotCol - 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+            }
+            case KeyEvent.VK_S -> {
+                if (playerSlotCol < MAX_COL) gameWindow.getUi().setPlayerSlotCol(playerSlotCol + 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+            }
+            case KeyEvent.VK_A -> {
+                if (playerSlotRow > 0) gameWindow.getUi().setPlayerSlotRow(playerSlotRow - 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+            }
+            case KeyEvent.VK_D -> {
+                if (playerSlotRow < MAX_ROW) gameWindow.getUi().setPlayerSlotRow(playerSlotRow + 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+            }
+        }
+    }
+
+    public void npcInventory(int code) {
+
+        int npcSlotRow = gameWindow.getUi().getNpcSlotRow();
+        int npcSlotCol = gameWindow.getUi().getNpcSlotCol();
+        int maxCol = MAX_COL;
+        int maxRow = (gameWindow.getPlayer().getInventory().size() + maxCol - 1) / maxCol;
+
+        switch (code) {
+            case KeyEvent.VK_W -> {
+                if (npcSlotCol > 0) gameWindow.getUi().setNpcSlotCol(npcSlotCol - 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+            }
+            case KeyEvent.VK_S -> {
+                if (npcSlotCol < MAX_COL) gameWindow.getUi().setNpcSlotCol(npcSlotCol + 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+            }
+            case KeyEvent.VK_A -> {
+                if (npcSlotRow > 0) gameWindow.getUi().setNpcSlotRow(npcSlotRow - 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+            }
+            case KeyEvent.VK_D -> {
+                if (npcSlotRow < MAX_ROW) gameWindow.getUi().setNpcSlotRow(npcSlotRow + 1);
+                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
             }
         }
     }
@@ -257,7 +325,7 @@ public class KeyHandler implements KeyListener {
         gameWindow.setGameState(gameWindow.getDialogueState());
 
         // 最初のセリフを出す
-        speakDialogue();
+        npcMerChantSpeak();
     }
 
     @Override
@@ -294,6 +362,19 @@ public class KeyHandler implements KeyListener {
     }
 
     private void speakDialogue() {
+
+        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+            setPlayerEnter(true);
+            clearAllKeys();
+        } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
+
+            gameWindow.setGameState(gameWindow.getPlayState());
+            gameWindow.startNpcRoute(0, 1, 0);
+            gameWindow.getPlayer().setInvincible(false);
+        }
+    }
+
+    public void npcMerChantSpeak() {
 
         int idx = gameWindow.getPlayer().getTalkNpcIndex();
         if (idx < 0) return;

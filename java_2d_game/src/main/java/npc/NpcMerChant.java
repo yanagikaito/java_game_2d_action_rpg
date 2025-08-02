@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class NpcMerChant extends Entity {
 
@@ -24,6 +25,7 @@ public class NpcMerChant extends Entity {
         setSpeed(1);
         loadNPCImages();
         setDialogue();
+        setItems();
     }
 
     public void loadNPCImages() {
@@ -52,11 +54,13 @@ public class NpcMerChant extends Entity {
 
     public void setItems() {
 
-        getGameWindow().getPlayer().getInventory().add(new ObjRedPotion(getGameWindow()));
-        getGameWindow().getPlayer().getInventory().add(new ObjGreenPotion(getGameWindow()));
-        getGameWindow().getPlayer().getInventory().add(new ObjSwordNormal(getGameWindow()));
-        getGameWindow().getPlayer().getInventory().add(new ObjShieldWood(getGameWindow()));
-        getGameWindow().getPlayer().getInventory().add(new ObjAxe(getGameWindow()));
+        ArrayList<Entity> items = new ArrayList<>();
+        items.add(getCurrentWeapon());
+        items.add(getCurrentShield());
+        items.add(new ObjRedPotion(getGameWindow()));
+        items.add(new ObjGreenPotion(getGameWindow()));
+
+        setInventory(items);
     }
 
     @Override
@@ -64,28 +68,11 @@ public class NpcMerChant extends Entity {
 
         GameWindow gameWindow = getGameWindow();
         int tradeState = gameWindow.getTradeState();
+        super.speak();
         gameWindow.setGameState(tradeState);
 
         gameWindow.getUi().setNpc(this);
 
-        String[] dialogues = getDialogue();
-
-        int dialogueIndex = getDialogueIndex();
-
-        if (dialogues[dialogueIndex] == null) {
-            dialogueIndex = 0;
-        }
-
-        getGameWindow().getUi().setCurrentDialogueMessage(dialogues[dialogueIndex]);
-        dialogueIndex++;
-        setDialogueIndex(dialogueIndex);
-
-        switch (getGameWindow().getPlayer().getDirection()) {
-            case "up" -> setDirection("down");
-            case "down" -> setDirection("up");
-            case "left" -> setDirection("right");
-            case "right" -> setDirection("left");
-        }
     }
 
     public String getNextDialogue() {

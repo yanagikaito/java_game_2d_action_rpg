@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -100,6 +101,8 @@ public abstract class Entity {
             {-1, 1},
             {1, 1}
     };
+    private ArrayList<Entity> inventory;
+    private final int maxInventorySize;
     protected int mapId;
 
     public Entity(GameWindow gameWindow) {
@@ -129,6 +132,8 @@ public abstract class Entity {
         this.exp = 0;
         this.nextLevelExp = 0;
         this.coin = 0;
+        this.inventory = new ArrayList<>();
+        this.maxInventorySize = 20;
     }
 
     public void setAction() {
@@ -666,6 +671,18 @@ public abstract class Entity {
         return mapId;
     }
 
+    public ArrayList<Entity> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(ArrayList<Entity> inventory) {
+        this.inventory = inventory;
+    }
+
+    public int getMaxInventorySize() {
+        return maxInventorySize;
+    }
+
     public void generateParticle(@NotNull Entity generator, Entity target) {
 
         Color color = generator.getParticleColor();
@@ -743,7 +760,7 @@ public abstract class Entity {
         this.height = tileSize;
     }
 
-    protected void setImage(BufferedImage raw, int tileSize) {
+    public void setImage(BufferedImage raw, int tileSize) {
         this.image = DEFAULT_RESIZER.resize(raw, tileSize, tileSize);
         this.width = this.height = tileSize;
     }
