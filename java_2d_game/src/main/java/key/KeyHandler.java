@@ -140,7 +140,10 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_P -> togglePause();
             case KeyEvent.VK_T -> debugText();
             case KeyEvent.VK_R -> gameWindow.toggleHitBoxDebug();
-            case KeyEvent.VK_C -> gameWindow.setGameState(gameWindow.getCharacterState());
+            case KeyEvent.VK_C -> {
+                gameWindow.setGameState(gameWindow.getCharacterState());
+                clearAllKeys();
+            }
             case KeyEvent.VK_ENTER -> {
                 int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
                 if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcMerChant) {
@@ -148,6 +151,7 @@ public class KeyHandler implements KeyListener {
                     gameWindow.setGameState(gameWindow.getTradeState());
                 } else if (gameWindow.getGameState() == gameWindow.getTradeState()) {
                     npcMerChantSpeak();
+                    gameWindow.getUi().setSubState(0);
                 } else {
                     speakDialogue();
                     clearAllKeys();
@@ -245,7 +249,6 @@ public class KeyHandler implements KeyListener {
             }
             if (gameWindow.getUi().getSubState() == 1) {
                 npcInventory(code);
-                playerInventory(code);
                 if (code == KeyEvent.VK_ESCAPE) {
                     gameWindow.getUi().setSubState(0);
                 }
@@ -291,7 +294,7 @@ public class KeyHandler implements KeyListener {
         int npcSlotRow = gameWindow.getUi().getNpcSlotRow();
         int npcSlotCol = gameWindow.getUi().getNpcSlotCol();
         int maxCol = MAX_COL;
-        int maxRow = (gameWindow.getPlayer().getInventory().size() + maxCol - 1) / maxCol;
+        int maxRow = (gameWindow.getUi().getNpc().getInventory().size() + maxCol - 1) / maxCol;
 
         switch (code) {
             case KeyEvent.VK_W -> {
