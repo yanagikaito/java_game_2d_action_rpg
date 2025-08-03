@@ -412,14 +412,6 @@ public class UI {
 
     private void drawInventory(@NotNull Graphics2D g2, @NotNull Entity entity, boolean cursor) {
 
-        ArrayList<Entity> items = new ArrayList<>();
-        items.add(entity.getCurrentWeapon());
-        items.add(entity.getCurrentShield());
-        items.add(new ObjRedPotion(entity.getGameWindow()));
-        items.add(new ObjGreenPotion(entity.getGameWindow()));
-
-        entity.setInventory(items);
-
         if (entity == null || entity.getInventory() == null) return;
 
         int frameX = 0;
@@ -454,14 +446,16 @@ public class UI {
         int slotY = slotYstart;
 
         int slotSize = tileSize + 3;
-        int cursorX = slotXstart + (slotSize * playerSlotRow);
-        int cursorY = slotYstart + (slotSize * playerSlotCol);
+        int cursorX = slotXstart + (slotSize * slotRow);
+        int cursorY = slotYstart + (slotSize * slotCol);
         int cursorWidth = tileSize;
         int cursorHeight = tileSize;
 
-        g2.setColor(Color.WHITE);
-        g2.setStroke(new BasicStroke(3));
-        g2.drawRoundRect(cursorX, cursorY - 2, cursorWidth, cursorHeight, 10, 10);
+        if (cursor) {
+            g2.setColor(Color.WHITE);
+            g2.setStroke(new BasicStroke(3));
+            g2.drawRoundRect(cursorX, cursorY - 2, cursorWidth, cursorHeight, 10, 10);
+        }
 
         List<Entity> inv = entity.getInventory();
         for (int i = 0; i < inv.size(); i++) {
@@ -474,11 +468,7 @@ public class UI {
                 g2.fillRoundRect(slotX, slotY, tileSize, tileSize, 10, 10);
             }
 
-            if (item == null) continue;
-            BufferedImage img = item.getImage();
-            if (img == null) continue;
-
-            g2.drawImage(img, slotX, slotY, tileSize, tileSize, null);
+            g2.drawImage(item.getImage(), slotX, slotY, tileSize, tileSize, null);
 
             slotX += slotSize;
 
@@ -488,16 +478,16 @@ public class UI {
             }
         }
 
-        if (cursor == true) {
+        int dFrameX = frameX;
+        int dFrameY = frameY + frameHeight;
+        int dFrameWidth = frameWidth;
+        int dFrameHeight = tileSize * 3;
 
-            int dFrameX = frameX;
-            int dFrameY = frameY + frameHeight;
-            int dFrameWidth = frameWidth;
-            int dFrameHeight = tileSize * 3;
+        int textX = dFrameX + 20;
+        int textY = dFrameY + tileSize;
+        g2.setFont(g2.getFont().deriveFont(28F));
 
-            int textX = dFrameX + 20;
-            int textY = dFrameY + tileSize;
-            g2.setFont(g2.getFont().deriveFont(28F));
+        if (cursor) {
 
             int itemIndex = getItemIndexOnSlot(slotRow, slotCol);
 
@@ -582,8 +572,8 @@ public class UI {
 
     }
 
-    public int getItemIndexOnSlot(int slotRow, int slotCot) {
-        int itemIndex = playerSlotRow + (playerSlotCol * 5);
+    public int getItemIndexOnSlot(int slotRow, int slotCol) {
+        int itemIndex = slotRow + (slotCol * 5);
         return itemIndex;
     }
 

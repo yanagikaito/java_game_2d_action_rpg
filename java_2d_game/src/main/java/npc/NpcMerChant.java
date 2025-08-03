@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class NpcMerChant extends Entity {
 
+    private GameWindow gameWindow;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
@@ -21,6 +22,7 @@ public class NpcMerChant extends Entity {
 
     public NpcMerChant(GameWindow gameWindow) {
         super(gameWindow);
+        this.gameWindow = gameWindow;
         setDirection("down");
         setSpeed(1);
         loadNPCImages();
@@ -55,10 +57,10 @@ public class NpcMerChant extends Entity {
     public void setItems() {
 
         ArrayList<Entity> items = new ArrayList<>();
-        items.add(getCurrentWeapon());
-        items.add(getCurrentShield());
-        items.add(new ObjRedPotion(getGameWindow()));
-        items.add(new ObjGreenPotion(getGameWindow()));
+        items.add(new ObjSwordNormal(gameWindow));
+        items.add(new ObjShieldWood(gameWindow));
+        items.add(new ObjRedPotion(gameWindow));
+        items.add(new ObjGreenPotion(gameWindow));
 
         setInventory(items);
     }
