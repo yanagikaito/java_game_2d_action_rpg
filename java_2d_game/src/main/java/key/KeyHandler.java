@@ -221,44 +221,7 @@ public class KeyHandler implements KeyListener {
 
         if (gameWindow.getGameState() == gameWindow.getTradeState()) {
 
-            switch (code) {
-                case KeyEvent.VK_W -> {
-                    setCommandNum(getCommandNum() - 1);
-                    if (getCommandNum() < 0) {
-                        setCommandNum(2);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_S -> {
-                    setCommandNum(getCommandNum() + 1);
-                    if (getCommandNum() > 2) {
-                        setCommandNum(0);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_ENTER -> {
-                    if (getCommandNum() == 0) {
-                        setPlayerEnter(true);
-                    }
-                    if (getCommandNum() == 1) {
-                    }
-                    if (getCommandNum() == 2) {
-                        setPlayerEnter(true);
-                    }
-                }
-            }
-            if (gameWindow.getUi().getSubState() == 1) {
-                npcInventory(code);
-                if (code == KeyEvent.VK_ESCAPE) {
-                    gameWindow.getUi().setSubState(0);
-                }
-            }
-            if (gameWindow.getUi().getSubState() == 2) {
-                npcInventory(code);
-            }
-            if (gameWindow.getUi().getSubState() == 3) {
-                npcInventory(code);
-            }
+            gameWindow.getUi().updateTrade(code);
         }
     }
 
