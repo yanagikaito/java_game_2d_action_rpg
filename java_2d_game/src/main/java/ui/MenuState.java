@@ -13,6 +13,7 @@ public class MenuState implements TradeScreenState {
 
     private final TradeScreenContext screenContext;
     private final List<String> options = List.of("買う", "売る", "去る");
+    private boolean skipNextEnter = true;
 
     public MenuState(TradeScreenContext screenContext) {
         this.screenContext = screenContext;
@@ -22,6 +23,13 @@ public class MenuState implements TradeScreenState {
     public void handleKey(int code) {
 
         KeyHandler keyHandler = screenContext.kh();
+
+        if (skipNextEnter && code == KeyEvent.VK_ENTER) {
+            skipNextEnter = false;
+            keyHandler.clearAllKeys();
+            return;
+        }
+        skipNextEnter = true;
 
         // カーソル移動（上下のみ）
         if (code == KeyEvent.VK_W && keyHandler.getCommandNum() > 0) {
