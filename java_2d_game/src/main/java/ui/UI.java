@@ -48,8 +48,11 @@ public class UI {
     private Entity npc;
     private int subState;
 
+    private final TradeScreenContext tradeCtx;
+
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
+        this.tradeCtx = new TradeScreenContext(gameWindow, this);
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
@@ -269,7 +272,7 @@ public class UI {
         g2.drawString(text, x, y);
     }
 
-    private void drawDialogueScreen(@NotNull Graphics2D g2) {
+    void drawDialogueScreen(@NotNull Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
 
@@ -410,7 +413,7 @@ public class UI {
         }
     }
 
-    private void drawInventory(@NotNull Graphics2D g2, @NotNull Entity entity, boolean cursor) {
+    void drawInventory(@NotNull Graphics2D g2, @NotNull Entity entity, boolean cursor) {
 
         if (entity == null || entity.getInventory() == null) return;
 
@@ -508,68 +511,12 @@ public class UI {
         }
     }
 
-    public void drawTradeScreen(@NotNull Graphics2D g2) {
-
-        switch (subState) {
-            case 0 -> tradeSelect(g2);
-            case 1 -> tradeBuy(g2);
-            case 2 -> tradeSell();
-        }
-        gameWindow.getKeyHandler().setPlayerEnter(false);
+    public void drawTradeScreen(Graphics2D g2) {
+        tradeCtx.draw(g2);
     }
 
-    public void tradeSelect(@NotNull Graphics2D g2) {
-
-        int tileSize = FrameApp.getTileSize();
-        int commandNum = gameWindow.getKeyHandler().getCommandNum();
-        drawDialogueScreen(g2);
-
-        int x = tileSize * 12;
-        int y = tileSize * 5;
-        int width = tileSize * 3;
-        int height = (int) (tileSize * 3.5);
-        drawSubWindow(g2, x, y, width, height);
-
-        x += tileSize;
-        y += tileSize;
-        g2.drawString("買う", x, y);
-        if (commandNum == 0) {
-            g2.drawString(">", x - 24, y);
-            if (gameWindow.getKeyHandler().isPlayerEnter()) {
-                subState = 1;
-            }
-        }
-
-        y += tileSize;
-        g2.drawString("売る", x, y);
-        if (commandNum == 1) {
-            g2.drawString(">", x - 24, y);
-            if (gameWindow.getKeyHandler().isPlayerEnter()) {
-                subState = 2;
-            }
-        }
-
-        y += tileSize;
-        g2.drawString("去る", x, y);
-        if (commandNum == 2) {
-            g2.drawString(">", x - 24, y);
-            if (gameWindow.getKeyHandler().isPlayerEnter()) {
-                gameWindow.getKeyHandler().setCommandNum(0);
-                gameWindow.setGameState(gameWindow.getDialogueState());
-                gameWindow.getKeyHandler().clearAllKeys();
-                gameWindow.setGameState(gameWindow.getPlayState());
-            }
-        }
-    }
-
-    public void tradeBuy(Graphics2D g2) {
-
-        drawInventory(g2, gameWindow.getPlayer(), false);
-        drawInventory(g2, getNpc(), true);
-    }
-
-    public void tradeSell() {
-
+    public void updateTrade(int keyCode) {
+        tradeCtx.handleKey(keyCode);
     }
 
     public int getItemIndexOnSlot(int slotRow, int slotCol) {
@@ -577,7 +524,7 @@ public class UI {
         return itemIndex;
     }
 
-    private void drawSubWindow(@NotNull Graphics2D g2, int x, int y, int width, int height) {
+    void drawSubWindow(@NotNull Graphics2D g2, int x, int y, int width, int height) {
 
         Color color = new Color(0, 0, 0, 210);
         g2.setColor(color);

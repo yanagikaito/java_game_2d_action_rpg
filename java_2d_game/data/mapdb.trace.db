@@ -1,0 +1,9 @@
+2025-08-07 22:58:52.289347+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-07 23:04:01.097866+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-08 09:07:02.299168+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
