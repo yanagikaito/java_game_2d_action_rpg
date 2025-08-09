@@ -22,6 +22,7 @@ public class ObjRedPotion extends Entity {
         setType(getType_redPotion());
         setName("レッドポーション");
         setDescription("[" + getName() + "]\n 体力を2回復する");
+        setPrice(10);
         try {
 
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/red-potion.gif"));

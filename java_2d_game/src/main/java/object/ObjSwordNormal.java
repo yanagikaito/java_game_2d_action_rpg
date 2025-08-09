@@ -19,6 +19,7 @@ public class ObjSwordNormal extends Entity {
         setName("普通の剣");
         setAttackValue(1);
         setDescription("[" + getName() + "]\n 古くからある剣");
+        setPrice(100);
         try {
 
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/sword-normal.gif"));

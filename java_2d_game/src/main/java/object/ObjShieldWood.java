@@ -19,6 +19,7 @@ public class ObjShieldWood extends Entity {
         setName("木の盾");
         setDefenseValue(1);
         setDescription("[" + getName() + "]\n 木で,できた盾");
+        setPrice(75);
         try {
 
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/shield-wood.gif"));

@@ -24,7 +24,6 @@ public class ObjAxe extends Entity {
         getAttackArea().width = 25;
         getAttackArea().height = 25;
         setDescription("[" + getName() + "]\n木を切ることができる");
-
         try {
 
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/axe.gif"));

@@ -104,6 +104,7 @@ public abstract class Entity {
     private ArrayList<Entity> inventory;
     private final int maxInventorySize;
     protected int mapId;
+    private int price;
 
     public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -673,6 +674,14 @@ public abstract class Entity {
 
     public ArrayList<Entity> getInventory() {
         return inventory;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public void setInventory(ArrayList<Entity> inventory) {

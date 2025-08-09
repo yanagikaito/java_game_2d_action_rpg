@@ -31,12 +31,11 @@ public class UI {
     private String currentDialogueMessage;
     private ArrayList<String> message = new ArrayList<>();
     private ArrayList<Integer> messageCounter = new ArrayList<>();
-    private List<String> currentDialogueList = List.of();
-    private int currentDialogueIndex = 0;
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
     private BufferedImage heartBlank;
+    private BufferedImage coin;
 
     private int playerSlotCol = 0;
     private int playerSlotRow = 0;
@@ -63,6 +62,9 @@ public class UI {
         heartFull = heart.getImage();
         heartHalf = heart.getImage2();
         heartBlank = heart.getImage3();
+
+        Entity bronzeCoin = new ObjCoinBronze(gameWindow);
+        coin = bronzeCoin.getImage();
     }
 
     public void addMessage(String text) {
@@ -413,7 +415,7 @@ public class UI {
         }
     }
 
-    void drawInventory(@NotNull Graphics2D g2, @NotNull Entity entity, boolean cursor) {
+    public void drawInventory(@NotNull Graphics2D g2, @NotNull Entity entity, boolean cursor) {
 
         if (entity == null || entity.getInventory() == null) return;
 
@@ -549,7 +551,7 @@ public class UI {
         return FrameApp.getScreenWidth() / 2 - textWidth / 2;
     }
 
-    private int getXForAlignToRightText(@NotNull Graphics2D g2, String text, int tailX) {
+    int getXForAlignToRightText(@NotNull Graphics2D g2, String text, int tailX) {
         int textWidth = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = tailX - textWidth;
         return x;
@@ -613,5 +615,13 @@ public class UI {
 
     public void setSubState(int subState) {
         this.subState = subState;
+    }
+
+    public BufferedImage getCoin() {
+        return coin;
+    }
+
+    public void setCoin(BufferedImage coin) {
+        this.coin = coin;
     }
 }

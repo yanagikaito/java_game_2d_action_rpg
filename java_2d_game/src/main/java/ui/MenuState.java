@@ -55,17 +55,18 @@ public class MenuState implements TradeScreenState {
 
     @Override
     public void draw(Graphics2D g2) {
-        int ts = FrameApp.getTileSize();
+
+        int tileSize = FrameApp.getTileSize();
         int cmd = screenContext.kh().getCommandNum();
 
         screenContext.ui().drawDialogueScreen(g2);
-        screenContext.ui().drawSubWindow(g2, ts * 12, ts * 5, ts * 3, (int) (ts * 3.5));
+        screenContext.ui().drawSubWindow(g2, tileSize * 12, tileSize * 5, tileSize * 3, (int) (tileSize * 3.5));
 
-        int x = ts * 13, y = ts * 6;
+        int x = tileSize * 13, y = tileSize * 6;
         for (int i = 0; i < options.size(); i++) {
-            g2.drawString(options.get(i), x, y + ts * i);
+            g2.drawString(options.get(i), x, y + tileSize * i);
             if (i == cmd) {
-                g2.drawString(">", x - 24, y + ts * i);
+                g2.drawString(">", x - 24, y + tileSize * i);
             }
         }
     }
