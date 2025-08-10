@@ -22,6 +22,7 @@ public class ObjGreenPotion extends Entity {
         setType(getType_greenPotion());
         setName("グリーンポーション");
         setDescription("[" + getName() + "]\n 魔力を20回復する");
+        setPrice(10);
         try {
 
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/green-potion.gif"));
