@@ -98,6 +98,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getKeyHandler().clearAllKeys();
         getPlayer().setDefaultPositions();
         getPlayer().restoreLifeAndMan();
+        getPlayer().setItems();
+        getPlayer().setCoin(500);
         getPlayer().setMoving(false);
         assetSetter.setNPC();
         assetSetter.setMonster();
@@ -109,6 +111,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().setDefaultPositions();
         getPlayer().restoreLifeAndMan();
         getPlayer().setItems();
+        getPlayer().setCoin(500);
         assetSetter.setNPC();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();

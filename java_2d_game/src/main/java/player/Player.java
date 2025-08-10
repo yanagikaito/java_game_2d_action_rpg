@@ -96,7 +96,7 @@ public class Player extends Entity {
         setDexterity(1);
         setExp(0);
         setNextLevelExp(5);
-        setCoin(0);
+        setCoin(500);
         setCurrentWeapon(new ObjSwordNormal(gameWindow));
         setCurrentShield(new ObjShieldWood(gameWindow));
         setProjectile(new ObjFireball(gameWindow));
