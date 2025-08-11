@@ -20,11 +20,12 @@ public class BuyState implements TradeScreenState {
 
     @Override
     public void handleKey(int code) {
-        GameWindow gw = screenContext.gw();
-        KeyHandler kh = screenContext.kh();
+
+        GameWindow gameWindow = screenContext.gw();
+        KeyHandler keyHandler = screenContext.kh();
 
         // 1) カーソル移動
-        gw.getKeyHandler().npcInventory(code);
+        gameWindow.getKeyHandler().npcInventory(code);
 
         // 2) ENTER → 購入判定
         if (code == KeyEvent.VK_ENTER) {
@@ -34,8 +35,8 @@ public class BuyState implements TradeScreenState {
 
         // 3) ESC → メニューに戻る
         if (code == KeyEvent.VK_ESCAPE) {
-            kh.clearAllKeys();
-            kh.setCommandNum(0);
+            keyHandler.clearAllKeys();
+            keyHandler.setCommandNum(0);
             screenContext.setState(new MenuState(screenContext));
         }
     }
@@ -94,7 +95,7 @@ public class BuyState implements TradeScreenState {
             screenContext.setState(
                     new DialogueState(screenContext,
                             "これ以上購入できない!!",
-                            this
+                            this // BuyState に戻る
                     )
             );
         } else {
@@ -104,6 +105,7 @@ public class BuyState implements TradeScreenState {
     }
 
     private void drawMessageWindow(Graphics2D g2, int tileSize) {
+
         int x = tileSize * 2;
         int y = tileSize * 9;
         int width = tileSize * 6 + tileSize / 2;
@@ -113,6 +115,7 @@ public class BuyState implements TradeScreenState {
     }
 
     private void drawPlayerCoinWindow(Graphics2D g2, int tileSize, int coin) {
+
         int x = tileSize * 9;
         int y = tileSize * 9;
         int width = tileSize * 6 + tileSize / 2;
@@ -122,12 +125,14 @@ public class BuyState implements TradeScreenState {
     }
 
     private void drawPriceWindow(Graphics2D g2, int tileSize, @NotNull UI ui, List<Entity> inv) {
+
         int row = ui.getNpcSlotRow();
         int col = ui.getNpcSlotCol();
         int idx = ui.getItemIndexOnSlot(row, col);
         if (idx < 0 || idx >= inv.size()) return;
 
-        int x = (int) (tileSize * 5.5), y = (int) (tileSize * 5.5);
+        int x = (int) (tileSize * 5.5);
+        int y = (int) (tileSize * 5.5);
         int width = (int) (tileSize * 2.5);
         int height = tileSize;
         ui.drawSubWindow(g2, x, y, width, height);
