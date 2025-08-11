@@ -38,3 +38,6 @@ build/
 
 ### Mac OS ###
 .DS_Store"data/mapdb.mv.db" 
+
+# MapDB のデータベースファイル
+data/mapdb.mv.db
