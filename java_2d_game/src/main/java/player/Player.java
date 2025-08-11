@@ -737,6 +737,12 @@ public class Player extends Entity {
         }
     }
 
+    public boolean isEquipped(Entity item) {
+        if (item == null) return false;
+        return item.equals(getCurrentWeapon())
+                || item.equals(getCurrentShield());
+    }
+
     @Override
     public void draw(@NotNull Graphics2D g2) {
 

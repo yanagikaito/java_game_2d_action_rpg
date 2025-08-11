@@ -1,6 +1,5 @@
 package ui;
 
-import entity.Entity;
 import key.KeyHandler;
 import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
