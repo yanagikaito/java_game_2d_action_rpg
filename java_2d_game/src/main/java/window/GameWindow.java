@@ -331,68 +331,30 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         } else {
 
-            tileManager.draw(g2);
-
-            for (int i = 0; i < iTile.length; i++) {
-                if (iTile[i] != null) {
-                    iTile[i].draw(g2);
-                }
-            }
-
-            for (int i = 0; i < obj.length; i++) {
-                if (obj[i] != null) {
-                    obj[i].draw(g2);
-                }
-            }
-
-            for (Entity item : itemList) {
-                if (item != null && item.getAlive()) {
-                    item.draw(g2);
-                }
-            }
-
-            for (Entity paList : particleList) {
-                if (paList != null) {
-                    paList.draw(g2);
-                }
-            }
-
-            List<Entity> entityList = new ArrayList<>();
-
-            entityList.add(player);
-
-            for (Entity entity : npc) {
-                if (entity != null) {
-                    entityList.add(entity);
-                }
-            }
-            for (Entity entity : monster) {
-                if (entity != null) {
-                    entityList.add(entity);
-                }
-            }
-            for (Entity proList : projectileList) {
-                if (proList != null && proList.getAlive()) {
-                    entityList.add(proList);
-                }
-            }
-
-            entityList.sort(Comparator.comparingInt(Entity::getWorldY));
-
-            for (Entity entity : entityList) {
-                entity.draw(g2);
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-            }
-            entityList.clear();
-
-            ui.draw(g2);
-
             if (onTransition) {
                 Composite old = g2.getComposite();
                 g2.setComposite(AlphaComposite.getInstance(
                         AlphaComposite.SRC_OVER, Math.min(1f, Math.max(0f, alpha))
                 ));
                 g2.setColor(Color.black);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setComposite(old);
+            }
+            // フェードアウト中は前のマップ
+            if (!onTransition || !fadingOut) {
+                // 通常のワールド描画
+                tileManager.draw(g2);
+                renderEntitiesAndObjects(g2);
+                ui.draw(g2);
+            }
+
+            // 遷移中は常に黒オーバーレイを描画
+            if (onTransition) {
+                Composite old = g2.getComposite();
+                g2.setComposite(AlphaComposite.getInstance(
+                        AlphaComposite.SRC_OVER, alpha
+                ));
+                g2.setColor(Color.BLACK);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setComposite(old);
             }
@@ -429,6 +391,61 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             g2.dispose();
         }
+    }
+
+    private void renderEntitiesAndObjects(Graphics2D g2) {
+
+        for (int i = 0; i < iTile.length; i++) {
+            if (iTile[i] != null) {
+                iTile[i].draw(g2);
+            }
+        }
+
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2);
+            }
+        }
+
+        for (Entity item : itemList) {
+            if (item != null && item.getAlive()) {
+                item.draw(g2);
+            }
+        }
+
+        for (Entity paList : particleList) {
+            if (paList != null) {
+                paList.draw(g2);
+            }
+        }
+
+        List<Entity> entityList = new ArrayList<>();
+
+        entityList.add(player);
+
+        for (Entity entity : npc) {
+            if (entity != null) {
+                entityList.add(entity);
+            }
+        }
+        for (Entity entity : monster) {
+            if (entity != null) {
+                entityList.add(entity);
+            }
+        }
+        for (Entity proList : projectileList) {
+            if (proList != null && proList.getAlive()) {
+                entityList.add(proList);
+            }
+        }
+
+        entityList.sort(Comparator.comparingInt(Entity::getWorldY));
+
+        for (Entity entity : entityList) {
+            entity.draw(g2);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        }
+        entityList.clear();
     }
 
     public Player getPlayer() {
