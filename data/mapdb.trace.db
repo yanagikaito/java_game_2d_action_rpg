@@ -74,3 +74,12 @@ Caused by: java.net.BindException: Address already in use: bind
 	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:170)
 	at org.h2.util.NetUtils.createServerSocketTry(NetUtils.java:207)
 	... 16 more
+2025-08-12 13:10:06.573508+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 13:11:00.554895+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 13:12:43.857072+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
