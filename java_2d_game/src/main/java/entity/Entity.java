@@ -151,7 +151,6 @@ public abstract class Entity {
      */
 
     public void setAction() {
-        throw new UnsupportedOperationException("setAction() がオーバーライドされていない");
     }
 
     /**
@@ -161,7 +160,6 @@ public abstract class Entity {
      */
 
     public void damageReaction() {
-        throw new UnsupportedOperationException("damageReaction() がオーバーライドされていない");
     }
 
     /**
@@ -323,9 +321,6 @@ public abstract class Entity {
      */
 
     public void setWorldX(int worldX) {
-        if (worldX < 0) {
-            throw new IllegalArgumentException("worldX は 0 以上でなければならない");
-        }
         this.worldX = worldX;
     }
 
@@ -348,9 +343,6 @@ public abstract class Entity {
      */
 
     public void setWorldY(int worldY) {
-        if (worldY < 0) {
-            throw new IllegalArgumentException("worldY は 0 以上でなければならない");
-        }
         this.worldY = worldY;
     }
 
@@ -373,9 +365,6 @@ public abstract class Entity {
      */
 
     public void setSpeed(int speed) {
-        if (speed <= 0) {
-            throw new IllegalArgumentException("speed は 1 以上でなければならない");
-        }
         this.speed = speed;
     }
 
@@ -1462,9 +1451,6 @@ public abstract class Entity {
      * @throws IllegalStateException price が負の値の場合
      */
     public int getPrice() {
-        if (price < 0) {
-            throw new IllegalStateException("price が不正な値: " + price);
-        }
         return price;
     }
 
@@ -1475,9 +1461,6 @@ public abstract class Entity {
      * @throws IllegalArgumentException price が負の値の場合
      */
     public void setPrice(int price) {
-        if (price < 0) {
-            throw new IllegalArgumentException("price は 0 以上でなければならない。");
-        }
         this.price = price;
     }
 

@@ -52,14 +52,21 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.4.0</version>
                 <configuration>
+                    <!-- 文字コード設定 -->
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <docencoding>${project.build.sourceEncoding}</docencoding>
                     <charset>${project.build.sourceEncoding}</charset>
+
+                    <!-- DocLint を全部オフ -->
                     <additionalOptions>
                         <additionalOption>-Xdoclint:none</additionalOption>
                     </additionalOptions>
+
+                    <!-- エラーがあってもビルド失敗にしない -->
                     <failOnError>false</failOnError>
-                    <reportOutputDirectory>${project.build.directory}/site/apidocs</reportOutputDirectory>
+
+                    <!-- 出力先を docs/javadoc に変更 -->
+                    <destDir>${project.basedir}/docs/javadoc</destDir>
                 </configuration>
                 <executions>
                     <execution>
