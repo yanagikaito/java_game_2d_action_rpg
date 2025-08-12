@@ -52,6 +52,13 @@ public class Player extends Entity {
     private static final int FIREBALL_MANA_COST = 20;
     private int talkNpcIndex = -1;
 
+    /**
+     * プレイヤーを初期化するコンストラクタ。
+     *
+     * @param gameWindow メインのゲームウィンドウ。描画やUIアクセスに使用する。
+     * @param keyHandler キー入力ハンドラ。プレイヤーの移動や操作を受け付ける。
+     */
+
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
         this.gameWindow = gameWindow;
@@ -80,6 +87,11 @@ public class Player extends Entity {
         setItems();
     }
 
+    /**
+     * プレイヤーのステータス、装備、初期経験値などをデフォルト値で設定する。
+     * ゲーム開始時の初期化やリスタート時に呼び出す。
+     */
+
     public void setDefaultValues() {
 
         setWorldX(FrameApp.getTileSize() * 23);
@@ -104,12 +116,22 @@ public class Player extends Entity {
         setDefense(calculateBaseDefense());
     }
 
+    /**
+     * プレイヤーのワールド座標・速度・向きをデフォルトにリセットする。
+     * ステータスや装備は変更せず、位置のみ初期化したい場合に使用する。
+     */
+
     public void setDefaultPositions() {
         setWorldX(FrameApp.getTileSize() * 23);
         setWorldY(FrameApp.getTileSize() * 21);
         setSpeed(4);
         setDirection("down");
     }
+
+    /**
+     * プレイヤーのレベル、最大HP/MP、現在HP/MP、無敵状態をリセットする。
+     * 主にゲームオーバー後のリスタート時などに全回復させたい場合に呼ぶ。
+     */
 
     public void restoreLifeAndMan() {
         setLevel(1);
@@ -119,6 +141,10 @@ public class Player extends Entity {
         setMana(getMaxMana());
         setInvincible(false);
     }
+
+    /**
+     * インベントリをクリアし、初期アイテム（剣、盾、赤ポーション、緑ポーション）を装備・追加する。
+     */
 
     public void setItems() {
 
@@ -131,6 +157,11 @@ public class Player extends Entity {
 
         setInventory(items);
     }
+
+    /**
+     * 歩行スプライトをディレクション・フレームごとに読み込み、タイルサイズにリサイズする。
+     * リソースパス: /player/image-{direction}-{frame}.gif
+     */
 
     public void loadPlayerImages() {
         try {
@@ -148,6 +179,11 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 剣用・斧用の攻撃スプライトを全方向・全フレーム分読み込み、
+     * 向きに応じて縦長 or 横長にリサイズする。
+     */
 
     private void loadAllAttackSprites() {
 
@@ -188,6 +224,10 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * 装備中の武器タイプに応じて、攻撃スプライト配列を剣用か斧用に切り替える。
+     */
+
     private void updateCurrentAttackSprites() {
         if (getCurrentWeapon().getType() == getType_axe()) {
             currentAttackSprites = axeSprites;
@@ -195,6 +235,13 @@ public class Player extends Entity {
             currentAttackSprites = attackSprites;
         }
     }
+
+    /**
+     * 赤ポーションをインベントリの指定スロットから使用する。
+     * HPを回復し、効果音を再生、インベントリからアイテムを削除する。
+     *
+     * @param index 使用するインベントリのスロット番号
+     */
 
     public void useRedPotion(int index) {
         System.out.println("useRedPotion が呼ばれた index=" + index
@@ -221,6 +268,13 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * 緑ポーションをインベントリの指定スロットから使用する。
+     * 魔力を回復し、効果音を再生、インベントリからアイテムを削除する。
+     *
+     * @param index 使用するインベントリのスロット番号
+     */
+
     public void useGreenPotion(int index) {
         System.out.println("useRedPotion が呼ばれた index=" + index
                 + " invSize=" + getInventory().size());
@@ -246,6 +300,12 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * 現在の武器種別と向きをもとに攻撃アニメーションを開始する準備を行う。
+     * axeなら「axe＋方向」、それ以外は「attack＋方向」を attackDirection に設定し、
+     * 対応する攻撃スプライト配列を更新。
+     */
+
     private void startAttack() {
 
         String base = capitalize(getDirection());
@@ -257,6 +317,12 @@ public class Player extends Entity {
 
         updateCurrentAttackSprites();
     }
+
+    /**
+     * 毎フレーム呼び出される更新処理。
+     * 無敵時間のカウントダウン、攻撃クールダウンの減算、攻撃・移動入力の判定、
+     * 衝突判定、アニメーション切り替え、タイル移動の実行などを行う。
+     */
 
     @Override
     public void update() {
@@ -294,6 +360,12 @@ public class Player extends Entity {
         updateInvincibility();
     }
 
+    /**
+     * キーハンドラから上下左右キーの押下をチェックし、
+     * 押されていれば向きを設定して moving を true。
+     * 一度に複数キーが押されても最初に判定された方向のみを採用。
+     */
+
     private void processInput() {
 
         var keyHandler = gameWindow.getKeyHandler();
@@ -314,6 +386,11 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * 衝突判定フラグをチェックし、当たり判定に引っかかっていなければ
+     * ワールド座標を currentSpeed 分だけ移動。
+     */
+
     private void updateMovement() {
 
         if (!isCollision()) {
@@ -326,6 +403,15 @@ public class Player extends Entity {
             }
         }
     }
+
+    /**
+     * プレイヤーの向きの前方に、指定タイル数（range）以内の NPC がいるかを検索。
+     * マップIDとワールド座標が一致する NPC を見つけたらその配列インデックスを返す。
+     *
+     * @param npc   NPC オブジェクトの配列
+     * @param range プレイヤーの向きに沿って何タイル先まで調べるか
+     * @return 見つかった NPC の配列インデックス、見つからない場合は -1
+     */
 
     public int checkNpcInFront(Entity[] npc, int range) {
 
@@ -367,6 +453,12 @@ public class Player extends Entity {
         return -1;
     }
 
+    /**
+     * プレイヤーの衝突判定を更新。
+     * タイル、NPC、オブジェクト、モンスター、インタラクティブタイルとの当たり判定を行い、
+     * マップ切り替えやNPCとの会話開始、ダメージ処理を呼び出す。
+     */
+
     private void updateCollision() {
 
         int tileSize = FrameApp.getTileSize();
@@ -404,6 +496,11 @@ public class Player extends Entity {
         gameWindow.changeMap(collidedTileId);
     }
 
+    /**
+     * プレイヤーのスプライトアニメーションを更新。
+     * カウンタが閾値を超えたらフレーム番号を進め、ループ。
+     */
+
     private void updateAnimation() {
 
         setSpriteCounter(getSpriteCounter() + 1);
@@ -414,6 +511,11 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * タイル移動中のピクセルカウンタを更新し、
+     * 指定距離（タイルサイズ）移動し終えたら移動フラグをリセット。
+     */
+
     private void updateTileMovement() {
 
         pixelCounter += getSpeed();
@@ -423,6 +525,11 @@ public class Player extends Entity {
             pixelCounter = 0;
         }
     }
+
+    /**
+     * 無敵状態および発射可能カウンタを更新。
+     * 無敵時間が終了したら無敵状態を解除し、発射再使用待機時間を進める。
+     */
 
     private void updateInvincibility() {
 
@@ -438,6 +545,12 @@ public class Player extends Entity {
             setShotAvailableCounter(getShotAvailableCounter() + 1);
         }
     }
+
+    /**
+     * 剣や斧による近接攻撃のアニメーションと当たり判定を処理。
+     * スプライトフレームを進め、攻撃範囲内のモンスターやタイルにダメージを与え、
+     * 攻撃終了後に位置や当たり判定を元に戻す。
+     */
 
     public void playerAttacking() {
 
@@ -489,6 +602,12 @@ public class Player extends Entity {
         getSolidArea().height = originalSolidHeight;
     }
 
+    /**
+     * ファイアボールを発射する処理を行う。
+     * ショットキー入力、射出可能状態、マナ消費、クールダウン判定を満たしたときに
+     * プロジェクタイルを生成し、リストに追加して効果音を再生。
+     */
+
     public void playerAttackingFireball() {
 
         KeyHandler kh = gameWindow.getKeyHandler();
@@ -527,6 +646,13 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * 指定したオブジェクト配列インデックスのオブジェクトを拾う処理を行う。
+     * インベントリに空きがあれば追加し、メッセージを表示。オブジェクトをマップから削除。
+     *
+     * @param i オブジェクト配列内のインデックス
+     */
+
     public void pickUpObject(int i) {
 
         if (i != 999) {
@@ -545,6 +671,13 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * NPCとのインタラクトを行う。
+     * Enterキーが押されていれば、NPCが存在する場合は会話を開始し、
+     * いない場合は近接攻撃を実行。
+     *
+     * @param i NPC配列内のインデックス
+     */
 
     public void interactNPC(int i) {
 
@@ -563,6 +696,13 @@ public class Player extends Entity {
         }
         keyHandler.setPlayerEnter(false);
     }
+
+    /**
+     * モンスターと接触した際のダメージ計算・HP減少・無敵状態移行・
+     * ゲームオーバー判定を行う。
+     *
+     * @param i モンスター配列内のインデックス
+     */
 
     public void contactMonster(int i) {
 
@@ -592,6 +732,15 @@ public class Player extends Entity {
             }
         }
     }
+
+    /**
+     * 指定したモンスターにダメージを与える。
+     * ダメージ音を再生し、HPが0以下になった場合は死亡演出、アイテムドロップ、
+     * 経験値取得、レベルアップ判定、リスポーン処理を行う。
+     *
+     * @param i      モンスター配列内の対象インデックス（存在しない場合は999）
+     * @param attack プレイヤーの攻撃力（防御値計算前の値）
+     */
 
     public void damageMonster(int i, int attack) {
 
@@ -660,6 +809,14 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * インタラクティブタイルに対して破壊判定を行い、
+     * 正しいアイテム使用時にダメージ音再生・パーティクル生成・ライフ減少・
+     * 破壊完了後は破壊済みオブジェクトへ置き換える。
+     *
+     * @param i インタラクティブタイル配列内の対象インデックス（存在しない場合は999）
+     */
+
     public void damageInteractiveTile(int i) {
 
         if (!gameWindow.getPlayer().getAttacking()) return;
@@ -679,6 +836,14 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * モンスターのリスポーン処理用タイマーを生成。
+     * 指定時間後にAssetSetterで再度モンスターを配置し、リスポーンフラグを解除。
+     *
+     * @param monster リスポーン対象のモンスターエンティティ
+     * @return 一度だけ実行される javax.swing.Timer インスタンス
+     */
+
     private @NotNull Timer getTimer(Entity monster) {
         Timer respawnTimer = new Timer(5000, e -> {
             gameWindow.getAssetSetter().setMonster();
@@ -688,6 +853,11 @@ public class Player extends Entity {
         respawnTimer.setRepeats(false);
         return respawnTimer;
     }
+
+    /**
+     * 現在の経験値が次レベル経験値を超えているかを判定、
+     * レベルアップ時には各ステータスを強化、ダイアログ表示、HP全回復を行う。
+     */
 
     public void checkLevelUp() {
 
@@ -706,6 +876,13 @@ public class Player extends Entity {
             gameWindow.getPlayer().setLife(gameWindow.getPlayer().getMaxLife());
         }
     }
+
+    /**
+     * インベントリ内の選択スロットからアイテムを取得し、
+     * 武器／盾なら装備を更新、ポーションなら使用処理を呼び出す。
+     *
+     * @param index メニュー画面で選択されたインベントリスロットのインデックス
+     */
 
     public void selectItem(int index) {
 
@@ -737,11 +914,25 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * 指定アイテムが現在装備中の武器または盾かどうかを判定。
+     *
+     * @param item 判定対象のエンティティ
+     * @return 装備中であれば true、そうでなければ false
+     */
+
     public boolean isEquipped(Entity item) {
         if (item == null) return false;
         return item.equals(getCurrentWeapon())
                 || item.equals(getCurrentShield());
     }
+
+    /**
+     * プレイヤーおよび攻撃スプライトを画面に描画。
+     * 無敵状態時は半透明、攻撃中は武器種別ごとの拡大スプライトを使用。
+     *
+     * @param g2 描画用Graphics2Dオブジェクト
+     */
 
     @Override
     public void draw(@NotNull Graphics2D g2) {
@@ -804,6 +995,15 @@ public class Player extends Entity {
         g2.setComposite(original);
     }
 
+    /**
+     * BufferedImage を指定サイズにリサイズして返す。
+     *
+     * @param original 元画像
+     * @param width    新しい幅（ピクセル）
+     * @param height   新しい高さ（ピクセル）
+     * @return 指定サイズにリサイズされた BufferedImage
+     */
+
     private @NotNull BufferedImage createImage(BufferedImage original, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = result.createGraphics();
@@ -812,29 +1012,69 @@ public class Player extends Entity {
         return result;
     }
 
+    /**
+     * 画面上におけるプレイヤーの描画位置X座標を取得。
+     *
+     * @return プレイヤーの画面上X座標
+     */
+
     public int getScreenX() {
         return screenX;
     }
+
+    /**
+     * 画面上におけるプレイヤーの描画位置Y座標を取得。
+     *
+     * @return プレイヤーの画面上Y座標
+     */
 
     public int getScreenY() {
         return screenY;
     }
 
+    /**
+     * プレイヤーが移動中かどうかを返す。
+     *
+     * @return true なら移動中、false なら停止中
+     */
+
     public boolean getMoving() {
         return moving;
     }
+
+    /**
+     * プレイヤーの移動状態を設定する。
+     *
+     * @param moving true に設定すると移動中、false に設定すると停止状態
+     */
 
     public void setMoving(boolean moving) {
         this.moving = moving;
     }
 
+    /**
+     * 装備中の武器が持つ攻撃範囲を基本攻撃範囲として設定。
+     */
+
     public void calculateBaseAttackArea() {
         setAttackArea(getCurrentWeapon().getAttackArea());
     }
 
+    /**
+     * プレイヤーの基本攻撃力（筋力に依存）を計算して返す。
+     *
+     * @return 基本攻撃力
+     */
+
     public int calculateBaseAttack() {
         return getStrength();
     }
+
+    /**
+     * 装備中の武器から得られる攻撃力ボーナスを計算して返す。
+     *
+     * @return 武器ボーナス値（装備なし時は1）
+     */
 
     public int calculateWeaponBonus() {
         return getCurrentWeapon() != null
@@ -842,15 +1082,34 @@ public class Player extends Entity {
                 : 1;
     }
 
+    /**
+     * 総合攻撃力を計算して返す。
+     * 基本攻撃範囲を設定したうえで、基本攻撃力 × 武器ボーナス を返す。
+     *
+     * @return 総合攻撃力
+     */
+
     public int calculateTotalAttack() {
         calculateBaseAttackArea();
         return calculateBaseAttack()
                 * calculateWeaponBonus();
     }
 
+    /**
+     * プレイヤーの基本防御力（器用さに依存）を計算して返す。
+     *
+     * @return 基本防御力
+     */
+
     public int calculateBaseDefense() {
         return getDexterity();
     }
+
+    /**
+     * 装備中の盾から得られる防御力ボーナスを計算して返す。
+     *
+     * @return 盾ボーナス値（装備なし時は1）
+     */
 
     public int calculateShieldBonus() {
         return getCurrentShield() != null
@@ -858,10 +1117,24 @@ public class Player extends Entity {
                 : 1;
     }
 
+    /**
+     * 総合防御力を計算して返す。
+     * 基本防御力 × 盾ボーナス を返す。
+     *
+     * @return 総合防御力
+     */
+
     public int calculateTotalDefense() {
         return calculateBaseDefense()
                 * calculateShieldBonus();
     }
+
+    /**
+     * 指定されたマナコストを消費できるか判定し、可能ならマナを減算。
+     *
+     * @param cost 消費するマナ量
+     * @return 消費可能なら true（消費後）、マナ不足なら false（消費せず）
+     */
 
     public boolean consumeMana(int cost) {
         if (getMana() < cost) return false;
@@ -869,32 +1142,77 @@ public class Player extends Entity {
         return true;
     }
 
+    /**
+     * ブロンズコインを拾ったときの処理を行う。
+     * 所持ゴールドに値を加算し、UIにメッセージを表示。
+     *
+     * @param coin 拾ったブロンズコインオブジェクト
+     */
 
     public void addCoin(@NotNull ObjCoinBronze coin) {
         int value = coin.getValue();
         setCoin(getCoin() + value);
-        gameWindow.getUi().addMessage("コインを拾った。所持金が" + value + "獲得！");
+        gameWindow.getUi().addMessage(
+                "コインを拾った。所持金が" + value + "獲得！"
+        );
     }
+
+    /**
+     * 赤ポーションを拾ったときの処理を行う。
+     * 最大HPを超えない範囲でライフを回復し、UIにメッセージを表示。
+     *
+     * @param potion 拾った赤ポーションオブジェクト
+     */
 
     public void healRedPotion(@NotNull ObjRedPotion potion) {
         int amount = potion.getHealAmount();
         setLife(Math.min(getLife() + amount, getMaxLife()));
-        gameWindow.getUi().addMessage("レッドポーションを拾った。HPが" + amount + "回復！");
+        gameWindow.getUi().addMessage(
+                "レッドポーションを拾った。HPが" + amount + "回復！"
+        );
     }
+
+    /**
+     * 緑ポーションを拾ったときの処理を行う。
+     * 最大MPを超えない範囲でマナを回復し、UIにメッセージを表示。
+     *
+     * @param potion 拾った緑ポーションオブジェクト
+     */
 
     public void healGreenPotion(@NotNull ObjGreenPotion potion) {
         int amount = potion.getHealAmount();
         setMana(Math.min(getMana() + amount, getMaxMana()));
-        gameWindow.getUi().addMessage("グリーンポーションを拾った。MPが" + amount + "回復！");
+        gameWindow.getUi().addMessage(
+                "グリーンポーションを拾った。MPが" + amount + "回復！"
+        );
     }
+
+    /**
+     * 文字列の先頭文字を大文字化して返す。
+     *
+     * @param s 対象文字列
+     * @return 先頭が大文字になった文字列
+     */
 
     private @NotNull String capitalize(@NotNull String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
+    /**
+     * NPCとの会話対象インデックスを取得。
+     *
+     * @return 会話対象のNPC配列インデックス
+     */
+
     public int getTalkNpcIndex() {
         return talkNpcIndex;
     }
+
+    /**
+     * NPCとの会話対象インデックスを設定。
+     *
+     * @param talkNpcIndex 会話対象のNPC配列インデックス
+     */
 
     public void setTalkNpcIndex(int talkNpcIndex) {
         this.talkNpcIndex = talkNpcIndex;

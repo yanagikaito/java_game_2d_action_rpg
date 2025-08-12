@@ -151,6 +151,7 @@ public abstract class Entity {
      */
 
     public void setAction() {
+
     }
 
     /**
@@ -160,6 +161,7 @@ public abstract class Entity {
      */
 
     public void damageReaction() {
+
     }
 
     /**
@@ -251,7 +253,7 @@ public abstract class Entity {
      */
 
     public void speak() {
-        throw new UnsupportedOperationException("speak() が実装されていない");
+
     }
 
     /**
@@ -1450,6 +1452,7 @@ public abstract class Entity {
      * @return price この商品の価格
      * @throws IllegalStateException price が負の値の場合
      */
+
     public int getPrice() {
         return price;
     }
@@ -1460,6 +1463,7 @@ public abstract class Entity {
      * @param price 設定する価格（0以上）
      * @throws IllegalArgumentException price が負の値の場合
      */
+
     public void setPrice(int price) {
         this.price = price;
     }
@@ -1560,6 +1564,7 @@ public abstract class Entity {
     /**
      * デフォルトの ImageResizer。渡されたソース画像を指定の幅・高さでアルファ付きでリサイズして返す。
      */
+
     private static final ImageResizer DEFAULT_RESIZER = (src, width, height) -> {
         if (src == null) {
             throw new NullPointerException("src は null にできない");
@@ -1583,6 +1588,7 @@ public abstract class Entity {
      * @throws IOException          いずれかの画像読み込み時に入出力例外が発生した場合
      * @throws NullPointerException path1, path2, path3 のいずれかが null の場合
      */
+
     protected void loadAnimationFrames(String path1,
                                        String path2,
                                        String path3,
@@ -1613,6 +1619,7 @@ public abstract class Entity {
      * @param tileSize リサイズ後の幅・高さ（ピクセル単位）
      * @throws NullPointerException raw が null の場合
      */
+
     public void setImage(BufferedImage raw, int tileSize) {
         if (raw == null) {
             throw new NullPointerException("raw は null にできない");

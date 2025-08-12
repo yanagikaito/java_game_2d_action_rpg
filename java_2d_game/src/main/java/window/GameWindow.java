@@ -363,7 +363,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             tileManager.loadMap(2);
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 29);
-            getPlayer().setWorldY(tileSize * 16);
+            getPlayer().setWorldY(tileSize * 14);
             assetSetter.setMerchant();
 
             repaint();
@@ -373,8 +373,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getKeyHandler().clearAllKeys();
             tileManager.loadMap(1);
             startMapTransition(2);
-            getPlayer().setWorldX(tileSize * 23);
-            getPlayer().setWorldY(tileSize * 16);
+            getPlayer().setWorldX(tileSize * 33);
+            getPlayer().setWorldY(tileSize * 12);
 
             assetSetter.setNPC();
             assetSetter.setMonster();
