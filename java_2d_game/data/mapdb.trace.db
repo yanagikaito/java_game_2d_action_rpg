@@ -7,3 +7,27 @@ SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
 2025-08-08 09:07:02.299168+09:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
 SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 10:39:57.090724+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 10:39:57.651916+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 10:39:58.107117+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 10:39:58.536596+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 11:43:02.052743+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 11:43:02.506218+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 11:43:02.684130+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]
+2025-08-12 11:43:03.054375+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MAP_TILE" not found (this database is empty); SQL statement:
+SELECT x, y, tile_id FROM map_tile WHERE map_id = ? [42104-224]

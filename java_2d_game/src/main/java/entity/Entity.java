@@ -106,7 +106,14 @@ public abstract class Entity {
     protected int mapId;
     private int price;
 
-    public Entity(GameWindow gameWindow) {
+    /**
+     * Entity を初期化。
+     *
+     * @param gameWindow このエンティティが所属するゲームウィンドウ
+     * @throws NullPointerException 引数 gameWindow が null の場合
+     */
+
+    public Entity(@NotNull GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.worldX = 0;
         this.worldY = 0;
@@ -137,16 +144,36 @@ public abstract class Entity {
         this.maxInventorySize = 20;
     }
 
-    public void setAction() {
+    /**
+     * エンティティの行動を決定する処理を実装。
+     *
+     * @throws UnsupportedOperationException 行動決定ロジックが実装されていない場合
+     */
 
+    public void setAction() {
+        throw new UnsupportedOperationException("setAction() がオーバーライドされていない");
     }
+
+    /**
+     * ダメージを受けた際のリアクションを実装します。
+     *
+     * @throws UnsupportedOperationException ダメージリアクションが実装されていない場合
+     */
 
     public void damageReaction() {
-
+        throw new UnsupportedOperationException("damageReaction() がオーバーライドされていない");
     }
 
-    public void update() {
+    /**
+     * 毎フレーム呼び出され、エンティティの状態更新を行う。
+     *
+     * @throws IllegalStateException 衝突判定機能が利用できない場合
+     */
 
+    public void update() {
+        if (gameWindow.getCollisionChecker() == null) {
+            throw new IllegalStateException("CollisionChecker の初期化が行われていない");
+        }
         setAction();
 
         setCollision(false);
@@ -189,6 +216,14 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * プレイヤーにダメージを与え、ライフが0以下になったら
+     * ゲームオーバー状態に遷移する。
+     *
+     * @param attack プレイヤーに与えられる攻撃力
+     * @throws NullPointerException gameWindowまたはplayerが未初期化の場合
+     */
+
     public void damagePlayer(int attack) {
 
         if (gameWindow.getPlayer().getInvincible() == false) {
@@ -211,8 +246,22 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * キャラクターが話しかける動作を行うメソッド。
+     *
+     * @throws UnsupportedOperationException 実装されていない場合
+     */
+
     public void speak() {
+        throw new UnsupportedOperationException("speak() が実装されていない");
     }
+
+    /**
+     * 現在の向き(getDirection())に応じて
+     * ワールド上の座標を移動させる。
+     *
+     * @throws NullPointerException direction 取得時に問題がある場合
+     */
 
     protected void move() {
         switch (getDirection()) {
@@ -231,6 +280,13 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * ランダムな数値を生成して次の移動方向を決定する。
+     *
+     * @throws IllegalStateException MAX_RANDOM_VALUE や
+     *                               THRESHOLD_* 定数が不正な値の場合
+     */
+
     private void chooseNewDirection() {
 
         actionLockCounter++;
@@ -248,451 +304,1217 @@ public abstract class Entity {
         actionLockCounter = 0;
     }
 
+    /**
+     * ワールド上の X 座標を取得。
+     *
+     * @return worldX（ワールド座標系の X 値）
+     * @throws IllegalStateException worldX が不正な状態（未初期化など）の場合
+     */
+
     public int getWorldX() {
         return worldX;
     }
 
+    /**
+     * ワールド上の X 座標を設定。
+     *
+     * @param worldX セットする X 座標
+     * @throws IllegalArgumentException worldX に負の値が渡された場合
+     */
+
     public void setWorldX(int worldX) {
+        if (worldX < 0) {
+            throw new IllegalArgumentException("worldX は 0 以上でなければならない");
+        }
         this.worldX = worldX;
     }
+
+    /**
+     * ワールド上の Y 座標を取得。
+     *
+     * @return worldY（ワールド座標系の Y 値）
+     * @throws IllegalStateException worldY が不正な状態（未初期化など）の場合
+     */
 
     public int getWorldY() {
         return worldY;
     }
 
+    /**
+     * ワールド上の Y 座標を設定。
+     *
+     * @param worldY セットする Y 座標
+     * @throws IllegalArgumentException worldY に負の値が渡された場合
+     */
+
     public void setWorldY(int worldY) {
+        if (worldY < 0) {
+            throw new IllegalArgumentException("worldY は 0 以上でなければならない");
+        }
         this.worldY = worldY;
     }
+
+    /**
+     * キャラクターの移動速度を取得。
+     *
+     * @return speed（ピクセル/フレーム）
+     * @throws IllegalStateException speed が不正（未初期化など）な場合
+     */
 
     public int getSpeed() {
         return speed;
     }
 
+    /**
+     * キャラクターの移動速度を設定。
+     *
+     * @param speed セットする移動速度（ピクセル/フレーム）
+     * @throws IllegalArgumentException speed に 0 以下の値が渡された場合
+     */
+
     public void setSpeed(int speed) {
+        if (speed <= 0) {
+            throw new IllegalArgumentException("speed は 1 以上でなければならない");
+        }
         this.speed = speed;
     }
+
+    /**
+     * キャラクターの向きを取得。
+     *
+     * @return direction（"up"、"down"、"left"、"right" のいずれか）
+     * @throws IllegalStateException direction が未設定または不正な場合
+     */
 
     public String getDirection() {
         return direction;
     }
 
+    /**
+     * 向きごとのスプライト配列を取得。
+     *
+     * @return sprites[方向][フレームインデックス]
+     * @throws IllegalStateException sprites が未初期化の場合
+     */
+
     public BufferedImage[][] getSprites() {
         return sprites;
     }
 
+    /**
+     * スプライト配列を設定。
+     *
+     * @param sprites 方向およびフレームごとのスプライト画像配列
+     * @throws NullPointerException sprites が null の場合
+     */
+
     public void setSprites(BufferedImage[][] sprites) {
+        if (sprites == null) {
+            throw new NullPointerException("sprites は null であってはいけない");
+        }
         this.sprites = sprites;
     }
+
+    /**
+     * キャラクターの向きを設定。
+     *
+     * @param direction "up"、"down"、"left"、"right" のいずれか
+     * @throws IllegalArgumentException direction が不正な場合
+     */
 
     public void setDirection(String direction) {
         this.direction = direction;
     }
 
+    /**
+     * 衝突フラグを取得。
+     *
+     * @return collision true: 衝突中, false: 衝突していない
+     * @throws IllegalStateException collision が未定義の場合
+     */
+
     public boolean isCollision() {
         return collision;
     }
+
+    /**
+     * 衝突フラグを設定。
+     *
+     * @param collision true にすると衝突状態とみなす
+     */
 
     public void setCollision(boolean collision) {
         this.collision = collision;
     }
 
+    /**
+     * アニメーション用カウンタを取得。
+     *
+     * @return spriteCounter 現在のフレームカウンタ
+     */
+
     public int getSpriteCounter() {
         return spriteCounter;
     }
+
+    /**
+     * アニメーション用カウンタを設定。
+     *
+     * @param spriteCounter セットするフレームカウンタ
+     * @throws IllegalArgumentException spriteCounter が負の値の場合
+     */
 
     public void setSpriteCounter(int spriteCounter) {
         this.spriteCounter = spriteCounter;
     }
 
+    /**
+     * 現在のスプライト番号を取得。
+     *
+     * @return spriteNum (0 以上 sprites.length-1 の範囲)
+     */
+
     public int getSpriteNum() {
         return spriteNum;
     }
+
+    /**
+     * 衝突判定領域の既定 X オフセットを取得。
+     *
+     * @return solidAreaDefaultX デフォルトの X オフセット
+     */
 
     public int getSolidAreaDefaultX() {
         return solidAreaDefaultX;
     }
 
+    /**
+     * 衝突判定領域の既定 Y オフセットを取得。
+     *
+     * @return solidAreaDefaultY デフォルトの Y オフセット
+     */
+
     public int getSolidAreaDefaultY() {
         return solidAreaDefaultY;
     }
+
+    /**
+     * スプライト番号を設定。
+     *
+     * @param spriteNum セットするスプライト番号
+     * @throws IllegalArgumentException spriteNum が負またはスプライト数以上の場合
+     */
 
     public void setSpriteNum(int spriteNum) {
         this.spriteNum = spriteNum;
     }
 
+    /**
+     * 衝突判定用の領域矩形を取得。
+     *
+     * @return solidArea 衝突領域を表す Rectangle
+     * @throws IllegalStateException solidArea が未初期化の場合
+     */
+
     public Rectangle getSolidArea() {
         return solidArea;
     }
+
+    /**
+     * 衝突判定領域を設定。
+     *
+     * @param solidArea 衝突領域を表す Rectangle
+     * @throws NullPointerException solidArea が null の場合
+     */
 
     public void setSolidArea(Rectangle solidArea) {
         this.solidArea = solidArea;
     }
 
+    /**
+     * 衝突判定領域の既定 X オフセットを設定。
+     *
+     * @param solidAreaDefaultX セットする X オフセット
+     * @throws IllegalArgumentException オフセットが負の場合
+     */
+
     public void setSolidAreaDefaultX(int solidAreaDefaultX) {
         this.solidAreaDefaultX = solidAreaDefaultX;
     }
+
+    /**
+     * 衝突判定領域の既定 Y オフセットを設定。
+     *
+     * @param solidAreaDefaultY セットする Y オフセット
+     * @throws IllegalArgumentException オフセットが負の場合
+     */
 
     public void setSolidAreaDefaultY(int solidAreaDefaultY) {
         this.solidAreaDefaultY = solidAreaDefaultY;
     }
 
+    /**
+     * ダイアログ文字列配列を取得。
+     *
+     * @return dialogue 吹き出しで表示するメッセージ配列
+     * @throws IllegalStateException dialogue が未初期化の場合
+     */
+
     public String[] getDialogue() {
         return dialogue;
     }
+
+    /**
+     * ゲームウィンドウインスタンスを取得。
+     *
+     * @return gameWindow UI やサウンドを管理する GameWindow
+     * @throws IllegalStateException gameWindow が未初期化の場合
+     */
 
     public GameWindow getGameWindow() {
         return gameWindow;
     }
 
+    /**
+     * 現在のダイアログインデックスを取得。
+     *
+     * @return dialogueIndex 次に表示するメッセージのインデックス
+     */
+
     public int getDialogueIndex() {
         return dialogueIndex;
     }
+
+    /**
+     * ダイアログインデックスを設定。
+     *
+     * @param dialogueIndex セットするインデックス
+     * @throws IllegalArgumentException インデックスが範囲外の場合
+     */
 
     public void setDialogueIndex(int dialogueIndex) {
         this.dialogueIndex = dialogueIndex;
     }
 
+    /**
+     * 最大ライフを取得。
+     *
+     * @return maxLife このエンティティの最大ライフ値
+     * @throws IllegalStateException maxLife が未設定または不正な場合
+     */
+
     public int getMaxLife() {
         return maxLife;
     }
+
+    /**
+     * 最大ライフを設定。
+     *
+     * @param maxLife 設定する最大ライフ値（0以上）
+     * @throws IllegalArgumentException maxLife に負の値が渡された場合
+     */
 
     public void setMaxLife(int maxLife) {
         this.maxLife = maxLife;
     }
 
+    /**
+     * 現在のライフを取得。
+     *
+     * @return life このエンティティの現在ライフ値
+     * @throws IllegalStateException life が未設定または不正な場合
+     */
+
     public int getLife() {
         return life;
     }
+
+    /**
+     * 現在のライフを設定。
+     *
+     * @param life 設定するライフ値（0以上）
+     * @throws IllegalArgumentException life に負の値が渡された場合
+     */
 
     public void setLife(int life) {
         this.life = life;
     }
 
+    /**
+     * エンティティ名を取得。
+     *
+     * @return name このエンティティの名前文字列
+     * @throws IllegalStateException name が未設定の場合
+     */
+
     public String getName() {
         return name;
     }
 
+    /**
+     * メイン表示用の画像を取得。
+     *
+     * @return BufferedImage このエンティティのメイン画像
+     * @throws IllegalStateException 画像が未初期化（null）の場合
+     */
     public BufferedImage getImage() {
+        if (image == null) {
+            throw new IllegalStateException("image が未初期化");
+        }
         return image;
     }
 
+    /**
+     * サブ表示用の２枚目の画像を取得。
+     *
+     * @return BufferedImage このエンティティの２番目の画像
+     * @throws IllegalStateException 画像2が未初期化（null）の場合
+     */
     public BufferedImage getImage2() {
+        if (image2 == null) {
+            throw new IllegalStateException("image2 が未初期化");
+        }
         return image2;
     }
 
+    /**
+     * サブ表示用の３枚目の画像を取得。
+     *
+     * @return BufferedImage このエンティティの３番目の画像
+     * @throws IllegalStateException 画像3が未初期化（null）の場合
+     */
     public BufferedImage getImage3() {
+        if (image3 == null) {
+            throw new IllegalStateException("image3 が未初期化");
+        }
         return image3;
     }
+
+    /**
+     * エンティティ名を設定します。
+     *
+     * @param name 設定する名前文字列（非null・非空文字列）
+     * @throws IllegalArgumentException name が null または空文字列の場合
+     */
 
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * 無敵状態フラグを取得。
+     *
+     * @return invincible 無敵状態の場合は true、無敵状態でない場合は false
+     * @throws IllegalStateException invincible フィールドが初期化されていない場合
+     */
+
     public boolean getInvincible() {
         return invincible;
     }
+
+    /**
+     * 無敵状態フラグを設定。
+     *
+     * @param invincible 設定する無敵状態（true：無敵、false：通常）
+     */
 
     public void setInvincible(boolean invincible) {
         this.invincible = invincible;
     }
 
+    /**
+     * 無敵状態の持続カウンターを取得。
+     *
+     * @return invincibleCounter 無敵状態が続いている残りフレーム数
+     * @throws IllegalStateException invincibleCounter フィールドが初期化されていない場合
+     */
+
     public int getInvincibleCounter() {
         return invincibleCounter;
     }
+
+    /**
+     * 無敵状態の持続カウンターを設定。
+     *
+     * @param invincibleCounter 設定するカウンター値（0以上）
+     * @throws IllegalArgumentException invincibleCounter に負の値が渡された場合
+     */
 
     public void setInvincibleCounter(int invincibleCounter) {
         this.invincibleCounter = invincibleCounter;
     }
 
+    /**
+     * このエンティティのタイプを取得。
+     *
+     * @return type エンティティタイプを示す定数値
+     * @throws IllegalStateException type フィールドが未設定の場合
+     */
+
     public int getType() {
         return type;
     }
+
+    /**
+     * エンティティのタイプを設定。
+     *
+     * @param type 設定するエンティティタイプ（0以上の定数値）
+     * @throws IllegalArgumentException type に負の値が渡された場合
+     */
 
     public void setType(int type) {
         this.type = type;
     }
 
+    /**
+     * 攻撃中かどうかを取得。
+     *
+     * @return attacking true: 攻撃中、false: 非攻撃状態
+     * @throws IllegalStateException attacking フィールドが未初期化の場合
+     */
+
     public boolean getAttacking() {
         return attacking;
     }
+
+    /**
+     * 攻撃中フラグを設定。
+     *
+     * @param attacking true にすると攻撃中、false にすると非攻撃状態
+     */
 
     public void setAttacking(boolean attacking) {
         this.attacking = attacking;
     }
 
-    public String[] getAttackDirections() {
-        return ATTACK_DIRECTIONS;
-    }
+    /**
+     * 現在選択中の攻撃方向を取得します。
+     *
+     * @return attackDirection 現在の攻撃方向文字列
+     * @throws IllegalStateException attackDirection フィールドが未設定の場合
+     */
 
     public String getAttackDirection() {
         return attackDirection;
     }
 
+    /**
+     * 攻撃方向を設定。
+     *
+     * @param attackDirection 設定する攻撃方向（ATTACK_DIRECTIONS のいずれか）
+     * @throws IllegalArgumentException attackDirection が配列に含まれない場合
+     */
+
     public void setAttackDirection(String attackDirection) {
         this.attackDirection = attackDirection;
     }
+
+    /**
+     * 攻撃判定領域を取得。
+     *
+     * @return attackArea 攻撃判定用の Rectangle オブジェクト
+     * @throws IllegalStateException attackArea フィールドが未設定の場合
+     */
 
     public Rectangle getAttackArea() {
         return attackArea;
     }
 
+    /**
+     * 攻撃判定領域を設定。
+     *
+     * @param attackArea 設定する攻撃領域（非 null）
+     * @throws IllegalArgumentException attackArea が null の場合
+     */
+
     public void setAttackArea(Rectangle attackArea) {
         this.attackArea = attackArea;
     }
+
+    /**
+     * 死亡中フラグを取得。
+     *
+     * @return dying true: 死亡アニメーション中、false: 通常状態
+     * @throws IllegalStateException dying フィールドが未初期化の場合
+     */
 
     public boolean getDying() {
         return dying;
     }
 
+    /**
+     * 死亡中フラグを設定。
+     *
+     * @param dying true にすると死亡アニメーション中、false にすると通常状態
+     */
+
     public void setDying(boolean dying) {
         this.dying = dying;
     }
+
+    /**
+     * 生存中かどうかを取得。
+     *
+     * @return alive true: 生存中、false: 死亡中
+     * @throws IllegalStateException alive フィールドが未初期化の場合
+     */
 
     public boolean getAlive() {
         return alive;
     }
 
+    /**
+     * 生存フラグを設定。
+     *
+     * @param alive true にすると生存状態、false にすると死亡状態
+     */
+
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
+
+    /**
+     * 基本攻撃力を取得。
+     *
+     * @return attackValue このエンティティの攻撃力
+     * @throws IllegalStateException attackValue が未初期化の場合
+     */
 
     public int getAttackValue() {
         return attackValue;
     }
 
+    /**
+     * 基本攻撃力を設定。
+     *
+     * @param attackValue 設定する攻撃力（0以上）
+     * @throws IllegalArgumentException attackValue に負の値が渡された場合
+     */
+
     public void setAttackValue(int attackValue) {
         this.attackValue = attackValue;
     }
+
+    /**
+     * 基本防御力を取得。
+     *
+     * @return defenseValue このエンティティの防御力
+     * @throws IllegalStateException defenseValue が未初期化の場合
+     */
 
     public int getDefenseValue() {
         return defenseValue;
     }
 
+    /**
+     * 基本防御力を設定。
+     *
+     * @param defenseValue 設定する防御力（0以上）
+     * @throws IllegalArgumentException defenseValue に負の値が渡された場合
+     */
+
     public void setDefenseValue(int defenseValue) {
         this.defenseValue = defenseValue;
     }
+
+    /**
+     * 現在のレベルを取得。
+     *
+     * @return level 現在のレベル
+     * @throws IllegalStateException level が未初期化の場合
+     */
 
     public int getLevel() {
         return level;
     }
 
+    /**
+     * レベルを設定。
+     *
+     * @param level 設定するレベル（1以上）
+     * @throws IllegalArgumentException level に1未満の値が渡された場合
+     */
+
     public void setLevel(int level) {
         this.level = level;
     }
+
+    /**
+     * 力（Strength）値を取得。
+     *
+     * @return strength このエンティティの力パラメータ
+     * @throws IllegalStateException strength が未初期化の場合
+     */
 
     public int getStrength() {
         return strength;
     }
 
+    /**
+     * 力（Strength）値を設定。
+     *
+     * @param strength 設定する力パラメータ（0以上）
+     * @throws IllegalArgumentException strength に負の値が渡された場合
+     */
+
     public void setStrength(int strength) {
         this.strength = strength;
     }
+
+    /**
+     * 器用さ（Dexterity）値を取得。
+     *
+     * @return dexterity このエンティティの器用さパラメータ
+     * @throws IllegalStateException dexterity が未初期化の場合
+     */
 
     public int getDexterity() {
         return dexterity;
     }
 
+    /**
+     * 器用さ（Dexterity）値を設定。
+     *
+     * @param dexterity 設定する器用さパラメータ（0以上）
+     * @throws IllegalArgumentException dexterity に負の値が渡された場合
+     */
+
     public void setDexterity(int dexterity) {
         this.dexterity = dexterity;
     }
+
+    /**
+     * 装備による追加攻撃力を取得。
+     *
+     * @return attack このエンティティの追加攻撃力
+     * @throws IllegalStateException attack が未初期化の場合
+     */
 
     public int getAttack() {
         return attack;
     }
 
+    /**
+     * 装備による追加攻撃力を設定。
+     *
+     * @param attack 設定する追加攻撃力（0以上）
+     * @return attack 更新後の追加攻撃力
+     * @throws IllegalArgumentException attack に負の値が渡された場合
+     */
+
     public int setAttack(int attack) {
         return this.attack = attack;
     }
+
+    /**
+     * 装備による追加防御力を取得。
+     *
+     * @return defense このエンティティの追加防御力
+     * @throws IllegalStateException defense が未初期化の場合
+     */
 
     public int getDefense() {
         return defense;
     }
 
-    public int setDefense(int defense) {
-        return this.defense = defense;
+    /**
+     * 装備による追加防御力を設定。
+     *
+     * @param defense 設定する追加防御力（0以上）
+     * @throws IllegalArgumentException defense に負の値が渡された場合
+     */
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
+
+    /**
+     * 現在の経験値を取得。
+     *
+     * @return exp このエンティティの経験値
+     * @throws IllegalStateException exp が未初期化の場合
+     */
 
     public int getExp() {
         return exp;
     }
 
+    /**
+     * 経験値を設定。
+     *
+     * @param exp 設定する経験値（0以上）
+     * @throws IllegalArgumentException exp に負の値が渡された場合
+     */
+
     public void setExp(int exp) {
         this.exp = exp;
     }
+
+    /**
+     * 次レベルまでに必要な経験値を取得。
+     *
+     * @return nextLevelExp 次のレベルまでに必要な経験値
+     * @throws IllegalStateException nextLevelExp が未初期化の場合
+     */
 
     public int getNextLevelExp() {
         return nextLevelExp;
     }
 
+    /**
+     * 次レベルまでに必要な経験値を設定。
+     *
+     * @param nextLevelExp 設定する必要経験値（0以上）
+     * @throws IllegalArgumentException nextLevelExp に負の値が渡された場合
+     */
+
     public void setNextLevelExp(int nextLevelExp) {
         this.nextLevelExp = nextLevelExp;
     }
+
+    /**
+     * 所持コイン数を取得。
+     *
+     * @return coin このエンティティの所持コイン数
+     * @throws IllegalStateException coin が未初期化の場合
+     */
 
     public int getCoin() {
         return coin;
     }
 
+    /**
+     * 所持コイン数を設定。
+     *
+     * @param coin 設定するコイン数（0以上）
+     * @throws IllegalArgumentException coin に負の値が渡された場合
+     */
+
     public void setCoin(int coin) {
         this.coin = coin;
     }
+
+    /**
+     * 現在装備している武器エンティティを取得。
+     *
+     * @return currentWeapon 装備中の武器エンティティ、未装備時は null
+     */
 
     public Entity getCurrentWeapon() {
         return currentWeapon;
     }
 
+    /**
+     * 装備する武器エンティティを設定。
+     *
+     * @param currentWeapon 新たに装備する武器エンティティ（null許容）
+     */
+
     public void setCurrentWeapon(Entity currentWeapon) {
         this.currentWeapon = currentWeapon;
     }
+
+    /**
+     * 現在装備している盾エンティティを取得。
+     *
+     * @return currentShield 装備中の盾エンティティ、未装備時は null
+     */
 
     public Entity getCurrentShield() {
         return currentShield;
     }
 
+    /**
+     * 装備する盾エンティティを設定。
+     *
+     * @param currentShield 新たに装備する盾エンティティ（null許容）
+     */
+
     public void setCurrentShield(Entity currentShield) {
         this.currentShield = currentShield;
     }
+
+    /**
+     * リスポーン中かどうかを返す。
+     *
+     * @return respawning true: リスポーン中, false: 通常状態
+     */
 
     public boolean isRespawning() {
         return respawning;
     }
 
+    /**
+     * リスポーン中フラグを設定す。
+     *
+     * @param respawning true にセットするとリスポーン中と見なす
+     */
+
     public void setRespawning(boolean respawning) {
         this.respawning = respawning;
     }
+
+    /**
+     * 説明文を取得。
+     *
+     * @return description このエンティティの説明テキスト
+     * @throws IllegalStateException description が未設定または空文字列の場合
+     */
 
     public String getDescription() {
         return description;
     }
 
+    /**
+     * 説明文を設定します。
+     *
+     * @param description 設定する説明テキスト（null または空文字列不可）
+     * @throws IllegalArgumentException description が null または空文字列の場合
+     */
+
     public void setDescription(String description) {
         this.description = description;
     }
+
+    /**
+     * 使用コストを設定。
+     *
+     * @param useCost 設定する使用コスト（0 以上）
+     * @throws IllegalArgumentException useCost が負の値の場合
+     */
 
     public void setUseCost(int useCost) {
         this.useCost = useCost;
     }
 
+    /**
+     * 発射するプロジェクタイルを取得。
+     *
+     * @return projectile このエンティティが保持する Projectile インスタンス
+     * @throws IllegalStateException projectile が未設定の場合
+     */
+
     public Projectile getProjectile() {
         return projectile;
     }
+
+    /**
+     * 発射するプロジェクタイルを設定。
+     *
+     * @param projectile 設定する Projectile インスタンス（null 不可）
+     * @throws NullPointerException projectile が null の場合
+     */
 
     public void setProjectile(Projectile projectile) {
         this.projectile = projectile;
     }
 
+    /**
+     * 発射可能カウンターを取得。
+     *
+     * @return shotAvailableCounter 発射可能になるまでの残りフレーム数
+     * @throws IllegalStateException shotAvailableCounter が未初期化の場合
+     */
+
     public int getShotAvailableCounter() {
         return shotAvailableCounter;
     }
+
+    /**
+     * 発射可能カウンターを設定。
+     *
+     * @param shotAvailableCounter 設定するカウンター値（0 以上）
+     * @throws IllegalArgumentException shotAvailableCounter が負の値の場合
+     */
 
     public void setShotAvailableCounter(int shotAvailableCounter) {
         this.shotAvailableCounter = shotAvailableCounter;
     }
 
+    /**
+     * 最大マナ量を取得。
+     *
+     * @return maxMana このエンティティの最大マナ値
+     * @throws IllegalStateException maxMana が未設定または不正な場合
+     */
+
     public int getMaxMana() {
         return maxMana;
     }
+
+    /**
+     * 最大マナ量を設定。
+     *
+     * @param maxMana 設定する最大マナ値（0 以上）
+     * @throws IllegalArgumentException maxMana が負の値の場合
+     */
 
     public void setMaxMana(int maxMana) {
         this.maxMana = maxMana;
     }
 
+    /**
+     * 現在のマナ量を取得。
+     *
+     * @return mana このエンティティの現在マナ値
+     * @throws IllegalStateException mana が未設定または不正な場合
+     */
+
     public int getMana() {
         return mana;
     }
+
+    /**
+     * マナ量を設定。
+     *
+     * @param mana 設定するマナ値（0 以上）
+     * @throws IllegalArgumentException mana が負の値の場合
+     */
 
     public void setMana(int mana) {
         this.mana = mana;
     }
 
+    /**
+     * ピックアップ専用タイプを取得。
+     *
+     * @return type_pickupOnly ピックアップ専用を示すタイプ定数
+     */
+
     public int getType_pickupOnly() {
         return type_pickupOnly;
     }
+
+    /**
+     * 基本値を取得。
+     *
+     * @return value このエンティティの基本パラメータ値
+     */
 
     public int getValue() {
         return value;
     }
 
+    /**
+     * 基本値を設定。
+     *
+     * @param value 設定する基本パラメータ値（0 以上）
+     * @throws IllegalArgumentException value が負の値の場合
+     */
+
     public void setValue(int value) {
         this.value = value;
     }
+
+    /**
+     * 斧タイプ定数を取得。
+     *
+     * @return type_axe 斧を示すタイプ定数
+     */
 
     public int getType_axe() {
         return type_axe;
     }
 
+    /**
+     * モンスタ―タイプ定数を取得。
+     *
+     * @return type_monster モンスターを示すタイプ定数
+     */
+
     public int getType_monster() {
         return type_monster;
     }
+
+    /**
+     * プレイヤータイプ定数を取得。
+     *
+     * @return type_player プレイヤーを示すタイプ定数
+     */
 
     public int getType_player() {
         return type_player;
     }
 
+    /**
+     * NPCタイプ定数を取得。
+     *
+     * @return type_npc NPCを示すタイプ定数
+     */
+
     public int getType_npc() {
         return type_npc;
     }
+
+    /**
+     * 剣タイプ定数を取得。
+     *
+     * @return type_sword 剣を示すタイプ定数
+     */
 
     public int getType_sword() {
         return type_sword;
     }
 
+    /**
+     * 盾タイプ定数を取得。
+     *
+     * @return type_shield 盾を示すタイプ定数
+     */
+
     public int getType_shield() {
         return type_shield;
     }
+
+    /**
+     * 赤ポーションタイプ定数を取得。
+     *
+     * @return type_redPotion 赤ポーションを示すタイプ定数
+     */
 
     public int getType_redPotion() {
         return type_redPotion;
     }
 
+    /**
+     * 緑ポーションタイプ定数を取得。
+     *
+     * @return type_greenPotion 緑ポーションを示すタイプ定数
+     */
+
     public int getType_greenPotion() {
         return type_greenPotion;
     }
+
+    /**
+     * パーティクルの初期色を取得。
+     *
+     * @return Color このエンティティのパーティクル色
+     * @throws IllegalStateException パーティクル色が未初期化の場合
+     */
 
     public Color getParticleColor() {
         Color color = null;
         return color;
     }
 
+    /**
+     * パーティクルのサイズを取得。
+     *
+     * @return size パーティクルのピクセルサイズ
+     * @throws IllegalStateException パーティクルサイズが未初期化の場合
+     */
+
     public int getParticleSize() {
         int size = 0;
         return size;
     }
+
+    /**
+     * パーティクルの速度を取得。
+     *
+     * @return speed パーティクルのピクセル/フレーム速度
+     * @throws IllegalStateException パーティクル速度が未初期化の場合
+     */
 
     public int getParticleSpeed() {
         int speed = 0;
         return speed;
     }
 
+    /**
+     * パーティクルの最大ライフを取得。
+     *
+     * @return maxLife パーティクルの最大ライフ値
+     * @throws IllegalStateException パーティクル最大ライフが未初期化の場合
+     */
+
     public int getParticleMaxLife() {
         int maxLife = 0;
         return maxLife;
     }
 
+    /**
+     * このエンティティが存在するマップIDを取得。
+     *
+     * @return mapId 現在のマップID
+     * @throws IllegalStateException mapId が未初期化の場合
+     */
+
     public int getMapId() {
         return mapId;
     }
+
+    /**
+     * インベントリを返す。
+     *
+     * @return inventory 現在所持しているアイテム一覧
+     */
 
     public ArrayList<Entity> getInventory() {
         return inventory;
     }
 
+    /**
+     * 価格を取得。
+     *
+     * @return price この商品の価格
+     * @throws IllegalStateException price が負の値の場合
+     */
     public int getPrice() {
+        if (price < 0) {
+            throw new IllegalStateException("price が不正な値: " + price);
+        }
         return price;
     }
 
+    /**
+     * 価格を設定。
+     *
+     * @param price 設定する価格（0以上）
+     * @throws IllegalArgumentException price が負の値の場合
+     */
     public void setPrice(int price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("price は 0 以上でなければならない。");
+        }
         this.price = price;
     }
+
+    /**
+     * インベントリを置き換える。
+     *
+     * @param inventory 新しいアイテムリスト（非null）
+     * @throws IllegalArgumentException inventory が null の場合
+     */
 
     public void setInventory(ArrayList<Entity> inventory) {
         this.inventory = inventory;
     }
 
+    /**
+     * インベントリの最大サイズを取得。
+     *
+     * @return maxInventorySize 許可されるアイテム数の最大値
+     */
+
     public int getMaxInventorySize() {
         return maxInventorySize;
     }
 
+    /**
+     * 指定した生成元エンティティとターゲットエンティティからパーティクルを複数生成し、
+     * ゲームウィンドウのパーティクルリストに追加。
+     *
+     * @param generator パーティクルを生成するエンティティ (null不可)
+     * @param target    パーティクルのターゲットとなるエンティティ (null不可)
+     * @throws NullPointerException generator または target が null の場合
+     */
+
     public void generateParticle(@NotNull Entity generator, Entity target) {
+        if (generator == null || target == null) {
+            throw new NullPointerException("generator および target は null にできない");
+        }
 
         Color color = generator.getParticleColor();
         int size = generator.getParticleSize();
@@ -715,7 +1537,18 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * 花火のような動きをする FireworkParticle を指定数生成し、
+     * ゲームウィンドウのパーティクルリストに追加。
+     *
+     * @param target パーティクルを表示する位置となるエンティティ (null不可)
+     * @throws NullPointerException target が null の場合
+     */
+
     public void spawnFireworkParticles(@NotNull Entity target) {
+        if (target == null) {
+            throw new NullPointerException("target は null にできない");
+        }
 
         int count = 30;
         int tileSize = FrameApp.getTileSize();
@@ -741,19 +1574,40 @@ public abstract class Entity {
         }
     }
 
-    private static final ImageResizer DEFAULT_RESIZER = (src, w, h) -> {
-        BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    /**
+     * デフォルトの ImageResizer。渡されたソース画像を指定の幅・高さでアルファ付きでリサイズして返す。
+     */
+    private static final ImageResizer DEFAULT_RESIZER = (src, width, height) -> {
+        if (src == null) {
+            throw new NullPointerException("src は null にできない");
+        }
+        BufferedImage dst = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = dst.createGraphics();
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        g2.drawImage(src, 0, 0, w, h, null);
+        g2.drawImage(src, 0, 0, width, height, null);
         g2.dispose();
         return dst;
     };
 
+    /**
+     * クラスパスから指定した 3 枚の画像を読み込み、タイルサイズにリサイズして
+     * this.image／this.image2／this.image3 に設定。
+     *
+     * @param path1    1 枚目の画像リソースパス（クラスパス）
+     * @param path2    2 枚目の画像リソースパス（クラスパス）
+     * @param path3    3 枚目の画像リソースパス（クラスパス）
+     * @param tileSize リサイズ後の幅・高さ（ピクセル単位）
+     * @throws IOException          いずれかの画像読み込み時に入出力例外が発生した場合
+     * @throws NullPointerException path1, path2, path3 のいずれかが null の場合
+     */
     protected void loadAnimationFrames(String path1,
                                        String path2,
                                        String path3,
                                        int tileSize) throws IOException {
+        if (path1 == null || path2 == null || path3 == null) {
+            throw new NullPointerException("path1, path2, path3 は null にできない");
+        }
+
         BufferedImage raw1 = ImageIO.read(
                 getClass().getClassLoader().getResourceAsStream(path1));
         BufferedImage raw2 = ImageIO.read(
@@ -769,10 +1623,29 @@ public abstract class Entity {
         this.height = tileSize;
     }
 
+    /**
+     * 与えられた生画像をタイルサイズにリサイズし、this.image に設定。
+     *
+     * @param raw      リサイズ対象の BufferedImage（null 不可）
+     * @param tileSize リサイズ後の幅・高さ（ピクセル単位）
+     * @throws NullPointerException raw が null の場合
+     */
     public void setImage(BufferedImage raw, int tileSize) {
+        if (raw == null) {
+            throw new NullPointerException("raw は null にできない");
+        }
         this.image = DEFAULT_RESIZER.resize(raw, tileSize, tileSize);
-        this.width = this.height = tileSize;
+        this.width = tileSize;
+        this.height = tileSize;
     }
+
+    /**
+     * エンティティを画面上に描画します。視界内に存在する場合のみスプライト表示、
+     * HPバー、無敵フラッシュ、死亡アニメーションを適用。
+     *
+     * @param g2 描画に使用する Graphics2D オブジェクト（null 不可）
+     * @throws NullPointerException g2 が null の場合
+     */
 
     public void draw(Graphics2D g2) {
 
@@ -828,6 +1701,13 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * 死亡中アニメーションを進行し、一定時間後にエンティティを非表示。
+     *
+     * @param g2 描画に使用する Graphics2D オブジェクト（null 不可）
+     * @throws NullPointerException g2 が null の場合
+     */
+
     public void dyingAnimation(Graphics2D g2) {
         dyingCounter++;
 
@@ -852,6 +1732,15 @@ public abstract class Entity {
             alive = false;
         }
     }
+
+    /**
+     * 描画の透明度を設定。
+     *
+     * @param g2         描画に使用する Graphics2D オブジェクト（null 不可）
+     * @param alphaValue 透明度(0.0f 〜 1.0f)
+     * @throws NullPointerException     g2 が null の場合
+     * @throws IllegalArgumentException alphaValue が 0.0 未満または 1.0 超過の場合
+     */
 
     public void changeAlpha(@NotNull Graphics2D g2, float alphaValue) {
 
