@@ -29,6 +29,12 @@ import java.util.List;
 
 import static frame.FrameApp.baseDisplay;
 
+/**
+ * ゲームのメイン描画パネルを表すクラス。
+ * ゲームループの管理、キー入力、マップ描画、エンティティ更新および描画を担当。
+ * Window インタフェースと Runnable インタフェースを実装し、シングルトンとして扱われる。
+ */
+
 public class GameWindow extends JPanel implements Window, Runnable {
 
     private GameFrame gameFrame = FrameFactory.createFrame(baseDisplay(), this);
@@ -67,6 +73,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
 
+    /**
+     * GameWindow のコンストラクタ。
+     */
+
     protected GameWindow() {
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -77,6 +87,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.setUpGame();
     }
 
+    /**
+     * ゲーム開始時の初期配置を行います。
+     */
+
     public void setUpGame() {
 
         assetSetter.setNPC();
@@ -86,12 +100,23 @@ public class GameWindow extends JPanel implements Window, Runnable {
         gameState = titleState;
     }
 
+    /**
+     * シングルトンインスタンスを取得。
+     *
+     * @return GameWindow の唯一のインスタンス
+     */
+
     public static synchronized GameWindow getInstance() {
         if (instance == null) {
             instance = new GameWindow();
         }
         return instance;
     }
+
+    /**
+     * ゲームオーバー後のリトライ処理を行う。
+     * プレイヤーやエンティティを初期位置・初期状態に戻す。
+     */
 
     public void retry() {
 
@@ -104,6 +129,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setNPC();
         assetSetter.setMonster();
     }
+
+    /**
+     * ゲーム再スタート（ニューゲーム）時の初期化処理を行う。
+     */
 
     public void restart() {
 
@@ -118,6 +147,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setObjAxe();
     }
 
+    /**
+     * マップ遷移エフェクトを開始。
+     *
+     * @param newMapId 遷移先のマップID
+     */
+
     public void startMapTransition(int newMapId) {
         this.pendingMapId = newMapId;
         this.onTransition = true;
@@ -128,6 +163,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         keyHandler.clearAllKeys();
         getPlayer().setMoving(false);
     }
+
+    /**
+     * ゲームループを実行。
+     * FPS の管理を行い、定期的に更新および再描画を呼び出す。
+     */
 
     @Override
     public void run() {
@@ -161,15 +201,29 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
+    /**
+     * Window インタフェースのメソッド。
+     * フレームを作成して表示。
+     */
+
     @Override
     public void frame() {
         gameFrame.createFrame();
     }
 
+    /**
+     * ゲーム用スレッドを生成し起動。
+     */
+
     public void startThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
+
+    /**
+     * フェードアウト／フェードインを含むマップ遷移エフェクトを更新。
+     * フェードアウト完了時に map を切り替え、その後フェードインを行う。
+     */
 
     private void updateTransition() {
 
@@ -193,6 +247,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
     }
+
+    /**
+     * 毎フレーム呼び出され、ゲームの各エンティティやオブジェクトの状態を更新。
+     * playState 時にはプレイヤー、NPC、モンスター、アイテム、発射物、パーティクル、タイル等を順次更新し、
+     * pauseState 時には何も処理を行わない。
+     */
 
     public void update() {
 
@@ -276,6 +336,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
+    /**
+     * マップを新しい ID のマップへ切り替える。
+     * 古いマップのエンティティやオブジェクトをクリアした上で新規ロードし、
+     * プレイヤー位置や NPC/モンスター配置を初期化。
+     *
+     * @param newMap 切り替え先のマップID
+     */
+
     public void changeMap(int newMap) {
 
         int tileSize = FrameApp.getTileSize();
@@ -316,6 +384,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
             repaint();
         }
     }
+
+    /**
+     * ゲーム画面および UI、デバッグテキストの描画を行う。
+     * フェード中は黒のオーバーレイを適用し、タイトル画面とワールド描画を切り替える。
+     *
+     * @param g 描画に使用する Graphics オブジェクト
+     * @throws IllegalArgumentException g が null の場合
+     */
 
     @Override
     public void paintComponent(Graphics g) {
@@ -393,6 +469,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
+    /**
+     * レンダリング対象のエンティティおよびオブジェクトを描画。
+     *
+     * @param g2 描画に使用する Graphics2D オブジェクト
+     * @throws IllegalArgumentException g2 が null の場合
+     */
+
     private void renderEntitiesAndObjects(Graphics2D g2) {
 
         for (int i = 0; i < iTile.length; i++) {
@@ -448,145 +531,257 @@ public class GameWindow extends JPanel implements Window, Runnable {
         entityList.clear();
     }
 
+    /**
+     * 現在のプレイヤーインスタンスを返す。
+     *
+     * @return Player オブジェクト
+     */
+
     public Player getPlayer() {
         return player;
     }
+
+    /**
+     * 現在の KeyHandler インスタンスを返す。
+     *
+     * @return KeyHandler オブジェクト
+     */
 
     public KeyHandler getKeyHandler() {
         return keyHandler;
     }
 
+    /**
+     * 現在の TileManager インスタンスを返す。
+     *
+     * @return TileManager オブジェクト
+     */
+
     public TileManager getTileManager() {
         return tileManager;
     }
+
+    /**
+     * 現在の CollisionChecker インスタンスを返す。
+     *
+     * @return CollisionChecker オブジェクト
+     */
 
     public CollisionChecker getCollisionChecker() {
         return collisionChecker;
     }
 
+    /**
+     * 現在のゲームステートを取得する。
+     *
+     * @return 現在の gameState 値
+     */
+
     public int getGameState() {
         return gameState;
     }
+
+    /**
+     * ポーズ状態を示すステートID を返す。
+     *
+     * @return pauseState（整数値）
+     */
 
     public int getPauseState() {
         return pauseState;
     }
 
+    /**
+     * プレイ状態を示すステートID を返す。
+     *
+     * @return playState（整数値）
+     */
+
     public int getPlayState() {
         return playState;
     }
+
+    /**
+     * ゲームステートを設定する。
+     *
+     * @param gameState 新しいステートID
+     */
 
     public void setGameState(int gameState) {
         this.gameState = gameState;
     }
 
+    /**
+     * 現在配置されている NPC 配列を返す。
+     *
+     * @return Entity 型の配列（npc）
+     */
+
     public Entity[] getNPC() {
         return npc;
     }
+
+    /**
+     * 現在配置されているモンスター配列を返す。
+     *
+     * @return Entity 型の配列（monster）
+     */
 
     public Entity[] getMonster() {
         return monster;
     }
 
+    /**
+     * NPC 配列を新しいものに置き換える。
+     *
+     * @param npc 新しい Entity 配列
+     * @throws IllegalArgumentException npc が null の場合
+     */
+
     public void setNPC(Entity[] npc) {
         this.npc = npc;
     }
+
+    /**
+     * モンスター配列を新しいものに置き換える。
+     *
+     * @param monster 新しい Entity 配列
+     * @throws IllegalArgumentException monster が null の場合
+     */
 
     public void setMonster(Entity[] monster) {
         this.monster = monster;
     }
 
+    /**
+     * 対話状態を示すステートID を返す。
+     *
+     * @return dialogueState（整数値）
+     */
+
     public int getDialogueState() {
         return dialogueState;
     }
+
+    /**
+     * UI 管理オブジェクトを返す。
+     *
+     * @return UI オブジェクト
+     */
 
     public UI getUi() {
         return ui;
     }
 
+    /**
+     * サウンド管理オブジェクトを返す。
+     *
+     * @return SoundManager オブジェクト
+     */
+
     public SoundManager getSoundmanager() {
         return soundManager;
     }
+
+    /**
+     * キャラクターステートを示すステートID を返す。
+     *
+     * @return characterState（整数値）
+     */
 
     public int getCharacterState() {
         return characterState;
     }
 
-    public void setCharacterState(int characterState) {
-        this.gameState = characterState;
-    }
-
-    public int getDebugState() {
-        return debugState;
-    }
-
-    public void setDebugState(int debugState) {
-        this.gameState = debugState;
-    }
+    /**
+     * AssetSetter 管理オブジェクトを返す。
+     *
+     * @return AssetSetter オブジェクト
+     */
 
     public AssetSetter getAssetSetter() {
         return assetSetter;
     }
 
-    public void setAssetSetter(AssetSetter assetSetter) {
-        this.assetSetter = assetSetter;
-    }
+    /**
+     * 現在の Projectile リストを返す。
+     *
+     * @return ArrayList&lt;Projectile&gt; オブジェクト
+     */
 
     public ArrayList<Projectile> getProjectileList() {
         return projectileList;
     }
 
-    public void setProjectileList(ArrayList<Projectile> projectileList) {
-        this.projectileList = projectileList;
-    }
-
-    public ArrayList<Entity> getItemList() {
-        return itemList;
-    }
-
-    public ArrayList<Entity> setItemList(ArrayList<Entity> itemList) {
-        return this.itemList = itemList;
-    }
+    /**
+     * 現在のパーティクルリストを返す。
+     *
+     * @return ArrayList&lt;Entity&gt; オブジェクト
+     */
 
     public ArrayList<Entity> getParticleList() {
         return particleList;
     }
 
-    public void setParticleList(ArrayList<Entity> particleList) {
-        this.particleList = particleList;
-    }
+    /**
+     * 現在のインタラクティブタイル配列を返す。
+     *
+     * @return InteractiveTile[] オブジェクト
+     */
 
     public InteractiveTile[] getItile() {
         return iTile;
     }
 
+    /**
+     * インタラクティブタイル配列を置き換える。
+     *
+     * @param iTile 新しい InteractiveTile 配列
+     * @throws IllegalArgumentException iTile が null の場合
+     */
+
     public void setItile(InteractiveTile[] iTile) {
         this.iTile = iTile;
     }
+
+    /**
+     * 現在のオブジェクト配列を返す。
+     *
+     * @return Entity[] オブジェクト
+     */
 
     public Entity[] getObj() {
         return obj;
     }
 
-    public void setObj(Entity[] obj) {
-        this.obj = obj;
-    }
-
-    public boolean isDialogueActive() {
-        return dialogueActive;
-    }
+    /**
+     * タイトルステートID を返す。
+     *
+     * @return titleState（整数値）
+     */
 
     public int getTitleState() {
         return titleState;
     }
 
+    /**
+     * ダイアログアクティブ状態を設定する。
+     *
+     * @param active 新しいダイアログアクティブ状態
+     * @return void
+     */
+
     public void setDialogueActive(boolean active) {
         this.dialogueActive = active;
     }
 
-    public int getCurrentMap() {
-        return currentMap;
-    }
+    /**
+     * アイテムをドロップし、ワールド座標をソースと同じ位置に設定する。
+     *
+     * @param droppedItem ドロップするアイテム Entity
+     * @param source      ドロップ元となる Entity
+     * @throws IllegalArgumentException droppedItem または source が null の場合
+     */
 
     public void dropItem(@NotNull Entity droppedItem, @NotNull Entity source) {
         System.out.println("【dropItem】呼ばれた／itemList before=" + itemList.size());
@@ -597,6 +792,15 @@ public class GameWindow extends JPanel implements Window, Runnable {
         System.out.println("【dropItem】 今の itemList サイズ=" + itemList.size());
     }
 
+    /**
+     * 指定された NPC インデックスのルート追従を開始する。
+     *
+     * @param npcIndex NPC 配列内のインデックス
+     * @param mapId    ルート追従を行うマップID
+     * @param pathId   ルートID
+     * @throws IndexOutOfBoundsException npcIndex が範囲外の場合
+     */
+
     public void startNpcRoute(int npcIndex, int mapId, int pathId) {
         if (npcIndex < 0 || npcIndex >= npc.length) return;
         Entity e = npc[npcIndex];
@@ -605,17 +809,39 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
+    /**
+     * デバッグ用にヒットボックス表示のトグルを行う。
+     */
+
     public void toggleHitBoxDebug() {
         showHitBoxes = !showHitBoxes;
     }
+
+    /**
+     * ゲームオーバーステートID を返す。
+     *
+     * @return gameOverState（整数値）
+     */
 
     public int getGameOverState() {
         return gameOverState;
     }
 
+    /**
+     * マップ遷移中かどうかを返す。
+     *
+     * @return onTransition（boolean）
+     */
+
     public boolean isOnTransition() {
         return onTransition;
     }
+
+    /**
+     * 取引ステートID を返す。
+     *
+     * @return tradeState（整数値）
+     */
 
     public int getTradeState() {
         return tradeState;
