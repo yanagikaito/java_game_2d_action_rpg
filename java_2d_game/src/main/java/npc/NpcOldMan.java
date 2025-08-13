@@ -1,5 +1,6 @@
 package npc;
 
+import collision.CollisionChecker;
 import db.PathManager;
 import entity.Entity;
 import frame.FrameApp;
@@ -28,9 +29,11 @@ public class NpcOldMan extends Entity {
     private List<Point> route = List.of();
     private int routeIndex = 0;
     private boolean following = false;
+    private final CollisionChecker collisionChecker;
 
     public NpcOldMan(GameWindow gameWindow) {
         super(gameWindow);
+        this.collisionChecker = new CollisionChecker(gameWindow);
         setDirection("down");
         setSpeed(1);
         loadNPCImages();
@@ -70,9 +73,26 @@ public class NpcOldMan extends Entity {
     public void setAction() {
         if (following) {
             followRouteStep();
+            checkPlayerCollision();
         } else {
             randomWalkStep();
         }
+    }
+
+    /**
+     * 移動後に必ず呼ぶ衝突判定
+     */
+
+    private void checkPlayerCollision() {
+        boolean hit = collisionChecker.checkPlayer(this);
+        if (hit) {
+            onHitPlayer();
+        }
+    }
+
+    private void onHitPlayer() {
+        this.following = false;
+        getGameWindow().setGameState(getGameWindow().getGameOverState());
     }
 
     private void randomWalkStep() {
