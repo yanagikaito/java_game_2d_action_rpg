@@ -23,6 +23,8 @@
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/java_2d_game" />
             <option value="$PROJECT_DIR$/java_game_tile_editor" />
+            <option value="$PROJECT_DIR$/pathfinding_core" />
+            <option value="$PROJECT_DIR$/pathfinding_editor" />
           </set>
         </option>
       </GradleProjectSettings>
