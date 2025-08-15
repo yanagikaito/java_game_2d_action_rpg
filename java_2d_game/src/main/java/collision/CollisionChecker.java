@@ -2,7 +2,6 @@ package collision;
 
 import entity.Entity;
 import frame.FrameApp;
-import org.jetbrains.annotations.NotNull;
 import tile.Tile;
 import tile.TileManager;
 import window.GameWindow;
@@ -15,7 +14,7 @@ public class CollisionChecker {
         this.gameWindow = gameWindow;
     }
 
-    public void checkTile(@NotNull Entity entity) {
+    public void checkTile(Entity entity) {
 
         int tileSize = FrameApp.getTileSize();
         TileManager tileManager = gameWindow.getTileManager();
@@ -71,7 +70,7 @@ public class CollisionChecker {
         }
     }
 
-    public int checkEntity(@NotNull Entity entity, Entity @NotNull [] targets) {
+    public int checkEntity(Entity entity, Entity[] targets) {
 
         int index = 999;
 
@@ -138,12 +137,12 @@ public class CollisionChecker {
         return contactPlayer;
     }
 
-    private void updateSolidArea(@NotNull Entity entity) {
+    private void updateSolidArea(Entity entity) {
         entity.getSolidArea().x = entity.getWorldX() + entity.getSolidArea().x;
         entity.getSolidArea().y = entity.getWorldY() + entity.getSolidArea().y;
     }
 
-    private void resetSolidArea(@NotNull Entity entity) {
+    private void resetSolidArea(Entity entity) {
         entity.getSolidArea().x = entity.getSolidAreaDefaultX();
         entity.getSolidArea().y = entity.getSolidAreaDefaultY();
     }

@@ -9,7 +9,6 @@ import object.ObjCoinBronze;
 import object.ObjGreenPotion;
 import object.ObjRedPotion;
 import object.Projectile;
-import org.jetbrains.annotations.NotNull;
 import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
@@ -783,7 +782,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
      * @throws IllegalArgumentException droppedItem または source が null の場合
      */
 
-    public void dropItem(@NotNull Entity droppedItem, @NotNull Entity source) {
+    public void dropItem(Entity droppedItem, Entity source) {
         System.out.println("【dropItem】呼ばれた／itemList before=" + itemList.size());
         droppedItem.setWorldX(source.getWorldX());
         droppedItem.setWorldY(source.getWorldY());

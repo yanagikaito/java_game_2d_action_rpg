@@ -1,7 +1,6 @@
 package key;
 
 import npc.NpcMerChant;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.event.KeyEvent;
@@ -87,7 +86,7 @@ public class KeyHandler implements KeyListener {
     }
 
     @Override
-    public void keyPressed(@NotNull KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
 
         int code = e.getKeyCode();
 
@@ -101,19 +100,19 @@ public class KeyHandler implements KeyListener {
             switch (code) {
                 case KeyEvent.VK_W -> {
                     if (playerSlotCol > 0) gameWindow.getUi().setPlayerSlotCol(playerSlotCol - 1);
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_S -> {
                     if (playerSlotCol < MAX_COL) gameWindow.getUi().setPlayerSlotCol(playerSlotCol + 1);
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_A -> {
                     if (playerSlotRow > 0) gameWindow.getUi().setPlayerSlotRow(playerSlotRow - 1);
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_D -> {
                     if (playerSlotRow < MAX_ROW) gameWindow.getUi().setPlayerSlotRow(playerSlotRow + 1);
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_C -> {
                     gameWindow.setGameState(gameWindow.getPlayState());
@@ -168,14 +167,14 @@ public class KeyHandler implements KeyListener {
                     if (getCommandNum() < 0) {
                         setCommandNum(1);
                     }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_S -> {
                     setCommandNum(getCommandNum() + 1);
                     if (getCommandNum() > 1) {
                         setCommandNum(0);
                     }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_ENTER -> {
                     if (getCommandNum() == 0) {
@@ -185,7 +184,7 @@ public class KeyHandler implements KeyListener {
                     } else {
                         System.exit(0);
                     }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
             }
         }
@@ -198,14 +197,16 @@ public class KeyHandler implements KeyListener {
                     if (getCommandNum() < 0) {
                         setCommandNum(1);
                     }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_S -> {
                     setCommandNum(getCommandNum() + 1);
                     if (getCommandNum() > 1) {
                         setCommandNum(0);
                     }
-                    gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                    System.out.println("working dir: " + System.getProperty("user.dir"));
+
                 }
                 case KeyEvent.VK_ENTER -> {
                     if (getCommandNum() == 0) {
@@ -235,19 +236,19 @@ public class KeyHandler implements KeyListener {
         switch (code) {
             case KeyEvent.VK_W -> {
                 if (playerSlotCol > 0) gameWindow.getUi().setPlayerSlotCol(playerSlotCol - 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
             case KeyEvent.VK_S -> {
                 if (playerSlotCol < MAX_COL) gameWindow.getUi().setPlayerSlotCol(playerSlotCol + 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
             case KeyEvent.VK_A -> {
                 if (playerSlotRow > 0) gameWindow.getUi().setPlayerSlotRow(playerSlotRow - 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
             case KeyEvent.VK_D -> {
                 if (playerSlotRow < MAX_ROW) gameWindow.getUi().setPlayerSlotRow(playerSlotRow + 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
         }
     }
@@ -262,19 +263,19 @@ public class KeyHandler implements KeyListener {
         switch (code) {
             case KeyEvent.VK_W -> {
                 if (npcSlotCol > 0) gameWindow.getUi().setNpcSlotCol(npcSlotCol - 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
             case KeyEvent.VK_S -> {
                 if (npcSlotCol < MAX_COL) gameWindow.getUi().setNpcSlotCol(npcSlotCol + 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
             case KeyEvent.VK_A -> {
                 if (npcSlotRow > 0) gameWindow.getUi().setNpcSlotRow(npcSlotRow - 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
             case KeyEvent.VK_D -> {
                 if (npcSlotRow < MAX_ROW) gameWindow.getUi().setNpcSlotRow(npcSlotRow + 1);
-                gameWindow.getSoundmanager().cursorWAV("java_2d_game/res/sound/cursor-sound.wav");
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
             }
         }
     }
@@ -295,7 +296,7 @@ public class KeyHandler implements KeyListener {
     }
 
     @Override
-    public void keyReleased(@NotNull KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
 
         int code = e.getKeyCode();
 
@@ -361,7 +362,7 @@ public class KeyHandler implements KeyListener {
         }
 
         gameWindow.getSoundmanager().cursorWAV(
-                "java_2d_game/res/sound/cursor-sound.wav"
+                "sound/cursor-sound.wav"
         );
     }
 

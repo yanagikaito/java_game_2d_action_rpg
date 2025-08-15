@@ -2,7 +2,6 @@ package tileInteractive;
 
 import entity.Entity;
 import frame.FrameApp;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -23,7 +22,7 @@ public class ItDryTree extends InteractiveTile {
         }
     }
 
-    public boolean isCorrectItem(@NotNull Entity entity) {
+    public boolean isCorrectItem(Entity entity) {
 
         boolean isCorrectItem = false;
 
@@ -64,7 +63,7 @@ public class ItDryTree extends InteractiveTile {
     }
 
     @Override
-    public void draw(@NotNull Graphics2D g2) {
+    public void draw(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
         int screenX = getWorldX() - getGameWindow().getPlayer().getWorldX() + getGameWindow().getPlayer().getScreenX();

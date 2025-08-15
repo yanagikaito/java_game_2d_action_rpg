@@ -1,7 +1,6 @@
 package entity;
 
 import frame.FrameApp;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.*;
@@ -20,7 +19,7 @@ public class Particle extends Entity {
     private final double gravity = 1.0;
 
     public Particle(GameWindow gameWindow,
-                    @NotNull Entity generator,
+                    Entity generator,
                     Color color,
                     int size,
                     int speed,
@@ -63,7 +62,7 @@ public class Particle extends Entity {
     }
 
     @Override
-    public void draw(@NotNull Graphics2D g2) {
+    public void draw(Graphics2D g2) {
 
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();

@@ -67,7 +67,7 @@ public class MainFrame extends JFrame {
 
             try (InputStream is = getClass().getResourceAsStream("/tiles/" + id + ".png")) {
                 if (is == null) {
-                    System.err.println("タイル画像が見つかりません: " + "/tiles/" + id + ".png");
+                    System.err.println("tiles" + id + ".png");
                 } else {
                     BufferedImage img = ImageIO.read(is);
                     tileImages.put(id, img);

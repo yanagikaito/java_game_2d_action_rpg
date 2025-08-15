@@ -22,7 +22,7 @@ public class ObjSwordNormal extends Entity {
         setPrice(100);
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/sword-normal.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/sword-normal.gif"));
             setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {

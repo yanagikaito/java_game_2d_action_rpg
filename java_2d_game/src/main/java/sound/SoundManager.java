@@ -3,7 +3,9 @@ package sound;
 import window.GameWindow;
 
 import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
 
 public class SoundManager {
 
@@ -45,17 +47,17 @@ public class SoundManager {
 
         try {
 
-            Clip clip = AudioSystem.getClip();
-
-            if (clip != null && clip.isRunning()) {
-                clip.stop();
+            InputStream in = getClass().getClassLoader()
+                    .getResourceAsStream(filePath);
+            if (in == null) {
+                throw new IllegalStateException("リソースが見つかりません: " + filePath);
             }
-
-            File soundFile = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start();
+            try (BufferedInputStream bin = new BufferedInputStream(in)) {
+                AudioInputStream ais = AudioSystem.getAudioInputStream(bin);
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
