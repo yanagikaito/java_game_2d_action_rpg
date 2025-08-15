@@ -6,7 +6,6 @@ import monster.MonGreenSlime;
 import npc.NpcMerChant;
 import npc.NpcOldMan;
 import object.ObjAxe;
-import org.jetbrains.annotations.NotNull;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
@@ -64,14 +63,14 @@ public class AssetSetter {
         obj[i] = createObjAxe(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
     }
 
-    private @NotNull MonGreenSlime createMonGreenSlime(int worldX, int worldY) {
+    private MonGreenSlime createMonGreenSlime(int worldX, int worldY) {
         MonGreenSlime monster = new MonGreenSlime(gameWindow);
         monster.setWorldX(worldX);
         monster.setWorldY(worldY);
         return monster;
     }
 
-    private @NotNull ObjAxe createObjAxe(int worldX, int worldY) {
+    private ObjAxe createObjAxe(int worldX, int worldY) {
         ObjAxe objAxe = new ObjAxe(gameWindow);
         objAxe.setWorldX(worldX);
         objAxe.setWorldY(worldY);

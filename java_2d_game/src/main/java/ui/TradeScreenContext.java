@@ -1,7 +1,6 @@
 package ui;
 
 import key.KeyHandler;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.*;
@@ -12,7 +11,7 @@ public class TradeScreenContext {
     private final UI ui;
     private final KeyHandler kh;
 
-    public TradeScreenContext(@NotNull GameWindow gw, UI ui) {
+    public TradeScreenContext(GameWindow gw, UI ui) {
         this.gameWindow = gw;
         this.ui = ui;
         this.kh = gw.getKeyHandler();

@@ -3,7 +3,6 @@ package ui;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
-import org.jetbrains.annotations.NotNull;
 import player.Player;
 import window.GameWindow;
 
@@ -124,7 +123,7 @@ public class BuyState implements TradeScreenState {
         g2.drawString("所持金: " + coin, x + 50, y + 50);
     }
 
-    private void drawPriceWindow(Graphics2D g2, int tileSize, @NotNull UI ui, List<Entity> inv) {
+    private void drawPriceWindow(Graphics2D g2, int tileSize, UI ui, List<Entity> inv) {
 
         int row = ui.getNpcSlotRow();
         int col = ui.getNpcSlotCol();

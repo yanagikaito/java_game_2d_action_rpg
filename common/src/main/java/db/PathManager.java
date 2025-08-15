@@ -1,7 +1,5 @@
 package db;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +9,7 @@ public class PathManager {
     /**
      * map_id, path_id を指定してステップ順に Point 一覧を取得
      */
-    public static @NotNull List<Point> loadPath(int mapId, int pathId) {
+    public static List<Point> loadPath(int mapId, int pathId) {
         List<Point> list = new ArrayList<>();
         String sql = "SELECT x, y FROM map_path " +
                 "WHERE map_id=? AND path_id=? ORDER BY step";

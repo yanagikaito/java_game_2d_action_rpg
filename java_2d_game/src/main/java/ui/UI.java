@@ -4,7 +4,6 @@ import entity.Entity;
 import frame.FrameApp;
 import npc.NpcMerChant;
 import object.*;
-import org.jetbrains.annotations.NotNull;
 import player.Player;
 import window.GameWindow;
 
@@ -82,7 +81,7 @@ public class UI {
         }
     }
 
-    public void draw(@NotNull Graphics2D g2) {
+    public void draw(Graphics2D g2) {
 
         g2.setFont(arial40);
         g2.setColor(Color.white);
@@ -138,7 +137,7 @@ public class UI {
         }
     }
 
-    private void drawTitleScreen(@NotNull Graphics2D g2) {
+    private void drawTitleScreen(Graphics2D g2) {
 
         String text;
         int x;
@@ -174,7 +173,7 @@ public class UI {
         }
     }
 
-    public void drawGameOverScreen(@NotNull Graphics2D g2) {
+    public void drawGameOverScreen(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
         g2.setColor(new Color(0, 0, 0, 150));
@@ -237,7 +236,7 @@ public class UI {
         }
     }
 
-    private void drawManaBar(@NotNull Graphics2D g2) {
+    private void drawManaBar(Graphics2D g2) {
 
         Player p = gameWindow.getPlayer();
 
@@ -266,7 +265,7 @@ public class UI {
         g2.drawRoundRect(x, y, w, h, arc, arc);
     }
 
-    private void drawPauseScreen(@NotNull Graphics2D g2) {
+    private void drawPauseScreen(Graphics2D g2) {
         g2.setFont(arial80Bold.deriveFont(Font.PLAIN, 80F));
         String text = "PAUSED";
         int x = getXForCenteredText(g2, text);
@@ -274,7 +273,7 @@ public class UI {
         g2.drawString(text, x, y);
     }
 
-    void drawDialogueScreen(@NotNull Graphics2D g2) {
+    void drawDialogueScreen(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
 
@@ -291,7 +290,7 @@ public class UI {
         g2.drawString(currentDialogueMessage, x, y);
     }
 
-    private void drawCharacterScreen(@NotNull Graphics2D g2) {
+    private void drawCharacterScreen(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
 
@@ -386,7 +385,7 @@ public class UI {
         g2.drawImage(gameWindow.getPlayer().getCurrentShield().getImage(), tailX - tileSize, textY - 10, null);
     }
 
-    private void drawBattleLogMessage(@NotNull Graphics2D g2) {
+    private void drawBattleLogMessage(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
         int messageX = tileSize;
@@ -415,7 +414,7 @@ public class UI {
         }
     }
 
-    public void drawInventory(@NotNull Graphics2D g2, @NotNull Entity entity, boolean cursor) {
+    public void drawInventory(Graphics2D g2, Entity entity, boolean cursor) {
 
         if (entity == null || entity.getInventory() == null) return;
 
@@ -526,7 +525,7 @@ public class UI {
         return itemIndex;
     }
 
-    void drawSubWindow(@NotNull Graphics2D g2, int x, int y, int width, int height) {
+    void drawSubWindow(Graphics2D g2, int x, int y, int width, int height) {
 
         Color color = new Color(0, 0, 0, 210);
         g2.setColor(color);
@@ -539,19 +538,19 @@ public class UI {
     }
 
 
-    private void drawMessage(@NotNull Graphics2D g2) {
+    private void drawMessage(Graphics2D g2) {
         g2.setFont(arial40.deriveFont(Font.PLAIN, 40F));
         int x = getXForCenteredText(g2, currentDialogueMessage);
         int y = (int) (FrameApp.getScreenHeight() * 0.8);
         g2.drawString(currentDialogueMessage, x, y);
     }
 
-    private int getXForCenteredText(@NotNull Graphics2D g2, String text) {
+    private int getXForCenteredText(Graphics2D g2, String text) {
         int textWidth = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return FrameApp.getScreenWidth() / 2 - textWidth / 2;
     }
 
-    int getXForAlignToRightText(@NotNull Graphics2D g2, String text, int tailX) {
+    int getXForAlignToRightText(Graphics2D g2, String text, int tailX) {
         int textWidth = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = tailX - textWidth;
         return x;

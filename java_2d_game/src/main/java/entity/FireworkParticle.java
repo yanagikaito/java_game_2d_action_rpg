@@ -1,6 +1,5 @@
 package entity;
 
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import java.awt.*;
@@ -56,7 +55,7 @@ public class FireworkParticle extends Particle {
     }
 
     @Override
-    public void draw(@NotNull Graphics2D g2) {
+    public void draw(Graphics2D g2) {
 
         float alpha = getLife() / initLife;
         AlphaComposite ac = AlphaComposite.getInstance(

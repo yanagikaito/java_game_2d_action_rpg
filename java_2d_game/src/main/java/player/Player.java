@@ -5,7 +5,6 @@ import frame.FrameApp;
 import key.KeyHandler;
 import npc.NpcMerChant;
 import object.*;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -260,7 +259,7 @@ public class Player extends Entity {
             int heal = potion.getHealAmount();
             setLife(Math.min(getLife() + heal, getMaxLife()));
             gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
-            gameWindow.getSoundmanager().redPotionWAV("java_2d_game/res/sound/potion-sound.wav");
+            gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
             getInventory().remove(index);
             return;
         } else {
@@ -292,7 +291,7 @@ public class Player extends Entity {
             int heal = potion.getHealAmount();
             setMana(Math.min(getMana() + heal, getMaxMana()));
             gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
-            gameWindow.getSoundmanager().greenPotionWAV("java_2d_game/res/sound/potion-sound.wav");
+            gameWindow.getSoundmanager().greenPotionWAV("sound/potion-sound.wav");
             getInventory().remove(index);
             return;
         } else {
@@ -640,7 +639,7 @@ public class Player extends Entity {
 
                 gameWindow.getProjectileList().add(fb);
                 setShotAvailableCounter(0);
-                gameWindow.getSoundmanager().explosionWAV("java_2d_game/res/sound/explosion-sound.wav");
+                gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
                 System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
             }
         }
@@ -691,7 +690,7 @@ public class Player extends Entity {
                 setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
                         + getDirection().substring(1));
                 setAttacking(true);
-                gameWindow.getSoundmanager().defeatedWAV("java_2d_game/res/sound/thrust-sound.wav");
+                gameWindow.getSoundmanager().defeatedWAV("sound/thrust-sound.wav");
             }
         }
         keyHandler.setPlayerEnter(false);
@@ -708,7 +707,7 @@ public class Player extends Entity {
 
         if (i != 999) {
             if (!getInvincible()) {
-                gameWindow.getSoundmanager().damageWAV("java_2d_game/res/sound/damage-sound.wav");
+                gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
                 // スライムのダメージ量
                 int damage = setAttack(gameWindow.getMonster()[i].getAttack() - calculateTotalDefense());
@@ -748,7 +747,7 @@ public class Player extends Entity {
 
         if (i != 999) {
             if (!gameWindow.getMonster()[i].getInvincible()) {
-                gameWindow.getSoundmanager().damageWAV("java_2d_game/res/sound/damage-sound.wav");
+                gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
                 long end = System.nanoTime();
 
@@ -789,7 +788,7 @@ public class Player extends Entity {
                     setExp(getExp() + gainedExp);
                     gameWindow.getUi().addMessage("経験値" + gainedExp + " 入手!");
                     checkLevelUp();
-                    gameWindow.getSoundmanager().defeatedWAV("java_2d_game/res/sound/defeated-sound.wav");
+                    gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
 
                     int aliveCount = 0;
                     for (Entity m : gameWindow.getMonster()) {
@@ -825,7 +824,7 @@ public class Player extends Entity {
                 && gameWindow.getItile()[i].isCorrectItem(this) == true
                 && gameWindow.getItile()[i].getInvincible() == false) {
 
-            gameWindow.getSoundmanager().damageWAV("java_2d_game/res/sound/thrust-sound.wav");
+            gameWindow.getSoundmanager().damageWAV("sound/thrust-sound.wav");
             gameWindow.getItile()[i].setLife(gameWindow.getItile()[i].getLife() - 1);
             gameWindow.getItile()[i].setInvincible(true);
             generateParticle(gameWindow.getItile()[i], gameWindow.getItile()[i]);
@@ -844,7 +843,7 @@ public class Player extends Entity {
      * @return 一度だけ実行される javax.swing.Timer インスタンス
      */
 
-    private @NotNull Timer getTimer(Entity monster) {
+    private Timer getTimer(Entity monster) {
         Timer respawnTimer = new Timer(5000, e -> {
             gameWindow.getAssetSetter().setMonster();
             monster.setRespawning(false);
@@ -870,7 +869,7 @@ public class Player extends Entity {
             setDexterity(getDexterity() + 1);
             setAttack(calculateBaseAttack());
             setDefense(calculateBaseDefense());
-            gameWindow.getSoundmanager().levelWAV("java_2d_game/res/sound/level-up-sound.wav");
+            gameWindow.getSoundmanager().levelWAV("sound/level-up-sound.wav");
             gameWindow.setGameState(gameWindow.getDialogueState());
             gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");
             gameWindow.getPlayer().setLife(gameWindow.getPlayer().getMaxLife());
@@ -935,7 +934,7 @@ public class Player extends Entity {
      */
 
     @Override
-    public void draw(@NotNull Graphics2D g2) {
+    public void draw(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
 
@@ -1004,7 +1003,7 @@ public class Player extends Entity {
      * @return 指定サイズにリサイズされた BufferedImage
      */
 
-    private @NotNull BufferedImage createImage(BufferedImage original, int width, int height) {
+    private BufferedImage createImage(BufferedImage original, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = result.createGraphics();
         g2.drawImage(original, 0, 0, width, height, null);
@@ -1149,7 +1148,7 @@ public class Player extends Entity {
      * @param coin 拾ったブロンズコインオブジェクト
      */
 
-    public void addCoin(@NotNull ObjCoinBronze coin) {
+    public void addCoin(ObjCoinBronze coin) {
         int value = coin.getValue();
         setCoin(getCoin() + value);
         gameWindow.getUi().addMessage(
@@ -1164,7 +1163,7 @@ public class Player extends Entity {
      * @param potion 拾った赤ポーションオブジェクト
      */
 
-    public void healRedPotion(@NotNull ObjRedPotion potion) {
+    public void healRedPotion(ObjRedPotion potion) {
         int amount = potion.getHealAmount();
         setLife(Math.min(getLife() + amount, getMaxLife()));
         gameWindow.getUi().addMessage(
@@ -1179,7 +1178,7 @@ public class Player extends Entity {
      * @param potion 拾った緑ポーションオブジェクト
      */
 
-    public void healGreenPotion(@NotNull ObjGreenPotion potion) {
+    public void healGreenPotion(ObjGreenPotion potion) {
         int amount = potion.getHealAmount();
         setMana(Math.min(getMana() + amount, getMaxMana()));
         gameWindow.getUi().addMessage(
@@ -1194,7 +1193,7 @@ public class Player extends Entity {
      * @return 先頭が大文字になった文字列
      */
 
-    private @NotNull String capitalize(@NotNull String s) {
+    private String capitalize(String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 

@@ -1,7 +1,6 @@
 package tileInteractive;
 
 import frame.FrameApp;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -37,7 +36,7 @@ public class ItTrunk extends InteractiveTile {
     }
 
     @Override
-    public void draw(@NotNull Graphics2D g2) {
+    public void draw(Graphics2D g2) {
 
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();

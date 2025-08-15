@@ -2,7 +2,6 @@ package entity;
 
 import frame.FrameApp;
 import object.Projectile;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -113,7 +112,7 @@ public abstract class Entity {
      * @throws NullPointerException 引数 gameWindow が null の場合
      */
 
-    public Entity(@NotNull GameWindow gameWindow) {
+    public Entity(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.worldX = 0;
         this.worldY = 0;
@@ -228,7 +227,7 @@ public abstract class Entity {
 
         if (gameWindow.getPlayer().getInvincible() == false) {
 
-            gameWindow.getSoundmanager().damageWAV("java_2d_game/res/sound/damage-sound.wav");
+            gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
             int damage = setAttack(Math.max(attack - gameWindow.getPlayer().calculateTotalDefense(), 1));
             if (damage < 0) {
@@ -1498,7 +1497,7 @@ public abstract class Entity {
      * @throws NullPointerException generator または target が null の場合
      */
 
-    public void generateParticle(@NotNull Entity generator, Entity target) {
+    public void generateParticle(Entity generator, Entity target) {
         if (generator == null || target == null) {
             throw new NullPointerException("generator および target は null にできない");
         }
@@ -1532,7 +1531,7 @@ public abstract class Entity {
      * @throws NullPointerException target が null の場合
      */
 
-    public void spawnFireworkParticles(@NotNull Entity target) {
+    public void spawnFireworkParticles(Entity target) {
         if (target == null) {
             throw new NullPointerException("target は null にできない");
         }
@@ -1732,7 +1731,7 @@ public abstract class Entity {
      * @throws IllegalArgumentException alphaValue が 0.0 未満または 1.0 超過の場合
      */
 
-    public void changeAlpha(@NotNull Graphics2D g2, float alphaValue) {
+    public void changeAlpha(Graphics2D g2, float alphaValue) {
 
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
 

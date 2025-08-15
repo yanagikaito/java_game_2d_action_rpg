@@ -22,7 +22,7 @@ public class ObjShieldWood extends Entity {
         setPrice(75);
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/shield-wood.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/shield-wood.gif"));
             setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {

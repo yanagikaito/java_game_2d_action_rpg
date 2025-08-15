@@ -1,7 +1,6 @@
 package map;
 
 import db.MapModel;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +15,7 @@ public class MapCanvas extends JPanel implements Scrollable {
     private int selectedTileId = 0;
     private final int tileSize = 32;
 
-    public MapCanvas(@NotNull MapModel model, Map<Integer, Image> tileImages) {
+    public MapCanvas(MapModel model, Map<Integer, Image> tileImages) {
         this.model = model;
         this.tileImages = tileImages;
         setPreferredSize(new Dimension(

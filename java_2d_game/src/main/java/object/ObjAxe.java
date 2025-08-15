@@ -2,7 +2,6 @@ package object;
 
 import entity.Entity;
 import frame.FrameApp;
-import org.jetbrains.annotations.NotNull;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -26,7 +25,7 @@ public class ObjAxe extends Entity {
         setDescription("[" + getName() + "]\n木を切ることができる");
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("objects/axe.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/axe.gif"));
             setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {
@@ -35,7 +34,7 @@ public class ObjAxe extends Entity {
     }
 
     @Override
-    public void draw(@NotNull Graphics2D g2) {
+    public void draw(Graphics2D g2) {
 
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
