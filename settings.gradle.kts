@@ -15,3 +15,5 @@ include(":java_2d_game")
 include(":java_game_tile_editor")
 include("pathfinding_core")
 include("pathfinding_editor")
+include("data:data")
+findProject(":data:data")?.name = "data"
