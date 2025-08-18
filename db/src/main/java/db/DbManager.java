@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DbManager {
+
     private static final String JDBC_URL = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE";
     private static final String JDBC_USER = "sa";
     private static final String JDBC_PASS = "";

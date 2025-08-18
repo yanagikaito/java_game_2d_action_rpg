@@ -182,7 +182,7 @@ public abstract class Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
-        if (this.type == type_monster && contactPlayer == true && !gameWindow.getPlayer().getInvincible()) {
+        if (this.type == type_monster && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
             damagePlayer(attack);
             gameWindow.getPlayer().setInvincible(true);
         }
@@ -225,7 +225,7 @@ public abstract class Entity {
 
     public void damagePlayer(int attack) {
 
-        if (gameWindow.getPlayer().getInvincible() == false) {
+        if (!gameWindow.getPlayer().getInvincible()) {
 
             gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 

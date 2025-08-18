@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PathManager {
+
     /**
      * map_id, path_id を指定してステップ順に Point 一覧を取得
      */
+
     public static List<Point> loadPath(int mapId, int pathId) {
         List<Point> list = new ArrayList<>();
         String sql = "SELECT x, y FROM map_path " +
