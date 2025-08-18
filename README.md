@@ -6,7 +6,7 @@ SwingでインターフェースやjavaのデザインパターンのFactory Met
 
 # libGDXでもSwing同様のRPGを制作
 
-https://github.com/yanagikaito/libgdx_2d_action_rpg
+https://github.com/yanagikaito/libgdx_2d_action_rpg/tree/master
 
 # 参考
 https://refactoring.guru/ja/design-patterns/factory-method/java/example
