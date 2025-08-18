@@ -1,5 +1,3 @@
-// common/build.gradle.kts
-
 plugins {
     `java-library`
 }
@@ -11,6 +9,8 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(23))
     }
+    withJavadocJar()
+    withSourcesJar()
 }
 
 repositories {
@@ -20,14 +20,22 @@ repositories {
 dependencies {
     implementation("com.h2database:h2:2.2.224")
     compileOnly("org.jetbrains:annotations:24.0.1")
+
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-// エンコーディング設定だけ
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
 
-dependencies {
-    // 他の依存関係…
-    compileOnly("org.jetbrains:annotations:24.0.1")
+tasks.named<Jar>("jar") {
+    manifest {
+        attributes["Implementation-Title"] = project.name
+        attributes["Implementation-Version"] = project.version
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

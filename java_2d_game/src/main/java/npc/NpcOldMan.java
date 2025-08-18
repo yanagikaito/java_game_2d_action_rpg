@@ -1,11 +1,10 @@
 package npc;
 
 import collision.CollisionChecker;
-import db.PathManager;
 import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;
-
+import db.*;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.List;

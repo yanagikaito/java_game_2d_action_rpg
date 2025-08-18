@@ -21,7 +21,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":db"))
+    implementation(project(":data"))
     implementation("com.h2database:h2:2.2.224")
 }
 

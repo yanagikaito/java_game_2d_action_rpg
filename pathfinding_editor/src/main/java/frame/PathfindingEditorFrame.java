@@ -1,13 +1,11 @@
 package frame;
 
 import canvas.PathfindingCanvas;
-import core.Node;
 import db.DbManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public class PathfindingEditorFrame extends JFrame {
 
@@ -51,7 +49,7 @@ public class PathfindingEditorFrame extends JFrame {
     }
 
     private void onSavePath() {
-        List<Node> path = canvas.getPath();
+        var path = canvas.getPath();
         if (path == null || path.isEmpty()) {
             JOptionPane.showMessageDialog(this, "先にRunで経路を生成してください");
             return;

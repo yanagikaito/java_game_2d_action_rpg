@@ -1,5 +1,4 @@
 package db;
-
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class PathManager {
         List<Point> list = new ArrayList<>();
         String sql = "SELECT x, y FROM map_path " +
                 "WHERE map_id=? AND path_id=? ORDER BY step";
-        try (Connection conn = db.DbManager.getConnection();
+        try (Connection conn = DbManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, mapId);
             ps.setInt(2, pathId);

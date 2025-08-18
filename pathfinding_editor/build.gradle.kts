@@ -23,10 +23,7 @@ tasks.withType<JavaCompile> {
 
 dependencies {
     // 共通ドメインモデル
-    implementation(project(":common"))
-
-    // パスファインディングコアロジック
-    implementation(project(":pathfinding_core"))
+    implementation(project(":db"))
 
     // H2 データベース（DB 保存／読み込み）
     implementation("com.h2database:h2:2.2.224")
