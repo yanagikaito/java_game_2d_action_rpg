@@ -111,6 +111,7 @@ public class Player extends Entity {
         setCurrentWeapon(new ObjSwordNormal(gameWindow));
         setCurrentShield(new ObjShieldWood(gameWindow));
         setProjectile(new ObjFireball(gameWindow));
+        setProjectile(new ObjBomb(gameWindow));
         setAttack(calculateBaseAttack());
         setDefense(calculateBaseDefense());
     }
@@ -340,8 +341,10 @@ public class Player extends Entity {
             startAttack();
             playerAttacking();
         } else {
-            if (gameWindow.getKeyHandler().isShotKeyPressed() && fireCooldown == 0) {
+            if (gameWindow.getKeyHandler().isBombKeyPressed() && fireCooldown == 0) {
                 fireCooldown = COOLDOWN_FRAMES;
+                playerAttackingBomb();
+            } else if (gameWindow.getKeyHandler().isShotKeyPressed() && fireCooldown == 0) {
                 playerAttackingFireball();
             }
             if (!moving) {
@@ -641,6 +644,44 @@ public class Player extends Entity {
                 setShotAvailableCounter(0);
                 gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
                 System.out.println("DEBUG: ファイアボール発射！向き=" + getDirection());
+            }
+        }
+    }
+
+    public void playerAttackingBomb() {
+
+        KeyHandler kh = gameWindow.getKeyHandler();
+
+        if (kh.isBombKeyPressed() &&
+                !getProjectile().getAlive() &&
+                getShotAvailableCounter() == 30 &&
+                consumeMana(FIREBALL_MANA_COST)) {
+
+            fireCooldown = COOLDOWN_FRAMES;
+
+            long now = System.currentTimeMillis();
+
+            if (now - lastFireTime >= FIRE_COOLDOWN_MS) {
+                lastFireTime = now;
+
+                System.out.println("DEBUG: Fキーが押されている");
+
+                ObjBomb bom = new ObjBomb(gameWindow);
+                bom.set(
+                        getWorldX(),
+                        getWorldY(),
+                        getDirection(),
+                        true,
+                        this
+                );
+                bom.setLife(bom.getMaxLife());
+                bom.setSpriteNum(1);
+                bom.setSpriteCounter(0);
+
+                gameWindow.getProjectileList().add(bom);
+                setShotAvailableCounter(0);
+                gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
+                System.out.println("DEBUG: ボム発射！向き=" + getDirection());
             }
         }
     }

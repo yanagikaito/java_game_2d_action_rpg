@@ -39,7 +39,6 @@ public class MonGreenSlime extends Entity {
         setDefense(0);
         setExp(5);
         setProjectile(new ObjStone(gameWindow));
-
         getSolidArea().x = 1;
         getSolidArea().y = 1;
         getSolidArea().width = 46;
