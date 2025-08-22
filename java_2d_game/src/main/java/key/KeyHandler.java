@@ -333,6 +333,7 @@ public class KeyHandler implements KeyListener {
         setPlayerLeft(false);
         setPlayerRight(false);
         setShotKeyPressed(false);
+        setBombKeyPressed(false);
     }
 
     private void togglePause() {
