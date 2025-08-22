@@ -53,4 +53,5 @@ subprojects {
 
 tasks.named<JavaExec>("run") {
     workingDir = projectDir.resolve("/src/main/resources")
+    jvmArgs("-Dfile.encoding=UTF-8")
 }

@@ -121,4 +121,8 @@ public abstract class Projectile extends Entity {
 //        }
         }
     }
+
+    public Entity getUser() {
+        return user;
+    }
 }

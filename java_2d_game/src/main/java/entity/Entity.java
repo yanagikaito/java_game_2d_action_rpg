@@ -67,6 +67,7 @@ public abstract class Entity {
     private final int type_redPotion = 6;
     private final int type_greenPotion = 7;
     private final int type_pickupOnly = 8;
+    private final int type_bomb = 9;
     private int value = 1;
     private boolean attacking = false;
     private boolean alive = true;
@@ -1465,6 +1466,10 @@ public abstract class Entity {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getType_bomb() {
+        return type_bomb;
     }
 
     /**
