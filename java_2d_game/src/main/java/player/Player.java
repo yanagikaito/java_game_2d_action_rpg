@@ -1,6 +1,6 @@
 package player;
 
-import entity.Entity;
+import entity.*;
 import frame.FrameApp;
 import key.KeyHandler;
 import npc.NpcMerChant;
@@ -229,7 +229,7 @@ public class Player extends Entity {
      */
 
     private void updateCurrentAttackSprites() {
-        if (getCurrentWeapon().getType() == getType_axe()) {
+        if (getCurrentWeapon().getType() instanceof AxeType) {
             currentAttackSprites = axeSprites;
         } else {
             currentAttackSprites = attackSprites;
@@ -309,7 +309,7 @@ public class Player extends Entity {
     private void startAttack() {
 
         String base = capitalize(getDirection());
-        if (getCurrentWeapon().getType() == getType_axe()) {
+        if (getCurrentWeapon().getType() instanceof AxeType) {
             setAttackDirection("axe" + base);
         } else {
             setAttackDirection("attack" + base);
@@ -934,21 +934,21 @@ public class Player extends Entity {
             Entity selectedItem = getInventory().get(itemIndex);
             System.out.println("selectedItem = " + selectedItem);
 
-            if (selectedItem.getType() == getType_sword() || selectedItem.getType() == getType_axe()) {
+            if (selectedItem.getType() instanceof SwordType || selectedItem.getType() instanceof AxeType) {
 
                 setCurrentWeapon(selectedItem);
                 setAttack(calculateTotalAttack());
                 loadAllAttackSprites();
             }
-            if (selectedItem.getType() == getType_shield()) {
+            if (selectedItem.getType() instanceof ShieldType) {
 
                 setCurrentShield(selectedItem);
                 setDefense(calculateTotalDefense());
             }
-            if (selectedItem.getType() == getType_redPotion()) {
+            if (selectedItem.getType() instanceof RedPotionType) {
                 useRedPotion(index);
             }
-            if (selectedItem.getType() == getType_greenPotion()) {
+            if (selectedItem.getType() instanceof GreenPotionType) {
                 useGreenPotion(index);
             }
         }
@@ -1003,7 +1003,7 @@ public class Player extends Entity {
                 g2.drawImage(img, screenX, screenY, tileSize, tileSize, null);
             }
         } else {
-            boolean isAxe = getCurrentWeapon().getType() == getType_axe();
+            boolean isAxe = getCurrentWeapon().getType() instanceof AxeType;
             String[] animationKeys = isAxe
                     ? AXE_DIRECTIONS
                     : ATTACK_DIRECTIONS;

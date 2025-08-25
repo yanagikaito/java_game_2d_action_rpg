@@ -1,5 +1,6 @@
 package object;
 
+import entity.BombType;
 import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;
@@ -22,7 +23,7 @@ public class ObjBomb extends Projectile {
         super(gameWindow, DIRS.length, SPRITE_COUNT);
         this.gameWindow = gameWindow;
 
-        setType(getType_bomb());
+        setType(new BombType());
         setName("爆弾");
         setSpeed(1);
         setMaxLife(80);

@@ -1,6 +1,7 @@
 package object;
 
 import entity.Entity;
+import entity.SwordType;
 import frame.FrameApp;
 import window.GameWindow;
 
@@ -15,7 +16,7 @@ public class ObjSwordNormal extends Entity {
     public ObjSwordNormal(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setType(getType_sword());
+        setType(new SwordType());
         setName("普通の剣");
         setAttackValue(1);
         setDescription("[" + getName() + "]\n 古くからある剣");

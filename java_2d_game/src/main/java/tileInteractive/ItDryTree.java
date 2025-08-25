@@ -1,5 +1,6 @@
 package tileInteractive;
 
+import entity.AxeType;
 import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;
@@ -26,7 +27,7 @@ public class ItDryTree extends InteractiveTile {
 
         boolean isCorrectItem = false;
 
-        if (entity.getCurrentWeapon().getType() == getType_axe()) {
+        if (entity.getCurrentWeapon().getType() instanceof AxeType) {
             isCorrectItem = true;
         }
         return isCorrectItem;

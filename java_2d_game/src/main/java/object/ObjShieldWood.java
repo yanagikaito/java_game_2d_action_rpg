@@ -1,6 +1,7 @@
 package object;
 
 import entity.Entity;
+import entity.ShieldType;
 import frame.FrameApp;
 import window.GameWindow;
 
@@ -15,7 +16,7 @@ public class ObjShieldWood extends Entity {
     public ObjShieldWood(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setType(getType_shield());
+        setType(new ShieldType());
         setName("木の盾");
         setDefenseValue(1);
         setDescription("[" + getName() + "]\n 木で,できた盾");

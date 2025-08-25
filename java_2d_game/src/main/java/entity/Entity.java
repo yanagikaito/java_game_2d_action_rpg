@@ -57,17 +57,7 @@ public abstract class Entity {
     private String name;
     private boolean invincible = false;
     private int invincibleCounter = 0;
-    private int type;
-    private final int type_player = 0;
-    private final int type_npc = 1;
-    private final int type_monster = 2;
-    private final int type_sword = 3;
-    private final int type_axe = 4;
-    private final int type_shield = 5;
-    private final int type_redPotion = 6;
-    private final int type_greenPotion = 7;
-    private final int type_pickupOnly = 8;
-    private final int type_bomb = 9;
+    private EntityType type;
     private int value = 1;
     private boolean attacking = false;
     private boolean alive = true;
@@ -183,7 +173,7 @@ public abstract class Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
-        if (this.type == type_monster && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
+        if (getType() instanceof MonsterType && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
             damagePlayer(attack);
             gameWindow.getPlayer().setInvincible(true);
         }
@@ -742,7 +732,7 @@ public abstract class Entity {
      * @throws IllegalStateException type フィールドが未設定の場合
      */
 
-    public int getType() {
+    public EntityType getType() {
         return type;
     }
 
@@ -753,7 +743,7 @@ public abstract class Entity {
      * @throws IllegalArgumentException type に負の値が渡された場合
      */
 
-    public void setType(int type) {
+    public void setType(EntityType type) {
         this.type = type;
     }
 
@@ -1267,16 +1257,6 @@ public abstract class Entity {
     }
 
     /**
-     * ピックアップ専用タイプを取得。
-     *
-     * @return type_pickupOnly ピックアップ専用を示すタイプ定数
-     */
-
-    public int getType_pickupOnly() {
-        return type_pickupOnly;
-    }
-
-    /**
      * 基本値を取得。
      *
      * @return value このエンティティの基本パラメータ値
@@ -1295,86 +1275,6 @@ public abstract class Entity {
 
     public void setValue(int value) {
         this.value = value;
-    }
-
-    /**
-     * 斧タイプ定数を取得。
-     *
-     * @return type_axe 斧を示すタイプ定数
-     */
-
-    public int getType_axe() {
-        return type_axe;
-    }
-
-    /**
-     * モンスタ―タイプ定数を取得。
-     *
-     * @return type_monster モンスターを示すタイプ定数
-     */
-
-    public int getType_monster() {
-        return type_monster;
-    }
-
-    /**
-     * プレイヤータイプ定数を取得。
-     *
-     * @return type_player プレイヤーを示すタイプ定数
-     */
-
-    public int getType_player() {
-        return type_player;
-    }
-
-    /**
-     * NPCタイプ定数を取得。
-     *
-     * @return type_npc NPCを示すタイプ定数
-     */
-
-    public int getType_npc() {
-        return type_npc;
-    }
-
-    /**
-     * 剣タイプ定数を取得。
-     *
-     * @return type_sword 剣を示すタイプ定数
-     */
-
-    public int getType_sword() {
-        return type_sword;
-    }
-
-    /**
-     * 盾タイプ定数を取得。
-     *
-     * @return type_shield 盾を示すタイプ定数
-     */
-
-    public int getType_shield() {
-        return type_shield;
-    }
-
-    /**
-     * 赤ポーションタイプ定数を取得。
-     *
-     * @return type_redPotion 赤ポーションを示すタイプ定数
-     */
-
-    public int getType_redPotion() {
-        return type_redPotion;
-    }
-
-    /**
-     * 緑ポーションタイプ定数を取得。
-     *
-     * @return type_greenPotion 緑ポーションを示すタイプ定数
-     */
-
-    public int getType_greenPotion() {
-        return type_greenPotion;
     }
 
     /**
@@ -1466,10 +1366,6 @@ public abstract class Entity {
 
     public void setPrice(int price) {
         this.price = price;
-    }
-
-    public int getType_bomb() {
-        return type_bomb;
     }
 
     /**
@@ -1658,7 +1554,7 @@ public abstract class Entity {
                 worldY > gameWindow.getPlayer().getWorldY() - gameWindow.getPlayer().getScreenY() &&
                 worldY < gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY()) {
 
-            if (type == type_monster && hpBarOn) {
+            if (getType() instanceof MonsterType && hpBarOn) {
 
                 double oneScale = (double) FrameApp.getTileSize() / maxLife;
                 double hpBarValue = oneScale * life;
