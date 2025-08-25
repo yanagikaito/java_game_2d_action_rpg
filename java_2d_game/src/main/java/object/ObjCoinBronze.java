@@ -1,6 +1,7 @@
 package object;
 
 import entity.Entity;
+import entity.PickupOnlyType;
 import frame.FrameApp;
 import window.GameWindow;
 
@@ -17,7 +18,7 @@ public class ObjCoinBronze extends Entity {
         super(gameWindow);
         this.gameWindow = gameWindow;
         setValue(1);
-        setType(getType_pickupOnly());
+        setType(new PickupOnlyType());
         setName("ブロンズコイン");
 
         try {

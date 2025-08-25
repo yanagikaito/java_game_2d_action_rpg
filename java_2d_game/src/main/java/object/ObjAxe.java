@@ -1,5 +1,6 @@
 package object;
 
+import entity.AxeType;
 import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;
@@ -17,7 +18,7 @@ public class ObjAxe extends Entity {
         super(gameWindow);
         this.gameWindow = gameWindow;
 
-        setType(getType_axe());
+        setType(new AxeType());
         setName("木の斧");
         setAttackValue(2);
         getAttackArea().width = 25;

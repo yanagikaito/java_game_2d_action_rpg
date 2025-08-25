@@ -1,6 +1,7 @@
 package monster;
 
 import entity.Entity;
+import entity.MonsterType;
 import frame.FrameApp;
 import object.ObjStone;
 import window.GameWindow;
@@ -30,7 +31,7 @@ public class MonGreenSlime extends Entity {
     public MonGreenSlime(GameWindow gameWindow) {
 
         super(gameWindow);
-        setType(getType_monster());
+        setType(new MonsterType());
         setName("Green Slime");
         setSpeed(1);
         setMaxLife(4);

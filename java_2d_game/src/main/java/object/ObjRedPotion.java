@@ -1,6 +1,7 @@
 package object;
 
 import entity.Entity;
+import entity.RedPotionType;
 import frame.FrameApp;
 import window.GameWindow;
 
@@ -18,7 +19,7 @@ public class ObjRedPotion extends Entity {
     public ObjRedPotion(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setType(getType_redPotion());
+        setType(new RedPotionType());
         setName("レッドポーション");
         setDescription("[" + getName() + "]\n 体力を2回復する");
         setPrice(10);

@@ -21,9 +21,7 @@ import ui.UI;
 import javax.swing.*;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
 
 import static frame.FrameApp.baseDisplay;
@@ -62,6 +60,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final int debugState = 5;
     private final int gameOverState = 6;
     private final int tradeState = 7;
+    private final int saveState = 8;
     private boolean onTransition = false;
     private boolean fadingOut = true;
     private float alpha = 0f;
@@ -71,6 +70,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private int currentMap = 1;
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
+    private Map<String, Boolean> mapFlags = new HashMap<>();
 
     /**
      * GameWindow のコンストラクタ。
@@ -844,5 +844,38 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public int getTradeState() {
         return tradeState;
+    }
+
+    public ArrayList<Entity> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(ArrayList<Entity> itemList) {
+        this.itemList = itemList;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    // マップフラグを上書きセット
+    public void setMapFlags(Map<String, Boolean> flags) {
+        // null対策してから代入するのが安全
+        if (flags == null) {
+            this.mapFlags.clear();
+        } else {
+            this.mapFlags.clear();
+            this.mapFlags.putAll(flags);
+        }
+    }
+
+    // ゲーム内から参照できるように getter も用意
+    public Map<String, Boolean> getMapFlags() {
+        return mapFlags;
+    }
+
+    // 例: マップフラグを個別に設定するヘルパー
+    public void setMapFlag(String name, boolean value) {
+        mapFlags.put(name, value);
     }
 }
