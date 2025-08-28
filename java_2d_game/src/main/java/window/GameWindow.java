@@ -385,6 +385,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         } else if (currentMap == TileManager.MEADOW_TILE_ID) {
 
+            Arrays.fill(npc, null);
             getKeyHandler().clearAllKeys();
             tileManager.loadMap(1);
             startMapTransition(2);
