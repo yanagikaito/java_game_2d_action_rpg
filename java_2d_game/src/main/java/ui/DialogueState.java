@@ -5,13 +5,13 @@ import key.KeyHandler;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class DialogueState implements TradeScreenState {
+public final class DialogueState implements TradeScreenState {
 
-    private final TradeScreenContext screenContext;
+    private final ScreenContext screenContext;
     private final String message;
     private final TradeScreenState returnState;
 
-    public DialogueState(TradeScreenContext context,
+    public DialogueState(ScreenContext context,
                          String message,
                          TradeScreenState returnState) {
         this.screenContext = context;

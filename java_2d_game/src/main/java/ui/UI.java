@@ -5,6 +5,7 @@ import frame.FrameApp;
 import npc.NpcMerChant;
 import object.*;
 import player.Player;
+import save.SaveManager;
 import window.GameWindow;
 
 import java.awt.*;
@@ -46,11 +47,11 @@ public class UI {
     private Entity npc;
     private int subState;
 
-    private final TradeScreenContext tradeCtx;
+    private final ScreenContext tradeCtx;
 
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        this.tradeCtx = new TradeScreenContext(gameWindow, this);
+        this.tradeCtx = new ScreenContext(gameWindow, this);
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
@@ -94,6 +95,7 @@ public class UI {
         int charState = gameWindow.getCharacterState();
         int gameOverState = gameWindow.getGameOverState();
         int tradeState = gameWindow.getTradeState();
+        int saveState = gameWindow.getSaveState();
 
         if (gameState == titleState) {
 
@@ -129,11 +131,54 @@ public class UI {
 
         } else if (gameState == tradeState) {
             drawTradeScreen(g2);
+
+        } else if (gameState == saveState) {
+            drawSaveScreen(g2);
         }
 
 
         if (messageOn) {
             drawMessage(g2);
+        }
+    }
+
+    private void drawSaveScreen(Graphics2D g2) {
+
+        // 背景を暗く
+        g2.setColor(new Color(0, 0, 0, 180));
+        g2.fillRect(0, 0, FrameApp.getScreenWidth(), FrameApp.getScreenHeight());
+
+        // セーブ中テキスト
+        g2.setFont(arial40);
+        g2.setColor(Color.white);
+        String text = "ゲームをセーブしますか？";
+        int x = getXForCenteredText(g2, text);
+        int y = FrameApp.getScreenHeight() / 2 - 40;
+
+        g2.drawString(text, x, y);
+
+        // オプション表示
+        g2.setFont(arial40);
+        text = "はい";
+        x = getXForCenteredText(g2, text);
+        y += 60;
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 0) {
+            g2.drawString(">", x - 40, y);
+            if (gameWindow.getKeyHandler().isPlayerEnter() == true) {
+                SaveManager.saveGame(1, gameWindow.getPlayer());
+                addMessage("セーブしました。");
+                subState = 1;
+                gameWindow.setGameState(gameWindow.getPlayState());
+            }
+        }
+
+        text = "いいえ";
+        x = getXForCenteredText(g2, text);
+        y += 45;
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 1) {
+            g2.drawString(">", x - 40, y);
         }
     }
 
@@ -156,7 +201,8 @@ public class UI {
         g2.drawString(text, x - 4, y - 4);
 
         g2.setFont(g2.getFont().deriveFont(50f));
-        text = "ゲーム開始";
+
+        text = "ニューゲーム";
         x = getXForCenteredText(g2, text);
         y += tileSize * 4;
         g2.drawString(text, x, y);
@@ -164,11 +210,19 @@ public class UI {
             g2.drawString(">", x - 40, y);
         }
 
-        text = "ゲーム終了";
+        text = "ゲームロード";
         x = getXForCenteredText(g2, text);
         y += 55;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 1) {
+            g2.drawString(">", x - 40, y);
+        }
+
+        text = "ゲーム終了";
+        x = getXForCenteredText(g2, text);
+        y += 55;
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 2) {
             g2.drawString(">", x - 40, y);
         }
     }

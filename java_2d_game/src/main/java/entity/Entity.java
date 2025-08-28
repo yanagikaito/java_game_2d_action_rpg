@@ -1637,4 +1637,8 @@ public abstract class Entity {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
 
     }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
+    }
 }

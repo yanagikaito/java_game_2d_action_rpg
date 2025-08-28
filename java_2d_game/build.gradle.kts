@@ -53,5 +53,10 @@ subprojects {
 
 tasks.named<JavaExec>("run") {
     workingDir = projectDir.resolve("/src/main/resources")
+    // 実行前に data/ フォルダを作成
+    doFirst {
+        file("data").mkdirs()
+    }
+
     jvmArgs("-Dfile.encoding=UTF-8")
 }

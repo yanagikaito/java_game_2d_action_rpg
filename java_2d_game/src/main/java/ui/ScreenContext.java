@@ -5,13 +5,14 @@ import window.GameWindow;
 
 import java.awt.*;
 
-public class TradeScreenContext {
+public final class ScreenContext {
+
     private TradeScreenState currentState;
     private final GameWindow gameWindow;
     private final UI ui;
     private final KeyHandler kh;
 
-    public TradeScreenContext(GameWindow gw, UI ui) {
+    public ScreenContext(GameWindow gw, UI ui) {
         this.gameWindow = gw;
         this.ui = ui;
         this.kh = gw.getKeyHandler();

@@ -9,13 +9,13 @@ import java.util.List;
 
 import static ui.TradeOptionConstants.*;
 
-public class MenuState implements TradeScreenState {
+public final class MenuState implements TradeScreenState {
 
-    private final TradeScreenContext screenContext;
+    private final ScreenContext screenContext;
     private final List<String> options = List.of("買う", "売る", "去る");
     private boolean skipNextEnter = true;
 
-    public MenuState(TradeScreenContext screenContext) {
+    public MenuState(ScreenContext screenContext) {
         this.screenContext = screenContext;
     }
 
