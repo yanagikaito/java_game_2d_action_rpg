@@ -13,6 +13,7 @@ import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
 import key.KeyHandler;
+import save.LoadManager;
 import sound.SoundManager;
 import tile.TileManager;
 import tileInteractive.InteractiveTile;
@@ -21,6 +22,7 @@ import ui.UI;
 import javax.swing.*;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 
@@ -77,6 +79,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
      */
 
     protected GameWindow() {
+        try {
+            db.DbManager.initSchema();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Failed to initialize the database");
+        }
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
@@ -113,20 +121,27 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     /**
-     * ゲームオーバー後のリトライ処理を行う。
-     * プレイヤーやエンティティを初期位置・初期状態に戻す。
+     * ゲームオーバー後のリトライ処理。
+     * セーブデータがあればそこから再開、なければ新規ゲーム。
      */
-
     public void retry() {
 
-        getKeyHandler().clearAllKeys();
-        getPlayer().setDefaultPositions();
-        getPlayer().restoreLifeAndMan();
-        getPlayer().setItems();
-        getPlayer().setCoin(500);
-        getPlayer().setMoving(false);
-        assetSetter.setNPC();
-        assetSetter.setMonster();
+        if (LoadManager.hasSaveData(1)) {
+
+            // セーブデータからロード
+            Entity loadedPlayer = LoadManager.loadPlayer(1, this);
+            if (loadedPlayer != null) {
+                setPlayer((Player) loadedPlayer);
+                setGameState(playState);
+                System.out.println("Resuming from Map" + loadedPlayer.getMapId());
+                return;
+            }
+        }
+
+        // セーブデータなし or ロード失敗 → 新規ゲーム
+        restart();
+        setGameState(playState);
+        System.out.println("Starting a new game");
     }
 
     /**
@@ -364,6 +379,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldX(tileSize * 29);
             getPlayer().setWorldY(tileSize * 14);
             assetSetter.setMerchant();
+            assetSetter.setNpcSave();
 
             repaint();
 
@@ -372,8 +388,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getKeyHandler().clearAllKeys();
             tileManager.loadMap(1);
             startMapTransition(2);
-            getPlayer().setWorldX(tileSize * 33);
-            getPlayer().setWorldY(tileSize * 12);
+            getPlayer().setWorldX(tileSize * 23);
+            getPlayer().setWorldY(tileSize * 10);
 
             assetSetter.setNPC();
             assetSetter.setMonster();
@@ -877,5 +893,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
     // 例: マップフラグを個別に設定するヘルパー
     public void setMapFlag(String name, boolean value) {
         mapFlags.put(name, value);
+    }
+
+    public int getSaveState() {
+        return saveState;
     }
 }

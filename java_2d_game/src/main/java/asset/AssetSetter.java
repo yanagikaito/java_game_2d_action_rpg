@@ -5,6 +5,7 @@ import frame.FrameApp;
 import monster.MonGreenSlime;
 import npc.NpcMerChant;
 import npc.NpcOldMan;
+import npc.NpcSave;
 import object.ObjAxe;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
@@ -33,6 +34,15 @@ public class AssetSetter {
         npcMerChant.setWorldY(FrameApp.getTileSize() * 11);
         Entity[] npcArray = gameWindow.getNPC();
         npcArray[0] = npcMerChant;
+        gameWindow.setNPC(npcArray);
+    }
+
+    public void setNpcSave() {
+        NpcSave npcSave = new NpcSave(gameWindow);
+        npcSave.setWorldX(FrameApp.getTileSize() * 27);
+        npcSave.setWorldY(FrameApp.getTileSize() * 11);
+        Entity[] npcArray = gameWindow.getNPC();
+        npcArray[1] = npcSave;
         gameWindow.setNPC(npcArray);
     }
 

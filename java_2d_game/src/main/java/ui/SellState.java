@@ -10,11 +10,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class SellState implements TradeScreenState {
+public final class SellState implements TradeScreenState {
 
-    private final TradeScreenContext screenContext;
+    private final ScreenContext screenContext;
 
-    public SellState(TradeScreenContext screenContext) {
+    public SellState(ScreenContext screenContext) {
         this.screenContext = screenContext;
     }
 

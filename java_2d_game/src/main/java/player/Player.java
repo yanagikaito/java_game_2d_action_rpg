@@ -4,6 +4,7 @@ import entity.*;
 import frame.FrameApp;
 import key.KeyHandler;
 import npc.NpcMerChant;
+import npc.NpcSave;
 import object.*;
 import window.GameWindow;
 
@@ -50,6 +51,7 @@ public class Player extends Entity {
     private final int playerSolidAreaY = 1;
     private static final int FIREBALL_MANA_COST = 20;
     private int talkNpcIndex = -1;
+    private boolean loaded = false;
 
     /**
      * プレイヤーを初期化するコンストラクタ。
@@ -62,6 +64,7 @@ public class Player extends Entity {
         super(gameWindow);
         this.gameWindow = gameWindow;
         this.keyHandler = keyHandler;
+        initializeDefaultStats();
 
         screenX = FrameApp.getScreenWidth() / 2 - (FrameApp.getTileSize() / 2);
         screenY = FrameApp.getScreenHeight() / 2 - (FrameApp.getTileSize() / 2);
@@ -79,11 +82,15 @@ public class Player extends Entity {
         setAttackArea(new Rectangle());
 //        getAttackArea().width = 36;
 //        getAttackArea().height = 36;
-
-        setDefaultValues();
         loadPlayerImages();
         loadAllAttackSprites();
         setItems();
+    }
+
+    private void initializeDefaultStats() {
+        if (loaded) return; // 🔥 既にロード済みならスキップ
+
+        setDefaultValues();
     }
 
     /**
@@ -472,6 +479,7 @@ public class Player extends Entity {
 
         int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         interactNPC(npcIndex);
+
         if (npcIndex != 999) {
             Entity e = gameWindow.getNPC()[npcIndex];
             if (e instanceof NpcMerChant) {
@@ -479,6 +487,10 @@ public class Player extends Entity {
                 talkNpcIndex = npcIndex;
                 gameWindow.setGameState(gameWindow.getDialogueState());
                 gameWindow.getUi().addDialogue(((NpcMerChant) e).getNextDialogue());
+            } else if (e instanceof NpcSave) {
+                talkNpcIndex = npcIndex;
+                gameWindow.setGameState(gameWindow.getDialogueState());
+                gameWindow.getUi().addDialogue(((NpcSave) e).getNextDialogue());
             }
         }
 
@@ -1256,5 +1268,9 @@ public class Player extends Entity {
 
     public void setTalkNpcIndex(int talkNpcIndex) {
         this.talkNpcIndex = talkNpcIndex;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
     }
 }
