@@ -30,4 +30,13 @@ public class ObjSwordNormal extends Entity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Entity copy() {
+        return new ObjSwordNormal(gameWindow);
+    }
+
+    public int getPrice() {
+        return 100;
+    }
 }

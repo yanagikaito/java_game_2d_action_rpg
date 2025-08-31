@@ -95,6 +95,7 @@ public abstract class Entity {
     private final int maxInventorySize;
     protected int mapId;
     private int price;
+    protected int count;
 
     /**
      * Entity を初期化。
@@ -132,6 +133,7 @@ public abstract class Entity {
         this.coin = 0;
         this.inventory = new ArrayList<>();
         this.maxInventorySize = 20;
+        this.count = 1;
     }
 
     /**
@@ -1343,7 +1345,16 @@ public abstract class Entity {
      */
 
     public ArrayList<Entity> getInventory() {
+        System.out.println("getInventory: " + (inventory == null ? "null" : inventory.size() + " items"));
         return inventory;
+    }
+
+    public ArrayList<Entity> getShopItems() {
+        return new ArrayList<>(); // デフォルトは空
+    }
+
+    public Entity copy() {
+        return null;
     }
 
     /**
@@ -1640,5 +1651,9 @@ public abstract class Entity {
 
     public void setMapId(int mapId) {
         this.mapId = mapId;
+    }
+
+    public int getCount() {
+        return count;
     }
 }

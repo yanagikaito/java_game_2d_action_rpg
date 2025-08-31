@@ -3,16 +3,23 @@ package ui;
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
+import npc.NpcMerChant;
+import object.ObjGreenPotion;
+import object.ObjRedPotion;
+import object.ObjShieldWood;
+import object.ObjSwordNormal;
 import player.Player;
 import window.GameWindow;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class BuyState implements TradeScreenState {
 
     private final ScreenContext screenContext;
+    private Entity shopEntity;
 
     public BuyState(ScreenContext screenContext) {
         this.screenContext = screenContext;
@@ -44,37 +51,72 @@ public final class BuyState implements TradeScreenState {
     @Override
     public void draw(Graphics2D g2) {
         UI ui = screenContext.ui();
-        GameWindow gw = screenContext.gw();
+        GameWindow gameWindow = screenContext.gw();
         int tileSize = FrameApp.getTileSize();
+        Entity npc = ui.getNpc();
 
-        // インベントリ描画
-        ui.drawInventory(g2, gw.getPlayer(), false);
-        ui.drawInventory(g2, ui.getNpc(), true);
+        if (npc == null) return;
+
+        ArrayList<Entity> shopItems;
+
+        if (npc instanceof NpcMerChant) {
+            shopItems = npc.getShopItems();
+        } else {
+            shopItems = createDefaultShopItems();
+        }
+
+        this.shopEntity = new Entity(screenContext.gw()) {
+            @Override
+            public ArrayList<Entity> getInventory() {
+                return shopItems;
+            }
+        };
+
+        ui.drawInventory(g2, screenContext.gw().getPlayer(), false);
+        ui.drawInventory(g2, this.shopEntity, true);
 
         // メッセージキーウィンドウ
         drawMessageWindow(g2, tileSize);
 
         // 所持金ウィンドウ
-        drawPlayerCoinWindow(g2, tileSize, gw.getPlayer().getCoin());
+        drawPlayerCoinWindow(g2, tileSize, gameWindow.getPlayer().getCoin());
 
         // 選択中アイテムの価格ウィンドウ
-        drawPriceWindow(g2, tileSize, ui, gw.getPlayer().getInventory());
+        drawPriceWindow(g2, tileSize, ui, gameWindow.getPlayer().getInventory());
+    }
+
+    private ArrayList<Entity> createDefaultShopItems() {
+
+        GameWindow gw = screenContext.gw();
+        ArrayList<Entity> items = new ArrayList<>();
+        items.add(new ObjSwordNormal(gw));
+        items.add(new ObjShieldWood(gw));
+        items.add(new ObjRedPotion(gw));
+        items.add(new ObjGreenPotion(gw));
+        return items;
     }
 
     private void attemptPurchase() {
+
         UI ui = screenContext.ui();
         GameWindow gameWindow = screenContext.gw();
         KeyHandler keyHandler = screenContext.kh();
         Player player = gameWindow.getPlayer();
 
+        if (shopEntity == null) return;
+        System.out.println("shopEntity = " + shopEntity);
+
+        // shopEntity のインベントリを使う
+        List<Entity> shopInv = shopEntity.getInventory();
+
         // スロット位置 → インデックス取得
         int row = ui.getNpcSlotRow();
         int col = ui.getNpcSlotCol();
         int idx = ui.getItemIndexOnSlot(row, col);
-        List<Entity> shopInv = ui.getNpc().getInventory();
 
         // 範囲外チェック
         if (idx < 0 || idx >= shopInv.size()) {
+            System.err.println("attemptPurchase: item is null at index " + idx);
             return;
         }
 
@@ -100,7 +142,7 @@ public final class BuyState implements TradeScreenState {
             );
         } else {
             player.setCoin(player.getCoin() - price);
-            player.getInventory().add(item);
+            player.getInventory().add(item.copy());
         }
     }
 

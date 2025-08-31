@@ -5,7 +5,6 @@ import npc.NpcMerChant;
 import npc.NpcSave;
 import player.Player;
 import save.LoadManager;
-import save.SaveManager;
 import window.GameWindow;
 
 import java.awt.event.KeyEvent;
@@ -217,7 +216,7 @@ public class KeyHandler implements KeyListener {
                                     ", Inventory=" + gameWindow.getPlayer().getInventory().size());
                         } else {
                             // セーブデータなしのメッセージ
-                            gameWindow.getUi().addMessage("No save data found.");
+                            gameWindow.getUi().addMessage("セーブデータなし");
                         }
                     } else if (getCommandNum() == 2) {
                         System.exit(0);

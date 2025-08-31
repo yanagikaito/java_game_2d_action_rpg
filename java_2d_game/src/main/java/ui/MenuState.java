@@ -1,5 +1,6 @@
 package ui;
 
+import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
 
