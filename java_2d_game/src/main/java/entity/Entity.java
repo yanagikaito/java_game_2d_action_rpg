@@ -1345,7 +1345,16 @@ public abstract class Entity {
      */
 
     public ArrayList<Entity> getInventory() {
+        System.out.println("getInventory: " + (inventory == null ? "null" : inventory.size() + " items"));
         return inventory;
+    }
+
+    public ArrayList<Entity> getShopItems() {
+        return new ArrayList<>(); // デフォルトは空
+    }
+
+    public Entity copy() {
+        return null;
     }
 
     /**

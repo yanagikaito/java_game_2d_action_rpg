@@ -165,10 +165,9 @@ public class UI {
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 0) {
             g2.drawString(">", x - 40, y);
-            if (gameWindow.getKeyHandler().isPlayerEnter() == true) {
+            if (gameWindow.getKeyHandler().isPlayerEnter()) {
                 SaveManager.saveGame(1, gameWindow.getPlayer());
                 addMessage("セーブしました。");
-                subState = 1;
                 gameWindow.setGameState(gameWindow.getPlayState());
             }
         }
@@ -471,6 +470,7 @@ public class UI {
     public void drawInventory(Graphics2D g2, Entity entity, boolean cursor) {
 
         if (entity == null || entity.getInventory() == null) return;
+        System.out.println("NPC Inventory size = " + entity.getInventory().size());
 
         int frameX = 0;
         int frameY = 0;

@@ -3,6 +3,7 @@ package npc;
 import entity.Entity;
 import frame.FrameApp;
 import object.*;
+import ui.ScreenContext;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -55,11 +56,21 @@ public class NpcMerChant extends Entity {
 
     public void setItems() {
 
+        System.out.println("🔧 NpcMerChant: setItems() called");
+
         ArrayList<Entity> items = new ArrayList<>();
+
+        System.out.println("gameWindow = " + gameWindow);
+
         items.add(new ObjSwordNormal(gameWindow));
         items.add(new ObjShieldWood(gameWindow));
         items.add(new ObjRedPotion(gameWindow));
         items.add(new ObjGreenPotion(gameWindow));
+
+        System.out.println("Items created: " + items.size());
+        for (Entity item : items) {
+            System.out.println(" - " + item + " | type=" + item.getType());
+        }
 
         setInventory(items);
     }
@@ -83,6 +94,16 @@ public class NpcMerChant extends Entity {
             resetDialogue();
             return null;
         }
+    }
+
+    @Override
+    public ArrayList<Entity> getShopItems() {
+        ArrayList<Entity> items = new ArrayList<>();
+        items.add(new ObjSwordNormal(gameWindow));
+        items.add(new ObjShieldWood(gameWindow));
+        items.add(new ObjRedPotion(gameWindow));
+        items.add(new ObjGreenPotion(gameWindow));
+        return items;
     }
 
     public void resetDialogue() {

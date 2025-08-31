@@ -41,11 +41,16 @@ public class ObjRedPotion extends Entity {
         g2.drawImage(this.getImage(), screenX, screenY, null);
     }
 
+    @Override
+    public Entity copy() {
+        return new ObjRedPotion(gameWindow);
+    }
+
     public int getHealAmount() {
         return healAmount;
     }
 
-    public int getStackSize() {
-        return stackSize;
+    public int getPrice() {
+        return 10;
     }
 }

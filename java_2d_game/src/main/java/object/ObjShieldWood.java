@@ -30,4 +30,13 @@ public class ObjShieldWood extends Entity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Entity copy() {
+        return new ObjShieldWood(gameWindow);
+    }
+
+    public int getPrice() {
+        return 75;
+    }
 }

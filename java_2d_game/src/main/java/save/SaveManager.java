@@ -96,6 +96,7 @@ public class SaveManager {
     }
 
     private static void saveInventory(Connection conn, int saveId, List<ItemSaveData> items) throws SQLException {
+
         String sql = "INSERT INTO inventory_items (save_id, slot, type_id, count) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             for (ItemSaveData item : items) {
