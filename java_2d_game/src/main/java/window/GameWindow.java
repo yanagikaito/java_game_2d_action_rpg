@@ -79,12 +79,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
      */
 
     protected GameWindow() {
-        try {
-            db.DbManager.initSchema();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("Failed to initialize the database");
-        }
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
