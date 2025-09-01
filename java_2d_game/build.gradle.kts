@@ -1,7 +1,15 @@
 plugins {
-    `java-library`
-    application
+    id("java")
+    id("application")
 }
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = application.mainClass
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 application {
     mainClass.set("game.Main")
 }
@@ -52,11 +60,6 @@ subprojects {
 }
 
 tasks.named<JavaExec>("run") {
-    workingDir = projectDir.resolve("/src/main/resources")
-    // 実行前に data/ フォルダを作成
-    doFirst {
-        file("data").mkdirs()
-    }
-
+    workingDir = projectDir.resolve("src/main/resources")
     jvmArgs("-Dfile.encoding=UTF-8")
 }
