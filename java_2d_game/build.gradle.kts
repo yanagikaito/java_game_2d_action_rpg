@@ -1,17 +1,21 @@
 plugins {
     id("java")
     id("application")
-}
-
-tasks.jar {
-    manifest {
-        attributes["Main-Class"] = application.mainClass
-    }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    id("com.gradleup.shadow") version "9.1.0"
 }
 
 application {
     mainClass.set("game.Main")
+}
+
+tasks.shadowJar {
+    archiveClassifier.set("all") // 出力名に -all をつける
+    manifest {
+        attributes["Main-Class"] = application.mainClass
+    }
+    mergeServiceFiles() // META-INF/services をマージ（H2などに必要）
+    // H2のパッケージをリネームして衝突を防ぐ
+    relocate("org.h2", "shaded.org.h2")
 }
 
 group = "org.example"
