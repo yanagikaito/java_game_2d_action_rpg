@@ -21,6 +21,7 @@ public class TileManager {
     private int[][] mapTileNum;
 
     public static final int MEADOW_TILE_ID = 1;
+    public static final int TREE_TILE_ID = 4;
     public static final int HUT_TILE_ID = 6;
 
     public TileManager(GameWindow gameWindow) {
@@ -29,6 +30,22 @@ public class TileManager {
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
+    }
+
+    /**
+     * 指定されたタイルが障害物かどうかを返す
+     *
+     * @param x タイルのX座標
+     * @param y タイルのY座標
+     * @return 障害物なら true
+     */
+
+    public boolean isObstacle(int x, int y) {
+        if (x < 0 || x >= FrameApp.getMaxWorldRow() || y < 0 || y >= FrameApp.getMaxWorldCol()) {
+            return true; // マップ外は通行不可（壁扱い）
+        }
+        int tileId = mapTileNum[y][x];
+        return tileId == TREE_TILE_ID; // 壁のIDと一致すれば障害物
     }
 
     private void loadTileImages() {

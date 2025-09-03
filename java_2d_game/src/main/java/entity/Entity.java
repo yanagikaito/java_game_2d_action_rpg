@@ -166,7 +166,7 @@ public abstract class Entity {
         if (gameWindow.getCollisionChecker() == null) {
             throw new IllegalStateException("CollisionChecker の初期化が行われていない");
         }
-        setAction();
+        setAction(); // 方向を設定（フロー・フィールドで決定）
 
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
@@ -181,7 +181,7 @@ public abstract class Entity {
         }
 
         if (!isCollision()) {
-            move();
+            move(); // ここで move() が呼び出される
             collisionCooldown = 0;
         } else {
             if (collisionCooldown == 0) {
@@ -192,6 +192,7 @@ public abstract class Entity {
             }
         }
 
+        // スプライトアニメーション
         setSpriteCounter(getSpriteCounter() + 1);
         if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
             setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
@@ -199,7 +200,7 @@ public abstract class Entity {
         }
 
         pixelCounter += getSpeed();
-        if (pixelCounter == FrameApp.getTileSize()) {
+        if (pixelCounter >= FrameApp.getTileSize()) {
             pixelCounter = 0;
         }
 
@@ -249,25 +250,23 @@ public abstract class Entity {
     }
 
     /**
-     * 現在の向き(getDirection())に応じて
-     * ワールド上の座標を移動させる。
-     *
-     * @throws NullPointerException direction 取得時に問題がある場合
+     * 現在の方向に応じて、エンティティを移動させる。
      */
 
     protected void move() {
+
         switch (getDirection()) {
             case "up":
-                setWorldY(getWorldY() - getSpeed());
+                worldY -= getSpeed();
                 break;
             case "down":
-                setWorldY(getWorldY() + getSpeed());
+                worldY += getSpeed();
                 break;
             case "left":
-                setWorldX(getWorldX() - getSpeed());
+                worldX -= getSpeed();
                 break;
             case "right":
-                setWorldX(getWorldX() + getSpeed());
+                worldX += getSpeed();
                 break;
         }
     }

@@ -1,7 +1,6 @@
 package canvas;
 
 import core.Node;
-import core.PathFinder;
 import db.DbManager;
 import frame.EditMode;
 
@@ -70,7 +69,6 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         Node s = grid[start.y][start.x];
         Node g = grid[goal.y][goal.x];
 
-        this.path = new PathFinder(grid).findPath(s, g);
         repaint();
     }
 
@@ -83,7 +81,7 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
                 boolean walkable = !blocks[r][c];
-                grid[r][c] = new Node(c, r, walkable);
+                grid[r][c] = new Node(c, r);
             }
         }
         return grid;
@@ -156,6 +154,7 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
     /**
      * マウスクリックで Start/Goal/障害物 設定
      */
+
     private class CanvasMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
@@ -181,6 +180,7 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
      * @param pathId 経路ID
      * @param path   保存する経路（Nodeのリスト）
      */
+
     public void savePathToDb(int mapId, int pathId, List<Node> path) {
         String deleteSql = "DELETE FROM map_path WHERE map_id=? AND path_id=?";
         String insertSql = "INSERT INTO map_path(map_id,path_id,step,x,y) VALUES(?,?,?,?,?)";
@@ -228,7 +228,7 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
 
         List<Point> points = db.PathManager.loadPath(mapId, pathId);
         this.path = points.stream()
-                .map(p -> new Node(p.x, p.y, true))
+                .map(p -> new Node(p.x, p.y))
                 .toList();
 
         System.out.println(">> Loaded path: " + points);

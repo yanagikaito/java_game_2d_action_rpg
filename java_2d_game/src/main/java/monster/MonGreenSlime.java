@@ -14,6 +14,10 @@ import java.util.Random;
 
 public class MonGreenSlime extends Entity {
 
+    private core.PathFinder pathfinder;
+    private core.Node[][] grid;
+    private int goalX, goalY;
+    private boolean flowFieldInitialized = false;
     private static final int ACTION_LOCK_THRESHOLD = 180;
     private static final int MAX_RANDOM_VALUE = 100;
     private static final int THRESHOLD_UP = 25;
@@ -80,23 +84,68 @@ public class MonGreenSlime extends Entity {
 
         updateMonsterInvincibility();
 
-        actionLockCounter++;
-
-        if (actionLockCounter >= ACTION_LOCK_THRESHOLD) {
-            chooseNewDirection();
-            actionLockCounter = 0;
+        // フロー・フィールドの初期化（1回だけ）
+        if (!flowFieldInitialized) {
+            initializeFlowField();
+            flowFieldInitialized = true;
         }
 
+        // ゴール（プレイヤー）の位置を取得
+        goalX = getGameWindow().getPlayer().getWorldX() / FrameApp.getTileSize();
+        goalY = getGameWindow().getPlayer().getWorldY() / FrameApp.getTileSize();
+
+        // 統合フィールドを再計算（プレイヤーが動いたら）
+        pathfinder.calculateIntegrationField(goalX, goalY);
+
+        // 現在の位置から進むべき方向を取得
+        int currentX = getWorldX() / FrameApp.getTileSize();
+        int currentY = getWorldY() / FrameApp.getTileSize();
+
+        currentX = Math.max(0, Math.min(currentX, pathfinder.getWidth() - 1));
+        currentY = Math.max(0, Math.min(currentY, pathfinder.getHeight() - 1));
+
+        int dir = pathfinder.getMoveDirection(currentX, currentY);
+
+        // 方向に応じて移動
+        switch (dir) {
+            case 0 -> setDirection("up");
+            case 1 -> setDirection("right");
+            case 2 -> setDirection("down");
+            case 3 -> setDirection("left");
+        }
+
+        // 射撃の処理は残す
         if (shotAvailableCounter < ROCK_COOLDOWN_FRAMES) {
             shotAvailableCounter++;
         }
         if (shotAvailableCounter >= ROCK_COOLDOWN_FRAMES) {
-            int i = random.nextInt(MAX_RANDOM_VALUE) + 1;
+            int i = random.nextInt(100) + 1;
             if (i < 30) {
                 shootRandomStone();
                 shotAvailableCounter = 0;
             }
         }
+    }
+
+    private void initializeFlowField() {
+
+        int mapWidth = FrameApp.getMaxWorldRow();
+        System.out.println(mapWidth);
+        int mapHeight = FrameApp.getMaxWorldCol();
+        System.out.println(mapHeight);
+
+        // グリッドの作成
+        grid = new core.Node[mapWidth][mapHeight];
+        for (int x = 0; x < mapWidth; x++) {
+            for (int y = 0; y < mapHeight; y++) {
+                grid[x][y] = new core.Node(x, y);
+                // 壁の位置を設定（必要に応じて）
+                grid[x][y].walkable = !getGameWindow().getTileManager().isObstacle(x, y);
+            }
+        }
+
+        // パスファインダーの初期化
+        pathfinder = new core.PathFinder(grid);
     }
 
     private void chooseNewDirection() {
