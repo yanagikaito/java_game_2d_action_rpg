@@ -35,6 +35,7 @@ repositories {
 dependencies {
     implementation(project(":db"))
     implementation(project(":data"))
+    implementation(project(":pathfinding_editor"))
     implementation("com.h2database:h2:2.2.224")
 }
 
