@@ -88,7 +88,7 @@ public class Player extends Entity {
     }
 
     private void initializeDefaultStats() {
-        if (loaded) return; // 🔥 既にロード済みならスキップ
+        if (loaded) return;
 
         setDefaultValues();
     }
