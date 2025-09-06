@@ -1556,49 +1556,60 @@ public abstract class Entity {
             image = sprites[dirIndex][getSpriteNum() - 1];
         }
 
+        // image が null なら即リターン
+        if (image == null) {
+            return;
+        }
+
+        // null チェック後に初めてサイズを取得
+        int spriteW = image.getWidth();
+        int spriteH = image.getHeight();
+
         int screenX = worldX - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
         int screenY = worldY - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
-        if (worldX > gameWindow.getPlayer().getWorldX() - gameWindow.getPlayer().getScreenX() &&
-                worldX < gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX() &&
-                worldY > gameWindow.getPlayer().getWorldY() - gameWindow.getPlayer().getScreenY() &&
-                worldY < gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY()) {
+        // 画面外判定
+        int canvasW = gameWindow.getWidth();
+        int canvasH = gameWindow.getHeight();
+        if (screenX + spriteW < 0 || screenX > canvasW
+                || screenY + spriteH < 0 || screenY > canvasH) {
+            return;
+        }
 
-            if (getType() instanceof MonsterType && hpBarOn) {
+        if (getType() instanceof MonsterType && hpBarOn) {
 
-                double oneScale = (double) FrameApp.getTileSize() / maxLife;
-                double hpBarValue = oneScale * life;
+            double oneScale = (double) FrameApp.getTileSize() / maxLife;
+            double hpBarValue = oneScale * life;
 
-                g2.setColor(new Color(35, 35, 35));
-                g2.fillRect(screenX + 4, screenY - 21, FrameApp.getTileSize(), 12);
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(screenX + 4, screenY - 21, FrameApp.getTileSize(), 12);
 
-                g2.setColor(new Color(255, 0, 30));
-                g2.fillRect(screenX + 5, screenY - 20, (int) hpBarValue, 10);
+            g2.setColor(new Color(255, 0, 30));
+            g2.fillRect(screenX + 5, screenY - 20, (int) hpBarValue, 10);
 
-                hpBarCounter++;
+            hpBarCounter++;
 
-                if (hpBarCounter > 600) {
-                    hpBarCounter = 0;
-                    hpBarOn = false;
-                }
-            }
-
-            if (getInvincible()) {
-                hpBarOn = true;
+            if (hpBarCounter > 600) {
                 hpBarCounter = 0;
-                changeAlpha(g2, 0.4f);
-            } else {
-                changeAlpha(g2, 1F);
+                hpBarOn = false;
             }
+        }
 
-            if (getDying()) {
-                dyingAnimation(g2);
-            }
-
-            g2.drawImage(image, screenX, screenY, null);
-
+        if (getInvincible()) {
+            hpBarOn = true;
+            hpBarCounter = 0;
+            changeAlpha(g2, 0.4f);
+        } else {
             changeAlpha(g2, 1F);
         }
+
+        if (getDying()) {
+            dyingAnimation(g2);
+        }
+
+        g2.drawImage(image, screenX, screenY, null);
+
+        changeAlpha(g2, 1F);
     }
 
     /**
