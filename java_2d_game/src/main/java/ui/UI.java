@@ -1,6 +1,7 @@
 package ui;
 
 import entity.Entity;
+import entity.EntityType;
 import frame.FrameApp;
 import npc.NpcMerChant;
 import object.*;
@@ -509,6 +510,14 @@ public class UI {
         int cursorWidth = tileSize;
         int cursorHeight = tileSize;
 
+        // ハイライト用ID取得
+        EntityType wId = entity.getCurrentWeapon() != null ? entity.getCurrentWeapon().getType() : null;
+        EntityType sId = entity.getCurrentShield() != null ? entity.getCurrentShield().getType() : null;
+
+        // “先頭だけ”ハイライト済みフラグ
+        boolean weaponHighlighted = false;
+        boolean shieldHighlighted = false;
+
         if (cursor) {
             g2.setColor(Color.WHITE);
             g2.setStroke(new BasicStroke(3));
@@ -518,12 +527,17 @@ public class UI {
         List<Entity> inv = entity.getInventory();
         for (int i = 0; i < inv.size(); i++) {
             Entity item = inv.get(i);
+            EntityType type = item.getType();
 
-            // 装備中のアイテムは背景色を変える
-            if (item == entity.getCurrentWeapon()
-                    || item == entity.getCurrentShield()) {
+            // まだハイライトしておらず、かつ装備中のTypeと一致するなら
+            if (!weaponHighlighted && wId != null && type.equals(wId)) {
                 g2.setColor(new Color(240, 190, 90));
                 g2.fillRoundRect(slotX, slotY, tileSize, tileSize, 10, 10);
+                weaponHighlighted = true;
+            } else if (!shieldHighlighted && sId != null && type.equals(sId)) {
+                g2.setColor(new Color(240, 190, 90));
+                g2.fillRoundRect(slotX, slotY, tileSize, tileSize, 10, 10);
+                shieldHighlighted = true;
             }
 
             g2.drawImage(item.getImage(), slotX, slotY, tileSize, tileSize, null);
