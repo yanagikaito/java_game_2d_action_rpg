@@ -63,7 +63,6 @@ public class ItDryTree extends InteractiveTile {
         return maxLife;
     }
 
-    @Override
     public void draw(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();

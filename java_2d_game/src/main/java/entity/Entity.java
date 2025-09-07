@@ -36,9 +36,6 @@ public abstract class Entity {
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
-    private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
-    private static final String[] AXE_DIRECTIONS = {"axeUp", "axeDown", "axeLeft", "axeRight"};
-    private static final String[] FIREBALL_DIRECTIONS = {"fireballUp", "fireballDown", "fireballLeft", "fireballRight"};
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -79,7 +76,6 @@ public abstract class Entity {
     private int attackValue;
     private int defenseValue;
     private boolean respawning = false;
-    private boolean visible = false;
     private String description = "";
     private int maxMana;
     private int mana;
@@ -166,7 +162,8 @@ public abstract class Entity {
         if (gameWindow.getCollisionChecker() == null) {
             throw new IllegalStateException("CollisionChecker の初期化が行われていない");
         }
-        setAction(); // 方向を設定（フロー・フィールドで決定）
+        // 方向を設定（フロー・フィールドで決定）
+        setAction();
 
         setCollision(false);
         gameWindow.getCollisionChecker().checkTile(this);
@@ -181,7 +178,7 @@ public abstract class Entity {
         }
 
         if (!isCollision()) {
-            move(); // ここで move() が呼び出される
+            move();
             collisionCooldown = 0;
         } else {
             if (collisionCooldown == 0) {

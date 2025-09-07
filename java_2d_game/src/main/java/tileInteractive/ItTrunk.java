@@ -35,7 +35,6 @@ public class ItTrunk extends InteractiveTile {
         setSolidAreaDefaultY(getSolidArea().y);
     }
 
-    @Override
     public void draw(Graphics2D g2) {
 
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
