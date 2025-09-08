@@ -37,8 +37,9 @@ public class MonGreenSlime extends Entity {
         super(gameWindow);
         setType(new MonsterType());
         setName("Green Slime");
-        setSpeed(1);
-        setMaxLife(4);
+        setDefaultSpeed(1);
+        setSpeed(getDefaultSpeed());
+        setMaxLife(15);
         setLife(getMaxLife());
         setAttack(5);
         setDefense(0);

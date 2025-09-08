@@ -20,6 +20,7 @@ public abstract class Entity {
     private int width;
     private int height;
     private int speed;
+    private int defaultSpeed;
     private String direction;
     private String attackDirection;
     private String axeDirection;
@@ -45,6 +46,7 @@ public abstract class Entity {
     private static final int THRESHOLD_DOWN = 50;
     private static final int THRESHOLD_LEFT = 75;
     private int pixelCounter = 0;
+    private int knockBackCounter = 0;
     private int actionLockCounter = 0;
     private static final int COLLISION_COOLDOWN_FRAMES = 30;
     private int collisionCooldown = 0;
@@ -76,6 +78,7 @@ public abstract class Entity {
     private int attackValue;
     private int defenseValue;
     private boolean respawning = false;
+    private boolean knockBack = false;
     private String description = "";
     private int maxMana;
     private int mana;
@@ -162,30 +165,53 @@ public abstract class Entity {
         if (gameWindow.getCollisionChecker() == null) {
             throw new IllegalStateException("CollisionChecker の初期化が行われていない");
         }
-        // 方向を設定（フロー・フィールドで決定）
-        setAction();
 
-        setCollision(false);
-        gameWindow.getCollisionChecker().checkTile(this);
-        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
-        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
-        boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
+        if (knockBack == true) {
 
-        if (getType() instanceof MonsterType && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
-            damagePlayer(attack);
-            gameWindow.getPlayer().setInvincible(true);
-        }
+            checkCollision();
+            if (collision == true) {
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            } else if (collision == false) {
+                switch (gameWindow.getPlayer().getDirection()) {
+                    case "up":
+                        worldY -= getSpeed();
+                        break;
+                    case "down":
+                        worldY += getSpeed();
+                        break;
+                    case "left":
+                        worldX -= getSpeed();
+                        break;
+                    case "right":
+                        worldX += getSpeed();
+                        break;
+                }
+            }
 
-        if (!isCollision()) {
-            move();
-            collisionCooldown = 0;
+            knockBackCounter++;
+            if (knockBackCounter == 10) {
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            }
+
         } else {
-            if (collisionCooldown == 0) {
-                chooseNewDirection();
-                collisionCooldown = COLLISION_COOLDOWN_FRAMES;
+            // 方向を設定（フロー・フィールドで決定）
+            setAction();
+            checkCollision();
+
+            if (!isCollision()) {
+                move();
+                collisionCooldown = 0;
             } else {
-                collisionCooldown--;
+                if (collisionCooldown == 0) {
+                    chooseNewDirection();
+                    collisionCooldown = COLLISION_COOLDOWN_FRAMES;
+                } else {
+                    collisionCooldown--;
+                }
             }
         }
 
@@ -203,6 +229,20 @@ public abstract class Entity {
 
         if (shotAvailableCounter < 30) {
             shotAvailableCounter++;
+        }
+    }
+
+    public void checkCollision() {
+        setCollision(false);
+        gameWindow.getCollisionChecker().checkTile(this);
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+        boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
+
+        if (getType() instanceof MonsterType && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
+            damagePlayer(attack);
+            gameWindow.getPlayer().setInvincible(true);
         }
     }
 
@@ -1609,6 +1649,14 @@ public abstract class Entity {
         changeAlpha(g2, 1F);
     }
 
+    public void knockBack(Entity entity) {
+
+        entity.direction = direction;
+        entity.speed += 10;
+        entity.knockBack = true;
+
+    }
+
     /**
      * 死亡中アニメーションを進行し、一定時間後にエンティティを非表示。
      *
@@ -1662,5 +1710,13 @@ public abstract class Entity {
 
     public int getCount() {
         return count;
+    }
+
+    public int getDefaultSpeed() {
+        return defaultSpeed;
+    }
+
+    public void setDefaultSpeed(int defaultSpeed) {
+        this.defaultSpeed = defaultSpeed;
     }
 }

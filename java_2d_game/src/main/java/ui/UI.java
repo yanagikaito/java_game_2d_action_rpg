@@ -379,9 +379,13 @@ public class UI {
         textY += lineHeight;
         g2.drawString("所持金", textX, textY);
         textY += lineHeight;
-        g2.drawString("武器", textX, textY + 20);
+        g2.drawString("右手", textX, textY + 20);
         textY += lineHeight;
-        g2.drawString("盾", textX, textY + 38);
+        g2.drawString("左手", textX, textY + 38);
+
+        g2.drawString(gameWindow.getPlayer().getCurrentWeapon().getName(), textX + 80, textY - 15);
+        textY += lineHeight;
+        g2.drawString(gameWindow.getPlayer().getCurrentShield().getName(), textX + 90, textY + 5);
 
         int tailX = (frameX + frameWidth) - 30;
         textY = frameY + tileSize;
@@ -431,12 +435,6 @@ public class UI {
         value = String.valueOf(gameWindow.getPlayer().getCoin());
         textX = getXForAlignToRightText(g2, value, tailX);
         g2.drawString(value, textX, textY);
-        textY += lineHeight;
-
-        g2.drawImage(gameWindow.getPlayer().getCurrentWeapon().getImage(), tailX - tileSize, textY - 14, null);
-        textY += tileSize;
-
-        g2.drawImage(gameWindow.getPlayer().getCurrentShield().getImage(), tailX - tileSize, textY - 10, null);
     }
 
     private void drawBattleLogMessage(Graphics2D g2) {
