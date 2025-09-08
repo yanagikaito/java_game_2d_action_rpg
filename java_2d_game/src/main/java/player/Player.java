@@ -131,7 +131,8 @@ public class Player extends Entity {
     public void setDefaultPositions() {
         setWorldX(FrameApp.getTileSize() * 23);
         setWorldY(FrameApp.getTileSize() * 21);
-        setSpeed(4);
+        setDefaultSpeed(4);
+        setSpeed(getDefaultSpeed());
         setDirection("down");
     }
 
@@ -801,6 +802,8 @@ public class Player extends Entity {
         if (i != 999) {
             if (!gameWindow.getMonster()[i].getInvincible()) {
                 gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
+
+                knockBack(gameWindow.getMonster()[i]);
 
                 long end = System.nanoTime();
 
