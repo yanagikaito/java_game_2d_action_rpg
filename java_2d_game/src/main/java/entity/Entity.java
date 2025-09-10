@@ -79,6 +79,7 @@ public abstract class Entity {
     private int defenseValue;
     private boolean respawning = false;
     private boolean knockBack = false;
+    private int knockBackPower = 0;
     private String description = "";
     private int maxMana;
     private int mana;
@@ -1649,10 +1650,10 @@ public abstract class Entity {
         changeAlpha(g2, 1F);
     }
 
-    public void knockBack(Entity entity) {
+    public void knockBack(Entity entity, int knockBackPower) {
 
         entity.direction = direction;
-        entity.speed += 10;
+        entity.speed += knockBackPower;
         entity.knockBack = true;
 
     }
@@ -1718,5 +1719,13 @@ public abstract class Entity {
 
     public void setDefaultSpeed(int defaultSpeed) {
         this.defaultSpeed = defaultSpeed;
+    }
+
+    public int getKnockBackPower() {
+        return knockBackPower;
+    }
+
+    public void setKnockBackPower(int knockBackPower) {
+        this.knockBackPower = knockBackPower;
     }
 }

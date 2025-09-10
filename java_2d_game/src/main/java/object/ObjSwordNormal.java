@@ -19,6 +19,7 @@ public class ObjSwordNormal extends Entity {
         setType(new SwordType());
         setName("普通の剣");
         setAttackValue(1);
+        setKnockBackPower(2);
         setDescription("[" + getName() + "]\n 古くからある剣");
         setPrice(100);
         try {
