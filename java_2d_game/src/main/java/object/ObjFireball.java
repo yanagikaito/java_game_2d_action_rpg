@@ -19,6 +19,7 @@ public class ObjFireball extends Projectile {
         setSpeed(5);
         setMaxLife(80);
         setAttack(2);
+        setKnockBackPower(0);
         setUseCost(1);
         setAlive(false);
         loadSprites();

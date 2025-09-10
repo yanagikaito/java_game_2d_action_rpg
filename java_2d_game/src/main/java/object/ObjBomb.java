@@ -28,6 +28,7 @@ public class ObjBomb extends Projectile {
         setSpeed(1);
         setMaxLife(80);
         setAttack(5);
+        setKnockBackPower(0);
         setUseCost(5);
         setAlive(false);
         setDescription("[" + getName() + "]\n一定時間経過すると爆発する。");
@@ -109,7 +110,7 @@ public class ObjBomb extends Projectile {
             if (monsterHit != 999) {
 
                 Entity target = getGameWindow().getMonster()[monsterHit];
-                getGameWindow().getPlayer().damageMonster(monsterHit, getAttack());
+                getGameWindow().getPlayer().damageMonster(monsterHit, getAttack(), this.getKnockBackPower());
                 System.out.println("プレイヤ-が爆弾の衝突判定がありダメージを与えた!");
                 generateParticle(this, target);
                 setAlive(false);

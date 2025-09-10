@@ -47,7 +47,7 @@ public abstract class Projectile extends Entity {
             if (monsterHit != 999) {
 
                 Entity target = getGameWindow().getMonster()[monsterHit];
-                getGameWindow().getPlayer().damageMonster(monsterHit, getAttack());
+                getGameWindow().getPlayer().damageMonster(monsterHit, getAttack(), getKnockBackPower());
 
                 generateParticle(this, target);
                 spawnFireworkParticles(target);

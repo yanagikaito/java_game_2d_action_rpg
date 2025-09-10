@@ -606,7 +606,7 @@ public class Player extends Entity {
         getSolidArea().height = FrameApp.getTileSize();
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-        damageMonster(monsterIndex, calculateTotalAttack());
+        damageMonster(monsterIndex, calculateTotalAttack(), getCurrentWeapon().getKnockBackPower());
 
         int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         damageInteractiveTile(iTileIndex);
@@ -795,7 +795,7 @@ public class Player extends Entity {
      * @param attack プレイヤーの攻撃力（防御値計算前の値）
      */
 
-    public void damageMonster(int i, int attack) {
+    public void damageMonster(int i, int attack, int knockBackPower) {
 
         long start = System.nanoTime();
 
@@ -803,7 +803,10 @@ public class Player extends Entity {
             if (!gameWindow.getMonster()[i].getInvincible()) {
                 gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
-                knockBack(gameWindow.getMonster()[i]);
+                if (knockBackPower > 0) {
+                    knockBack(gameWindow.getMonster()[i], getCurrentWeapon().getKnockBackPower());
+                }
+
 
                 long end = System.nanoTime();
 
