@@ -751,7 +751,7 @@ public class Player extends Entity {
     }
 
     /**
-     * モンスターと接触した際のダメージ計算・HP減少・無敵状態移行・
+     * プレイヤーからモンスターと接触した際のダメージ計算・HP減少・無敵状態移行・
      * ゲームオーバー判定を行う。
      *
      * @param i モンスター配列内のインデックス
@@ -764,7 +764,7 @@ public class Player extends Entity {
                 gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
                 // スライムのダメージ量
-                int damage = setAttack(gameWindow.getMonster()[i].getAttack() - calculateTotalDefense());
+                int damage = setAttack(Math.max(gameWindow.getMonster()[i].getAttack() - calculateTotalDefense(), 1));
                 if (damage < 0) {
                     damage = 0;
                 }
@@ -923,8 +923,8 @@ public class Player extends Entity {
             setMaxLife(getMaxLife() + 2);
             setStrength(getStrength() + 1);
             setDexterity(getDexterity() + 1);
-            setAttack(calculateBaseAttack());
-            setDefense(calculateBaseDefense());
+            setAttack(calculateTotalAttack());
+            setDefense(calculateTotalDefense());
             gameWindow.getSoundmanager().levelWAV("sound/level-up-sound.wav");
             gameWindow.setGameState(gameWindow.getDialogueState());
             gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");

@@ -412,12 +412,12 @@ public class UI {
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-        value = String.valueOf(gameWindow.getPlayer().getAttack());
+        value = String.valueOf(gameWindow.getPlayer().calculateTotalAttack());
         textX = getXForAlignToRightText(g2, value, tailX);
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-        value = String.valueOf(gameWindow.getPlayer().getDefense());
+        value = String.valueOf(gameWindow.getPlayer().calculateTotalDefense());
         textX = getXForAlignToRightText(g2, value, tailX);
         g2.drawString(value, textX, textY);
         textY += lineHeight;
