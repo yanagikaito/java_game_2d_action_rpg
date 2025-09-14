@@ -32,7 +32,13 @@ public class CollisionChecker {
         int entityBottomRow = entityBottomY / tileSize;
 
         int tileNum1, tileNum2;
-        switch (entity.getDirection()) {
+
+        String direction = entity.getDirection();
+        if (entity.isInKnockBack() == true) {
+            direction = entity.getKnockBackDirection();
+        }
+
+        switch (direction) {
             case "up" -> {
                 int newTopRow = (entityTopY - entity.getSpeed()) / tileSize;
                 tileNum1 = mapTileNum[entityLeftCol][newTopRow];
@@ -74,6 +80,11 @@ public class CollisionChecker {
 
         int index = 999;
 
+        String direction = entity.getDirection();
+        if (entity.isInKnockBack() == true) {
+            direction = entity.getKnockBackDirection();
+        }
+
         for (int i = 0; i < targets.length; i++) {
 
             if (targets[i] != null) {
@@ -82,7 +93,7 @@ public class CollisionChecker {
 
                 int offsetX = 0;
                 int offsetY = 0;
-                switch (entity.getDirection()) {
+                switch (direction) {
                     case "up" -> offsetY = -entity.getSpeed();
                     case "down" -> offsetY = entity.getSpeed();
                     case "left" -> offsetX = -entity.getSpeed();

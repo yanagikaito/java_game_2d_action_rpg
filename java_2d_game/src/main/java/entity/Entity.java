@@ -2,10 +2,12 @@ package entity;
 
 import frame.FrameApp;
 import object.Projectile;
+import player.Player;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public abstract class Entity {
     private int coin;
     private Entity currentWeapon;
     private Entity currentShield;
+    private Entity attacker;
+    private String knockBackDirection;
     private Projectile projectile;
     private int attackValue;
     private int defenseValue;
@@ -96,6 +100,10 @@ public abstract class Entity {
     protected int mapId;
     private int price;
     protected int count;
+    private int hitBoxX;
+    private int hitBoxY;
+    private double hitBoxWidth;
+    private double hitBoxHeight;
 
     /**
      * Entity を初期化。
@@ -168,14 +176,13 @@ public abstract class Entity {
         }
 
         if (knockBack == true) {
-
             checkCollision();
             if (collision == true) {
                 knockBackCounter = 0;
                 knockBack = false;
                 speed = defaultSpeed;
             } else if (collision == false) {
-                switch (gameWindow.getPlayer().getDirection()) {
+                switch (knockBackDirection) {
                     case "up":
                         worldY -= getSpeed();
                         break;
@@ -242,8 +249,10 @@ public abstract class Entity {
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
         if (getType() instanceof MonsterType && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
-            damagePlayer(attack);
-            gameWindow.getPlayer().setInvincible(true);
+            if (!getInvincible()) {
+                damagePlayer(attack, knockBackPower);
+                gameWindow.getPlayer().setInvincible(true);
+            }
         }
     }
 
@@ -255,11 +264,18 @@ public abstract class Entity {
      * @throws NullPointerException gameWindowまたはplayerが未初期化の場合
      */
 
-    public void damagePlayer(int attack) {
+    public void damagePlayer(int attack, int knockBackPower) {
+
+        Player player = gameWindow.getPlayer();
 
         if (!gameWindow.getPlayer().getInvincible()) {
 
             gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
+
+            // ノックバック
+            if (knockBackPower > 0) {
+                setKnockBack(player, this, knockBackPower);
+            }
 
             int damage = setAttack(Math.max(attack - gameWindow.getPlayer().calculateTotalDefense(), 1));
             if (damage < 0) {
@@ -1650,11 +1666,12 @@ public abstract class Entity {
         changeAlpha(g2, 1F);
     }
 
-    public void knockBack(Entity entity, int knockBackPower) {
+    public void setKnockBack(Entity target, Entity attacker, int knockBackPower) {
 
-        entity.direction = direction;
-        entity.speed += knockBackPower;
-        entity.knockBack = true;
+        this.attacker = attacker;
+        target.knockBackDirection = attacker.direction;
+        target.knockBackPower = knockBackPower;
+        target.knockBack = true;
 
     }
 
@@ -1727,5 +1744,59 @@ public abstract class Entity {
 
     public void setKnockBackPower(int knockBackPower) {
         this.knockBackPower = knockBackPower;
+    }
+
+    public boolean isInKnockBack() {
+        return knockBack;
+    }
+
+    public void setInKnockBack(boolean knockBack) {
+        this.knockBack = knockBack;
+    }
+
+    public int getKnockBackCounter() {
+        return knockBackCounter;
+    }
+
+    public void setKnockBackCounter(int knockBackCounter) {
+        this.knockBackCounter = knockBackCounter;
+    }
+
+    public String getKnockBackDirection() {
+        return knockBackDirection;
+    }
+
+    public void setKnockBackDirection(String knockBackDirection) {
+        this.knockBackDirection = knockBackDirection;
+    }
+
+    /**
+     * エンティティのヒットボックスを表す Rectangle2D を生成して返却。
+     * worldX, worldY に対してヒットボックスのオフセットとサイズを適用する。
+     */
+
+    public Rectangle2D getBounds() {
+        return new Rectangle2D.Double(
+                worldX + hitBoxX,
+                worldY + hitBoxY,
+                hitBoxWidth,
+                hitBoxHeight
+        );
+    }
+
+    public void setHitBoxX(int hitBoxX) {
+        this.hitBoxX = hitBoxX;
+    }
+
+    public void setHitBoxY(int hitBoxY) {
+        this.hitBoxY = hitBoxY;
+    }
+
+    public void setHitBoxWidth(double hitBoxWidth) {
+        this.hitBoxWidth = hitBoxWidth;
+    }
+
+    public void setHitBoxHeight(double hitBoxHeight) {
+        this.hitBoxHeight = hitBoxHeight;
     }
 }
