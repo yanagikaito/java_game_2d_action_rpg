@@ -10,6 +10,7 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class Player extends Entity {
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 5;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 15;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 25;
+    private static final int MAX_KB_FRAMES = 10;
+    private static final int ATTACK_ANIMATION_FRAMES = SPRITE_ATTACKING_THRESHOLD_NUM3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] axeSprites = new BufferedImage[AXE_DIRECTIONS.length][SPRITE_COUNT];
@@ -40,18 +43,28 @@ public class Player extends Entity {
     private static final int COOLDOWN_FRAMES = 60 * 3;
     private int invincibleCounter = 0;
     private final int INVINCIBLE_DURATION = 60; // 60フレーム無敵
+    private int attackCounter;
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
     private final int screenX;
     private final int screenY;
     private boolean moving = false;
+    private boolean collisionOnTile;
     private int pixelCounter = 0;
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
     private static final int FIREBALL_MANA_COST = 20;
     private int talkNpcIndex = -1;
     private boolean loaded = false;
+
+    private int knockbackTimer = 0;
+
+    private double knockBackDx, knockBackDy;
+
+    private static final int KNOCKBACK_FRAMES = 10;
+    private static final double KNOCKBACK_SPEED = 4.0;
+
 
     /**
      * プレイヤーを初期化するコンストラクタ。
@@ -79,6 +92,12 @@ public class Player extends Entity {
         getSolidArea().width = FrameApp.getTileSize() - 3;
         getSolidArea().height = FrameApp.getTileSize() - 3;
 
+
+        setHitBoxX(getSolidArea().x);
+        setHitBoxY(getSolidArea().y);
+        setHitBoxWidth(getSolidArea().width);
+        setHitBoxHeight(getSolidArea().height);
+
         setAttackArea(new Rectangle());
 //        getAttackArea().width = 36;
 //        getAttackArea().height = 36;
@@ -103,6 +122,7 @@ public class Player extends Entity {
         setWorldX(FrameApp.getTileSize() * 23);
         setWorldY(FrameApp.getTileSize() * 21);
         setSpeed(4);
+        setKnockBackPower(2);
         setDirection("down");
 
         setLevel(1);
@@ -335,19 +355,52 @@ public class Player extends Entity {
     @Override
     public void update() {
 
+        // 1) フレーム先頭で移動フラグと衝突フラグをリセット
+        moving = false;
+        setCollision(false);
+
+        int tileSize = FrameApp.getTileSize();
+        int playerGridX = getWorldX() / tileSize;
+        int playerGridY = getWorldY() / tileSize;
+
+        gameWindow.getCollisionChecker().checkTile(this);
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+        int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
+        gameWindow.changeMap(collidedTileId);
+
+
+        // ノックバック優先
+        if (knockbackTimer > 0) {
+
+            // 毎フレームdx,dyだけ押し出す
+            setWorldX(getWorldX() + (int) knockBackDx);
+            setWorldY(getWorldY() + (int) knockBackDy);
+            knockbackTimer--;
+
+            // ノックバック終了なら重なり解消
+            if (knockbackTimer == 0) {
+                resolvePenetration();
+            }
+            return;
+        }
+
+        // 無敵時間・クールダウンなど
         if (getInvincible()) {
-            invincibleCounter++;
-            if (invincibleCounter > INVINCIBLE_DURATION) {
+            if (++invincibleCounter > INVINCIBLE_DURATION) {
                 setInvincible(false);
                 invincibleCounter = 0;
             }
         }
-
         if (fireCooldown > 0) fireCooldown--;
 
+        // 攻撃処理
         if (getAttacking()) {
             startAttack();
             playerAttacking();
+            return;
         } else {
             if (gameWindow.getKeyHandler().isBombKeyPressed() && fireCooldown == 0) {
                 fireCooldown = COOLDOWN_FRAMES;
@@ -355,10 +408,10 @@ public class Player extends Entity {
             } else if (gameWindow.getKeyHandler().isShotKeyPressed() && fireCooldown == 0) {
                 playerAttackingFireball();
             }
-            if (!moving) {
-                processInput();
-            }
         }
+
+        // 入力受付
+        processInput();
 
         if (moving) {
             updateMovement();
@@ -366,8 +419,28 @@ public class Player extends Entity {
             updateAnimation();
             updateTileMovement();
         }
-
         updateInvincibility();
+    }
+
+    private void resolvePenetration() {
+        for (Entity m : gameWindow.getMonster()) {
+            if (m == null) continue;
+            Rectangle2D playerB = this.getBounds();
+            Rectangle2D monsterB = m.getBounds();
+            if (playerB.intersects(monsterB)) {
+                Rectangle2D overlap = playerB.createIntersection(monsterB);
+                double w = overlap.getWidth(), h = overlap.getHeight();
+                if (w < h) {
+                    // 左右いずれかに押し出し
+                    double shiftX = (playerB.getCenterX() < monsterB.getCenterX() ? -w : w);
+                    setWorldX(getWorldX() + (int) shiftX);
+                } else {
+                    // 上下に押し出し
+                    double shiftY = (playerB.getCenterY() < monsterB.getCenterY() ? -h : h);
+                    setWorldY(getWorldY() + (int) shiftY);
+                }
+            }
+        }
     }
 
     /**
@@ -391,7 +464,6 @@ public class Player extends Entity {
             } else if (keyHandler.isPlayerLeft()) {
                 setDirection("left");
             }
-
             moving = true;
         }
     }
@@ -408,8 +480,8 @@ public class Player extends Entity {
             switch (getDirection()) {
                 case "up" -> setWorldY(getWorldY() - getSpeed());
                 case "down" -> setWorldY(getWorldY() + getSpeed());
-                case "right" -> setWorldX(getWorldX() + getSpeed());
                 case "left" -> setWorldX(getWorldX() - getSpeed());
+                case "right" -> setWorldX(getWorldX() + getSpeed());
             }
         }
     }
@@ -481,6 +553,7 @@ public class Player extends Entity {
         int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         interactNPC(npcIndex);
 
+
         if (npcIndex != 999) {
             Entity e = gameWindow.getNPC()[npcIndex];
             if (e instanceof NpcMerChant) {
@@ -500,15 +573,18 @@ public class Player extends Entity {
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         if (monsterIndex != 999 && !getInvincible()) {
-            contactMonster(monsterIndex);
+            Entity slime = gameWindow.getMonster()[monsterIndex];
+            contactMonster(monsterIndex, this, slime.getKnockBackPower());
             setInvincible(true);
+
+            int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+            damageInteractiveTile(iTileIndex);
+
+
+            int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
+            gameWindow.changeMap(collidedTileId);
+
         }
-
-        int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
-        damageInteractiveTile(iTileIndex);
-
-        int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
-        gameWindow.changeMap(collidedTileId);
     }
 
     /**
@@ -569,6 +645,8 @@ public class Player extends Entity {
 
     public void playerAttacking() {
 
+        attackCounter++;
+
         int counter = getSpriteCounter() + 1;
         setSpriteCounter(counter);
 
@@ -581,7 +659,9 @@ public class Player extends Entity {
         } else if (counter <= SPRITE_ATTACKING_THRESHOLD_NUM3) {
             setSpriteNum(3);
 //            System.out.println("counter:" + counter + " num:" + getSpriteNum());
-        } else {
+        } else if (attackCounter >= ATTACK_ANIMATION_FRAMES) {
+            // 状態をリセット
+            attackCounter = 0;
             setSpriteCounter(0);
             setAttacking(false);
             setSpriteNum(1);
@@ -754,35 +834,57 @@ public class Player extends Entity {
      * プレイヤーからモンスターと接触した際のダメージ計算・HP減少・無敵状態移行・
      * ゲームオーバー判定を行う。
      *
-     * @param i モンスター配列内のインデックス
+     * @param monsterIndex モンスター配列内のインデックス
      */
 
-    public void contactMonster(int i) {
+    public void contactMonster(int monsterIndex, Entity attacker, int knockBackPower) {
 
-        if (i != 999) {
-            if (!getInvincible()) {
-                gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
+        if (monsterIndex != 999) {
+            gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
-                // スライムのダメージ量
-                int damage = setAttack(Math.max(gameWindow.getMonster()[i].getAttack() - calculateTotalDefense(), 1));
-                if (damage < 0) {
-                    damage = 0;
-                }
+            Entity slime = gameWindow.getMonster()[monsterIndex];
+            // 相対ベクトルを計算
+            double dx = getWorldX() - slime.getWorldX();
+            double dy = getWorldY() - slime.getWorldY();
+            double len = Math.hypot(dx, dy);
+            if (len == 0) {
+                // 完全に重なっている場合は上方向に押し出す例
+                dx = 0;
+                dy = -1;
+                len = 1;
+            }
+            // 単位ベクトル×速度
+            knockBackDx = dx / len * KNOCKBACK_SPEED;
+            knockBackDy = dy / len * KNOCKBACK_SPEED;
+            knockbackTimer = KNOCKBACK_FRAMES;
 
-                setLife(getLife() - damage);
-                setInvincible(true);
+            // 無敵時間・移動禁止フラグ
+            moving = false;
 
-                if (getLife() <= 0) {
-                    setLife(0);
-                    gameWindow.setGameState(gameWindow.getGameOverState());
-                }
+            if (knockBackPower > 0) {
+                setKnockBack(gameWindow.getMonster()[monsterIndex], attacker, slime.getKnockBackPower());
+            }
+
+            // スライムのダメージ量
+            int damage = setAttack(Math.max(gameWindow.getMonster()[monsterIndex].getAttack() - calculateTotalDefense(), 1));
+            if (damage < 0) {
+                damage = 0;
+            }
+
+            System.out.println("isCollision() = " + isCollision());
+            setLife(getLife() - damage);
+            setInvincible(true);
+
+            if (getLife() <= 0) {
+                setLife(0);
+                gameWindow.setGameState(gameWindow.getGameOverState());
+            }
 
 //                System.out.println("モンスター衝突: " + i);
 //                System.out.println("無敵状態: " + getInvincible());
 //                System.out.println(i);
 //                System.out.println("衝突時の無敵状態: " + getInvincible());
 //                System.out.println("プレイヤーのHP: " + getLife());
-            }
         }
     }
 
@@ -804,7 +906,7 @@ public class Player extends Entity {
                 gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
                 if (knockBackPower > 0) {
-                    knockBack(gameWindow.getMonster()[i], getCurrentWeapon().getKnockBackPower());
+                    setKnockBack(gameWindow.getMonster()[i], this, knockBackPower);
                 }
 
 

@@ -39,7 +39,7 @@ public class MonGreenSlime extends Entity {
         setName("Green Slime");
         setDefaultSpeed(1);
         setSpeed(getDefaultSpeed());
-        setMaxLife(15);
+        setMaxLife(50);
         setLife(getMaxLife());
         setAttack(5);
         setDefense(0);

@@ -47,7 +47,7 @@ public abstract class Projectile extends Entity {
             if (monsterHit != 999) {
 
                 Entity target = getGameWindow().getMonster()[monsterHit];
-                getGameWindow().getPlayer().damageMonster(monsterHit, getAttack(), getKnockBackPower());
+                getGameWindow().getPlayer().damageMonster(monsterHit, getAttack(), this.getKnockBackPower());
 
                 generateParticle(this, target);
                 spawnFireworkParticles(target);
@@ -60,7 +60,7 @@ public abstract class Projectile extends Entity {
 
             if (getGameWindow().getPlayer().getInvincible() == false && hit == true) {
 
-                damagePlayer(getAttack());
+                damagePlayer(getAttack(), getKnockBackPower());
                 // 衝突判定を起こした時の Projectile インスタンスを渡す
                 generateParticle(this, getGameWindow().getPlayer());
                 System.out.println("プレイヤ-に石ころの衝突判定がありダメージを与えた!");
@@ -69,7 +69,6 @@ public abstract class Projectile extends Entity {
         }
         updateAnimation();
     }
-
 
     protected void move() {
         switch (getDirection()) {

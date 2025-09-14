@@ -123,7 +123,7 @@ public class ObjBomb extends Projectile {
 
             if (getGameWindow().getPlayer().getInvincible() == false && hit == true) {
 
-                damagePlayer(getAttack());
+                damagePlayer(getAttack(),getKnockBackPower());
                 setAlive(false);
             }
         }

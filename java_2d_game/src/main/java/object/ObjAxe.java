@@ -21,7 +21,7 @@ public class ObjAxe extends Entity {
         setType(new AxeType());
         setName("木の斧");
         setAttackValue(2);
-        setKnockBackPower(10);
+        setKnockBackPower(2);
         getAttackArea().width = 25;
         getAttackArea().height = 25;
         setDescription("[" + getName() + "]\n木を切ることができる");
