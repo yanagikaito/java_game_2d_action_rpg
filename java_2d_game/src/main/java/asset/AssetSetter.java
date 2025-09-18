@@ -3,6 +3,7 @@ package asset;
 import entity.Entity;
 import frame.FrameApp;
 import monster.MonGreenSlime;
+import monster.MonMintSoldier;
 import npc.NpcMerChant;
 import npc.NpcOldMan;
 import npc.NpcSave;
@@ -49,11 +50,12 @@ public class AssetSetter {
     public void setMonster() {
 
         Entity[] monsters = gameWindow.getMonster();
-        int i = 0;
 
-        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 36);
-//        i++;
-//
+        int x = 23;
+        int y = 37;
+        for (int i = 0; i < 10; i++) {
+            monsters[i] = createMonMintSoldier(FrameApp.getTileSize() * x++, FrameApp.getTileSize() * y++);
+        }
 //        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 37);
 //        i++;
 //
@@ -75,6 +77,13 @@ public class AssetSetter {
 
     private MonGreenSlime createMonGreenSlime(int worldX, int worldY) {
         MonGreenSlime monster = new MonGreenSlime(gameWindow);
+        monster.setWorldX(worldX);
+        monster.setWorldY(worldY);
+        return monster;
+    }
+
+    private MonMintSoldier createMonMintSoldier(int worldX, int worldY) {
+        MonMintSoldier monster = new MonMintSoldier(gameWindow);
         monster.setWorldX(worldX);
         monster.setWorldY(worldY);
         return monster;

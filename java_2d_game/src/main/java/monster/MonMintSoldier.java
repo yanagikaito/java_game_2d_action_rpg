@@ -3,6 +3,7 @@ package monster;
 import entity.Entity;
 import entity.MonsterType;
 import frame.FrameApp;
+import object.ObjFireball;
 import object.ObjStone;
 import window.GameWindow;
 
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
-public class MonGreenSlime extends Entity {
+public class MonMintSoldier extends Entity {
 
     private core.PathFinder pathfinder;
     private core.Node[][] grid;
@@ -32,11 +33,11 @@ public class MonGreenSlime extends Entity {
     private int shotAvailableCounter = ROCK_COOLDOWN_FRAMES;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
 
-    public MonGreenSlime(GameWindow gameWindow) {
+    public MonMintSoldier(GameWindow gameWindow) {
 
         super(gameWindow);
         setType(new MonsterType());
-        setName("Green Slime");
+        setName("Mint Soldier");
         setDefaultSpeed(1);
         setSpeed(getDefaultSpeed());
         setMaxLife(50);
@@ -63,7 +64,7 @@ public class MonGreenSlime extends Entity {
                 for (int i = 0; i < SPRITE_COUNT; i++) {
                     BufferedImage original = ImageIO.read(
                             getClass().getClassLoader()
-                                    .getResourceAsStream("monster/greenSlime-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif"));
+                                    .getResourceAsStream("player/image-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif"));
                     BufferedImage processed = createImage(original, tileSize, tileSize);
                     getSprites()[dir][i] = processed;
                 }
@@ -123,7 +124,7 @@ public class MonGreenSlime extends Entity {
         if (shotAvailableCounter >= ROCK_COOLDOWN_FRAMES) {
             int i = random.nextInt(100) + 1;
             if (i < 30) {
-                shootRandomStone();
+                shootRandomFireball();
                 shotAvailableCounter = 0;
             }
         }
@@ -150,14 +151,14 @@ public class MonGreenSlime extends Entity {
         pathfinder = new core.PathFinder(grid);
     }
 
-    private void shootRandomStone() {
+    private void shootRandomFireball() {
 
         String[] dirs = {"up", "down", "left", "right"};
         String dir = dirs[random.nextInt(dirs.length)];
 
-        ObjStone rock = new ObjStone(getGameWindow());
-        rock.set(getWorldX(), getWorldY(), dir, true, this);
-        getGameWindow().getProjectileList().add(rock);
+        ObjFireball objFireball = new ObjFireball(getGameWindow());
+        objFireball.set(getWorldX(), getWorldY(), dir, true, this);
+        getGameWindow().getProjectileList().add(objFireball);
     }
 
     public void damageReaction() {
