@@ -50,7 +50,6 @@ public class AssetSetter {
     public void setMonster() {
 
         Entity[] monsters = gameWindow.getMonster();
-
         int x = 23;
         int y = 37;
         for (int i = 0; i < 10; i++) {
