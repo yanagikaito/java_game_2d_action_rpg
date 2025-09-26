@@ -31,6 +31,7 @@ public abstract class Entity {
     private BufferedImage image;
     private BufferedImage image2;
     private BufferedImage image3;
+    private BufferedImage blurredAura;
     private boolean collision;
     private int spriteCounter;
     private int spriteNum;
@@ -104,6 +105,9 @@ public abstract class Entity {
     private int hitBoxY;
     private double hitBoxWidth;
     private double hitBoxHeight;
+
+    private Color targetColor;
+    private boolean targetColorOn;
 
     /**
      * Entity を初期化。
@@ -719,6 +723,7 @@ public abstract class Entity {
      * @return BufferedImage このエンティティの３番目の画像
      * @throws IllegalStateException 画像3が未初期化（null）の場合
      */
+
     public BufferedImage getImage3() {
         if (image3 == null) {
             throw new IllegalStateException("image3 が未初期化");
@@ -1649,11 +1654,36 @@ public abstract class Entity {
             }
         }
 
+        if (getType() instanceof MonsterType && targetColorOn) {
+
+            int margine = 2;
+            int size = FrameApp.getTileSize() - (margine * 2);
+
+            g2.fillRect(screenX + margine, screenY + margine, size, size);
+
+            // 枠線の描画
+            g2.setColor(Color.BLACK);
+            g2.drawRect(screenX + margine, screenY + margine, size, size);
+
+            for (int i = 0; i < 10; i++) {
+                // ランダムな位置とサイズを生成
+                int particleX = screenX + margine + (int) (Math.random() * size);
+                int particleY = screenY + margine + (int) (Math.random() * size);
+                // 1～5のサイズ
+                int particleSize = (int) (Math.random() * 5 + 1);
+
+                // 半透明の白色またはランダムな色
+                g2.setColor(new Color(255, 255, 255, (int) (Math.random() * 128 + 128)));
+                g2.fillOval(particleX, particleY, particleSize, particleSize);
+            }
+        }
+
         if (getInvincible()) {
             hpBarOn = true;
             hpBarCounter = 0;
             changeAlpha(g2, 0.4f);
         } else {
+            targetColorOn = true;
             changeAlpha(g2, 1F);
         }
 
@@ -1798,5 +1828,13 @@ public abstract class Entity {
 
     public void setHitBoxHeight(double hitBoxHeight) {
         this.hitBoxHeight = hitBoxHeight;
+    }
+
+    public Color getTargetColor() {
+        return targetColor;
+    }
+
+    public void setHairColor(Color targetColor) {
+        this.targetColor = targetColor;
     }
 }
