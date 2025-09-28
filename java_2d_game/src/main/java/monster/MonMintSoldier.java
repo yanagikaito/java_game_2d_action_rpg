@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Set;
 
 public class MonMintSoldier extends Entity {
 
@@ -19,19 +20,13 @@ public class MonMintSoldier extends Entity {
     private core.Node[][] grid;
     private int goalX, goalY;
     private boolean flowFieldInitialized = false;
-    private static final int ACTION_LOCK_THRESHOLD = 180;
-    private static final int MAX_RANDOM_VALUE = 100;
-    private static final int THRESHOLD_UP = 25;
-    private static final int THRESHOLD_DOWN = 50;
-    private static final int THRESHOLD_LEFT = 75;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
-    private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private Random random = new Random();
     private int actionLockCounter = 0;
     private static final int ROCK_COOLDOWN_FRAMES = 180;
     private int shotAvailableCounter = ROCK_COOLDOWN_FRAMES;
-    private static final int SPRITE_ANIMATION_THRESHOLD = 10;
+    private static final int NEW_HAIR_COLOR = 0xFF00FF00;
 
     public MonMintSoldier(GameWindow gameWindow) {
 
@@ -55,6 +50,13 @@ public class MonMintSoldier extends Entity {
         loadMonsterImages();
     }
 
+    // 完全一致リスト（必要に応じて色を追加）
+    private static final Set<Integer> HAIR_COLORS = Set.of(
+            0xFFF3D131, 0xFFCCAA0A,
+            0xFFEEBE93, 0xFF534721,
+            0xFF997F03
+    );
+
     public void loadMonsterImages() {
 
         try {
@@ -64,7 +66,14 @@ public class MonMintSoldier extends Entity {
                 for (int i = 0; i < SPRITE_COUNT; i++) {
                     BufferedImage original = ImageIO.read(
                             getClass().getClassLoader()
-                                    .getResourceAsStream("player/image-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif"));
+                                    .getResourceAsStream(
+                                            "player/image-"
+                                                    + DIRECTIONS[dir]
+                                                    + "-" + (i + 1) + ".gif"));
+
+                    // 髪ピクセルを全走査してログ出力
+                    logHairPositions(original, DIRECTIONS[dir], i + 1);
+
                     BufferedImage processed = createImage(original, tileSize, tileSize);
                     getSprites()[dir][i] = processed;
                 }
@@ -74,12 +83,60 @@ public class MonMintSoldier extends Entity {
         }
     }
 
-    private BufferedImage createImage(BufferedImage original, int width, int height) {
-        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = result.createGraphics();
+    /**
+     * 画像中の髪色ピクセルを全走査し、見つかった座標と色をログ出力する
+     *
+     * @param img   元画像(リサイズ前)
+     * @param dir   方向ラベル（例："up", "down"...）
+     * @param index スプライト番号(1〜)
+     */
+
+    private void logHairPositions(BufferedImage img, String dir, int index) {
+        int w = img.getWidth(), h = img.getHeight();
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int rgb = img.getRGB(x, y);
+                if (HAIR_COLORS.contains(rgb)) {
+                    System.out.printf(
+                            "Hair pixel detected in %s-%d @(%2d,%2d): 0x%08X%n",
+                            dir, index, x, y, rgb
+                    );
+                }
+            }
+        }
+    }
+
+
+    private BufferedImage createImage(
+            BufferedImage original,
+            int width,
+            int height) {
+
+        // リサイズ
+        BufferedImage resized = new BufferedImage(
+                width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resized.createGraphics();
+
+        // 最近傍補間でズレを防ぐ
+        g2.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         g2.drawImage(original, 0, 0, width, height, null);
         g2.dispose();
-        return result;
+
+        // 髪色置換ループ
+        int w = resized.getWidth(), h = resized.getHeight();
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int rgb = resized.getRGB(x, y);
+                // 完全一致リストにある色なら緑に置換
+                if (HAIR_COLORS.contains(rgb)) {
+                    resized.setRGB(x, y, NEW_HAIR_COLOR);
+                }
+            }
+        }
+
+        return resized;
     }
 
     @Override
