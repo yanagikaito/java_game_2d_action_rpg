@@ -22,7 +22,6 @@ import ui.UI;
 import javax.swing.*;
 
 import java.awt.*;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 

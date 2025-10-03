@@ -217,6 +217,23 @@ public class Player extends Entity {
 
         int tileSize = FrameApp.getTileSize();
 
+        // 剣用
+        for (int d = 0; d < ATTACK_DIRECTIONS.length; d++) {
+            for (int i = 0; i < SPRITE_COUNT; i++) {
+                String path = "player/image-" + ATTACK_DIRECTIONS[d] + "-" + (i + 1) + ".gif";
+                try {
+                    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    if (d == 0 || d == 1) {
+                        attackSprites[d][i] = createImage(img, tileSize, tileSize * 2);
+                    } else {
+                        attackSprites[d][i] = createImage(img, tileSize * 2, tileSize);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         // 斧用
         for (int d = 0; d < AXE_DIRECTIONS.length; d++) {
             for (int i = 0; i < SPRITE_COUNT; i++) {
