@@ -26,15 +26,15 @@ public class MonMintSoldier extends Entity {
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private static final String[] AXE_DIRECTIONS = {"axeUp", "axeDown", "axeLeft", "axeRight"};
-    private static final int SPRITE_ANIMATION_THRESHOLD = 10;
-    private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 5;
-    private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 15;
-    private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 25;
+    private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 40;
+    private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 60;
+    private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 80;
     private static final int ATTACK_ANIMATION_FRAMES = SPRITE_ATTACKING_THRESHOLD_NUM3;
     private int attackCounter;
     private BufferedImage[][] axeSprites = new BufferedImage[AXE_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] currentAttackSprites;
     private static final int SPRITE_COUNT = 3;
+    private static final int ANIMATION_RATE = 3;
     private Random random = new Random();
     private int actionLockCounter = 0;
     private static final int ROCK_COOLDOWN_FRAMES = 180;
@@ -214,7 +214,6 @@ public class MonMintSoldier extends Entity {
         currentY = Math.max(0, Math.min(currentY, pathfinder.getHeight() - 1));
 
         int dir = pathfinder.getMoveDirection(currentX, currentY);
-        double dist = Math.sqrt(currentX * currentX + currentY * currentY);
 
         // 方向に応じて移動
         switch (dir) {
@@ -224,10 +223,17 @@ public class MonMintSoldier extends Entity {
             case 3 -> setDirection("left");
         }
 
+        // 距離チェック（プレイヤーとのタイル差分で計算し直す）
+        int mx = getWorldX() / FrameApp.getTileSize();
+        int my = getWorldY() / FrameApp.getTileSize();
+        int px = getGameWindow().getPlayer().getWorldX() / FrameApp.getTileSize();
+        int py = getGameWindow().getPlayer().getWorldY() / FrameApp.getTileSize();
+        double dist = Math.hypot(px - mx, py - my);
+
         // プレイヤーが2タイル以内に近づいたら攻撃開始
         if (dist < FrameApp.getTileSize() * 2 && !getAttacking()) {
             setAttacking(true);
-            return; // 攻撃開始
+            return;
         }
 
         // 攻撃処理
@@ -248,7 +254,7 @@ public class MonMintSoldier extends Entity {
     private void startAttack() {
         String dir = getDirection();
         System.out.println("dir = " + dir);
-        if (dir == null || dir.isEmpty()) dir = "down";
+        if (dir == null || dir.isEmpty()) dir = getDirection();
         String base = capitalize(dir);
         System.out.println("base = " + base);
         if (getCurrentWeapon().getType() instanceof AxeType) {
@@ -284,7 +290,7 @@ public class MonMintSoldier extends Entity {
     }
 
     /**
-     * 剣や斧による近接攻撃のアニメーションと当たり判定を処理。
+     * 斧による近接攻撃のアニメーションと当たり判定を処理。
      * スプライトフレームを進め、攻撃範囲内のモンスターやタイルにダメージを与え、
      * 攻撃終了後に位置や当たり判定を元に戻す。
      */
@@ -292,6 +298,12 @@ public class MonMintSoldier extends Entity {
     public void monsterAttacking() {
 
         attackCounter++;
+
+        // 3フレームに1度だけスプライト更新する
+        if (attackCounter / ANIMATION_RATE != 0) {
+            System.out.println("attackCounter = " + attackCounter / ANIMATION_RATE);
+            return;
+        }
 
         int counter = getSpriteCounter() + 1;
         setSpriteCounter(counter);
@@ -331,16 +343,19 @@ public class MonMintSoldier extends Entity {
         getSolidArea().width = FrameApp.getTileSize();
         getSolidArea().height = FrameApp.getTileSize();
 
-        int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
-        getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack(), getCurrentWeapon().getKnockBackPower());
+        if (getType() instanceof MonsterType) {
 
-        int iTileIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getItile());
-        getGameWindow().getPlayer().damageInteractiveTile(iTileIndex);
+            int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
+            getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack(), getCurrentWeapon().getKnockBackPower());
 
-        setWorldX(originalWorldX);
-        setWorldY(originalWorldY);
-        getSolidArea().width = originalSolidWidth;
-        getSolidArea().height = originalSolidHeight;
+            int iTileIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getItile());
+            getGameWindow().getPlayer().damageInteractiveTile(iTileIndex);
+
+            setWorldX(originalWorldX);
+            setWorldY(originalWorldY);
+            getSolidArea().width = originalSolidWidth;
+            getSolidArea().height = originalSolidHeight;
+        }
     }
 
     private void initializeFlowField() {
