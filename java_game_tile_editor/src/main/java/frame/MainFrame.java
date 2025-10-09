@@ -35,7 +35,7 @@ public class MainFrame extends JFrame {
             control.add(b);
         }
 
-        selector = new JComboBox<>(new Integer[]{1, 2});
+        selector = new JComboBox<>(new Integer[]{1, 2, 3});
         selector.setSelectedItem(currentMapId);
         selector.addActionListener(e -> {
             currentMapId = (Integer) selector.getSelectedItem();
@@ -63,7 +63,7 @@ public class MainFrame extends JFrame {
 
     private void loadTiles() {
 
-        for (int id = 0; id < 9; id++) {
+        for (int id = 0; id < 10; id++) {
 
             try (InputStream is = getClass().getResourceAsStream("/tiles/" + id + ".png")) {
                 if (is == null) {
