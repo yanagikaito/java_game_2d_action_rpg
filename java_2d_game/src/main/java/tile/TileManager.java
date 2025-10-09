@@ -23,10 +23,11 @@ public class TileManager {
     public static final int MEADOW_TILE_ID = 1;
     public static final int TREE_TILE_ID = 4;
     public static final int HUT_TILE_ID = 6;
+    public static final int FOREST_TILE_ID = 9;
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[9];
+        tiles = new Tile[10];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -82,6 +83,9 @@ public class TileManager {
             tiles[8] = new Tile();
             tiles[8].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/table.png"));
             tiles[8].collision = true;
+
+            tiles[9] = new Tile();
+            tiles[9].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/forest.png"));
 
         } catch (IOException e) {
             e.printStackTrace();

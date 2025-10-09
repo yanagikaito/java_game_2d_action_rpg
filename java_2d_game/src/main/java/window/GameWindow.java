@@ -391,6 +391,25 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjAxe();
 
             repaint();
+
+        } else if (currentMap == TileManager.FOREST_TILE_ID) {
+
+            Arrays.fill(npc, null);
+            Arrays.fill(monster, null);
+            Arrays.fill(obj, null);
+            Arrays.fill(iTile, null);
+            itemList.clear();
+            projectileList.clear();
+            particleList.clear();
+
+            getKeyHandler().clearAllKeys();
+            tileManager.loadMap(3);
+            startMapTransition(2);
+            getPlayer().setWorldX(tileSize * 2);
+            getPlayer().setWorldY(tileSize * 48);
+
+            repaint();
+
         }
     }
 
