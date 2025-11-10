@@ -408,6 +408,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldX(tileSize * 2);
             getPlayer().setWorldY(tileSize * 48);
 
+            assetSetter.setBossMonster();
+
             repaint();
 
         }

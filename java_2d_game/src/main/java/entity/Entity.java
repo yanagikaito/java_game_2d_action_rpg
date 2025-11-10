@@ -1652,31 +1652,49 @@ public abstract class Entity {
                 hpBarCounter = 0;
                 hpBarOn = false;
             }
-        }
+        } else if (getType() instanceof BossMonsterType && hpBarOn) {
 
-        if (getType() instanceof MonsterType && targetColorOn) {
+            double oneScale = (double) FrameApp.getTileSize() / maxLife;
+            double hpBarValue = oneScale * life;
 
-            int margine = 2;
-            int size = FrameApp.getTileSize() - (margine * 2);
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(screenX + 59, screenY - 21, FrameApp.getTileSize(), 12);
 
-            g2.fillRect(screenX + margine, screenY + margine, size, size);
+            g2.setColor(new Color(200, 50, 100));
+            g2.fillRect(screenX + 60, screenY - 20, (int) hpBarValue, 10);
 
-            // 枠線の描画
-            g2.setColor(Color.BLACK);
-            g2.drawRect(screenX + margine, screenY + margine, size, size);
+            hpBarCounter++;
 
-            for (int i = 0; i < 10; i++) {
-                // ランダムな位置とサイズを生成
-                int particleX = screenX + margine + (int) (Math.random() * size);
-                int particleY = screenY + margine + (int) (Math.random() * size);
-                // 1～5のサイズ
-                int particleSize = (int) (Math.random() * 5 + 1);
-
-                // 半透明の白色またはランダムな色
-                g2.setColor(new Color(255, 255, 255, (int) (Math.random() * 128 + 128)));
-                g2.fillOval(particleX, particleY, particleSize, particleSize);
+            if (hpBarCounter > 600) {
+                hpBarCounter = 0;
+                hpBarOn = false;
             }
         }
+
+        // デバッグ
+//        if (getType() instanceof MonsterType && targetColorOn) {
+//
+//            int margine = 2;
+//            int size = FrameApp.getTileSize() - (margine * 2);
+//
+//            g2.fillRect(screenX + margine, screenY + margine, size, size);
+//
+//            // 枠線の描画
+//            g2.setColor(Color.BLACK);
+//            g2.drawRect(screenX + margine, screenY + margine, size, size);
+//
+//            for (int i = 0; i < 10; i++) {
+//                // ランダムな位置とサイズを生成
+//                int particleX = screenX + margine + (int) (Math.random() * size);
+//                int particleY = screenY + margine + (int) (Math.random() * size);
+//                // 1～5のサイズ
+//                int particleSize = (int) (Math.random() * 5 + 1);
+//
+//                // 半透明の白色またはランダムな色
+//                g2.setColor(new Color(255, 255, 255, (int) (Math.random() * 128 + 128)));
+//                g2.fillOval(particleX, particleY, particleSize, particleSize);
+//            }
+//        }
 
         if (getInvincible()) {
             hpBarOn = true;

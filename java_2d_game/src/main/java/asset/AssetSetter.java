@@ -2,6 +2,7 @@ package asset;
 
 import entity.Entity;
 import frame.FrameApp;
+import monster.MonGreenGoblin;
 import monster.MonGreenSlime;
 import monster.MonMintSoldier;
 import npc.NpcMerChant;
@@ -66,6 +67,16 @@ public class AssetSetter {
         gameWindow.setMonster(monsters);
     }
 
+    public void setBossMonster() {
+
+        Entity[] monsters = gameWindow.getMonster();
+        int i = 0;
+
+        monsters[i] = createMonGreenGoblin(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 15);
+
+        gameWindow.setMonster(monsters);
+    }
+
     public void setObjAxe() {
 
         Entity[] obj = gameWindow.getObj();
@@ -83,6 +94,13 @@ public class AssetSetter {
 
     private MonMintSoldier createMonMintSoldier(int worldX, int worldY) {
         MonMintSoldier monster = new MonMintSoldier(gameWindow);
+        monster.setWorldX(worldX);
+        monster.setWorldY(worldY);
+        return monster;
+    }
+
+    private MonGreenGoblin createMonGreenGoblin(int worldX, int worldY) {
+        MonGreenGoblin monster = new MonGreenGoblin(gameWindow);
         monster.setWorldX(worldX);
         monster.setWorldY(worldY);
         return monster;
