@@ -2,15 +2,15 @@ package monster;
 
 import entity.BossMonsterType;
 import entity.Entity;
-import entity.MonsterType;
 import frame.FrameApp;
-import object.ObjStone;
+import player.Player;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 public class MonGreenGoblin extends Entity {
@@ -25,6 +25,8 @@ public class MonGreenGoblin extends Entity {
     private static final int THRESHOLD_DOWN = 50;
     private static final int THRESHOLD_LEFT = 75;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
+    private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private static final int SPRITE_COUNT = 3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private Random random = new Random();
@@ -45,17 +47,24 @@ public class MonGreenGoblin extends Entity {
         setAttack(10);
         setDefense(0);
         setExp(10);
-        setProjectile(new ObjStone(gameWindow));
+
+        int tileSize = FrameApp.getTileSize() * 5;
         getSolidArea().x = 1;
         getSolidArea().y = 1;
-        getSolidArea().width = 190;
-        getSolidArea().height = 190;
+        getSolidArea().width = tileSize - 48 * 2;
+        getSolidArea().height = tileSize - 48 * 2;
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
+        setAttackArea(new Rectangle());
+        getAttackArea().width = tileSize;
+        getAttackArea().height = tileSize;
         loadMonsterImages();
+        loadMonsterAttackSprites();
     }
 
     public void loadMonsterImages() {
+
+        int s = 5;
 
         try {
             int tileSize = FrameApp.getTileSize();
@@ -65,12 +74,34 @@ public class MonGreenGoblin extends Entity {
                     BufferedImage original = ImageIO.read(
                             getClass().getClassLoader()
                                     .getResourceAsStream("monster/greenGoblin-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif"));
-                    BufferedImage processed = createImage(original, tileSize * 4, tileSize * 4);
+                    BufferedImage processed = createImage(original, tileSize * s, tileSize * s);
                     getSprites()[dir][i] = processed;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void loadMonsterAttackSprites() {
+
+        int tileSize = FrameApp.getTileSize();
+        int s = 5;
+
+        for (int d = 0; d < ATTACK_DIRECTIONS.length; d++) {
+            for (int i = 0; i < SPRITE_COUNT; i++) {
+                String path = "monster/greenGoblin-" + ATTACK_DIRECTIONS[d] + "-" + (i + 1) + ".gif";
+                try {
+                    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    if (d == 0 || d == 1) {
+                        attackSprites[d][i] = createImage(img, tileSize, tileSize * s * 2);
+                    } else {
+                        attackSprites[d][i] = createImage(img, tileSize * s * 2, tileSize);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -87,46 +118,49 @@ public class MonGreenGoblin extends Entity {
 
         updateMonsterInvincibility();
 
-        // フロー・フィールドの初期化（1回だけ）
+        // プレイヤーとの距離を計算
+        Player player = getGameWindow().getPlayer();
+        int dx = player.getWorldX() - getWorldX();
+        int dy = player.getWorldY() - getWorldY();
+        int visionRange = FrameApp.getTileSize() * 5;
+
+        if (Math.abs(dx) < visionRange && Math.abs(dy) < visionRange) {
+            // 攻撃モードに移行
+            setAttacking(true);
+            setAttackDirection("attackRight");
+
+            // 攻撃方向を決定
+            if (Math.abs(dx) > Math.abs(dy)) {
+                setAttackDirection(dx > 0 ? "attackRight" : "attackLeft");
+            } else {
+                setAttackDirection(dy > 0 ? "attackDown" : "attackUp");
+            }
+
+            return;
+        }
+
+        // ここからは通常の移動処理（プレイヤーを追う）
         if (!flowFieldInitialized) {
             initializeFlowField();
             flowFieldInitialized = true;
         }
 
-        // ゴール（プレイヤー）の位置を取得
-        goalX = getGameWindow().getPlayer().getWorldX() / FrameApp.getTileSize();
-        goalY = getGameWindow().getPlayer().getWorldY() / FrameApp.getTileSize();
-
-        // 統合フィールドを再計算（プレイヤーが動いたら）
+        goalX = player.getWorldX() / FrameApp.getTileSize();
+        goalY = player.getWorldY() / FrameApp.getTileSize();
         pathfinder.calculateIntegrationField(goalX, goalY);
 
-        // 現在の位置から進むべき方向を取得
         int currentX = getWorldX() / FrameApp.getTileSize();
         int currentY = getWorldY() / FrameApp.getTileSize();
-
         currentX = Math.max(0, Math.min(currentX, pathfinder.getWidth() - 1));
         currentY = Math.max(0, Math.min(currentY, pathfinder.getHeight() - 1));
 
         int dir = pathfinder.getMoveDirection(currentX, currentY);
 
-        // 方向に応じて移動
         switch (dir) {
             case 0 -> setDirection("up");
             case 1 -> setDirection("right");
             case 2 -> setDirection("down");
             case 3 -> setDirection("left");
-        }
-
-        // 射撃の処理は残す
-        if (shotAvailableCounter < ROCK_COOLDOWN_FRAMES) {
-            shotAvailableCounter++;
-        }
-        if (shotAvailableCounter >= ROCK_COOLDOWN_FRAMES) {
-            int i = random.nextInt(100) + 1;
-            if (i < 30) {
-//                shootRandomStone();
-                shotAvailableCounter = 0;
-            }
         }
     }
 
@@ -151,16 +185,6 @@ public class MonGreenGoblin extends Entity {
         pathfinder = new core.PathFinder(grid);
     }
 
-    private void shootRandomStone() {
-
-        String[] dirs = {"up", "down", "left", "right"};
-        String dir = dirs[random.nextInt(dirs.length)];
-
-        ObjStone rock = new ObjStone(getGameWindow());
-        rock.set(getWorldX(), getWorldY(), dir, true, this);
-        getGameWindow().getProjectileList().add(rock);
-    }
-
     public void damageReaction() {
 
         actionLockCounter = 0;
@@ -178,5 +202,75 @@ public class MonGreenGoblin extends Entity {
                 setInvincibleCounter(0);
             }
         }
+    }
+
+    /**
+     * エンティティを画面上に描画します。視界内に存在する場合のみスプライト表示、
+     * HPバー、無敵フラッシュ、死亡アニメーションを適用。
+     *
+     * @param g2 描画に使用する Graphics2D オブジェクト（null 不可）
+     * @throws NullPointerException g2 が null の場合
+     */
+
+    @Override
+    public void draw(Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+        int s = 5;
+
+        int screenX = getWorldX()
+                - getGameWindow().getPlayer().getWorldX()
+                + getGameWindow().getPlayer().getScreenX();
+
+        int screenY = getWorldY()
+                - getGameWindow().getPlayer().getWorldY()
+                + getGameWindow().getPlayer().getScreenY();
+
+        Composite original = g2.getComposite();
+        if (getInvincible()) {
+            g2.setComposite(
+                    AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)
+            );
+        }
+
+        BufferedImage img;
+        if (!getAttacking()) {
+            int walkDirIndex = Arrays.asList(DIRECTIONS)
+                    .indexOf(getDirection());
+            if (walkDirIndex >= 0) {
+                img = sprites[walkDirIndex][getSpriteNum() - 1];
+                g2.drawImage(img, screenX, screenY, tileSize, tileSize, null);
+            }
+        } else {
+            String[] animationKeys = ATTACK_DIRECTIONS;
+            BufferedImage[][] spriteSet = attackSprites;
+
+            int directionIndex = Arrays.asList(animationKeys)
+                    .indexOf(getAttackDirection());
+            if (directionIndex >= 0) {
+                int frameIndex = Math.max(0,
+                        Math.min(getSpriteNum() - 1, SPRITE_COUNT - 1)
+                );
+                img = spriteSet[directionIndex][frameIndex];
+
+                int drawWidth = (directionIndex == 2 || directionIndex == 3)
+                        ? tileSize * s * 2 : tileSize * s;
+                int drawHeight = (directionIndex == 0 || directionIndex == 1)
+                        ? tileSize * s * 2 : tileSize * s;
+                int drawX = animationKeys[directionIndex]
+                        .endsWith("Left") ? screenX - tileSize * s : screenX;
+                int drawY = animationKeys[directionIndex]
+                        .endsWith("Up") ? screenY - tileSize * s : screenY;
+
+                g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
+
+//                // デバッグ：攻撃エリアを矩形で描画
+//                Rectangle attackBox = new Rectangle(drawX, drawY, getAttackArea().width, getAttackArea().height);
+//                g2.setColor(new Color(255, 0, 0, 255));
+//                g2.drawRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
+            }
+        }
+
+        g2.setComposite(original);
     }
 }
