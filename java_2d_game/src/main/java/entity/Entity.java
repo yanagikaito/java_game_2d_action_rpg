@@ -40,6 +40,7 @@ public abstract class Entity {
     private int solidAreaDefaultX;
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
+    private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -53,6 +54,7 @@ public abstract class Entity {
     private int actionLockCounter = 0;
     private static final int COLLISION_COOLDOWN_FRAMES = 30;
     private int collisionCooldown = 0;
+    private int attackCooldown = 0;
     private int dialogueIndex = 0;
     private int maxLife;
     private int life;
@@ -202,6 +204,18 @@ public abstract class Entity {
                 }
             }
 
+            // スプライトアニメーション
+            if (getAttacking()) {
+                setSpriteCounter(getSpriteCounter() + 1);
+                if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
+                    setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
+                    setSpriteCounter(0);
+                }
+                if (spriteNum == SPRITE_COUNT) {
+                    setAttacking(false);
+                }
+            }
+
             knockBackCounter++;
             if (knockBackCounter == 10) {
                 knockBackCounter = 0;
@@ -209,29 +223,23 @@ public abstract class Entity {
                 speed = defaultSpeed;
             }
 
-        } else {
-            // 方向を設定（フロー・フィールドで決定）
-            setAction();
-            checkCollision();
-
-            if (!isCollision()) {
-                move();
-                collisionCooldown = 0;
-            } else {
-                if (collisionCooldown == 0) {
-                    chooseNewDirection();
-                    collisionCooldown = COLLISION_COOLDOWN_FRAMES;
-                } else {
-                    collisionCooldown--;
-                }
-            }
+        } else if (attacking == true) {
+            attacking();
         }
+        // 方向を設定（フロー・フィールドで決定）
+        setAction();
+        checkCollision();
 
-        // スプライトアニメーション
-        setSpriteCounter(getSpriteCounter() + 1);
-        if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
-            setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
-            setSpriteCounter(0);
+        if (!isCollision()) {
+            move();
+            collisionCooldown = 0;
+        } else {
+            if (collisionCooldown == 0) {
+                chooseNewDirection();
+                collisionCooldown = COLLISION_COOLDOWN_FRAMES;
+            } else {
+                collisionCooldown--;
+            }
         }
 
         pixelCounter += getSpeed();
@@ -258,6 +266,27 @@ public abstract class Entity {
                 gameWindow.getPlayer().setInvincible(true);
             }
         }
+    }
+
+    private void attacking() {
+        // 攻撃アニメーションのフレーム進行
+        setSpriteCounter(getSpriteCounter() + 1);
+        if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
+            setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
+            setSpriteCounter(0);
+        }
+
+        // 攻撃判定（攻撃エリアとプレイヤーの当たり判定が重なったらダメージ）
+        Rectangle attackBox = new Rectangle(worldX, worldY, attackArea.width, attackArea.height);
+        Player player = getGameWindow().getPlayer();
+        Rectangle playerBox = new Rectangle(player.getWorldX(), player.getWorldY(),
+                FrameApp.getTileSize(), FrameApp.getTileSize());
+
+        if (attackBox.intersects(playerBox) && !player.getInvincible()) {
+            damagePlayer(getAttack(), knockBackPower);
+        }
+
+        attackCooldown = 60;
     }
 
     /**
@@ -1610,9 +1639,19 @@ public abstract class Entity {
 
         BufferedImage image = null;
 
-        int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
-        if (dirIndex != -1) {
-            image = sprites[dirIndex][getSpriteNum() - 1];
+        if (getAttacking()) {
+            // 攻撃スプライトを選択
+            int dirIndex = Arrays.asList(ATTACK_DIRECTIONS).indexOf(getAttackDirection());
+            if (dirIndex != -1) {
+                image = attackSprites[dirIndex][getSpriteNum() - 1];
+                System.out.println("attackSprites = " + image);
+            }
+        } else {
+            // 通常スプライトを選択
+            int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
+            if (dirIndex != -1) {
+                image = sprites[dirIndex][getSpriteNum() - 1];
+            }
         }
 
         // image が null なら即リターン
