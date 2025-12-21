@@ -3,6 +3,7 @@ package window;
 import asset.AssetSetter;
 import collision.CollisionChecker;
 import entity.Entity;
+import event.EventHandler;
 import frame.FrameApp;
 import npc.NpcOldMan;
 import object.ObjCoinBronze;
@@ -41,6 +42,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private TileManager tileManager = new TileManager(this);
     private CollisionChecker collisionChecker = new CollisionChecker(this);
     private AssetSetter assetSetter = new AssetSetter(this);
+    private EventHandler eventHandler = new EventHandler(this);
     private SoundManager soundManager = new SoundManager(this);
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
@@ -905,12 +907,20 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return mapFlags;
     }
 
-    // 例: マップフラグを個別に設定するヘルパー
+    // マップフラグを個別に設定するヘルパー
     public void setMapFlag(String name, boolean value) {
         mapFlags.put(name, value);
     }
 
     public int getSaveState() {
         return saveState;
+    }
+
+    public EventHandler getEventHandler() {
+        return eventHandler;
+    }
+
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
     }
 }

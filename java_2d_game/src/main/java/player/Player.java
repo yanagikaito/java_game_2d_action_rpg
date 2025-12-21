@@ -44,6 +44,7 @@ public class Player extends Entity {
     private int invincibleCounter = 0;
     private final int INVINCIBLE_DURATION = 60; // 60フレーム無敵
     private int attackCounter;
+    private boolean invincible = false;
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
@@ -368,6 +369,7 @@ public class Player extends Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+        gameWindow.getEventHandler().checkEvent();
         int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
         gameWindow.changeMap(collidedTileId);
 
@@ -1380,5 +1382,13 @@ public class Player extends Entity {
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
+    }
+
+    public void takeDamage(int dmg) {
+        setLife(getLife() - dmg);
+        gameWindow.getUi().addMessage("何かにぶつかり" + dmg + "ダメージ!");
+        if (getLife() <= 0) {
+            gameWindow.setGameState(gameWindow.getGameOverState());
+        }
     }
 }
