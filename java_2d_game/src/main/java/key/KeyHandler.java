@@ -252,6 +252,7 @@ public class KeyHandler implements KeyListener {
                     }
                     if (getCommandNum() == 1) {
                         gameWindow.setGameState(gameWindow.getTitleState());
+                        gameWindow.getUi().returnToTitleFromGameOver();
                     }
                 }
             }
