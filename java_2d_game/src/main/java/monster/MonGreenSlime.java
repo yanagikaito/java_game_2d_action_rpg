@@ -56,6 +56,7 @@ public class MonGreenSlime extends Entity {
 
     public void loadMonsterImages() {
 
+        setSprites(sprites);
         try {
             int tileSize = FrameApp.getTileSize();
             setSprites(new BufferedImage[DIRECTIONS.length][SPRITE_COUNT]);
