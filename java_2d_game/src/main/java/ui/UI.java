@@ -9,6 +9,7 @@ import player.Player;
 import save.SaveManager;
 import window.GameWindow;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class UI {
     private String currentDialogueMessage;
     private ArrayList<String> message = new ArrayList<>();
     private ArrayList<Integer> messageCounter = new ArrayList<>();
+    private TriforcePanel triforcePanel = new TriforcePanel();
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -225,7 +227,52 @@ public class UI {
         if (gameWindow.getKeyHandler().getCommandNum() == 2) {
             g2.drawString(">", x - 40, y);
         }
+
+        // トライフォース描画
+        if (triforcePanel != null) {
+            triforcePanel.startAnimation();
+            int triforcePx = FrameApp.getTileSize() * 6; // 表示サイズ（ピクセル）
+            int centerX = FrameApp.getScreenWidth() / 2;
+            int topY = FrameApp.getTileSize() / 2;
+
+            Graphics2D tg = (Graphics2D) g2.create();
+
+            try {
+                // 移動：描画領域の中心に合わせる（正規化座標系を想定）
+                tg.translate(centerX, topY + triforcePx / 2);
+
+                // scale は TriforceRenderer が期待する scale に合わせる
+                // TriforcePanel と同じ係数
+                double scale = Math.min(triforcePx, triforcePx) / 2.6;
+
+                // Y反転して正規化座標系にする
+                tg.scale(scale, -scale);
+
+                // Renderer を呼ぶ（TriforcePanel の状態を渡す）
+                ui.TriforceRenderer.drawTriforce(
+                        tg,
+                        triforcePanel.getTris(),
+                        triforcePanel.isForming(),
+                        triforcePanel.getFormTime(),
+                        triforcePanel.getFormDuration()
+                );
+            } finally {
+                tg.dispose();
+            }
+        }
     }
+
+    public void returnToTitleFromGameOver() {
+
+        // ゲーム側の状態をタイトルに切り替え
+        gameWindow.setGameState(gameWindow.getTitleState());
+
+        SwingUtilities.invokeLater(() -> {
+            triforcePanel.resetAnimation();
+            triforcePanel.startAnimation();
+        });
+    }
+
 
     public void drawGameOverScreen(Graphics2D g2) {
 
@@ -688,5 +735,9 @@ public class UI {
 
     public void setCoin(BufferedImage coin) {
         this.coin = coin;
+    }
+
+    public TriforcePanel getTriforcePanel() {
+        return triforcePanel;
     }
 }
