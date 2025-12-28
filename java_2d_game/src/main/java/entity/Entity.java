@@ -204,18 +204,6 @@ public abstract class Entity {
                 }
             }
 
-            // スプライトアニメーション
-            if (getAttacking()) {
-                setSpriteCounter(getSpriteCounter() + 1);
-                if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
-                    setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
-                    setSpriteCounter(0);
-                }
-                if (spriteNum == SPRITE_COUNT) {
-                    setAttacking(false);
-                }
-            }
-
             knockBackCounter++;
             if (knockBackCounter == 10) {
                 knockBackCounter = 0;
@@ -223,7 +211,17 @@ public abstract class Entity {
                 speed = defaultSpeed;
             }
 
-        } else if (attacking == true) {
+        } else if (attacking == false) {
+            // スプライトアニメーション
+            setSpriteCounter(getSpriteCounter() + 1);
+            if (getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
+                setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
+                setSpriteCounter(0);
+            }
+            if (spriteNum == SPRITE_COUNT) {
+                setAttacking(false);
+            }
+        } else {
             attacking();
         }
         // 方向を設定（フロー・フィールドで決定）
