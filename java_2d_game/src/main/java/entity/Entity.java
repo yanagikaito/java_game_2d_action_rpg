@@ -31,7 +31,6 @@ public abstract class Entity {
     private BufferedImage image;
     private BufferedImage image2;
     private BufferedImage image3;
-    private BufferedImage blurredAura;
     private boolean collision;
     private int spriteCounter;
     private int spriteNum;
@@ -41,6 +40,12 @@ public abstract class Entity {
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
+    protected String spriteKey = "entity_default";
+
+    public enum Direction {UP, DOWN, LEFT, RIGHT}
+
+    // 内部で向きを管理するフィールド
+    protected Direction facing = Direction.DOWN;
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -1891,5 +1896,38 @@ public abstract class Entity {
 
     public void setHairColor(Color targetColor) {
         this.targetColor = targetColor;
+    }
+
+    // JSON や SaveMeta 用に文字列を返す
+    public String getFacing() {
+        return facing.name().toLowerCase();
+    }
+
+    // enum を返す
+    public Direction getFacingEnum() {
+        return facing;
+    }
+
+    public void setFacing(Direction d) {
+        if (d != null) this.facing = d;
+    }
+
+    public void setFacing(String dir) {
+        if (dir == null) return;
+        switch (dir.toLowerCase()) {
+            case "up" -> setFacing(Direction.UP);
+            case "down" -> setFacing(Direction.DOWN);
+            case "left" -> setFacing(Direction.LEFT);
+            case "right" -> setFacing(Direction.RIGHT);
+            default -> setFacing(Direction.DOWN);
+        }
+    }
+
+    public String getSpriteKey() {
+        return spriteKey;
+    }
+
+    public void setSpriteKey(String key) {
+        this.spriteKey = key;
     }
 }

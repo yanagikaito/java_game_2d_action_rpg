@@ -1,4 +1,4 @@
-package ui;
+package triforce;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

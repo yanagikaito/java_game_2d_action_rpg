@@ -1,4 +1,4 @@
-package ui;
+package triforce;
 
 import javax.swing.*;
 import java.awt.geom.Point2D;

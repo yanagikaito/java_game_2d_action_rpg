@@ -1,4 +1,4 @@
-package ui;
+package triforce;
 
 /**
  * トライフォースを構成する小さな三角形の状態を保持するデータクラス。
@@ -23,34 +23,34 @@ public class SmallTri {
     private static final int COLOR_SEED_BOUND = 10_000;
 
     // 表示位置（正規化座標系）
-    public double x;
-    public double y;
+    double x;
+    double y;
 
     // 目標位置（合体時のターゲット）
-    public double targetX;
-    public double targetY;
+    double targetX;
+    double targetY;
 
     // 補間開始時の記録（合体補間で使用）
-    public double startX;
-    public double startY;
+    double startX;
+    double startY;
 
     // サイズ（半高さに相当）
-    public double size;
-    public double targetSize;
-    public double startSize;
+    double size;
+    double targetSize;
+    double startSize;
 
     // 回転角度（度）
-    public double angle;
-    public double startAngle;
+    double angle;
+    double startAngle;
 
     // 回転速度（度/秒）
-    public double angularVel;
+    double angularVel;
 
     // 上昇速度（正の値で上に移動する想定）
-    public double vy;
+    double vy;
 
     // アニメーション補助（色やバリエーションの種）
-    public int colorSeed;
+    int colorSeed;
 
     /**
      * SmallTri を生成します。
