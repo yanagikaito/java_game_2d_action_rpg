@@ -56,14 +56,15 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Thread gameThread;
     private int gameState;
     private final int titleState = 0;
-    private final int playState = 1;
-    private final int pauseState = 2;
-    private final int dialogueState = 3;
-    private final int characterState = 4;
-    private final int debugState = 5;
-    private final int gameOverState = 6;
-    private final int tradeState = 7;
-    private final int saveState = 8;
+    private final int loadState = 1;
+    private final int playState = 2;
+    private final int pauseState = 3;
+    private final int dialogueState = 4;
+    private final int characterState = 5;
+    private final int debugState = 6;
+    private final int gameOverState = 7;
+    private final int tradeState = 8;
+    private final int saveState = 9;
     private boolean onTransition = false;
     private boolean fadingOut = true;
     private float alpha = 0f;
@@ -119,6 +120,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
      * ゲームオーバー後のリトライ処理。
      * セーブデータがあればそこから再開、なければ新規ゲーム。
      */
+
     public void retry() {
 
         if (LoadManager.hasSaveData(1)) {
@@ -433,8 +435,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if (gameState == titleState) {
-
+        if (gameState == titleState || gameState == loadState) {
             getUi().draw(g2);
 
         } else {
@@ -496,8 +497,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 debugY += lineHeight;
                 g2.drawString("Col    : " + col, debugX, debugY);
             }
-
-            g2.dispose();
         }
     }
 
@@ -922,5 +921,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;
+    }
+
+    public int getLoadState() {
+        return loadState;
     }
 }

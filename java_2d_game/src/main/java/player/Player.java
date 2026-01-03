@@ -36,6 +36,7 @@ public class Player extends Entity {
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] axeSprites = new BufferedImage[AXE_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] currentAttackSprites;
+    private int characterTypeId;
     private static final long FIRE_COOLDOWN_MS = 1000;
     private long lastFireTime = 0;
     private int fireCooldown = 0;
@@ -66,7 +67,6 @@ public class Player extends Entity {
     private static final int KNOCKBACK_FRAMES = 10;
     private static final double KNOCKBACK_SPEED = 4.0;
 
-
     /**
      * プレイヤーを初期化するコンストラクタ。
      *
@@ -78,6 +78,7 @@ public class Player extends Entity {
         super(gameWindow);
         this.gameWindow = gameWindow;
         this.keyHandler = keyHandler;
+        this.spriteKey = "player_basic";
         initializeDefaultStats();
 
         screenX = FrameApp.getScreenWidth() / 2 - (FrameApp.getTileSize() / 2);
@@ -90,8 +91,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = FrameApp.getTileSize() - 3;
-        getSolidArea().height = FrameApp.getTileSize() - 3;
+        getSolidArea().width = FrameApp.getTileSize() - 1;
+        getSolidArea().height = FrameApp.getTileSize() - 1;
 
 
         setHitBoxX(getSolidArea().x);
@@ -1172,6 +1173,13 @@ public class Player extends Entity {
         g2.drawImage(original, 0, 0, width, height, null);
         g2.dispose();
         return result;
+    }
+
+    @Override
+    public String getSpriteKey() {
+        // 装備やスキンで切り替えるロジック
+        if (characterTypeId == 1) return "player_knight";
+        return spriteKey;
     }
 
     /**

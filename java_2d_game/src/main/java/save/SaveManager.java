@@ -1,15 +1,28 @@
 package save;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import entity.Entity;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class SaveManager {
 
+    // DB 関連
     static final String DB_URL = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE";
+
+    // JSON メタ関連
+    private static final String SAVE_DIR = "saves";
+    private static final String SLOT_PREFIX = "slot";
+    private static final String SUFFIX = ".json";
+    private static final Gson gson = new Gson();
 
     public static void saveGame(int slot, Entity entity) {
         // セーブ時刻をここで生成（ロード時にnullになるのを防ぐ）
@@ -30,6 +43,11 @@ public class SaveManager {
             saveEquipment(conn, slot, data);
             conn.commit();
             System.out.println("Game saved : slot " + slot);
+
+            // フルセーブ成功後にメタを書き出す
+            SaveMeta meta = new SaveMeta(true, data.hp(), data.maxHp(),
+                    entity.getFacing(), entity.getSpriteKey(), System.currentTimeMillis());
+            writeMeta(slot, meta);
 
         } catch (SQLException e) {
             if (conn != null) {
@@ -127,6 +145,44 @@ public class SaveManager {
             pstmt.setString(2, itemType);
             pstmt.setInt(3, typeId);
             pstmt.executeUpdate();
+        }
+    }
+
+    // --- JSON メタ読み書き ---
+    public static SaveMeta loadMeta(int slotIndex) {
+        File dir = new File(SAVE_DIR);
+        if (!dir.exists() || !dir.isDirectory()) {
+            return new SaveMeta(false, 0, 0, "player_basic", "down", 0L);
+        }
+        File file = new File(dir, SLOT_PREFIX + slotIndex + SUFFIX);
+        if (!file.exists() || !file.isFile()) {
+            return new SaveMeta(false, 0, 0, "player_basic", "down", 0L);
+        }
+        try (FileReader fr = new FileReader(file)) {
+            SaveMeta meta = gson.fromJson(fr, SaveMeta.class);
+            if (meta == null) {
+                return new SaveMeta(false, 0, 0, "player_basic", "down", 0L);
+            }
+            return meta;
+        } catch (IOException | JsonSyntaxException e) {
+            System.err.println("Failed to read meta for slot " + slotIndex + ": " + e.getMessage());
+            return new SaveMeta(false, 0, 0, "down", "player_basic", 0L);
+        }
+    }
+
+    public static boolean writeMeta(int slotIndex, SaveMeta meta) {
+        File dir = new File(SAVE_DIR);
+        if (!dir.exists() && !dir.mkdirs()) {
+            System.err.println("Failed to create save directory: " + SAVE_DIR);
+            return false;
+        }
+        File file = new File(dir, SLOT_PREFIX + slotIndex + SUFFIX);
+        try (FileWriter fw = new FileWriter(file)) {
+            gson.toJson(meta, fw);
+            return true;
+        } catch (IOException e) {
+            System.err.println("Failed to write meta for slot " + slotIndex + ": " + e.getMessage());
+            return false;
         }
     }
 }

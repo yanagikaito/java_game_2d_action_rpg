@@ -6,7 +6,12 @@ import frame.FrameApp;
 import npc.NpcMerChant;
 import object.*;
 import player.Player;
+import player.SpriteManager;
 import save.SaveManager;
+import save.SaveMeta;
+import triforce.SmallTri;
+import triforce.TriforcePanel;
+import triforce.TriforceRenderer;
 import window.GameWindow;
 
 import javax.swing.*;
@@ -34,6 +39,7 @@ public class UI {
     private ArrayList<String> message = new ArrayList<>();
     private ArrayList<Integer> messageCounter = new ArrayList<>();
     private TriforcePanel triforcePanel = new TriforcePanel();
+    private SpriteManager spriteManager = new SpriteManager();
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -49,6 +55,10 @@ public class UI {
     private boolean dialogueOn = false;
     private Entity npc;
     private int subState;
+
+    private SaveMeta[] saveMetas;
+    private final int SLOT_COUNT = 3;
+    private int loadSlotIndex = 0;
 
     private final ScreenContext tradeCtx;
 
@@ -92,6 +102,7 @@ public class UI {
 
         int gameState = gameWindow.getGameState();
         int titleState = gameWindow.getTitleState();
+        int loadState = gameWindow.getLoadState();
         int playState = gameWindow.getPlayState();
         int pauseState = gameWindow.getPauseState();
         int dialogueState = gameWindow.getDialogueState();
@@ -103,6 +114,11 @@ public class UI {
         if (gameState == titleState) {
 
             drawTitleScreen(g2);
+
+        } else if (gameState == loadState) {
+
+            gameWindow.setDialogueActive(false);
+            drawLoadScreen(g2);
 
         } else if (gameState == playState) {
 
@@ -184,7 +200,7 @@ public class UI {
         }
     }
 
-    private void drawTitleScreen(Graphics2D g2) {
+    public void drawTitleScreen(Graphics2D g2) {
 
         String text;
         int x;
@@ -214,7 +230,7 @@ public class UI {
 
         text = "ゲームロード";
         x = getXForCenteredText(g2, text);
-        y += 55;
+        y += tileSize + 7;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 1) {
             g2.drawString(">", x - 40, y);
@@ -222,7 +238,7 @@ public class UI {
 
         text = "ゲーム終了";
         x = getXForCenteredText(g2, text);
-        y += 55;
+        y += tileSize + 7;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 2) {
             g2.drawString(">", x - 40, y);
@@ -249,7 +265,7 @@ public class UI {
                 tg.scale(scale, -scale);
 
                 // Renderer を呼ぶ（TriforcePanel の状態を渡す）
-                ui.TriforceRenderer.drawTriforce(
+                TriforceRenderer.drawTriforce(
                         tg,
                         triforcePanel.getTris(),
                         triforcePanel.isForming(),
@@ -261,6 +277,116 @@ public class UI {
             }
         }
     }
+
+    public void initLoadScreen() {
+        saveMetas = new SaveMeta[SLOT_COUNT];
+        for (int i = 0; i < SLOT_COUNT; i++) { // SaveManager.loadMeta はセーブの存在チェックと簡易情報を返す想定
+            saveMetas[i] = SaveManager.loadMeta(i); // null ではなく SaveMeta を返す設計が望ましい
+        }
+        loadSlotIndex = 0;
+    }
+
+    public void drawLoadScreen(Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+
+        int frameX = tileSize / 2;
+        int frameY = tileSize / 2;
+        int frameWidth = tileSize * 15;
+        int frameHeight = tileSize * 3;
+        drawLoadPlayerLife(g2);
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
+
+        String text;
+        int x;
+        int y;
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
+
+        text = "slot0";
+        x = getXForCenteredText(g2, text);
+        y = tileSize * 2;
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 0) {
+            g2.drawString(">", x - 40, y);
+        }
+
+        // slot0 がセーブされているならハートとプレビューを描画
+        if (saveMetas != null && saveMetas.length > 0 && saveMetas[0] != null && saveMetas[0].exists()) {
+            SaveMeta meta = saveMetas[0];
+            drawPlayerLife(g2);
+            // プレイヤープレビュー（右側に表示する例）
+            int previewX = frameX + frameWidth - tileSize * 3;
+            int previewY = frameY + 8;
+            drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+        }
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
+
+        frameX = tileSize / 2;
+        frameY = FrameApp.getScreenHeight() / 3;
+        frameWidth = tileSize * 15;
+        frameHeight = tileSize * 3;
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
+
+        text = "slot1";
+        x = getXForCenteredText(g2, text);
+        y += (int) (tileSize * 3.5);
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 1) {
+            g2.drawString(">", x - 40, y);
+        }
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
+
+        frameX = tileSize / 2;
+        frameY = (int) ((FrameApp.getScreenHeight() + tileSize) / 1.7);
+        frameWidth = tileSize * 15;
+        frameHeight = tileSize * 3;
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
+
+        text = "slot2";
+        x = getXForCenteredText(g2, text);
+        y += (int) (tileSize * 3.5);
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 2) {
+            g2.drawString(">", x - 40, y);
+        }
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
+    }
+
+    // スプライトプレビュー描画ヘルパー（spriteManager を使う想定）
+    private void drawSpritePreview(Graphics2D g2, SaveMeta meta, int x, int y, int w, int h) {
+        System.out.println("drawSpritePreview: meta=" + meta);
+        if (meta == null) {
+            System.out.println("meta is null");
+        } else {
+            System.out.println("key=" + meta.getSpriteKey() + ", facing=" + meta.getFacing() + ", savedAt=" + meta.getSavedAt());
+        }
+        System.out.println("spriteManager=" + spriteManager);
+        BufferedImage sprite = null;
+        try {
+            // spriteManager.getSprite(key, facing, frame) のような API を想定
+            sprite = spriteManager.getSprite(meta.getSpriteKey(), meta.getFacing(), 0);
+        } catch (Exception e) {
+            // 無ければ null のままフォールバック
+        }
+
+        if (sprite != null) {
+            g2.drawImage(sprite, x, y, w, h, null);
+        } else {
+            // フォールバック表示（グレーの四角）
+            g2.setColor(Color.GRAY);
+            g2.fillRect(x, y, w, h);
+            g2.setColor(Color.WHITE);
+            g2.drawString("No sprite", x + 4, y + h / 2);
+        }
+    }
+
 
     public void returnToTitleFromGameOver() {
 
@@ -313,6 +439,31 @@ public class UI {
     }
 
     public void drawPlayerLife(Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+        int startX = tileSize / 2;
+        int y = tileSize / 2;
+
+        var player = gameWindow.getPlayer();
+
+        int maxHearts = player.getMaxLife() / 2;
+        int life = player.getLife();
+        int fullHearts = life / 2;
+        int halfHearts = life % 2;
+
+        for (int i = 0; i < maxHearts; i++) {
+            int x = startX + i * tileSize;
+            if (i < fullHearts) {
+                g2.drawImage(heartFull, x, y, tileSize, tileSize, null);
+            } else if (i == fullHearts && halfHearts == 1) {
+                g2.drawImage(heartHalf, x, y, tileSize, tileSize, null);
+            } else {
+                g2.drawImage(heartBlank, x, y, tileSize, tileSize, null);
+            }
+        }
+    }
+
+    public void drawLoadPlayerLife(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
         int startX = tileSize / 2;

@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":pathfinding_editor"))
     implementation("com.h2database:h2:2.2.224")
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 tasks.withType<JavaExec>().configureEach {

@@ -194,21 +194,73 @@ public class KeyHandler implements KeyListener {
                 }
                 case KeyEvent.VK_S -> {
                     setCommandNum(getCommandNum() + 1);
-                    if (getCommandNum() > 1) {
+                    if (getCommandNum() > 2) {
                         setCommandNum(0);
                     }
                     gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_ENTER -> {
-                    if (getCommandNum() == 0) {
+                    int selected = getCommandNum();
+                    if (selected == 0) {
                         gameWindow.setGameState(gameWindow.getPlayState());
                         gameWindow.restart();
                         clearAllKeys();
-                    } else if (commandNum == 1 || isPlayerEnter()) {
+                    } else if (selected == 1) {
+                        gameWindow.setGameState(gameWindow.getLoadState());
+                        gameWindow.getUi().initLoadScreen(); // 2. ロード画面用データを初期化（saveMetas 読み込み）
+                        gameWindow.repaint();
+                    } else if (selected == 2) {
+                        System.exit(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
+            }
+        }
+
+        if (gameWindow.getGameState() == gameWindow.getLoadState()) {
+
+            switch (code) {
+                case KeyEvent.VK_W -> {
+                    setCommandNum(getCommandNum() - 1);
+                    if (getCommandNum() < 0) {
+                        setCommandNum(2);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_S -> {
+                    setCommandNum(getCommandNum() + 1);
+                    if (getCommandNum() > 2) {
+                        setCommandNum(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_ENTER -> {
+                    int selected = getCommandNum();
+                    if (selected == 0) {
                         Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
                             gameWindow.setGameState(gameWindow.getPlayState());
+                            gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
+                            gameWindow.repaint();
+                            System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
+                            // ロード後
+                            System.out.println("load: HP=" + gameWindow.getPlayer().getLife() +
+                                    ", Weapon=" + (gameWindow.getPlayer().getCurrentWeapon() != null ?
+                                    gameWindow.getPlayer().getCurrentWeapon().getName() : "no") +
+                                    ", Inventory=" + gameWindow.getPlayer().getInventory().size());
+                        } else {
+                            // セーブデータなしのメッセージ
+                            gameWindow.getUi().addMessage("セーブデータなし");
+                        }
+                    } else if (selected == 1) {
+                        Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
+                        if (loadedPlayer != null) {
+                            gameWindow.setPlayer((Player) loadedPlayer);
+//                            gameWindow.setGameState(gameWindow.getPlayState());
+                            gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
+                            gameWindow.repaint();
+                            System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
                             // ロード後
                             System.out.println("load: HP=" + gameWindow.getPlayer().getLife() +
                                     ", Weapon=" + (gameWindow.getPlayer().getCurrentWeapon() != null ?
@@ -219,7 +271,22 @@ public class KeyHandler implements KeyListener {
                             gameWindow.getUi().addMessage("セーブデータなし");
                         }
                     } else if (getCommandNum() == 2) {
-                        System.exit(0);
+                        Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
+                        if (loadedPlayer != null) {
+                            gameWindow.setPlayer((Player) loadedPlayer);
+                            gameWindow.setGameState(gameWindow.getPlayState());
+                            gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
+                            gameWindow.repaint();
+                            System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
+                            // ロード後
+                            System.out.println("load: HP=" + gameWindow.getPlayer().getLife() +
+                                    ", Weapon=" + (gameWindow.getPlayer().getCurrentWeapon() != null ?
+                                    gameWindow.getPlayer().getCurrentWeapon().getName() : "no") +
+                                    ", Inventory=" + gameWindow.getPlayer().getInventory().size());
+                        } else {
+                            // セーブデータなしのメッセージ
+                            gameWindow.getUi().addMessage("セーブデータなし");
+                        }
                     }
                     gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
