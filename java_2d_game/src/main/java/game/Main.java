@@ -1,8 +1,8 @@
 package game;
 
 import window.GameWindow;
-import window.Window;
 
+import javax.swing.*;
 import java.sql.SQLException;
 
 
@@ -16,7 +16,9 @@ public class Main {
             System.err.println("Failed to initialize the database");
         }
 
-        Window gameFrame = GameWindow.getInstance();
-        gameFrame.frame();
+        SwingUtilities.invokeLater(() -> {
+            GameWindow gameFrame = GameWindow.getInstance();
+            gameFrame.frame();
+        });
     }
 }

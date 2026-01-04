@@ -91,8 +91,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = FrameApp.getTileSize() - 1;
-        getSolidArea().height = FrameApp.getTileSize() - 1;
+        getSolidArea().width = FrameApp.getTileSize() - 2;
+        getSolidArea().height = FrameApp.getTileSize() - 2;
 
 
         setHitBoxX(getSolidArea().x);
