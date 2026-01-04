@@ -20,6 +20,7 @@ public class FrameFactory {
 
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
+            return frame;
         };
     }
 }

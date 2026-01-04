@@ -36,7 +36,6 @@ import static frame.FrameApp.baseDisplay;
 
 public class GameWindow extends JPanel implements Window, Runnable {
 
-    private GameFrame gameFrame = FrameFactory.createFrame(baseDisplay(), this);
     private KeyHandler keyHandler = new KeyHandler(this);
     private Player player = new Player(this, keyHandler);
     private TileManager tileManager = new TileManager(this);
@@ -84,7 +83,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
-        this.startThread();
         this.setLayout(null);
         this.addKeyListener(keyHandler);
         this.setUpGame();
@@ -117,6 +115,47 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     /**
+     * ゲームループ用スレッドを安全に開始。
+     *
+     * <p>
+     * このメソッドは {@code gameThread} が未生成または既に終了している場合にのみ新しいスレッドを生成して開始。
+     * スレッド生成と開始処理は {@code synchronized} により排他制御されるため、二重起動の競合を防ぐ。
+     * </p>
+     *
+     * <p>
+     * 生成されるスレッドは {@code Runnable}（このクラスの {@code run()} 実装）を実行し、名前は "GameThread" に設定。
+     * </p>
+     *
+     * <h4>注意</h4>
+     * <ul>
+     *   <li>UI（Swing）の初期化が完了してから呼び出すこと（例: {@code windowOpened} イベント）。</li>
+     *   <li>二重起動は内部で防止されるが、呼び出し側でも起動タイミングを管理するとより安全。</li>
+     * </ul>
+     *
+     * @see #stopGame()
+     */
+
+    public synchronized void startGame() {
+        if (gameThread == null || !gameThread.isAlive()) {
+            gameThread = new Thread(this, "GameThread");
+            gameThread.start();
+        }
+    }
+
+    public synchronized void stopGame() {
+        // gameThread を null にすることでループを抜けさせる
+        Thread t = gameThread;
+        gameThread = null;
+        if (t != null) {
+            try {
+                t.join(1000); // 最大1秒待つ
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    /**
      * ゲームオーバー後のリトライ処理。
      * セーブデータがあればそこから再開、なければ新規ゲーム。
      */
@@ -136,10 +175,49 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
 
         // セーブデータなし or ロード失敗 → 新規ゲーム
-        restart();
+        restartSafely();
         setGameState(playState);
         System.out.println("Starting a new game");
     }
+
+    /**
+     * ゲームを安全に再起動。
+     *
+     * <p>
+     * このメソッドは次の順序で処理を行う：
+     * </p>
+     * <ol>
+     *   <li>{@link #stopGame()} を呼んで現在のゲームループを安全に停止する。</li>
+     *   <li>{@link #restart()} を呼んでゲーム状態（プレイヤー、マップ配置、アイテム等）を初期化する。</li>
+     *   <li>{@link #startGame()} を呼んでゲームループを再起動する。</li>
+     * </ol>
+     *
+     * <h4>設計上の注意</h4>
+     * <ul>
+     *   <li>{@code stopGame()} と {@code startGame()} は {@code synchronized} で保護されているため、
+     *       再起動処理中の競合は基本的に防がれる。</li>
+     *   <li>{@code stopGame()} は内部で {@code join(...)} を行う可能性があり、呼び出し元スレッドを一時的に待機させる。
+     *       そのため Swing の EDT（UI スレッド）上で直接呼び出すと UI が固まる恐れがあります。UI ハンドラから呼ぶ場合は
+     *       別スレッドで実行するか、非同期に処理する。</li>
+     *   <li>ゲームスレッド自身からこのメソッドを呼ぶとデッドロックや自己待機が発生する可能性があるため避ける。</li>
+     * </ul>
+     *
+     * <h4>用途</h4>
+     * <p>
+     * セーブデータのロード失敗後に新規ゲームを開始する場合や、ゲームオーバー後に完全に状態をリセットして再開したい場合などに使用する。
+     * </p>
+     *
+     * @see #stopGame()
+     * @see #restart()
+     * @see #startGame()
+     */
+
+    public void restartSafely() {
+        stopGame();    // ゲームループを止める
+        restart();     // 状態初期化（プレイヤー等）
+        startGame();   // 再起動
+    }
+
 
     /**
      * ゲーム再スタート（ニューゲーム）時の初期化処理を行う。
@@ -213,23 +291,55 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     /**
-     * Window インタフェースのメソッド。
-     * フレームを作成して表示。
+     * フレームを作成して表示します（Window インタフェースの実装）。
+     *
+     * <p>
+     * このメソッドはフレームの遅延初期化を行い、以下の責務を持つ：
+     * </p>
+     * <ul>
+     *   <li>FrameFactory を使って {@code GameFrame} を生成し、実際の {@link javax.swing.JFrame} を取得する。</li>
+     *   <li>ウィンドウリスナを登録し、ウィンドウが開いたときに {@link #startGame()} を呼んでゲームループを開始する。</li>
+     *   <li>ウィンドウが閉じられたときは別スレッド（"ShutdownWorker"）で {@link #stopGame()} を呼び、ゲームループの安全な停止を待った後に
+     *       {@link javax.swing.SwingUtilities#invokeLater(Runnable)} を使って EDT 上で {@code JFrame#dispose()} を実行する。</li>
+     * </ul>
+     *
+     * <h4>設計上の注意</h4>
+     * <ul>
+     *   <li>フィールド初期化時に {@code this} を外部に渡さない（遅延初期化）ことで、未初期化状態で別スレッドに参照されるリスクを避ける。</li>
+     *   <li>{@code startGame()} は UI の初期化が完了したタイミング（{@code windowOpened}）で呼ぶことで、ゲームスレッドが未初期化のフィールドを参照することを防ぐ。</li>
+     *   <li>{@code stopGame()} は内部で {@code join()} を行う可能性があるため、EDT をブロックしないよう必ず別スレッドから呼び出す。</li>
+     *   <li>ウィンドウ破棄（dispose）は必ず EDT 上で行うこと（Swing のスレッドルールに従う）。</li>
+     * </ul>
+     *
+     * <h4>副作用と例外</h4>
+     * <ul>
+     *   <li>FrameFactory の実装が期待する型（{@code GameFrame} が正しく {@code JFrame} を返す）であることを前提とする。</li>
+     *   <li>フレーム生成や表示に失敗した場合は呼び出し側で適切にログや例外処理を行うこと。</li>
+     * </ul>
      */
 
     @Override
     public void frame() {
-        gameFrame.createFrame();
+        // フィールドは遅延初期化しておく（コンストラクタで this を渡さない）
+        GameFrame gf = FrameFactory.createFrame(baseDisplay(), this);
+        JFrame jf = gf.create();
+
+        jf.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                startGame();
+            }
+
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                new Thread(() -> {
+                    stopGame();
+                    javax.swing.SwingUtilities.invokeLater(jf::dispose);
+                }, "ShutdownWorker").start();
+            }
+        });
     }
 
-    /**
-     * ゲーム用スレッドを生成し起動。
-     */
-
-    public void startThread() {
-        gameThread = new Thread(this);
-        gameThread.start();
-    }
 
     /**
      * フェードアウト／フェードインを含むマップ遷移エフェクトを更新。
