@@ -2,6 +2,7 @@ package player;
 
 import entity.*;
 import frame.FrameApp;
+import game.GameState;
 import key.KeyHandler;
 import npc.NpcMerChant;
 import npc.NpcSave;
@@ -91,8 +92,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = FrameApp.getTileSize() - 2;
-        getSolidArea().height = FrameApp.getTileSize() - 2;
+        getSolidArea().width = (int) (FrameApp.getTileSize() - 1.3);
+        getSolidArea().height = (int) (FrameApp.getTileSize() - 1.3);
 
 
         setHitBoxX(getSolidArea().x);
@@ -562,11 +563,11 @@ public class Player extends Entity {
             if (e instanceof NpcMerChant) {
                 // 商人との接触
                 talkNpcIndex = npcIndex;
-                gameWindow.setGameState(gameWindow.getDialogueState());
+                gameWindow.setGameState(GameState.DIALOGUE);
                 gameWindow.getUi().addDialogue(((NpcMerChant) e).getNextDialogue());
             } else if (e instanceof NpcSave) {
                 talkNpcIndex = npcIndex;
-                gameWindow.setGameState(gameWindow.getDialogueState());
+                gameWindow.setGameState(GameState.DIALOGUE);
                 gameWindow.getUi().addDialogue(((NpcSave) e).getNextDialogue());
             }
         }
@@ -821,7 +822,7 @@ public class Player extends Entity {
 
         if (keyHandler.isPlayerEnter()) {
             if (i != 999) {
-                gameWindow.setGameState(gameWindow.getDialogueState());
+                gameWindow.setGameState(GameState.DIALOGUE);
                 gameWindow.getNPC()[i].speak();
             } else {
                 setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
@@ -880,7 +881,7 @@ public class Player extends Entity {
 
             if (getLife() <= 0) {
                 setLife(0);
-                gameWindow.setGameState(gameWindow.getGameOverState());
+                gameWindow.setGameState(GameState.GAME_OVER);
             }
 
 //                System.out.println("モンスター衝突: " + i);
@@ -1034,7 +1035,7 @@ public class Player extends Entity {
             setAttack(calculateTotalAttack());
             setDefense(calculateTotalDefense());
             gameWindow.getSoundmanager().levelWAV("sound/level-up-sound.wav");
-            gameWindow.setGameState(gameWindow.getDialogueState());
+            gameWindow.setGameState(GameState.DIALOGUE);
             gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");
             gameWindow.getPlayer().setLife(gameWindow.getPlayer().getMaxLife());
         }
@@ -1396,7 +1397,7 @@ public class Player extends Entity {
         setLife(getLife() - dmg);
         gameWindow.getUi().addMessage("何かにぶつかり" + dmg + "ダメージ!");
         if (getLife() <= 0) {
-            gameWindow.setGameState(gameWindow.getGameOverState());
+            gameWindow.setGameState(GameState.GAME_OVER);
         }
     }
 }

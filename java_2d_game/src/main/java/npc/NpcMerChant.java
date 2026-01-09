@@ -2,6 +2,7 @@ package npc;
 
 import entity.Entity;
 import frame.FrameApp;
+import game.GameState;
 import object.*;
 import ui.ScreenContext;
 import window.GameWindow;
@@ -79,9 +80,8 @@ public class NpcMerChant extends Entity {
     public void speak() {
 
         GameWindow gameWindow = getGameWindow();
-        int tradeState = gameWindow.getTradeState();
         super.speak();
-        gameWindow.setGameState(tradeState);
+        gameWindow.setGameState(GameState.TRADE);
 
         gameWindow.getUi().setNpc(this);
 

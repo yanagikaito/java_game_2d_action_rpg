@@ -3,6 +3,7 @@ package ui;
 import entity.Entity;
 import entity.EntityType;
 import frame.FrameApp;
+import game.GameState;
 import npc.NpcMerChant;
 import object.*;
 import player.Player;
@@ -100,58 +101,49 @@ public class UI {
         g2.setFont(arial40);
         g2.setColor(Color.white);
 
-        int gameState = gameWindow.getGameState();
-        int titleState = gameWindow.getTitleState();
-        int loadState = gameWindow.getLoadState();
-        int playState = gameWindow.getPlayState();
-        int pauseState = gameWindow.getPauseState();
-        int dialogueState = gameWindow.getDialogueState();
-        int charState = gameWindow.getCharacterState();
-        int gameOverState = gameWindow.getGameOverState();
-        int tradeState = gameWindow.getTradeState();
-        int saveState = gameWindow.getSaveState();
+        GameState gameState = gameWindow.getGameState();
 
-        if (gameState == titleState) {
+        if (gameState == GameState.TITLE) {
 
             drawTitleScreen(g2);
 
-        } else if (gameState == loadState) {
+        } else if (gameState == GameState.LOAD) {
 
             gameWindow.setDialogueActive(false);
             drawLoadScreen(g2);
 
-        } else if (gameState == playState) {
+        } else if (gameState == GameState.PLAY) {
 
             gameWindow.setDialogueActive(false);
             drawPlayerLife(g2);
             drawBattleLogMessage(g2);
             drawManaBar(g2);
 
-        } else if (gameState == pauseState) {
+        } else if (gameState == GameState.PAUSE) {
 
             gameWindow.setDialogueActive(false);
             drawPlayerLife(g2);
             drawPauseScreen(g2);
 
-        } else if (gameState == dialogueState) {
+        } else if (gameState == GameState.DIALOGUE) {
 
             gameWindow.setDialogueActive(true);
             drawPlayerLife(g2);
             drawDialogueScreen(g2);
 
-        } else if (gameState == charState) {
+        } else if (gameState == GameState.CHARACTER) {
 
             gameWindow.setDialogueActive(false);
             drawCharacterScreen(g2);
             drawInventory(g2, gameWindow.getPlayer(), true);
 
-        } else if (gameState == gameOverState) {
+        } else if (gameState == GameState.GAME_OVER) {
             drawGameOverScreen(g2);
 
-        } else if (gameState == tradeState) {
+        } else if (gameState == GameState.TRADE) {
             drawTradeScreen(g2);
 
-        } else if (gameState == saveState) {
+        } else if (gameState == GameState.SAVE) {
             drawSaveScreen(g2);
         }
 
@@ -187,7 +179,7 @@ public class UI {
             if (gameWindow.getKeyHandler().isPlayerEnter()) {
                 SaveManager.saveGame(1, gameWindow.getPlayer());
                 addMessage("セーブしました。");
-                gameWindow.setGameState(gameWindow.getPlayState());
+                gameWindow.setGameState(GameState.PLAY);
             }
         }
 
@@ -391,7 +383,7 @@ public class UI {
     public void returnToTitleFromGameOver() {
 
         // ゲーム側の状態をタイトルに切り替え
-        gameWindow.setGameState(gameWindow.getTitleState());
+        gameWindow.setGameState(GameState.TITLE);
 
         SwingUtilities.invokeLater(() -> {
             triforcePanel.resetAnimation();

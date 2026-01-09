@@ -2,6 +2,7 @@ package ui;
 
 import entity.Entity;
 import frame.FrameApp;
+import game.GameState;
 import key.KeyHandler;
 
 import java.awt.*;
@@ -48,7 +49,7 @@ public final class MenuState implements TradeScreenState {
                 case EXIT -> {
                     keyHandler.clearAllKeys();
                     keyHandler.setCommandNum(0);
-                    screenContext.gw().setGameState(screenContext.gw().getPlayState());
+                    screenContext.gw().setGameState(GameState.PLAY);
                 }
             }
         }

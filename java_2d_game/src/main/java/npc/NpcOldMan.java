@@ -3,6 +3,7 @@ package npc;
 import collision.CollisionChecker;
 import entity.Entity;
 import frame.FrameApp;
+import game.GameState;
 import window.GameWindow;
 import db.*;
 
@@ -91,7 +92,7 @@ public class NpcOldMan extends Entity {
 
     private void onHitPlayer() {
         this.following = false;
-        getGameWindow().setGameState(getGameWindow().getGameOverState());
+        getGameWindow().setGameState(GameState.GAME_OVER);
     }
 
     private void randomWalkStep() {

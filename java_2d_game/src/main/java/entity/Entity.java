@@ -1,6 +1,7 @@
 package entity;
 
 import frame.FrameApp;
+import game.GameState;
 import object.Projectile;
 import player.Player;
 import window.GameWindow;
@@ -325,7 +326,7 @@ public abstract class Entity {
 
         if (gameWindow.getPlayer().getLife() <= 0) {
             gameWindow.getPlayer().setLife(0);
-            gameWindow.setGameState(gameWindow.getGameOverState());
+            gameWindow.setGameState(GameState.GAME_OVER);
         }
     }
 

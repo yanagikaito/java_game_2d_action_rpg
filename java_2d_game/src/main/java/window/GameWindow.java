@@ -5,6 +5,7 @@ import collision.CollisionChecker;
 import entity.Entity;
 import event.EventHandler;
 import frame.FrameApp;
+import game.GameState;
 import npc.NpcOldMan;
 import object.ObjCoinBronze;
 import object.ObjGreenPotion;
@@ -52,18 +53,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private ArrayList<Entity> particleList = new ArrayList<>();
     public ArrayList<Entity> itemList = new ArrayList<>();
     private static GameWindow instance;
+    private GameState gameState = GameState.TITLE;
     private Thread gameThread;
-    private int gameState;
-    private final int titleState = 0;
-    private final int loadState = 1;
-    private final int playState = 2;
-    private final int pauseState = 3;
-    private final int dialogueState = 4;
-    private final int characterState = 5;
-    private final int debugState = 6;
-    private final int gameOverState = 7;
-    private final int tradeState = 8;
-    private final int saveState = 9;
     private boolean onTransition = false;
     private boolean fadingOut = true;
     private float alpha = 0f;
@@ -98,7 +89,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
-        gameState = titleState;
+        gameState = GameState.TITLE;
     }
 
     /**
@@ -168,7 +159,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             Entity loadedPlayer = LoadManager.loadPlayer(1, this);
             if (loadedPlayer != null) {
                 setPlayer((Player) loadedPlayer);
-                setGameState(playState);
+                setGameState(GameState.PLAY);
                 System.out.println("Resuming from Map" + loadedPlayer.getMapId());
                 return;
             }
@@ -176,7 +167,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         // セーブデータなし or ロード失敗 → 新規ゲーム
         restartSafely();
-        setGameState(playState);
+        setGameState(GameState.PLAY);
         System.out.println("Starting a new game");
     }
 
@@ -377,7 +368,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void update() {
 
-        if (gameState == playState) {
+        if (gameState == GameState.PLAY) {
 
             if (onTransition) {
                 updateTransition();
@@ -452,7 +443,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 }
             }
         }
-        if (gameState == pauseState) {
+        if (gameState == GameState.PAUSE) {
 
         }
     }
@@ -545,7 +536,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if (gameState == titleState || gameState == loadState) {
+        if (gameState == GameState.TITLE || gameState == GameState.LOAD) {
             getUi().draw(g2);
 
         } else {
@@ -718,38 +709,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
      * @return 現在の gameState 値
      */
 
-    public int getGameState() {
+    public synchronized GameState getGameState() {
         return gameState;
     }
 
-    /**
-     * ポーズ状態を示すステートID を返す。
-     *
-     * @return pauseState（整数値）
-     */
-
-    public int getPauseState() {
-        return pauseState;
-    }
-
-    /**
-     * プレイ状態を示すステートID を返す。
-     *
-     * @return playState（整数値）
-     */
-
-    public int getPlayState() {
-        return playState;
-    }
-
-    /**
-     * ゲームステートを設定する。
-     *
-     * @param gameState 新しいステートID
-     */
-
-    public void setGameState(int gameState) {
-        this.gameState = gameState;
+    public synchronized void setGameState(GameState newState) {
+        if (newState == null) throw new IllegalArgumentException("gameState must not be null");
+        this.gameState = newState;
     }
 
     /**
@@ -795,16 +761,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     /**
-     * 対話状態を示すステートID を返す。
-     *
-     * @return dialogueState（整数値）
-     */
-
-    public int getDialogueState() {
-        return dialogueState;
-    }
-
-    /**
      * UI 管理オブジェクトを返す。
      *
      * @return UI オブジェクト
@@ -822,16 +778,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public SoundManager getSoundmanager() {
         return soundManager;
-    }
-
-    /**
-     * キャラクターステートを示すステートID を返す。
-     *
-     * @return characterState（整数値）
-     */
-
-    public int getCharacterState() {
-        return characterState;
     }
 
     /**
@@ -896,16 +842,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     /**
-     * タイトルステートID を返す。
-     *
-     * @return titleState（整数値）
-     */
-
-    public int getTitleState() {
-        return titleState;
-    }
-
-    /**
      * ダイアログアクティブ状態を設定する。
      *
      * @param active 新しいダイアログアクティブ状態
@@ -959,16 +895,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     /**
-     * ゲームオーバーステートID を返す。
-     *
-     * @return gameOverState（整数値）
-     */
-
-    public int getGameOverState() {
-        return gameOverState;
-    }
-
-    /**
      * マップ遷移中かどうかを返す。
      *
      * @return onTransition（boolean）
@@ -976,16 +902,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public boolean isOnTransition() {
         return onTransition;
-    }
-
-    /**
-     * 取引ステートID を返す。
-     *
-     * @return tradeState（整数値）
-     */
-
-    public int getTradeState() {
-        return tradeState;
     }
 
     public ArrayList<Entity> getItemList() {
@@ -1021,19 +937,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         mapFlags.put(name, value);
     }
 
-    public int getSaveState() {
-        return saveState;
-    }
-
     public EventHandler getEventHandler() {
         return eventHandler;
     }
 
     public void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;
-    }
-
-    public int getLoadState() {
-        return loadState;
     }
 }
