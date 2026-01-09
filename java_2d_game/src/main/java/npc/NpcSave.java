@@ -2,6 +2,7 @@ package npc;
 
 import entity.Entity;
 import frame.FrameApp;
+import game.GameState;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -54,8 +55,7 @@ public class NpcSave extends Entity {
     public void speak() {
 
         GameWindow gameWindow = getGameWindow();
-        int saveState = gameWindow.getSaveState();
-        gameWindow.setGameState(saveState);
+        gameWindow.setGameState(GameState.SAVE);
         System.out.println(gameWindow.getGameState());
         super.speak();
         gameWindow.getUi().setNpc(this);

@@ -1,6 +1,7 @@
 package key;
 
 import entity.Entity;
+import game.GameState;
 import npc.NpcMerChant;
 import npc.NpcSave;
 import player.Player;
@@ -103,7 +104,7 @@ public class KeyHandler implements KeyListener {
 
         int code = e.getKeyCode();
 
-        if (gameWindow.getGameState() == gameWindow.getCharacterState()) {
+        if (gameWindow.getGameState() == GameState.CHARACTER) {
 
             int playerSlotRow = gameWindow.getUi().getPlayerSlotRow();
             int playerSlotCol = gameWindow.getUi().getPlayerSlotCol();
@@ -128,7 +129,7 @@ public class KeyHandler implements KeyListener {
                     gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_C -> {
-                    gameWindow.setGameState(gameWindow.getPlayState());
+                    gameWindow.setGameState(GameState.PLAY);
                 }
                 case KeyEvent.VK_ENTER -> {
                     int index = playerSlotCol * maxRow + playerSlotRow;
@@ -153,21 +154,21 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_T -> debugText();
             case KeyEvent.VK_R -> gameWindow.toggleHitBoxDebug();
             case KeyEvent.VK_C -> {
-                gameWindow.setGameState(gameWindow.getCharacterState());
+                gameWindow.setGameState(GameState.CHARACTER);
                 clearAllKeys();
             }
             case KeyEvent.VK_ENTER -> {
                 int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
                 if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcMerChant) {
                     startConversation(npcIdx);
-                    gameWindow.setGameState(gameWindow.getTradeState());
+                    gameWindow.setGameState(GameState.TRADE);
                 } else if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcSave saveNpc) {
                     saveNpc.speak();
-                    gameWindow.setGameState(gameWindow.getSaveState());
-                } else if (gameWindow.getGameState() == gameWindow.getTradeState()) {
+                    gameWindow.setGameState(GameState.SAVE);
+                } else if (gameWindow.getGameState() == GameState.TRADE) {
                     npcMerChantSpeak();
                     gameWindow.getUi().setSubState(0);
-                } else if (gameWindow.getGameState() == gameWindow.getSaveState()) {
+                } else if (gameWindow.getGameState() == GameState.SAVE) {
                     npcSaveSpeak();
                 } else {
                     speakDialogue();
@@ -182,7 +183,7 @@ public class KeyHandler implements KeyListener {
             }
         }
 
-        if (gameWindow.getGameState() == gameWindow.getTitleState()) {
+        if (gameWindow.getGameState() == GameState.TITLE) {
 
             switch (code) {
                 case KeyEvent.VK_W -> {
@@ -202,11 +203,11 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_ENTER -> {
                     int selected = getCommandNum();
                     if (selected == 0) {
-                        gameWindow.setGameState(gameWindow.getPlayState());
+                        gameWindow.setGameState(GameState.PLAY);
                         gameWindow.restart();
                         clearAllKeys();
                     } else if (selected == 1) {
-                        gameWindow.setGameState(gameWindow.getLoadState());
+                        gameWindow.setGameState(GameState.LOAD);
                         gameWindow.getUi().initLoadScreen(); // 2. ロード画面用データを初期化（saveMetas 読み込み）
                         gameWindow.repaint();
                     } else if (selected == 2) {
@@ -217,7 +218,7 @@ public class KeyHandler implements KeyListener {
             }
         }
 
-        if (gameWindow.getGameState() == gameWindow.getLoadState()) {
+        if (gameWindow.getGameState() == GameState.LOAD) {
 
             switch (code) {
                 case KeyEvent.VK_W -> {
@@ -240,7 +241,7 @@ public class KeyHandler implements KeyListener {
                         Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
-                            gameWindow.setGameState(gameWindow.getPlayState());
+                            gameWindow.setGameState(GameState.PLAY);
                             gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
                             gameWindow.repaint();
                             System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
@@ -274,7 +275,7 @@ public class KeyHandler implements KeyListener {
                         Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
-                            gameWindow.setGameState(gameWindow.getPlayState());
+                            gameWindow.setGameState(GameState.PLAY);
                             gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
                             gameWindow.repaint();
                             System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
@@ -293,7 +294,7 @@ public class KeyHandler implements KeyListener {
             }
         }
 
-        if (gameWindow.getGameState() == gameWindow.getGameOverState()) {
+        if (gameWindow.getGameState() == GameState.GAME_OVER) {
 
             switch (code) {
                 case KeyEvent.VK_W -> {
@@ -314,23 +315,23 @@ public class KeyHandler implements KeyListener {
                 }
                 case KeyEvent.VK_ENTER -> {
                     if (getCommandNum() == 0) {
-                        gameWindow.setGameState(gameWindow.getPlayState());
+                        gameWindow.setGameState(GameState.PLAY);
                         gameWindow.retry();
                     }
                     if (getCommandNum() == 1) {
-                        gameWindow.setGameState(gameWindow.getTitleState());
+                        gameWindow.setGameState(GameState.TITLE);
                         gameWindow.getUi().returnToTitleFromGameOver();
                     }
                 }
             }
         }
 
-        if (gameWindow.getGameState() == gameWindow.getTradeState()) {
+        if (gameWindow.getGameState() == GameState.TRADE) {
 
             gameWindow.getUi().updateTrade(code);
         }
 
-        if (gameWindow.getGameState() == gameWindow.getSaveState()) {
+        if (gameWindow.getGameState() == GameState.SAVE) {
 
             switch (code) {
                 case KeyEvent.VK_W -> {
@@ -352,10 +353,10 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_ENTER -> {
                     if (getCommandNum() == 0) {
                         setPlayerEnter(true);
-                        gameWindow.setGameState(gameWindow.getSaveState());
+                        gameWindow.setGameState(GameState.SAVE);
                     }
                     if (getCommandNum() == 1) {
-                        gameWindow.setGameState(gameWindow.getPlayState());
+                        gameWindow.setGameState(GameState.PLAY);
                         clearAllKeys();
                     }
                 }
@@ -426,7 +427,7 @@ public class KeyHandler implements KeyListener {
 
         // 会話状態へ移行
         gameWindow.getPlayer().setTalkNpcIndex(npcIdx);
-        gameWindow.setGameState(gameWindow.getDialogueState());
+        gameWindow.setGameState(GameState.DIALOGUE);
 
         // 最初のセリフを出す
         npcMerChantSpeak();
@@ -437,7 +438,7 @@ public class KeyHandler implements KeyListener {
 
         int code = e.getKeyCode();
 
-        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+        if (gameWindow.getGameState() == GameState.PLAY) {
 
             switch (code) {
                 case KeyEvent.VK_W -> setPlayerUp(false);
@@ -460,21 +461,21 @@ public class KeyHandler implements KeyListener {
     }
 
     private void togglePause() {
-        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
-            gameWindow.setGameState(gameWindow.getPauseState());
-        } else if (gameWindow.getGameState() == gameWindow.getPauseState()) {
-            gameWindow.setGameState(gameWindow.getPlayState());
+        if (gameWindow.getGameState() == GameState.PLAY) {
+            gameWindow.setGameState(GameState.PAUSE);
+        } else if (gameWindow.getGameState() == GameState.PAUSE) {
+            gameWindow.setGameState(GameState.PLAY);
         }
     }
 
     private void speakDialogue() {
 
-        if (gameWindow.getGameState() == gameWindow.getPlayState()) {
+        if (gameWindow.getGameState() == GameState.PLAY) {
             setPlayerEnter(true);
             clearAllKeys();
-        } else if (gameWindow.getGameState() == gameWindow.getDialogueState()) {
+        } else if (gameWindow.getGameState() == GameState.DIALOGUE) {
 
-            gameWindow.setGameState(gameWindow.getPlayState());
+            gameWindow.setGameState(GameState.PLAY);
             gameWindow.startNpcRoute(0, 1, 0);
             gameWindow.getPlayer().setInvincible(false);
         }
@@ -493,7 +494,7 @@ public class KeyHandler implements KeyListener {
 
         if (text == null) {
             // 会話終了：状態リセット
-            gameWindow.setGameState(gameWindow.getPlayState());
+            gameWindow.setGameState(GameState.PLAY);
             gameWindow.getPlayer().setTalkNpcIndex(idx);
 
             // ついでにもう一度リセットしておく
@@ -514,7 +515,7 @@ public class KeyHandler implements KeyListener {
 
         if (text == null) {
             // 会話終了：状態リセット
-            gameWindow.setGameState(gameWindow.getPlayState());
+            gameWindow.setGameState(GameState.PLAY);
             gameWindow.getPlayer().setTalkNpcIndex(idx);
 
             // ついでにもう一度リセットしておく
