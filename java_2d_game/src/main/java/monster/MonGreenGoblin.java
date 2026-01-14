@@ -189,6 +189,8 @@ public class MonGreenGoblin extends Entity {
 
         actionLockCounter = 0;
         setDirection(getGameWindow().getPlayer().getDirection());
+        setHpBarOn(true);
+        setHpBarCounter(0);
     }
 
     private void updateMonsterInvincibility() {
@@ -263,6 +265,8 @@ public class MonGreenGoblin extends Entity {
                         .endsWith("Up") ? screenY - tileSize * s : screenY;
 
                 g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
+
+                drawHpBarIfNeeded(g2, screenX, screenY);
 
 //                // デバッグ：攻撃エリアを矩形で描画
 //                Rectangle attackBox = new Rectangle(drawX, drawY, getAttackArea().width, getAttackArea().height);

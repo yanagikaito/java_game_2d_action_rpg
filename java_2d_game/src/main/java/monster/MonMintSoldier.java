@@ -383,6 +383,8 @@ public class MonMintSoldier extends Entity {
 
         actionLockCounter = 0;
         setDirection(getGameWindow().getPlayer().getDirection());
+        setHpBarOn(true);
+        setHpBarCounter(0);
     }
 
     private void updateMonsterInvincibility() {
@@ -460,6 +462,8 @@ public class MonMintSoldier extends Entity {
                         .endsWith("Up") ? screenY - tileSize : screenY;
 
                 g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
+
+                drawHpBarIfNeeded(g2, screenX, screenY);
             }
         }
 
