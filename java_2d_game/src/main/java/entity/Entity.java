@@ -1678,42 +1678,6 @@ public abstract class Entity {
             return;
         }
 
-        if (getType() instanceof MonsterType && hpBarOn) {
-
-            double oneScale = (double) FrameApp.getTileSize() / maxLife;
-            double hpBarValue = oneScale * life;
-
-            g2.setColor(new Color(35, 35, 35));
-            g2.fillRect(screenX + 4, screenY - 21, FrameApp.getTileSize(), 12);
-
-            g2.setColor(new Color(255, 0, 30));
-            g2.fillRect(screenX + 5, screenY - 20, (int) hpBarValue, 10);
-
-            hpBarCounter++;
-
-            if (hpBarCounter > 600) {
-                hpBarCounter = 0;
-                hpBarOn = false;
-            }
-        } else if (getType() instanceof BossMonsterType && hpBarOn) {
-
-            double oneScale = (double) FrameApp.getTileSize() / maxLife;
-            double hpBarValue = oneScale * life;
-
-            g2.setColor(new Color(35, 35, 35));
-            g2.fillRect(screenX + 59, screenY - 21, FrameApp.getTileSize(), 12);
-
-            g2.setColor(new Color(200, 50, 100));
-            g2.fillRect(screenX + 60, screenY - 20, (int) hpBarValue, 10);
-
-            hpBarCounter++;
-
-            if (hpBarCounter > 600) {
-                hpBarCounter = 0;
-                hpBarOn = false;
-            }
-        }
-
         // デバッグ
 //        if (getType() instanceof MonsterType && targetColorOn) {
 //
@@ -1754,8 +1718,43 @@ public abstract class Entity {
 
         g2.drawImage(image, screenX, screenY, null);
 
+        drawHpBarIfNeeded(g2, screenX, screenY);
+
         changeAlpha(g2, 1F);
     }
+
+    protected void drawHpBarIfNeeded(Graphics2D g2, int screenX, int screenY) {
+
+        if (!hpBarOn) return;
+
+        int tile = FrameApp.getTileSize();
+        double oneScale = (double) tile / Math.max(1, maxLife);
+        int hpBarValue = (int) (oneScale * life);
+
+        if (getType() instanceof BossMonsterType) {
+            int x = screenX + 59;
+            int y = screenY - 21;
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(x, y, tile, 12);
+            g2.setColor(new Color(200, 50, 100));
+            g2.fillRect(x + 1, y + 1, Math.max(0, Math.min(tile - 2, hpBarValue)), 10);
+
+        } else if (getType() instanceof MonsterType) {
+            int x = screenX + 4;
+            int y = screenY - 21;
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(x, y, tile, 12);
+            g2.setColor(new Color(255, 0, 30));
+            g2.fillRect(x + 1, y + 1, Math.max(0, Math.min(tile - 2, hpBarValue)), 10);
+        }
+
+        hpBarCounter++;
+        if (hpBarCounter > 600) {
+            hpBarCounter = 0;
+            hpBarOn = false;
+        }
+    }
+
 
     public void setKnockBack(Entity target, Entity attacker, int knockBackPower) {
 
@@ -1930,5 +1929,13 @@ public abstract class Entity {
 
     public void setSpriteKey(String key) {
         this.spriteKey = key;
+    }
+
+    public void setHpBarOn(boolean hpBarOn) {
+        this.hpBarOn = hpBarOn;
+    }
+
+    public void setHpBarCounter(int hpBarCounter) {
+        this.hpBarCounter = hpBarCounter;
     }
 }
