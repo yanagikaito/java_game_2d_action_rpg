@@ -93,7 +93,7 @@ public class Player extends Entity {
         setSolidAreaDefaultY(getSolidArea().y);
 
         getSolidArea().width = (int) (FrameApp.getTileSize() - 1.3);
-        getSolidArea().height = (int) (FrameApp.getTileSize() - 1.3);
+        getSolidArea().height = (int) (FrameApp.getTileSize() - 1.2);
 
 
         setHitBoxX(getSolidArea().x);
@@ -1125,6 +1125,10 @@ public class Player extends Entity {
             if (walkDirIndex >= 0) {
                 img = sprites[walkDirIndex][getSpriteNum() - 1];
                 g2.drawImage(img, screenX, screenY, tileSize, tileSize, null);
+
+                // デバッグ
+//              g2.setColor(new Color(255, 0, 0, 255));
+//              g2.drawRect(screenX, screenY, getSolidArea().width, getSolidArea().height);
             }
         } else {
             boolean isAxe = getCurrentWeapon().getType() instanceof AxeType;
