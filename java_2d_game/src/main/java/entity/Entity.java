@@ -27,7 +27,7 @@ public abstract class Entity {
     private String direction;
     private String attackDirection;
     private String axeDirection;
-    private BufferedImage[][] sprites;
+    protected BufferedImage[][] sprites;
     private BufferedImage[][] attackSprites;
     private BufferedImage image;
     private BufferedImage image2;

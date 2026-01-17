@@ -11,6 +11,7 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -53,7 +54,6 @@ public class Player extends Entity {
     private final int screenX;
     private final int screenY;
     private boolean moving = false;
-    private boolean collisionOnTile;
     private int pixelCounter = 0;
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
@@ -68,6 +68,10 @@ public class Player extends Entity {
     private static final int KNOCKBACK_FRAMES = 10;
     private static final double KNOCKBACK_SPEED = 4.0;
 
+    // aura 用キャッシュ画像（事前レンダリング）
+    private ObjAura aura;
+
+
     /**
      * プレイヤーを初期化するコンストラクタ。
      *
@@ -80,6 +84,7 @@ public class Player extends Entity {
         this.gameWindow = gameWindow;
         this.keyHandler = keyHandler;
         this.spriteKey = "player_basic";
+        this.aura = new ObjAura(gameWindow);
         initializeDefaultStats();
 
         screenX = FrameApp.getScreenWidth() / 2 - (FrameApp.getTileSize() / 2);
@@ -358,6 +363,8 @@ public class Player extends Entity {
     @Override
     public void update() {
 
+        updateAura(500);
+
         // 1) フレーム先頭で移動フラグと衝突フラグをリセット
         moving = false;
         setCollision(false);
@@ -424,6 +431,19 @@ public class Player extends Entity {
             updateTileMovement();
         }
         updateInvincibility();
+    }
+
+    public void updateAura(long deltaMs) {
+
+        System.out.println("updateAura deltaMs=" + deltaMs + " ms");
+
+        // 既存の移動・入力・アニメ更新処理...
+        // プレイヤー座標にオーラを追従させる
+        if (aura != null) {
+            aura.setWorldX(this.getWorldX());
+            aura.setWorldY(this.getWorldY());
+            aura.updateAnimation(deltaMs);
+        }
     }
 
     private void resolvePenetration() {
@@ -1118,6 +1138,24 @@ public class Player extends Entity {
             );
         }
 
+        // draw の screenX, screenY 計算直後に追加
+        if (aura != null) {
+            int auraScreenX = aura.getWorldX()
+                    - gameWindow.getPlayer().getWorldX()
+                    + gameWindow.getPlayer().getScreenX();
+            int auraScreenY = aura.getWorldY()
+                    - gameWindow.getPlayer().getWorldY()
+                    + gameWindow.getPlayer().getScreenY();
+
+            auraScreenX += 8;
+
+            // 1.8倍の大きさで 0.7 の透明度
+            float auraScale = 3.6f;
+            float auraAlpha = 0.7f;
+
+            aura.drawAt(g2, auraScreenX, auraScreenY, auraScale, auraAlpha);
+        }
+
         BufferedImage img;
         if (!getAttacking()) {
             int walkDirIndex = Arrays.asList(DIRECTIONS)
@@ -1179,6 +1217,30 @@ public class Player extends Entity {
         g2.dispose();
         return result;
     }
+
+    private BufferedImage createAuraImage(int diameter, Color color) {
+        BufferedImage img = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = img.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        float[] dist = {0.0f, 0.6f, 1.0f};
+        Color[] cols = {
+                new Color(color.getRed(), color.getGreen(), color.getBlue(), 200),
+                new Color(color.getRed(), color.getGreen(), color.getBlue(), 80),
+                new Color(color.getRed(), color.getGreen(), color.getBlue(), 0)
+        };
+        RadialGradientPaint rgp = new RadialGradientPaint(
+                new Point2D.Float(diameter / 2f, diameter / 2f),
+                diameter / 2f,
+                dist,
+                cols
+        );
+        g.setPaint(rgp);
+        g.fillRect(0, 0, diameter, diameter);
+        g.dispose();
+        return img;
+    }
+
 
     @Override
     public String getSpriteKey() {
