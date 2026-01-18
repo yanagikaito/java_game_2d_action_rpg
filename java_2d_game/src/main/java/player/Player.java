@@ -1149,8 +1149,8 @@ public class Player extends Entity {
 
             auraScreenX += 8;
 
-            // 1.8倍の大きさで 0.7 の透明度
-            float auraScale = 3.6f;
+            // 3.2倍の大きさで 0.7 の透明度
+            float auraScale = 3.2f;
             float auraAlpha = 0.7f;
 
             aura.drawAt(g2, auraScreenX, auraScreenY, auraScale, auraAlpha);
