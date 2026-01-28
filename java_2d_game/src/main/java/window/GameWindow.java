@@ -65,6 +65,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
     private Map<String, Boolean> mapFlags = new HashMap<>();
+    private Map<Integer, String> mapBgmMap = new HashMap<>();
 
     /**
      * GameWindow のコンストラクタ。
@@ -90,6 +91,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
         gameState = GameState.TITLE;
+        initMapBgm();
+        getSoundmanager().stopBGM();
+    }
+
+    private void initMapBgm() {
+        mapBgmMap.put(TileManager.MEADOW_TILE_ID, "sound/meadow_G110.wav");
+        mapBgmMap.put(TileManager.FOREST_TILE_ID, "sound/meadow_G110.wav");
+        mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/meadow_G110.wav");
+        // 事前ロードしておく
+        for (String path : mapBgmMap.values()) {
+            getSoundmanager().preload(path);
+        }
     }
 
     /**
@@ -216,6 +229,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void restart() {
 
+        getSoundmanager().playBGM("sound/meadow_G110.wav");
         getPlayer().setDefaultValues();
         getPlayer().setDefaultPositions();
         getPlayer().restoreLifeAndMan();
@@ -460,6 +474,24 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         int tileSize = FrameApp.getTileSize();
         currentMap = newMap;
+
+        // BGM 切替（フェードアウト→新BGM再生）
+        String newBgm = getBgmForMap(currentMap);
+        if (newBgm != null) {
+            // 既に同じBGMが流れているなら何もしない
+            if (!newBgm.equals(getSoundmanager().getCurrentBgmName())) {
+                // フェードアウト（非同期に実行される想定）
+                getSoundmanager().fadeOutBGM(500);
+                // SoundManager が非同期なら直接呼べばよい
+                // 少し遅延を置いて新BGMを再生（フェード完了後に再生）
+                try {
+                    Thread.sleep(520);
+                } catch (InterruptedException ignored) {
+                }
+                getSoundmanager().playBGM(newBgm);
+            }
+        }
+
 
         if (currentMap == TileManager.HUT_TILE_ID) {
 
@@ -943,5 +975,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;
+    }
+
+    private String getBgmForMap(int mapId) {
+        return mapBgmMap.get(mapId);
     }
 }

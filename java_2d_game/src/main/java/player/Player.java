@@ -382,6 +382,15 @@ public class Player extends Entity {
         int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
         gameWindow.changeMap(collidedTileId);
 
+        // changeMap のプレイヤー座標設定直後
+        if (aura != null) {
+            // プレイヤーのワールド座標に対するオフセットを設定
+            int offsetX = 0;
+            int offsetY = 0;
+            aura.setWorldX(getWorldX() + offsetX);
+            aura.setWorldY(getWorldY() + offsetY);
+            aura.setMapId(collidedTileId);
+        }
 
         // ノックバック優先
         if (knockbackTimer > 0) {
