@@ -242,6 +242,7 @@ public class KeyHandler implements KeyListener {
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
                             gameWindow.setGameState(GameState.PLAY);
+                            gameWindow.getSoundmanager().playBGM("sound/meadow_G110.wav");
                             gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
                             gameWindow.repaint();
                             System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
