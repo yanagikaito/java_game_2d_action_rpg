@@ -1147,22 +1147,30 @@ public class Player extends Entity {
             );
         }
 
-        // draw の screenX, screenY 計算直後に追加
+        // aura の描画
         if (aura != null) {
-            int auraScreenX = aura.getWorldX()
-                    - gameWindow.getPlayer().getWorldX()
-                    + gameWindow.getPlayer().getScreenX();
-            int auraScreenY = aura.getWorldY()
-                    - gameWindow.getPlayer().getWorldY()
-                    + gameWindow.getPlayer().getScreenY();
+            // ワールド座標が未初期化(0,0)なら描画しない
+            if (aura.getWorldX() == 0 && aura.getWorldY() == 0) {
+                // 初期化待ちのフレームなので描画をスキップ
+            } else {
+                // プレイヤーのHPが満タンのときだけaura描画
+                Player p = this;
+                if (p.getLife() == p.getMaxLife()) {
+                    int auraScreenX = aura.getWorldX()
+                            - gameWindow.getPlayer().getWorldX()
+                            + gameWindow.getPlayer().getScreenX();
+                    int auraScreenY = aura.getWorldY()
+                            - gameWindow.getPlayer().getWorldY()
+                            + gameWindow.getPlayer().getScreenY();
 
-            auraScreenX += 8;
+                    auraScreenX += 8;
 
-            // 3.2倍の大きさで 0.7 の透明度
-            float auraScale = 3.2f;
-            float auraAlpha = 0.7f;
+                    float auraScale = 3.2f;
+                    float auraAlpha = 0.7f;
 
-            aura.drawAt(g2, auraScreenX, auraScreenY, auraScale, auraAlpha);
+                    aura.drawAt(g2, auraScreenX, auraScreenY, auraScale, auraAlpha);
+                }
+            }
         }
 
         BufferedImage img;
@@ -1227,30 +1235,6 @@ public class Player extends Entity {
         return result;
     }
 
-    private BufferedImage createAuraImage(int diameter, Color color) {
-        BufferedImage img = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = img.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        float[] dist = {0.0f, 0.6f, 1.0f};
-        Color[] cols = {
-                new Color(color.getRed(), color.getGreen(), color.getBlue(), 200),
-                new Color(color.getRed(), color.getGreen(), color.getBlue(), 80),
-                new Color(color.getRed(), color.getGreen(), color.getBlue(), 0)
-        };
-        RadialGradientPaint rgp = new RadialGradientPaint(
-                new Point2D.Float(diameter / 2f, diameter / 2f),
-                diameter / 2f,
-                dist,
-                cols
-        );
-        g.setPaint(rgp);
-        g.fillRect(0, 0, diameter, diameter);
-        g.dispose();
-        return img;
-    }
-
-
     @Override
     public String getSpriteKey() {
         // 装備やスキンで切り替えるロジック
@@ -1276,16 +1260,6 @@ public class Player extends Entity {
 
     public int getScreenY() {
         return screenY;
-    }
-
-    /**
-     * プレイヤーが移動中かどうかを返す。
-     *
-     * @return true なら移動中、false なら停止中
-     */
-
-    public boolean getMoving() {
-        return moving;
     }
 
     /**
