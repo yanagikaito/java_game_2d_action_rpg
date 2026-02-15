@@ -10,9 +10,10 @@ import player.Player;
 import player.SpriteManager;
 import save.SaveManager;
 import save.SaveMeta;
-import triforce.SmallTri;
 import triforce.TriforcePanel;
 import triforce.TriforceRenderer;
+import ui.state.trade.TradeScreenContext;
+import ui.state.trade.save.SaveScreenContext;
 import window.GameWindow;
 
 import javax.swing.*;
@@ -61,11 +62,20 @@ public class UI {
     private final int SLOT_COUNT = 3;
     private int loadSlotIndex = 0;
 
-    private final ScreenContext tradeCtx;
+    private final TradeScreenContext tradeCtx;
+    private final SaveScreenContext saveCtx;
+
+    // セーブメニュー関連
+    private int saveMenuSelected = 0;           // 現在選択中のスロット（0-based）
+    private boolean saveInProgress = false;     // 保存処理中フラグ
+    private boolean saveMenuOpen = false;       // セーブメニューが開いているか
+    private long menuInputCooldownUntil = 0L;   // 開いた直後の短い無効化タイムスタンプ（ms）
+
 
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        this.tradeCtx = new ScreenContext(gameWindow, this);
+        this.tradeCtx = new TradeScreenContext(gameWindow, this);
+        this.saveCtx = new SaveScreenContext(gameWindow, this);
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
@@ -153,43 +163,94 @@ public class UI {
         }
     }
 
-    private void drawSaveScreen(Graphics2D g2) {
+    public void drawDialogueSaveScreen(Graphics2D g2) {
 
-        // 背景を暗く
-        g2.setColor(new Color(0, 0, 0, 180));
-        g2.fillRect(0, 0, FrameApp.getScreenWidth(), FrameApp.getScreenHeight());
+        int tileSize = FrameApp.getTileSize();
 
-        // セーブ中テキスト
-        g2.setFont(arial40);
-        g2.setColor(Color.white);
-        String text = "ゲームをセーブしますか？";
-        int x = getXForCenteredText(g2, text);
-        int y = FrameApp.getScreenHeight() / 2 - 40;
+        int frameX = tileSize / 2;
+        int frameY = tileSize / 2;
+        int frameWidth = tileSize * 15;
+        int frameHeight = tileSize * 3;
+        drawLoadPlayerLife(g2);
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        g2.drawString(text, x, y);
+        String text;
+        int x;
+        int y;
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
 
-        // オプション表示
-        g2.setFont(arial40);
-        text = "はい";
+        text = "slot0";
         x = getXForCenteredText(g2, text);
-        y += 60;
+        y = tileSize * 2;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 0) {
             g2.drawString(">", x - 40, y);
-            if (gameWindow.getKeyHandler().isPlayerEnter()) {
-                SaveManager.saveGame(1, gameWindow.getPlayer());
-                addMessage("セーブしました。");
-                gameWindow.setGameState(GameState.PLAY);
-            }
         }
 
-        text = "いいえ";
+        // slot0 がセーブされているならハートとプレビューを描画
+        if (saveMetas != null && saveMetas.length > 0 && saveMetas[0] != null && saveMetas[0].exists()) {
+            SaveMeta meta = saveMetas[0];
+            drawPlayerLife(g2);
+            // プレイヤープレビュー（右側に表示する例）
+            int previewX = frameX + frameWidth - tileSize * 3;
+            int previewY = frameY + 8;
+            drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+        }
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
+
+        frameX = tileSize / 2;
+        frameY = FrameApp.getScreenHeight() / 3;
+        frameWidth = tileSize * 15;
+        frameHeight = tileSize * 3;
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
+
+        text = "slot1";
         x = getXForCenteredText(g2, text);
-        y += 45;
+        y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 1) {
             g2.drawString(">", x - 40, y);
         }
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
+
+        frameX = tileSize / 2;
+        frameY = (int) ((FrameApp.getScreenHeight() + tileSize) / 1.7);
+        frameWidth = tileSize * 15;
+        frameHeight = tileSize * 3;
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
+
+        text = "slot2";
+        x = getXForCenteredText(g2, text);
+        y += (int) (tileSize * 3.5);
+        g2.drawString(text, x, y);
+        if (gameWindow.getKeyHandler().getCommandNum() == 2) {
+            g2.drawString(">", x - 40, y);
+        }
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(28F));
+    }
+
+    private String ellipsize(Graphics2D g2, String text, int maxWidthPx) {
+        FontMetrics fm = g2.getFontMetrics();
+        if (fm.stringWidth(text) <= maxWidthPx) return text;
+        String ell = "...";
+        int avail = maxWidthPx - fm.stringWidth(ell);
+        if (avail <= 0) return ell;
+        StringBuilder sb = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            sb.append(c);
+            if (fm.stringWidth(sb.toString()) > avail) {
+                sb.setLength(Math.max(0, sb.length() - 1));
+                break;
+            }
+        }
+        return sb.toString() + ell;
     }
 
     public void drawTitleScreen(Graphics2D g2) {
@@ -303,11 +364,15 @@ public class UI {
             g2.drawString(">", x - 40, y);
         }
 
-        // slot0 がセーブされているならハートとプレビューを描画
+        // slot0 のサブウィンドウを描いた直後
         if (saveMetas != null && saveMetas.length > 0 && saveMetas[0] != null && saveMetas[0].exists()) {
             SaveMeta meta = saveMetas[0];
-            drawPlayerLife(g2);
-            // プレイヤープレビュー（右側に表示する例）
+            // ハートをサブウィンドウ左上に描く（微調整は y 座標で）
+            int lifeX0 = frameX; // frameX はそのスロットのサブウィンドウ左上
+            int lifeY0 = frameY;
+            drawPlayerLifeAt(g2, lifeX0, lifeY0, meta.getHp(), meta.getMaxHp());
+
+            // プレビューは既存の位置で描画
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
             drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
@@ -330,6 +395,20 @@ public class UI {
             g2.drawString(">", x - 40, y);
         }
 
+        // slot1 のサブウィンドウを描いた直後
+        if (saveMetas != null && saveMetas.length > 0 && saveMetas[1] != null && saveMetas[1].exists()) {
+            SaveMeta meta = saveMetas[1];
+            // ハートをサブウィンドウ左上に描く（微調整は y 座標で）
+            int lifeX1 = frameX; // frameX はそのスロットのサブウィンドウ左上
+            int lifeY1 = frameY;
+            drawPlayerLifeAt(g2, lifeX1, lifeY1, meta.getHp(), meta.getMaxHp());
+
+            // プレビューは既存の位置で描画
+            int previewX = frameX + frameWidth - tileSize * 3;
+            int previewY = frameY + 8;
+            drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+        }
+
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
 
@@ -347,8 +426,48 @@ public class UI {
             g2.drawString(">", x - 40, y);
         }
 
+        // slot0 のサブウィンドウを描いた直後
+        if (saveMetas != null && saveMetas.length > 0 && saveMetas[2] != null && saveMetas[2].exists()) {
+            SaveMeta meta = saveMetas[2];
+            // ハートをサブウィンドウ左上に描く（微調整は y 座標で）
+            int lifeX2 = frameX; // frameX はそのスロットのサブウィンドウ左上
+            int lifeY2 = frameY;
+            drawPlayerLifeAt(g2, lifeX2, lifeY2, meta.getHp(), meta.getMaxHp());
+
+            // プレビューは既存の位置で描画
+            int previewX = frameX + frameWidth - tileSize * 3;
+            int previewY = frameY + 8;
+            drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+        }
+
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
+    }
+
+    /**
+     * 指定座標にハートを描画する（既存の heartFull/heartHalf/heartBlank を再利用）
+     * hp と maxHp は SaveMeta から渡す（実数値: HP 単位）
+     * x,y は左上の描画開始座標（ピクセル）
+     */
+
+    private void drawPlayerLifeAt(Graphics2D g2, int x, int y, int hp, int maxHp) {
+        int tileSize = FrameApp.getTileSize();
+        // 既存の drawPlayerLife と同じロジックを座標指定で使う
+        int maxHearts = maxHp / 2;
+        int fullHearts = hp / 2;
+        int halfHearts = hp % 2;
+
+        for (int i = 0; i < maxHearts; i++) {
+            int hx = x + i * tileSize;
+            int hy = y;
+            if (i < fullHearts) {
+                g2.drawImage(heartFull, hx, hy, tileSize, tileSize, null);
+            } else if (i == fullHearts && halfHearts == 1) {
+                g2.drawImage(heartHalf, hx, hy, tileSize, tileSize, null);
+            } else {
+                g2.drawImage(heartBlank, hx, hy, tileSize, tileSize, null);
+            }
+        }
     }
 
     // スプライトプレビュー描画ヘルパー（spriteManager を使う想定）
@@ -517,7 +636,7 @@ public class UI {
         g2.drawString(text, x, y);
     }
 
-    void drawDialogueScreen(Graphics2D g2) {
+    public void drawDialogueScreen(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
 
@@ -776,12 +895,20 @@ public class UI {
         tradeCtx.handleKey(keyCode);
     }
 
+    public void drawSaveScreen(Graphics2D g2) {
+        saveCtx.draw(g2);
+    }
+
+    public void updateSave(int keyCode) {
+        tradeCtx.handleKey(keyCode);
+    }
+
     public int getItemIndexOnSlot(int slotRow, int slotCol) {
         int itemIndex = slotRow + (slotCol * 5);
         return itemIndex;
     }
 
-    void drawSubWindow(Graphics2D g2, int x, int y, int width, int height) {
+    public void drawSubWindow(Graphics2D g2, int x, int y, int width, int height) {
 
         Color color = new Color(0, 0, 0, 210);
         g2.setColor(color);
@@ -801,12 +928,12 @@ public class UI {
         g2.drawString(currentDialogueMessage, x, y);
     }
 
-    private int getXForCenteredText(Graphics2D g2, String text) {
+    public int getXForCenteredText(Graphics2D g2, String text) {
         int textWidth = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return FrameApp.getScreenWidth() / 2 - textWidth / 2;
     }
 
-    int getXForAlignToRightText(Graphics2D g2, String text, int tailX) {
+    public int getXForAlignToRightText(Graphics2D g2, String text, int tailX) {
         int textWidth = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = tailX - textWidth;
         return x;
@@ -882,5 +1009,50 @@ public class UI {
 
     public TriforcePanel getTriforcePanel() {
         return triforcePanel;
+    }
+
+    /**
+     * セーブ中フラグを外部からセット/解除する（KeyHandler から呼ばれる）
+     */
+    public void setSaveInProgress(boolean inProgress) {
+        this.saveInProgress = inProgress;
+    }
+
+    /**
+     * 指定スロットのメタを再読み込みして反映する（slot は 0-based 想定）
+     */
+    public void reloadSaveMeta(int slotZeroBased) {
+        if (slotZeroBased < 0 || slotZeroBased >= SLOT_COUNT) return;
+        // SaveManager の仕様に合わせて引数を調整（下は 0-based 想定）
+        SaveMeta meta = SaveManager.loadMeta(slotZeroBased); // もし SaveManager が 1-based なら slotZeroBased+1
+        if (saveMetas == null || saveMetas.length != SLOT_COUNT) {
+            saveMetas = new SaveMeta[SLOT_COUNT];
+        }
+        saveMetas[slotZeroBased] = (meta != null) ? meta : new SaveMeta();
+    }
+
+    /**
+     * セーブメニューを UI 側で閉じる（State 変更は呼び出し元で行う想定）
+     */
+    public void closeSaveMenuUI() {
+        saveMenuOpen = false;
+        saveInProgress = false;
+        saveMenuSelected = 0;
+        // メッセージは残す/消すは設計次第。ここではメッセージは残す。
+        // キー状態を安全にクリア
+        if (gameWindow != null && gameWindow.getKeyHandler() != null) {
+            gameWindow.getKeyHandler().clearAllKeys();
+        }
+    }
+
+    /**
+     * 選択インデックスを返す（0-based）
+     */
+    public int getSelectedSaveSlot() {
+        return Math.max(0, Math.min(SLOT_COUNT - 1, saveMenuSelected));
+    }
+
+    public Font getArial40() {
+        return arial40;
     }
 }

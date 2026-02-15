@@ -1,0 +1,103 @@
+package ui.state.trade.save;
+
+import frame.FrameApp;
+import game.GameState;
+import save.SaveManager;
+import ui.UI;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class SaveConfirmState implements SaveScreenState {
+    private final SaveScreenContext ctx;
+    private final int slot; // 0-based
+    private boolean started = false;
+
+    public SaveConfirmState(SaveScreenContext ctx, int slot) {
+        this.ctx = ctx;
+        this.slot = slot;
+        System.out.println("DEBUG: SaveConfirmState.<init> slot=" + slot + " thread=" + Thread.currentThread().getName());
+    }
+
+    @Override
+    public void handleKey(int code) {
+        // 保存中はキーを無視する（必要なら Esc でキャンセル等を実装）
+    }
+
+    @Override
+    public void draw(Graphics2D g2) {
+        System.out.println("DEBUG: SaveConfirmState.draw called slot=" + slot + " started=" + started);
+        // 保存処理は一度だけ開始する
+        if (!started) {
+            started = true;
+            System.out.println("DEBUG: SaveConfirmState.starting startSave()");
+            startSave();
+        }
+
+        // 簡易な「セーブ中」ダイアログを描画（UI の既存メッセージ機能と重複しないように）
+        UI ui = ctx.ui();
+        int w = FrameApp.getScreenWidth();
+        int h = FrameApp.getScreenHeight();
+        g2.setColor(new Color(0, 0, 0, 160));
+        g2.fillRect(0, 0, w, h);
+
+        g2.setFont(ui.getArial40()); // ui 側のフォント getter があれば使う
+        g2.setColor(Color.WHITE);
+        String text = "セーブ中...";
+        int tx = ui.getXForCenteredText(g2, text);
+        int ty = h / 2;
+        g2.drawString(text, tx, ty);
+    }
+
+    private void startSave() {
+        System.out.println("DEBUG: startSave() begin slot=" + slot);
+        ctx.ui().addMessage("セーブ中...");
+        ctx.ui().setSaveInProgress(true);
+
+        new Thread(() -> {
+            boolean ok = false;
+            try {
+                System.out.println("DEBUG: calling SaveManager.saveGame slot=" + slot);
+                ok = SaveManager.saveGame(slot, ctx.gw().getPlayer()); // 0-based 想定
+                System.out.println("DEBUG: SaveManager.saveGame returned=" + ok);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+                ok = false;
+            }
+
+            final boolean finalOk = ok;
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    ctx.ui().setSaveInProgress(false);
+                    if (finalOk) {
+                        ctx.ui().addMessage("セーブしました（Slot " + slot + "）");
+                    } else {
+                        ctx.ui().addMessage("セーブに失敗しました");
+                    }
+                    // メタ更新（UI 側の実装に合わせる）
+                    try {
+                        ctx.ui().reloadSaveMeta(slot);
+                    } catch (Throwable metaEx) {
+                        metaEx.printStackTrace();
+                    }
+
+                    // 少し待ってから閉じる
+                    Timer t = new Timer(800, evt -> {
+                        try {
+                            ctx.ui().closeSaveMenuUI();
+                            ctx.gw().setGameState(GameState.PLAY);
+                        } catch (Throwable e) {
+                            e.printStackTrace();
+                        } finally {
+                            ((Timer) evt.getSource()).stop();
+                        }
+                    });
+                    t.setRepeats(false);
+                    t.start();
+                } catch (Throwable uiEx) {
+                    uiEx.printStackTrace();
+                }
+            });
+        }, "SaveWorker").start();
+    }
+}

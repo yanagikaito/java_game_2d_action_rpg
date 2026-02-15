@@ -1,4 +1,4 @@
-package ui;
+package ui.state.trade;
 
 public final class TradeOptionConstants {
     private TradeOptionConstants() {

@@ -1,35 +1,36 @@
-package ui;
+package ui.state.trade.save;
 
 import key.KeyHandler;
+import ui.UI;
 import window.GameWindow;
 
 import java.awt.*;
 
-public final class ScreenContext {
+public class SaveScreenContext {
 
-    private TradeScreenState currentState;
+    private SaveScreenState saveCurrentState;
     private final GameWindow gameWindow;
     private final UI ui;
     private final KeyHandler kh;
 
-    public ScreenContext(GameWindow gw, UI ui) {
+    public SaveScreenContext(GameWindow gw, UI ui) {
         this.gameWindow = gw;
         this.ui = ui;
         this.kh = gw.getKeyHandler();
-        this.currentState = new MenuState(this);
+        this.saveCurrentState = new SaveMenuState(this);
     }
 
-    public void setState(TradeScreenState next) {
-        this.currentState = next;
+    public void setState(SaveScreenState next) {
+        this.saveCurrentState = next;
     }
 
     public void handleKey(int code) {
         // State にキー処理を集約し、必要に応じて内部で遷移
-        currentState.handleKey(code);
+        saveCurrentState.handleKey(code);
     }
 
     public void draw(Graphics2D g2) {
-        currentState.draw(g2);
+        saveCurrentState.draw(g2);
         // ENTER フラグは描画後に必ずクリア
         kh.setPlayerEnter(false);
     }
