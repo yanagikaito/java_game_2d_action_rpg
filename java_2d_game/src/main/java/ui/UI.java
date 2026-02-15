@@ -900,7 +900,7 @@ public class UI {
     }
 
     public void updateSave(int keyCode) {
-        tradeCtx.handleKey(keyCode);
+        saveCtx.handleKey(keyCode);
     }
 
     public int getItemIndexOnSlot(int slotRow, int slotCol) {
