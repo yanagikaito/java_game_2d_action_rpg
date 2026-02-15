@@ -4,11 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import entity.Entity;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -199,17 +198,20 @@ public class SaveManager {
     }
 
     public static boolean writeMeta(int slotIndex, SaveMeta meta) {
-        File dir = new File(SAVE_DIR);
-        if (!dir.exists() && !dir.mkdirs()) {
-            System.err.println("Failed to create save directory: " + SAVE_DIR);
-            return false;
-        }
-        File file = new File(dir, SLOT_PREFIX + slotIndex + SUFFIX);
-        try (FileWriter fw = new FileWriter(file)) {
-            gson.toJson(meta, fw);
+
+        try {
+            Path dir = Path.of(SAVE_DIR);
+            if (!Files.exists(dir)) Files.createDirectories(dir);
+            Path target = dir.resolve(SLOT_PREFIX + slotIndex + SUFFIX);
+            Path tmp = dir.resolve(SLOT_PREFIX + slotIndex + SUFFIX + ".tmp");
+            try (BufferedWriter bw = Files.newBufferedWriter(tmp)) {
+                gson.toJson(meta, bw);
+            }
+            Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            System.out.println("DEBUG: atomic writeMeta path=" + target.toAbsolutePath());
             return true;
         } catch (IOException e) {
-            System.err.println("Failed to write meta for slot " + slotIndex + ": " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }

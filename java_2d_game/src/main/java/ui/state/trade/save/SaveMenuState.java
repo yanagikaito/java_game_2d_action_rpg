@@ -36,31 +36,44 @@ public class SaveMenuState implements SaveScreenState {
         // カーソル移動（上下のみ）
         if (code == KeyEvent.VK_W && keyHandler.getCommandNum() > 0) {
             keyHandler.setCommandNum(keyHandler.getCommandNum() - 1);
+            return;
         }
         if (code == KeyEvent.VK_S && keyHandler.getCommandNum() < options.size() - 1) {
             keyHandler.setCommandNum(keyHandler.getCommandNum() + 1);
+            return;
+        }
+
+        // ESC 押下でメニューを閉じて Play に戻す
+        if (code == KeyEvent.VK_ESCAPE) {
+            System.out.println("DBG: SaveMenuState ESC pressed - closing save menu");
+            try {
+                saveScreenContext.ui().closeSaveMenuUI();
+            } catch (Throwable ignored) {
+            }
+            saveScreenContext.kh().clearAllKeys();
+            saveScreenContext.gw().setGameState(GameState.PLAY);
+            return;
         }
 
         // 決定
         if (code == KeyEvent.VK_ENTER) {
-            System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
-            saveScreenContext.setState(new SaveConfirmState(saveScreenContext, keyHandler.getCommandNum()));
-            System.out.println("DBG: SaveMenuState setState -> SaveConfirmState done");
 
-            switch (keyHandler.getCommandNum()) {
+            int slot = keyHandler.getCommandNum();
 
-                case SLOT0 -> {
-                    saveScreenContext.setState(new SaveConfirmState(saveScreenContext, SLOT0));
-                    saveScreenContext.gw().setGameState(GameState.PLAY);
-                }
-                case SLOT1 -> {
-                    saveScreenContext.setState(new SaveConfirmState(saveScreenContext, SLOT1));
-                    saveScreenContext.gw().setGameState(GameState.PLAY);
-                }
-                case SLOT2 -> {
-                    saveScreenContext.setState(new SaveConfirmState(saveScreenContext, SLOT2));
-                    saveScreenContext.gw().setGameState(GameState.PLAY);
-                }
+            if (slot == SLOT0) {
+                System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
+                saveScreenContext.setState(new SaveConfirmState(saveScreenContext, slot));
+                return;
+            }
+            if (slot == SLOT1) {
+                System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
+                saveScreenContext.setState(new SaveConfirmState(saveScreenContext, slot));
+                return;
+            }
+            if (slot == SLOT2) {
+                System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
+                saveScreenContext.setState(new SaveConfirmState(saveScreenContext, slot));
+                return;
             }
         }
         System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());

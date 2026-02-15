@@ -191,7 +191,9 @@ public class UI {
         // slot0 がセーブされているならハートとプレビューを描画
         if (saveMetas != null && saveMetas.length > 0 && saveMetas[0] != null && saveMetas[0].exists()) {
             SaveMeta meta = saveMetas[0];
-            drawPlayerLife(g2);
+            int lifeX0 = frameX; // frameX はそのスロットのサブウィンドウ左上
+            int lifeY0 = frameY;
+            drawPlayerLifeAt(g2, lifeX0, lifeY0, meta.getHp(), meta.getMaxHp());
             // プレイヤープレビュー（右側に表示する例）
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
@@ -215,6 +217,18 @@ public class UI {
             g2.drawString(">", x - 40, y);
         }
 
+        // slot1 がセーブされているならハートとプレビューを描画
+        if (saveMetas != null && saveMetas.length > 0 && saveMetas[1] != null && saveMetas[1].exists()) {
+            SaveMeta meta = saveMetas[1];
+            int lifeX1 = frameX;
+            int lifeY1 = frameY;
+            drawPlayerLifeAt(g2, lifeX1, lifeY1, meta.getHp(), meta.getMaxHp());
+            // プレイヤープレビュー（右側に表示する例）
+            int previewX = frameX + frameWidth - tileSize * 3;
+            int previewY = frameY + 8;
+            drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+        }
+
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
 
@@ -232,25 +246,20 @@ public class UI {
             g2.drawString(">", x - 40, y);
         }
 
+        // slot2 がセーブされているならハートとプレビューを描画
+        if (saveMetas != null && saveMetas.length > 0 && saveMetas[2] != null && saveMetas[2].exists()) {
+            SaveMeta meta = saveMetas[2];
+            int lifeX2 = frameX;
+            int lifeY2 = frameY;
+            drawPlayerLifeAt(g2, lifeX2, lifeY2, meta.getHp(), meta.getMaxHp());
+            // プレイヤープレビュー（右側に表示する例）
+            int previewX = frameX + frameWidth - tileSize * 3;
+            int previewY = frameY + 8;
+            drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+        }
+
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
-    }
-
-    private String ellipsize(Graphics2D g2, String text, int maxWidthPx) {
-        FontMetrics fm = g2.getFontMetrics();
-        if (fm.stringWidth(text) <= maxWidthPx) return text;
-        String ell = "...";
-        int avail = maxWidthPx - fm.stringWidth(ell);
-        if (avail <= 0) return ell;
-        StringBuilder sb = new StringBuilder();
-        for (char c : text.toCharArray()) {
-            sb.append(c);
-            if (fm.stringWidth(sb.toString()) > avail) {
-                sb.setLength(Math.max(0, sb.length() - 1));
-                break;
-            }
-        }
-        return sb.toString() + ell;
     }
 
     public void drawTitleScreen(Graphics2D g2) {
@@ -426,7 +435,7 @@ public class UI {
             g2.drawString(">", x - 40, y);
         }
 
-        // slot0 のサブウィンドウを描いた直後
+        // slot2 のサブウィンドウを描いた直後
         if (saveMetas != null && saveMetas.length > 0 && saveMetas[2] != null && saveMetas[2].exists()) {
             SaveMeta meta = saveMetas[2];
             // ハートをサブウィンドウ左上に描く（微調整は y 座標で）
@@ -1011,9 +1020,14 @@ public class UI {
         return triforcePanel;
     }
 
+    public boolean getSaveInProgress() {
+        return saveInProgress;
+    }
+
     /**
      * セーブ中フラグを外部からセット/解除する（KeyHandler から呼ばれる）
      */
+
     public void setSaveInProgress(boolean inProgress) {
         this.saveInProgress = inProgress;
     }
@@ -1021,6 +1035,7 @@ public class UI {
     /**
      * 指定スロットのメタを再読み込みして反映する（slot は 0-based 想定）
      */
+
     public void reloadSaveMeta(int slotZeroBased) {
         if (slotZeroBased < 0 || slotZeroBased >= SLOT_COUNT) return;
         // SaveManager の仕様に合わせて引数を調整（下は 0-based 想定）
@@ -1034,6 +1049,7 @@ public class UI {
     /**
      * セーブメニューを UI 側で閉じる（State 変更は呼び出し元で行う想定）
      */
+
     public void closeSaveMenuUI() {
         saveMenuOpen = false;
         saveInProgress = false;
@@ -1043,13 +1059,6 @@ public class UI {
         if (gameWindow != null && gameWindow.getKeyHandler() != null) {
             gameWindow.getKeyHandler().clearAllKeys();
         }
-    }
-
-    /**
-     * 選択インデックスを返す（0-based）
-     */
-    public int getSelectedSaveSlot() {
-        return Math.max(0, Math.min(SLOT_COUNT - 1, saveMenuSelected));
     }
 
     public Font getArial40() {

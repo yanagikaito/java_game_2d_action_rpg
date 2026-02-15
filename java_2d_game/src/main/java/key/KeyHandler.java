@@ -10,6 +10,7 @@ import window.GameWindow;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 
 public class KeyHandler implements KeyListener {
 
@@ -239,27 +240,27 @@ public class KeyHandler implements KeyListener {
                     gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
                 }
                 case KeyEvent.VK_ENTER -> {
-                    int selected = getCommandNum();
-                    if (selected == 0) {
-                        Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
+                    int slot = getCommandNum();
+                    if (slot == 0) {
+                        Entity loadedPlayer = LoadManager.loadPlayer(slot, gameWindow);
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
                             gameWindow.setGameState(GameState.PLAY);
                             gameWindow.getSoundmanager().playBGM("sound/meadow_G110.wav");
                             gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
                             gameWindow.repaint();
-                            System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
-                            // ロード後
-                            System.out.println("load: HP=" + gameWindow.getPlayer().getLife() +
-                                    ", Weapon=" + (gameWindow.getPlayer().getCurrentWeapon() != null ?
-                                    gameWindow.getPlayer().getCurrentWeapon().getName() : "no") +
-                                    ", Inventory=" + gameWindow.getPlayer().getInventory().size());
+                            System.out.println("DEBUG: LoadScreen.loadSlot start slot=" + slot);
+                            System.out.println("DEBUG: cwd=" + new File(".").getAbsolutePath());
+                            System.out.println("DEBUG: meta file path=" + new File("saves", "slot" + slot + ".json").getAbsolutePath()
+                                    + " exists=" + new File("saves", "slot" + slot + ".json").exists()
+                                    + " lastModified=" + (new File("saves", "slot" + slot + ".json").exists() ? new File("saves", "slot" + slot + ".json").lastModified() : 0));
+
                         } else {
                             // セーブデータなしのメッセージ
                             gameWindow.getUi().addMessage("セーブデータなし");
                         }
-                    } else if (selected == 1) {
-                        Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
+                    } else if (slot == 1) {
+                        Entity loadedPlayer = LoadManager.loadPlayer(slot, gameWindow);
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
 //                            gameWindow.setGameState(GameState.PLAY);
@@ -275,12 +276,12 @@ public class KeyHandler implements KeyListener {
                             // セーブデータなしのメッセージ
                             gameWindow.getUi().addMessage("セーブデータなし");
                         }
-                    } else if (getCommandNum() == 2) {
-                        Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
+                    } else if (slot == 2) {
+                        Entity loadedPlayer = LoadManager.loadPlayer(slot, gameWindow);
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
                             gameWindow.setGameState(GameState.PLAY);
-                            gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
+                            gameWindow.getUi().initLoadScreen();
                             gameWindow.repaint();
                             System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
                             // ロード後
