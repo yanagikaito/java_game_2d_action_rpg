@@ -4,7 +4,6 @@ import entity.Entity;
 import frame.FrameApp;
 import game.GameState;
 import object.*;
-import ui.ScreenContext;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;

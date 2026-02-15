@@ -1,28 +1,29 @@
-package ui;
+package ui.state.trade;
 
 import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
 import player.Player;
+import ui.UI;
 import window.GameWindow;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public final class SellState implements TradeScreenState {
+public final class TradeSellState implements TradeScreenState {
 
-    private final ScreenContext screenContext;
+    private final TradeScreenContext tradeScreenContext;
 
-    public SellState(ScreenContext screenContext) {
-        this.screenContext = screenContext;
+    public TradeSellState(TradeScreenContext tradeScreenContext) {
+        this.tradeScreenContext = tradeScreenContext;
     }
 
     @Override
     public void handleKey(int code) {
 
-        GameWindow gameWindow = screenContext.gw();
-        KeyHandler keyHandler = screenContext.kh();
+        GameWindow gameWindow = tradeScreenContext.gw();
+        KeyHandler keyHandler = tradeScreenContext.kh();
 
         // 1) カーソル移動
         gameWindow.getKeyHandler().playerInventory(code);
@@ -36,14 +37,14 @@ public final class SellState implements TradeScreenState {
         if (code == KeyEvent.VK_ESCAPE || (code == KeyEvent.VK_ENTER && keyHandler.isPlayerEnter())) {
             keyHandler.clearAllKeys();
             keyHandler.setCommandNum(0);
-            screenContext.setState(new MenuState(screenContext));
+            tradeScreenContext.setState(new TradeMenuState(tradeScreenContext));
         }
     }
 
     @Override
     public void draw(Graphics2D g2) {
-        UI ui = screenContext.ui();
-        GameWindow gw = screenContext.gw();
+        UI ui = tradeScreenContext.ui();
+        GameWindow gw = tradeScreenContext.gw();
         int tileSize = FrameApp.getTileSize();
 
         // インベントリ描画
@@ -61,9 +62,9 @@ public final class SellState implements TradeScreenState {
 
     private void attemptSell() {
 
-        UI ui = screenContext.ui();
-        GameWindow gameWindow = screenContext.gw();
-        KeyHandler keyHandler = screenContext.kh();
+        UI ui = tradeScreenContext.ui();
+        GameWindow gameWindow = tradeScreenContext.gw();
+        KeyHandler keyHandler = tradeScreenContext.kh();
         Player player = gameWindow.getPlayer();
         List<Entity> playerInv = player.getInventory();
 
@@ -100,9 +101,9 @@ public final class SellState implements TradeScreenState {
     }
 
     private void showNoItemDialogue() {
-        screenContext.setState(
-                new DialogueState(
-                        screenContext,
+        tradeScreenContext.setState(
+                new TradeDialogueState(
+                        tradeScreenContext,
                         "売却するアイテムがない!",
                         this   // SellState に戻る
                 )
@@ -110,9 +111,9 @@ public final class SellState implements TradeScreenState {
     }
 
     private void showCannotSellEquippedDialogue() {
-        screenContext.setState(
-                new DialogueState(
-                        screenContext,
+        tradeScreenContext.setState(
+                new TradeDialogueState(
+                        tradeScreenContext,
                         "装備中のアイテムは売却できない!",
                         this  // SellState に戻る
                 )
@@ -125,7 +126,7 @@ public final class SellState implements TradeScreenState {
         int y = tileSize * 9;
         int width = tileSize * 6 + tileSize / 2;
         int height = tileSize * 2;
-        screenContext.ui().drawSubWindow(g2, x, y, width, height);
+        tradeScreenContext.ui().drawSubWindow(g2, x, y, width, height);
         g2.drawString("[ESC] 戻る", x + 50, y + 50);
     }
 
@@ -135,7 +136,7 @@ public final class SellState implements TradeScreenState {
         int y = tileSize * 9;
         int width = tileSize * 6 + tileSize / 2;
         int height = tileSize * 2;
-        screenContext.ui().drawSubWindow(g2, x, y, width, height);
+        tradeScreenContext.ui().drawSubWindow(g2, x, y, width, height);
         g2.drawString("所持金: " + coin, x + 50, y + 50);
     }
 

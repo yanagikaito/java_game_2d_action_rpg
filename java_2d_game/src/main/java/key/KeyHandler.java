@@ -163,6 +163,9 @@ public class KeyHandler implements KeyListener {
                     startConversation(npcIdx);
                     gameWindow.setGameState(GameState.TRADE);
                 } else if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcSave saveNpc) {
+                    // ← ここに押しっぱなし対策を入れる
+                    gameWindow.getKeyHandler().consumeEnterOnce();
+                    gameWindow.getKeyHandler().clearAllKeys();
                     saveNpc.speak();
                     gameWindow.setGameState(GameState.SAVE);
                 } else if (gameWindow.getGameState() == GameState.TRADE) {
@@ -259,7 +262,7 @@ public class KeyHandler implements KeyListener {
                         Entity loadedPlayer = LoadManager.loadPlayer(1, gameWindow);
                         if (loadedPlayer != null) {
                             gameWindow.setPlayer((Player) loadedPlayer);
-//                            gameWindow.setGameState(gameWindow.getPlayState());
+//                            gameWindow.setGameState(GameState.PLAY);
                             gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
                             gameWindow.repaint();
                             System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
@@ -334,34 +337,7 @@ public class KeyHandler implements KeyListener {
 
         if (gameWindow.getGameState() == GameState.SAVE) {
 
-            switch (code) {
-                case KeyEvent.VK_W -> {
-                    setCommandNum(getCommandNum() - 1);
-                    if (getCommandNum() < 0) {
-                        setCommandNum(1);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_S -> {
-                    setCommandNum(getCommandNum() + 1);
-                    if (getCommandNum() > 1) {
-                        setCommandNum(0);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                    System.out.println("working dir: " + System.getProperty("user.dir"));
-
-                }
-                case KeyEvent.VK_ENTER -> {
-                    if (getCommandNum() == 0) {
-                        setPlayerEnter(true);
-                        gameWindow.setGameState(GameState.SAVE);
-                    }
-                    if (getCommandNum() == 1) {
-                        gameWindow.setGameState(GameState.PLAY);
-                        clearAllKeys();
-                    }
-                }
-            }
+            gameWindow.getUi().updateSave(code);
         }
     }
 
@@ -487,7 +463,7 @@ public class KeyHandler implements KeyListener {
         int idx = gameWindow.getPlayer().getTalkNpcIndex();
         if (idx < 0) return;
 
-        NpcMerChant mer = (NpcMerChant) gameWindow.getNPC()[idx];
+        NpcSave mer = (NpcSave) gameWindow.getNPC()[idx];
         String text = mer.getNextDialogue();
 
         // セリフを UI にセット
@@ -542,5 +518,9 @@ public class KeyHandler implements KeyListener {
 
     public void setCommandNum(int commandNum) {
         this.commandNum = commandNum;
+    }
+
+    public void consumeEnterOnce() {
+        this.playerEnter = false; // フラグ名は実装に合わせてください
     }
 }

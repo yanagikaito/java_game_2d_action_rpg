@@ -1,20 +1,21 @@
-package ui;
+package ui.state.trade;
 
 import key.KeyHandler;
+import ui.UI;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public final class DialogueState implements TradeScreenState {
+public final class TradeDialogueState implements TradeScreenState {
 
-    private final ScreenContext screenContext;
+    private final TradeScreenContext tradeScreenContext;
     private final String message;
     private final TradeScreenState returnState;
 
-    public DialogueState(ScreenContext context,
-                         String message,
-                         TradeScreenState returnState) {
-        this.screenContext = context;
+    public TradeDialogueState(TradeScreenContext context,
+                              String message,
+                              TradeScreenState returnState) {
+        this.tradeScreenContext = context;
         this.message = message;
         this.returnState = returnState;
     }
@@ -24,16 +25,16 @@ public final class DialogueState implements TradeScreenState {
 
         // Enterで元のステートに戻す
         if (code == KeyEvent.VK_ENTER) {
-            KeyHandler kh = screenContext.kh();
+            KeyHandler kh = tradeScreenContext.kh();
             kh.clearAllKeys();
-            screenContext.setState(returnState);
+            tradeScreenContext.setState(returnState);
         }
     }
 
     @Override
     public void draw(Graphics2D g2) {
         // 完全にダイアログ画面のみ描画
-        UI ui = screenContext.ui();
+        UI ui = tradeScreenContext.ui();
         ui.setCurrentDialogueMessage(message);
         ui.drawDialogueScreen(g2);
     }

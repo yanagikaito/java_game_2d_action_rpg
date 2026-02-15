@@ -1,4 +1,4 @@
-package ui;
+package ui.state.trade;
 
 import entity.Entity;
 import frame.FrameApp;
@@ -9,6 +9,7 @@ import object.ObjRedPotion;
 import object.ObjShieldWood;
 import object.ObjSwordNormal;
 import player.Player;
+import ui.UI;
 import window.GameWindow;
 
 import java.awt.*;
@@ -16,20 +17,20 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BuyState implements TradeScreenState {
+public final class TradeBuyState implements TradeScreenState {
 
-    private final ScreenContext screenContext;
+    private final TradeScreenContext tradeScreenContext;
     private Entity shopEntity;
 
-    public BuyState(ScreenContext screenContext) {
-        this.screenContext = screenContext;
+    public TradeBuyState(TradeScreenContext tradeScreenContext) {
+        this.tradeScreenContext = tradeScreenContext;
     }
 
     @Override
     public void handleKey(int code) {
 
-        GameWindow gameWindow = screenContext.gw();
-        KeyHandler keyHandler = screenContext.kh();
+        GameWindow gameWindow = tradeScreenContext.gw();
+        KeyHandler keyHandler = tradeScreenContext.kh();
 
         // 1) カーソル移動
         gameWindow.getKeyHandler().npcInventory(code);
@@ -44,14 +45,14 @@ public final class BuyState implements TradeScreenState {
         if (code == KeyEvent.VK_ESCAPE) {
             keyHandler.clearAllKeys();
             keyHandler.setCommandNum(0);
-            screenContext.setState(new MenuState(screenContext));
+            tradeScreenContext.setState(new TradeMenuState(tradeScreenContext));
         }
     }
 
     @Override
     public void draw(Graphics2D g2) {
-        UI ui = screenContext.ui();
-        GameWindow gameWindow = screenContext.gw();
+        UI ui = tradeScreenContext.ui();
+        GameWindow gameWindow = tradeScreenContext.gw();
         int tileSize = FrameApp.getTileSize();
         Entity npc = ui.getNpc();
 
@@ -65,14 +66,14 @@ public final class BuyState implements TradeScreenState {
             shopItems = createDefaultShopItems();
         }
 
-        this.shopEntity = new Entity(screenContext.gw()) {
+        this.shopEntity = new Entity(tradeScreenContext.gw()) {
             @Override
             public ArrayList<Entity> getInventory() {
                 return shopItems;
             }
         };
 
-        ui.drawInventory(g2, screenContext.gw().getPlayer(), false);
+        ui.drawInventory(g2, tradeScreenContext.gw().getPlayer(), false);
         ui.drawInventory(g2, this.shopEntity, true);
 
         // メッセージキーウィンドウ
@@ -87,7 +88,7 @@ public final class BuyState implements TradeScreenState {
 
     private ArrayList<Entity> createDefaultShopItems() {
 
-        GameWindow gw = screenContext.gw();
+        GameWindow gw = tradeScreenContext.gw();
         ArrayList<Entity> items = new ArrayList<>();
         items.add(new ObjSwordNormal(gw));
         items.add(new ObjShieldWood(gw));
@@ -98,9 +99,9 @@ public final class BuyState implements TradeScreenState {
 
     private void attemptPurchase() {
 
-        UI ui = screenContext.ui();
-        GameWindow gameWindow = screenContext.gw();
-        KeyHandler keyHandler = screenContext.kh();
+        UI ui = tradeScreenContext.ui();
+        GameWindow gameWindow = tradeScreenContext.gw();
+        KeyHandler keyHandler = tradeScreenContext.kh();
         Player player = gameWindow.getPlayer();
 
         if (shopEntity == null) return;
@@ -127,15 +128,15 @@ public final class BuyState implements TradeScreenState {
         keyHandler.clearAllKeys();
         keyHandler.setCommandNum(0);
         if (price > player.getCoin()) {
-            screenContext.setState(
-                    new DialogueState(screenContext,
+            tradeScreenContext.setState(
+                    new TradeDialogueState(tradeScreenContext,
                             "所持金が不足している!",
                             this  // BuyState に戻る
                     )
             );
         } else if (player.getInventory().size() >= player.getMaxInventorySize()) {
-            screenContext.setState(
-                    new DialogueState(screenContext,
+            tradeScreenContext.setState(
+                    new TradeDialogueState(tradeScreenContext,
                             "これ以上購入できない!!",
                             this // BuyState に戻る
                     )
@@ -152,7 +153,7 @@ public final class BuyState implements TradeScreenState {
         int y = tileSize * 9;
         int width = tileSize * 6 + tileSize / 2;
         int height = tileSize * 2;
-        screenContext.ui().drawSubWindow(g2, x, y, width, height);
+        tradeScreenContext.ui().drawSubWindow(g2, x, y, width, height);
         g2.drawString("[ESC] 戻る", x + 50, y + 50);
     }
 
@@ -162,7 +163,7 @@ public final class BuyState implements TradeScreenState {
         int y = tileSize * 9;
         int width = tileSize * 6 + tileSize / 2;
         int height = tileSize * 2;
-        screenContext.ui().drawSubWindow(g2, x, y, width, height);
+        tradeScreenContext.ui().drawSubWindow(g2, x, y, width, height);
         g2.drawString("所持金: " + coin, x + 50, y + 50);
     }
 

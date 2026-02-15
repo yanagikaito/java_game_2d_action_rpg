@@ -1,6 +1,5 @@
-package ui;
+package ui.state.trade;
 
-import entity.Entity;
 import frame.FrameApp;
 import game.GameState;
 import key.KeyHandler;
@@ -9,22 +8,22 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-import static ui.TradeOptionConstants.*;
+import static ui.state.trade.TradeOptionConstants.*;
 
-public final class MenuState implements TradeScreenState {
+public final class TradeMenuState implements TradeScreenState {
 
-    private final ScreenContext screenContext;
+    private final TradeScreenContext tradeScreenContext;
     private final List<String> options = List.of("買う", "売る", "去る");
     private boolean skipNextEnter = true;
 
-    public MenuState(ScreenContext screenContext) {
-        this.screenContext = screenContext;
+    public TradeMenuState(TradeScreenContext tradeScreenContext) {
+        this.tradeScreenContext = tradeScreenContext;
     }
 
     @Override
     public void handleKey(int code) {
 
-        KeyHandler keyHandler = screenContext.kh();
+        KeyHandler keyHandler = tradeScreenContext.kh();
 
         if (skipNextEnter && code == KeyEvent.VK_ENTER) {
             skipNextEnter = false;
@@ -44,12 +43,12 @@ public final class MenuState implements TradeScreenState {
         // 決定
         if (code == KeyEvent.VK_ENTER) {
             switch (keyHandler.getCommandNum()) {
-                case BUY -> screenContext.setState(new BuyState(screenContext));
-                case SELL -> screenContext.setState(new SellState(screenContext));
+                case BUY -> tradeScreenContext.setState(new TradeBuyState(tradeScreenContext));
+                case SELL -> tradeScreenContext.setState(new TradeSellState(tradeScreenContext));
                 case EXIT -> {
                     keyHandler.clearAllKeys();
                     keyHandler.setCommandNum(0);
-                    screenContext.gw().setGameState(GameState.PLAY);
+                    tradeScreenContext.gw().setGameState(GameState.PLAY);
                 }
             }
         }
@@ -59,10 +58,10 @@ public final class MenuState implements TradeScreenState {
     public void draw(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
-        int cmd = screenContext.kh().getCommandNum();
+        int cmd = tradeScreenContext.kh().getCommandNum();
 
-        screenContext.ui().drawDialogueScreen(g2);
-        screenContext.ui().drawSubWindow(g2, tileSize * 12, tileSize * 5, tileSize * 3, (int) (tileSize * 3.5));
+        tradeScreenContext.ui().drawDialogueScreen(g2);
+        tradeScreenContext.ui().drawSubWindow(g2, tileSize * 12, tileSize * 5, tileSize * 3, (int) (tileSize * 3.5));
 
         int x = tileSize * 13, y = tileSize * 6;
         for (int i = 0; i < options.size(); i++) {

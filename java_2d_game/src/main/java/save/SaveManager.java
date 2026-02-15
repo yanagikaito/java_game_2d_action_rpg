@@ -24,8 +24,9 @@ public class SaveManager {
     private static final String SUFFIX = ".json";
     private static final Gson gson = new Gson();
 
-    public static void saveGame(int slot, Entity entity) {
-        // セーブ時刻をここで生成（ロード時にnullになるのを防ぐ）
+    public static boolean saveGame(int slot, Entity entity) {
+        System.out.println("DEBUG: SaveManager.saveGame called slot=" + slot + " thread=" + Thread.currentThread().getName());
+        boolean result = false;
         LocalDateTime now = LocalDateTime.now();
         SaveData data = EntityStateConverter.toSaveData(slot, entity, now);
 
@@ -36,20 +37,30 @@ public class SaveManager {
 
             // 1. メインデータ保存
             saveMainData(conn, data);
+
             // 2. インベントリ削除 → 挿入
             clearInventory(conn, slot);
             saveInventory(conn, slot, data.inventory());
+
             // 3. 装備保存
             saveEquipment(conn, slot, data);
+
+            // コミット
             conn.commit();
             System.out.println("Game saved : slot " + slot);
 
             // フルセーブ成功後にメタを書き出す
             SaveMeta meta = new SaveMeta(true, data.hp(), data.maxHp(),
                     entity.getFacing(), entity.getSpriteKey(), System.currentTimeMillis());
+
+            // writeMeta が例外を投げる可能性があるならここで捕捉する
             writeMeta(slot, meta);
 
+            // すべて成功したら true を返す
+            result = true;
+
         } catch (SQLException e) {
+            // DB エラー時はロールバック
             if (conn != null) {
                 try {
                     conn.rollback();
@@ -58,10 +69,25 @@ public class SaveManager {
                 }
             }
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "セーブに失敗しました: " + e.getMessage());
-
+            // UI は EDT で表示する
+            javax.swing.SwingUtilities.invokeLater(() ->
+                    javax.swing.JOptionPane.showMessageDialog(null, "セーブに失敗しました: " + e.getMessage())
+            );
+        } catch (Exception e) {
+            // writeMeta 等のその他例外を捕捉
+            e.printStackTrace();
+            javax.swing.SwingUtilities.invokeLater(() ->
+                    javax.swing.JOptionPane.showMessageDialog(null, "セーブに失敗しました: " + e.getMessage())
+            );
+            // 必要ならここで conn.rollback() も試みる
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
         } finally {
-            // コネクションを確実に閉じる
             if (conn != null) {
                 try {
                     conn.close();
@@ -70,6 +96,8 @@ public class SaveManager {
                 }
             }
         }
+        System.out.println("DEBUG: SaveManager.saveGame finished slot=" + slot + " result=" + result);
+        return result;
     }
 
     private static void saveMainData(Connection conn, SaveData data) throws SQLException {
