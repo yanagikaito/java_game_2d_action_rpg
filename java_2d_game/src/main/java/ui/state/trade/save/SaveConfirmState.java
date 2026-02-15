@@ -1,7 +1,6 @@
 package ui.state.trade.save;
 
 import frame.FrameApp;
-import game.GameState;
 import save.SaveManager;
 import ui.UI;
 
@@ -21,7 +20,7 @@ public class SaveConfirmState implements SaveScreenState {
 
     @Override
     public void handleKey(int code) {
-        // 保存中はキーを無視する（必要なら Esc でキャンセル等を実装）
+
     }
 
     @Override
@@ -34,14 +33,14 @@ public class SaveConfirmState implements SaveScreenState {
             startSave();
         }
 
-        // 簡易な「セーブ中」ダイアログを描画（UI の既存メッセージ機能と重複しないように）
+        // 簡易な「セーブ中」ダイアログを描画
         UI ui = ctx.ui();
         int w = FrameApp.getScreenWidth();
         int h = FrameApp.getScreenHeight();
         g2.setColor(new Color(0, 0, 0, 160));
         g2.fillRect(0, 0, w, h);
 
-        g2.setFont(ui.getArial40()); // ui 側のフォント getter があれば使う
+        g2.setFont(ui.getArial40());
         g2.setColor(Color.WHITE);
         String text = "セーブ中...";
         int tx = ui.getXForCenteredText(g2, text);
@@ -51,6 +50,13 @@ public class SaveConfirmState implements SaveScreenState {
 
     private void startSave() {
         System.out.println("DEBUG: startSave() begin slot=" + slot);
+
+        // 二重保存防止
+        if (ctx.ui().getSaveInProgress()) {
+            System.out.println("DEBUG: save already in progress, aborting startSave()");
+            return;
+        }
+
         ctx.ui().addMessage("セーブ中...");
         ctx.ui().setSaveInProgress(true);
 
@@ -74,18 +80,29 @@ public class SaveConfirmState implements SaveScreenState {
                     } else {
                         ctx.ui().addMessage("セーブに失敗しました");
                     }
-                    // メタ更新（UI 側の実装に合わせる）
+
+                    // メタ更新
                     try {
                         ctx.ui().reloadSaveMeta(slot);
                     } catch (Throwable metaEx) {
                         metaEx.printStackTrace();
                     }
 
-                    // 少し待ってから閉じる
+                    // 少し待ってからセーブメニューに戻す
                     Timer t = new Timer(800, evt -> {
                         try {
-                            ctx.ui().closeSaveMenuUI();
-                            ctx.gw().setGameState(GameState.PLAY);
+                            // Confirm ダイアログだけ閉じるメソッドがあれば呼ぶ
+                            try {
+                                ctx.ui().closeSaveMenuUI();
+                            } catch (Throwable ignored) {
+                            }
+
+                            // 新しい SaveMenuState に戻す
+                            ctx.setState(new SaveMenuState(ctx));
+
+                            // GameState はセーブメニュー表示中のままにする
+                            // ctx.gw().setGameState(GameState.PLAY);
+
                         } catch (Throwable e) {
                             e.printStackTrace();
                         } finally {
@@ -94,6 +111,7 @@ public class SaveConfirmState implements SaveScreenState {
                     });
                     t.setRepeats(false);
                     t.start();
+
                 } catch (Throwable uiEx) {
                     uiEx.printStackTrace();
                 }

@@ -166,10 +166,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void retry() {
 
-        if (LoadManager.hasSaveData(1)) {
+        int slot = keyHandler.getCommandNum();
+        if (LoadManager.hasSaveData(slot)) {
 
             // セーブデータからロード
-            Entity loadedPlayer = LoadManager.loadPlayer(1, this);
+            Entity loadedPlayer = LoadManager.loadPlayer(slot, this);
             if (loadedPlayer != null) {
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
