@@ -521,6 +521,6 @@ public class KeyHandler implements KeyListener {
     }
 
     public void consumeEnterOnce() {
-        this.playerEnter = false; // フラグ名は実装に合わせてください
+        this.playerEnter = false;
     }
 }
