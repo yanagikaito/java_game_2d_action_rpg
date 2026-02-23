@@ -113,7 +113,7 @@ public class LoadManager {
                 EntityType type = findEntityTypeById(rs.getInt("type_id"));
                 if (type != null) {
                     Entity equipped = factory.create(type);
-                    if (equipped != null) { // 🔥 必須
+                    if (equipped != null) {
                         if ("weapon".equals(itemType)) {
                             player.setCurrentWeapon(equipped);
                         } else if ("shield".equals(itemType)) {

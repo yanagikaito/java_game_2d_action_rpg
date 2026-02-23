@@ -60,17 +60,17 @@ public class SaveMenuState implements SaveScreenState {
 
             int slot = keyHandler.getCommandNum();
 
-            if (slot == SLOT0) {
+            if (slot == SAVE_SLOT0) {
                 System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 saveScreenContext.setState(new SaveConfirmState(saveScreenContext, slot));
                 return;
             }
-            if (slot == SLOT1) {
+            if (slot == SAVE_SLOT1) {
                 System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 saveScreenContext.setState(new SaveConfirmState(saveScreenContext, slot));
                 return;
             }
-            if (slot == SLOT2) {
+            if (slot == SAVE_SLOT2) {
                 System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 saveScreenContext.setState(new SaveConfirmState(saveScreenContext, slot));
                 return;
