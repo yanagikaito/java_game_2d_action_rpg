@@ -1,16 +1,12 @@
 package key;
 
-import entity.Entity;
 import game.GameState;
 import npc.NpcMerChant;
 import npc.NpcSave;
-import player.Player;
-import save.LoadManager;
 import window.GameWindow;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 
 public class KeyHandler implements KeyListener {
 
@@ -224,79 +220,8 @@ public class KeyHandler implements KeyListener {
 
         if (gameWindow.getGameState() == GameState.LOAD) {
 
-            switch (code) {
-                case KeyEvent.VK_W -> {
-                    setCommandNum(getCommandNum() - 1);
-                    if (getCommandNum() < 0) {
-                        setCommandNum(2);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_S -> {
-                    setCommandNum(getCommandNum() + 1);
-                    if (getCommandNum() > 2) {
-                        setCommandNum(0);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_ENTER -> {
-                    int slot = getCommandNum();
-                    if (slot == 0) {
-                        Entity loadedPlayer = LoadManager.loadPlayer(slot, gameWindow);
-                        if (loadedPlayer != null) {
-                            gameWindow.setPlayer((Player) loadedPlayer);
-                            gameWindow.setGameState(GameState.PLAY);
-                            gameWindow.getSoundmanager().playBGM("sound/meadow_G110.wav");
-                            gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
-                            gameWindow.repaint();
-                            System.out.println("DEBUG: LoadScreen.loadSlot start slot=" + slot);
-                            System.out.println("DEBUG: cwd=" + new File(".").getAbsolutePath());
-                            System.out.println("DEBUG: meta file path=" + new File("saves", "slot" + slot + ".json").getAbsolutePath()
-                                    + " exists=" + new File("saves", "slot" + slot + ".json").exists()
-                                    + " lastModified=" + (new File("saves", "slot" + slot + ".json").exists() ? new File("saves", "slot" + slot + ".json").lastModified() : 0));
+            gameWindow.getUi().updateLoad(code);
 
-                        } else {
-                            // セーブデータなしのメッセージ
-                            gameWindow.getUi().addMessage("セーブデータなし");
-                        }
-                    } else if (slot == 1) {
-                        Entity loadedPlayer = LoadManager.loadPlayer(slot, gameWindow);
-                        if (loadedPlayer != null) {
-                            gameWindow.setPlayer((Player) loadedPlayer);
-//                            gameWindow.setGameState(GameState.PLAY);
-                            gameWindow.getUi().initLoadScreen(); // 必要ならロード後 UI 初期化
-                            gameWindow.repaint();
-                            System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
-                            // ロード後
-                            System.out.println("load: HP=" + gameWindow.getPlayer().getLife() +
-                                    ", Weapon=" + (gameWindow.getPlayer().getCurrentWeapon() != null ?
-                                    gameWindow.getPlayer().getCurrentWeapon().getName() : "no") +
-                                    ", Inventory=" + gameWindow.getPlayer().getInventory().size());
-                        } else {
-                            // セーブデータなしのメッセージ
-                            gameWindow.getUi().addMessage("セーブデータなし");
-                        }
-                    } else if (slot == 2) {
-                        Entity loadedPlayer = LoadManager.loadPlayer(slot, gameWindow);
-                        if (loadedPlayer != null) {
-                            gameWindow.setPlayer((Player) loadedPlayer);
-                            gameWindow.setGameState(GameState.PLAY);
-                            gameWindow.getUi().initLoadScreen();
-                            gameWindow.repaint();
-                            System.out.println("gameWindow.getGameState() ==" + gameWindow.getGameState());
-                            // ロード後
-                            System.out.println("load: HP=" + gameWindow.getPlayer().getLife() +
-                                    ", Weapon=" + (gameWindow.getPlayer().getCurrentWeapon() != null ?
-                                    gameWindow.getPlayer().getCurrentWeapon().getName() : "no") +
-                                    ", Inventory=" + gameWindow.getPlayer().getInventory().size());
-                        } else {
-                            // セーブデータなしのメッセージ
-                            gameWindow.getUi().addMessage("セーブデータなし");
-                        }
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-            }
         }
 
         if (gameWindow.getGameState() == GameState.GAME_OVER) {

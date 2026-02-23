@@ -13,6 +13,7 @@ import save.SaveMeta;
 import triforce.TriforcePanel;
 import triforce.TriforceRenderer;
 import ui.state.trade.TradeScreenContext;
+import ui.state.trade.load.LoadScreenContext;
 import ui.state.trade.save.SaveScreenContext;
 import window.GameWindow;
 
@@ -64,6 +65,7 @@ public class UI {
 
     private final TradeScreenContext tradeCtx;
     private final SaveScreenContext saveCtx;
+    private final LoadScreenContext loadCtx;
 
     // セーブメニュー関連
     private int saveMenuSelected = 0;           // 現在選択中のスロット（0-based）
@@ -76,6 +78,7 @@ public class UI {
         this.gameWindow = gameWindow;
         this.tradeCtx = new TradeScreenContext(gameWindow, this);
         this.saveCtx = new SaveScreenContext(gameWindow, this);
+        this.loadCtx = new LoadScreenContext(gameWindow, this);
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
@@ -114,12 +117,9 @@ public class UI {
         GameState gameState = gameWindow.getGameState();
 
         if (gameState == GameState.TITLE) {
-
             drawTitleScreen(g2);
 
         } else if (gameState == GameState.LOAD) {
-
-            gameWindow.setDialogueActive(false);
             drawLoadScreen(g2);
 
         } else if (gameState == GameState.PLAY) {
@@ -348,7 +348,7 @@ public class UI {
         loadSlotIndex = 0;
     }
 
-    public void drawLoadScreen(Graphics2D g2) {
+    public void drawDialogueLoadScreen(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
 
@@ -908,8 +908,16 @@ public class UI {
         saveCtx.draw(g2);
     }
 
+    public void drawLoadScreen(Graphics2D g2) {
+        loadCtx.draw(g2);
+    }
+
     public void updateSave(int keyCode) {
         saveCtx.handleKey(keyCode);
+    }
+
+    public void updateLoad(int keyCode) {
+        loadCtx.handleKey(keyCode);
     }
 
     public int getItemIndexOnSlot(int slotRow, int slotCol) {
