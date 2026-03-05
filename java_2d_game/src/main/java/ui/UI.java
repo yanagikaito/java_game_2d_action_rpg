@@ -73,7 +73,6 @@ public class UI {
     private boolean saveMenuOpen = false;       // セーブメニューが開いているか
     private long menuInputCooldownUntil = 0L;   // 開いた直後の短い無効化タイムスタンプ（ms）
 
-
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.tradeCtx = new TradeScreenContext(gameWindow, this);

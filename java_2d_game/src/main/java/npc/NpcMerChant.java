@@ -66,6 +66,7 @@ public class NpcMerChant extends Entity {
         items.add(new ObjShieldWood(gameWindow));
         items.add(new ObjRedPotion(gameWindow));
         items.add(new ObjGreenPotion(gameWindow));
+        items.add(new ObjBluePotion(gameWindow));
 
         System.out.println("Items created: " + items.size());
         for (Entity item : items) {
@@ -102,6 +103,7 @@ public class NpcMerChant extends Entity {
         items.add(new ObjShieldWood(gameWindow));
         items.add(new ObjRedPotion(gameWindow));
         items.add(new ObjGreenPotion(gameWindow));
+        items.add(new ObjBluePotion(gameWindow));
         return items;
     }
 
