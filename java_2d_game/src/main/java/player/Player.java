@@ -70,6 +70,11 @@ public class Player extends Entity {
     // aura 用キャッシュ画像（事前レンダリング）
     private ObjAura aura;
 
+    // Blue potion buff
+    private boolean bluePotionActive = false;
+    private long bluePotionExpireAt = 0L;
+    private static final long BLUE_POTION_DURATION_MS = 3 * 60 * 1000L; // 3分
+
 
     /**
      * プレイヤーを初期化するコンストラクタ。
@@ -189,6 +194,7 @@ public class Player extends Entity {
         items.add(getCurrentShield());
         items.add(new ObjRedPotion(gameWindow));
         items.add(new ObjGreenPotion(gameWindow));
+        items.add(new ObjBluePotion(gameWindow));
 
         setInventory(items);
     }
@@ -328,6 +334,31 @@ public class Player extends Entity {
             setMana(Math.min(getMana() + heal, getMaxMana()));
             gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
             gameWindow.getSoundmanager().greenPotionWAV("sound/potion-sound.wav");
+            getInventory().remove(index);
+            return;
+        } else {
+            System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
+        }
+    }
+
+    public void useBluePotion(int index) {
+        System.out.println("useBluePotion が呼ばれた index=" + index
+                + " invSize=" + getInventory().size());
+
+        if (index < 0 || index >= getInventory().size()) {
+            System.out.println("index 範囲外で return");
+            return;
+        }
+
+        Entity e = getInventory().get(index);
+
+        if (e instanceof ObjBluePotion) {
+            System.out.println("アイテムは BluePotion です。処理続行");
+            ObjBluePotion potion = (ObjBluePotion) e;
+            int heal = potion.getHealAmount();
+            setMana(Math.min(getMana() + heal, getMaxMana()));
+            gameWindow.getUi().addMessage("ブルーポーションを使った。MPが全回復！");
+            gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
             getInventory().remove(index);
             return;
         } else {
@@ -1102,6 +1133,9 @@ public class Player extends Entity {
             }
             if (selectedItem.getType() instanceof GreenPotionType) {
                 useGreenPotion(index);
+            }
+            if (selectedItem.getType() instanceof BluePotionType) {
+                useBluePotion(index);
             }
         }
     }

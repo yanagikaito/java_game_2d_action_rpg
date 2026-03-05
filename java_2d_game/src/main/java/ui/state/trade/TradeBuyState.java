@@ -4,10 +4,7 @@ import entity.Entity;
 import frame.FrameApp;
 import key.KeyHandler;
 import npc.NpcMerChant;
-import object.ObjGreenPotion;
-import object.ObjRedPotion;
-import object.ObjShieldWood;
-import object.ObjSwordNormal;
+import object.*;
 import player.Player;
 import ui.UI;
 import window.GameWindow;
@@ -83,7 +80,7 @@ public final class TradeBuyState implements TradeScreenState {
         drawPlayerCoinWindow(g2, tileSize, gameWindow.getPlayer().getCoin());
 
         // 選択中アイテムの価格ウィンドウ
-        drawPriceWindow(g2, tileSize, ui, gameWindow.getPlayer().getInventory());
+        drawPriceWindow(g2, tileSize, ui, createDefaultShopItems());
     }
 
     private ArrayList<Entity> createDefaultShopItems() {
@@ -94,6 +91,7 @@ public final class TradeBuyState implements TradeScreenState {
         items.add(new ObjShieldWood(gw));
         items.add(new ObjRedPotion(gw));
         items.add(new ObjGreenPotion(gw));
+        items.add(new ObjBluePotion(gw));
         return items;
     }
 
