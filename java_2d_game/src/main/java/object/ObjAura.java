@@ -15,6 +15,8 @@ public class ObjAura extends Entity {
     private GameWindow gameWindow;
     private static final String[] DIRECTIONS = {"Up", "Down", "Left", "Right"};
     private static final int FRAMES_PER_DIRECTION = 3;
+    private boolean active = false;
+    private long expireAt = 0L;
 
     // アニメ制御
     private long elapsedMilliseconds = 0L;
@@ -116,6 +118,13 @@ public class ObjAura extends Entity {
      */
 
     public void updateAnimation(long deltaMs) {
+        // 期限切れチェック（先に）
+        if (active && System.currentTimeMillis() >= expireAt) {
+            deactivate();
+            return;
+        }
+
+        // 既存のアニメ更新処理
         elapsedMilliseconds += deltaMs;
         while (elapsedMilliseconds >= FRAME_INTERVAL_MS) {
             elapsedMilliseconds -= FRAME_INTERVAL_MS;
@@ -128,7 +137,6 @@ public class ObjAura extends Entity {
      */
 
     public void drawAt(Graphics2D g2, int screenX, int screenY, float scale, float alpha) {
-
         BufferedImage frame = getAnimationFrame();
         // フォールバック: frame が null なら透明画像を作る（描画で落ちないように）
         if (frame == null) {
@@ -159,5 +167,37 @@ public class ObjAura extends Entity {
             g2.setRenderingHints(savedHints);
             g2.setComposite(originalComposite);
         }
+    }
+
+    public void activate(long durationMs) {
+        this.active = true;
+        this.expireAt = System.currentTimeMillis() + durationMs;
+        this.elapsedMilliseconds = 0L;
+        this.currentFrameIndexOneBased = 1;
+        System.out.println("DEBUG: ObjAura.activate durationMs=" + durationMs + " expireAt=" + expireAt);
+    }
+
+    public void deactivate() {
+        this.active = false;
+        this.expireAt = 0L;
+        System.out.println("DEBUG: ObjAura.deactivate");
+    }
+
+    public boolean isActive() {
+        return active && System.currentTimeMillis() < expireAt;
+    }
+
+    public boolean setActive(boolean active) {
+        return this.active = active && System.currentTimeMillis() < expireAt;
+    }
+
+    // 内部フラグをそのまま返すデバッグ用
+    public boolean isActiveRaw() {
+        return active;
+    }
+
+    // expireAt を返すデバッグ用
+    public long getExpireAt() {
+        return expireAt;
     }
 }

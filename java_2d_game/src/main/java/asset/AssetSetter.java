@@ -53,7 +53,7 @@ public class AssetSetter {
         Entity[] monsters = gameWindow.getMonster();
         int i = 0;
 
-        monsters[i] = createMonMintSoldier(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 9);
+        monsters[i] = createMonMintSoldier(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 3);
         i++;
 
         monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 38);

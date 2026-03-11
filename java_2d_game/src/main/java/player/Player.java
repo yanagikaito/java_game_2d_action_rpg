@@ -300,6 +300,13 @@ public class Player extends Entity {
             ObjRedPotion potion = (ObjRedPotion) e;
             int heal = potion.getHealAmount();
             setLife(Math.min(getLife() + heal, getMaxLife()));
+            // オーラ発動条件：HPが満タンになったら
+            if (aura != null && getLife() == getMaxLife()) {
+                long auraDurationMs = 30_000L; // 例: 30秒。仕様に合わせて変更
+                aura.activate(auraDurationMs);
+                gameWindow.getUi().addMessage("オーラが発動した！");
+                System.out.println("DEBUG: RedPotion triggered aura.activate durationMs=" + auraDurationMs);
+            }
             gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
             gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
             getInventory().remove(index);
@@ -482,6 +489,10 @@ public class Player extends Entity {
             aura.setWorldX(this.getWorldX());
             aura.setWorldY(this.getWorldY());
             aura.updateAnimation(deltaMs);
+            System.out.println("DEBUG: Enter判定 now=" + System.currentTimeMillis()
+                    + " aura.isActive()=" + aura.isActive()
+                    + " aura.expireAt=" + (aura != null ? aura.getExpireAt() : "null")
+                    + " aura.activeFlag=" + (aura != null ? aura.isActiveRaw() : "null"));
         }
     }
 
@@ -761,6 +772,47 @@ public class Player extends Entity {
     }
 
     /**
+     * オーラ有効かつ剣装備時に Enter で呼ぶ剣の射出処理。
+     * ObjSwordProjectile を生成して gameWindow.getProjectileList() に追加する。
+     */
+
+    public void shootSword() {
+
+        // 既に射出中のプロジェクタイルがあるならキャンセル（必要に応じて変更）
+        if (getProjectile() != null && getProjectile().getAlive()) {
+            return;
+        }
+
+        // 剣専用プロジェクタイルを生成（クラス名はプロジェクトに合わせる）
+        ObjSwordProjectile sp = new ObjSwordProjectile(gameWindow);
+
+        // set(...) のシグネチャは他のプロジェクタイルに合わせる
+        sp.set(
+                getWorldX(),
+                getWorldY(),
+                getDirection(),
+                true,
+                this
+        );
+
+        sp.setLife(sp.getMaxLife());
+        sp.setSpriteNum(1);
+        sp.setSpriteCounter(0);
+
+        gameWindow.getProjectileList().add(sp);
+
+        // 発射時の演出
+        gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
+        gameWindow.getUi().addMessage("剣を発射した！");
+
+        // 発射クールダウンやカウンタ類を必要に応じて設定
+        setShotAvailableCounter(0);
+        fireCooldown = COOLDOWN_FRAMES;
+        lastFireTime = System.currentTimeMillis();
+    }
+
+
+    /**
      * ファイアボールを発射する処理を行う。
      * ショットキー入力、射出可能状態、マナ消費、クールダウン判定を満たしたときに
      * プロジェクタイルを生成し、リストに追加して効果音を再生。
@@ -884,13 +936,27 @@ public class Player extends Entity {
                 gameWindow.setGameState(GameState.DIALOGUE);
                 gameWindow.getNPC()[i].speak();
             } else {
-                setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
-                        + getDirection().substring(1));
-                setAttacking(true);
-                gameWindow.getSoundmanager().defeatedWAV("sound/thrust-sound.wav");
+                // NPC がいない（素振り／攻撃）時の Enter 処理
+                // ここで「オーラが有効かつ剣を装備している」なら剣を発射する
+                boolean hasSwordEquipped = getCurrentWeapon() != null
+                        && getCurrentWeapon().getType() instanceof SwordType;
+
+                Player p = this;
+                boolean auraActive = (aura != null && aura.isActive() && p.getLife() == p.getMaxLife());
+
+                if (auraActive && hasSwordEquipped) {
+                    // オーラ中かつ剣装備なら射出
+                    shootSword();
+                } else {
+                    // 通常の近接攻撃（既存処理）
+                    setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
+                            + getDirection().substring(1));
+                    setAttacking(true);
+                    gameWindow.getSoundmanager().defeatedWAV("sound/thrust-sound.wav");
+                }
             }
+            keyHandler.setPlayerEnter(false);
         }
-        keyHandler.setPlayerEnter(false);
     }
 
     /**
@@ -1097,6 +1163,7 @@ public class Player extends Entity {
             gameWindow.setGameState(GameState.DIALOGUE);
             gameWindow.getUi().setCurrentDialogueMessage("プレイヤーはレベル" + gameWindow.getPlayer().getLevel() + "になった!");
             gameWindow.getPlayer().setLife(gameWindow.getPlayer().getMaxLife());
+            aura.setActive(true);
         }
     }
 
@@ -1189,6 +1256,7 @@ public class Player extends Entity {
                 // プレイヤーのHPが満タンのときだけaura描画
                 Player p = this;
                 if (p.getLife() == p.getMaxLife()) {
+                    aura.setActive(true);
                     int auraScreenX = aura.getWorldX()
                             - gameWindow.getPlayer().getWorldX()
                             + gameWindow.getPlayer().getScreenX();
