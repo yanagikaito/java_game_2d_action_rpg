@@ -1,5 +1,7 @@
 package entity;
 
+import entity.particle.FireworkParticle;
+import entity.particle.Particle;
 import frame.FrameApp;
 import game.GameState;
 import object.Projectile;

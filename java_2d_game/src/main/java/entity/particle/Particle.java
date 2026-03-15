@@ -1,5 +1,6 @@
-package entity;
+package entity.particle;
 
+import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;
 
