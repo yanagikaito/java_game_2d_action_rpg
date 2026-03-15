@@ -1,6 +1,8 @@
 package player;
 
 import entity.*;
+import entity.particle.SpriteUtil;
+import entity.particle.SwordAuraParticle;
 import frame.FrameApp;
 import game.GameState;
 import key.KeyHandler;
@@ -14,9 +16,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 import java.util.function.Supplier;
 import javax.swing.Timer;
@@ -778,15 +778,14 @@ public class Player extends Entity {
 
     public void shootSword() {
 
-        // 既に射出中のプロジェクタイルがあるならキャンセル（必要に応じて変更）
+        // 自分が発射した生存中の弾だけをチェックする
         if (getProjectile() != null && getProjectile().getAlive()) {
             return;
         }
 
-        // 剣専用プロジェクタイルを生成（クラス名はプロジェクトに合わせる）
+        // 剣専用プロジェクタイルを生成
         ObjSwordProjectile sp = new ObjSwordProjectile(gameWindow);
 
-        // set(...) のシグネチャは他のプロジェクタイルに合わせる
         sp.set(
                 getWorldX(),
                 getWorldY(),
@@ -799,16 +798,37 @@ public class Player extends Entity {
         sp.setSpriteNum(1);
         sp.setSpriteCounter(0);
 
+        // ここで projectileList に追加
         gameWindow.getProjectileList().add(sp);
 
         // 発射時の演出
         gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
         gameWindow.getUi().addMessage("剣を発射した！");
 
+        // 追加：発射直後にプロジェクタイル側でエフェクトを初期化させる
+        sp.onFire(getDirection());
+
         // 発射クールダウンやカウンタ類を必要に応じて設定
         setShotAvailableCounter(0);
         fireCooldown = COOLDOWN_FRAMES;
         lastFireTime = System.currentTimeMillis();
+    }
+
+
+    /**
+     * 方向文字列をラジアンに変換するユーティリティ。
+     * 右 = 0, 下 = +PI/2, 左 = PI, 上 = -PI/2 を返します。
+     */
+
+    public static double directionToAngle(String dir) {
+        if (dir == null) return 0.0;
+        return switch (dir.toLowerCase()) {
+            case "right" -> 0.0;
+            case "down" -> Math.PI / 2.0;
+            case "left" -> Math.PI;
+            case "up" -> -Math.PI / 2.0;
+            default -> 0.0; // 未知の方向は右向き(0)を返す
+        };
     }
 
 
@@ -1549,5 +1569,19 @@ public class Player extends Entity {
         if (getLife() <= 0) {
             gameWindow.setGameState(GameState.GAME_OVER);
         }
+    }
+
+    public BufferedImage getCurrentSwordSprite() {
+        var weapon = getCurrentWeapon();
+        if (weapon == null) return null;
+
+        // 武器が剣タイプかどうかを判定（あなたの実装に合わせて調整）
+        if (!(weapon.getType() instanceof SwordType)) {
+            return null;
+        }
+
+        // ObjSwordProjectile のプロトタイプからスプライトを取得（ロードを繰り返さない）
+        ObjSwordProjectile proto = ObjSwordProjectile.getPrototype(gameWindow);
+        return proto.getSprite(getDirection());
     }
 }
