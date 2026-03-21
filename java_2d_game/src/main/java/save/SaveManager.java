@@ -48,12 +48,30 @@ public class SaveManager {
             conn.commit();
             System.out.println("Game saved : slot " + slot);
 
-            // フルセーブ成功後にメタを書き出す
+            // 既存のメタ生成箇所（抜粋）
             SaveMeta meta = new SaveMeta(true, data.hp(), data.maxHp(),
                     entity.getFacing(), entity.getSpriteKey(), System.currentTimeMillis());
 
-            // writeMeta が例外を投げる可能性があるならここで捕捉する
+            // ここでプレイ時間をセットする（Player 型チェック）
+            try {
+                // Player クラスのパッケージに合わせて import してください
+                if (entity instanceof player.Player) {
+                    long playSeconds = ((player.Player) entity).getPlayTimeSeconds();
+                    meta.setPlayTimeSeconds(playSeconds);
+                    System.out.println("DEBUG: SaveManager - meta.playTimeSeconds = " + playSeconds + " for slot " + slot);
+                } else {
+                    // entity が Player でない場合は 0 のままにする（安全策）
+                    meta.setPlayTimeSeconds(0L);
+                }
+            } catch (NoClassDefFoundError | Exception e) {
+                // 万が一 Player クラスが見つからない等の問題があってもセーブ自体は続行する
+                meta.setPlayTimeSeconds(0L);
+                System.err.println("Warning: failed to set playTimeSeconds on SaveMeta: " + e.getMessage());
+            }
+
+            // writeMeta を呼ぶ（既存）
             writeMeta(slot, meta);
+
 
             // すべて成功したら true を返す
             result = true;

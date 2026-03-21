@@ -2,6 +2,7 @@ package ui.state.trade.save;
 
 import frame.FrameApp;
 import save.SaveManager;
+import save.SaveMeta;
 import ui.UI;
 
 import javax.swing.*;
@@ -64,14 +65,35 @@ public class SaveConfirmState implements SaveScreenState {
             boolean ok = false;
             try {
                 System.out.println("DEBUG: calling SaveManager.saveGame slot=" + slot);
-                ok = SaveManager.saveGame(slot, ctx.gw().getPlayer()); // 0-based 想定
+                ok = SaveManager.saveGame(slot, ctx.gw().getPlayer()); // セーブ実行
+
                 System.out.println("DEBUG: SaveManager.saveGame returned=" + ok);
+
+                // セーブ成功なら最新のメタを読み込んで UI に反映（ファイルに確実に書き込まれた値を取得）
+                if (ok) {
+                    SaveMeta meta = SaveManager.loadMeta(slot);
+                    System.out.println("DEBUG: loaded meta for slot=" + slot + " playTime=" + (meta != null ? meta.getPlayTimeSeconds() : "null"));
+
+                    // UI 更新は必ず EDT で行う
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        try {
+                            // UI#setSaveMeta を事前に実装しておく
+                            ctx.ui().setSaveMeta(slot, meta);
+                            // GameWindow の再描画
+                            ctx.gw().repaint();
+                        } catch (Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                }
+
             } catch (Throwable ex) {
                 ex.printStackTrace();
                 ok = false;
             }
 
             final boolean finalOk = ok;
+            // 結果表示や後処理は EDT で行う
             SwingUtilities.invokeLater(() -> {
                 try {
                     ctx.ui().setSaveInProgress(false);
@@ -81,27 +103,17 @@ public class SaveConfirmState implements SaveScreenState {
                         ctx.ui().addMessage("セーブに失敗しました");
                     }
 
-                    // メタ更新
-                    try {
-                        ctx.ui().reloadSaveMeta(slot);
-                    } catch (Throwable metaEx) {
-                        metaEx.printStackTrace();
-                    }
-
                     // 少し待ってからセーブメニューに戻す
                     Timer t = new Timer(800, evt -> {
                         try {
-                            // Confirm ダイアログだけ閉じるメソッドがあれば呼ぶ
+                            // Confirm ダイアログを閉じる UI 側のメソッドがあれば呼ぶ（無ければ無視）
                             try {
                                 ctx.ui().closeSaveMenuUI();
                             } catch (Throwable ignored) {
                             }
 
-                            // 新しい SaveMenuState に戻す
+                            // Save メニューに戻す
                             ctx.setState(new SaveMenuState(ctx));
-
-                            // GameState はセーブメニュー表示中のままにする
-                            // ctx.gw().setGameState(GameState.PLAY);
 
                         } catch (Throwable e) {
                             e.printStackTrace();

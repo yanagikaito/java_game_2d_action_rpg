@@ -1,12 +1,14 @@
 package save;
 
 public class SaveMeta {
+
     private boolean exists;
     private int hp;
     private int maxHp;
     private String facing;
     private String spriteKey;
     private long savedAt;
+    private long playTimeSeconds = 0L;
 
     // デフォルトコンストラクタ（Gson 用）
     public SaveMeta() {
@@ -43,5 +45,13 @@ public class SaveMeta {
 
     public String getSpriteKey() {
         return spriteKey;
+    }
+
+    public long getPlayTimeSeconds() {
+        return playTimeSeconds;
+    }
+
+    public void setPlayTimeSeconds(long playTimeSeconds) {
+        this.playTimeSeconds = playTimeSeconds;
     }
 }
