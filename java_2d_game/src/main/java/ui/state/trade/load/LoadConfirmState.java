@@ -5,6 +5,8 @@ import frame.FrameApp;
 import game.GameState;
 import player.Player;
 import save.LoadManager;
+import save.SaveManager;
+import save.SaveMeta;
 import ui.UI;
 
 import javax.swing.*;
@@ -93,10 +95,51 @@ public class LoadConfirmState implements LoadScreenState {
                         ctx.ui().setSaveInProgress(false);
                     } catch (Throwable ignored) {
                     }
+
                     if (finalOk && finalLoaded instanceof Player) {
+                        // メタを読み込んでプレイ時間を復元・保持・UI反映
+                        try {
+                            SaveMeta meta = SaveManager.loadMeta(slot);
+                            if (meta != null && meta.exists()) {
+                                long savedSeconds = meta.getPlayTimeSeconds();
+
+                                // プレイヤーの総プレイ時間を復元
+                                ((Player) finalLoaded).setPlayTimeSeconds(savedSeconds);
+
+                                // GameWindow に「保存時プレイ時間」を保持
+                                ctx.gw().setLoadedPlayTimeSeconds(savedSeconds);
+
+                                // UI の saveMetas も更新しておく（ロード画面やセーブ画面に反映）
+                                try {
+                                    ctx.ui().setSaveMeta(slot, meta);
+                                } catch (Throwable uiEx) {
+                                    uiEx.printStackTrace();
+                                }
+                            } else {
+                                // セーブが存在しない（互換性）→ ニューゲーム扱い
+                                ((Player) finalLoaded).setPlayTimeSeconds(0L);
+                                ctx.gw().setLoadedPlayTimeSeconds(-1L);
+                            }
+                        } catch (Throwable metaEx) {
+                            metaEx.printStackTrace();
+                            // 失敗時は安全側の初期化
+                            ((Player) finalLoaded).setPlayTimeSeconds(0L);
+                            ctx.gw().setLoadedPlayTimeSeconds(-1L);
+                        }
+
+                        // プレイヤーをゲームウィンドウにセットしてプレイ状態へ
                         ctx.gw().setPlayer((Player) finalLoaded);
                         ctx.gw().setGameState(GameState.PLAY);
+
+                        // メッセージ表示
                         ctx.ui().addMessage("ロードしました（Slot " + slot + "）");
+
+                        // 再描画
+                        try {
+                            ctx.gw().repaint();
+                        } catch (Throwable ignored) {
+                        }
+
                     } else {
                         ctx.ui().addMessage("ロードに失敗しました");
                         ctx.setState(new LoadMenuState(ctx));

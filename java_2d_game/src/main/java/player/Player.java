@@ -1,8 +1,6 @@
 package player;
 
 import entity.*;
-import entity.particle.SpriteUtil;
-import entity.particle.SwordAuraParticle;
 import frame.FrameApp;
 import game.GameState;
 import key.KeyHandler;
@@ -73,7 +71,15 @@ public class Player extends Entity {
     // Blue potion buff
     private boolean bluePotionActive = false;
     private long bluePotionExpireAt = 0L;
-    private static final long BLUE_POTION_DURATION_MS = 3 * 60 * 1000L; // 3分
+    // 3分
+    private static final long BLUE_POTION_DURATION_MS = 3 * 60 * 1000L;
+
+    // 保存・表示する秒単位のプレイ時間
+    private long playTimeSeconds = 0L;
+    // フレームの端数（秒）を保持
+    private double playTimeAccumulator = 0;
+    // 999時間59分59秒 = 3,599,999 秒
+    public static final long MAX_PLAY_SECONDS = 3_599_999L;
 
 
     /**
@@ -1571,17 +1577,40 @@ public class Player extends Entity {
         }
     }
 
-    public BufferedImage getCurrentSwordSprite() {
-        var weapon = getCurrentWeapon();
-        if (weapon == null) return null;
+    // プレイ時間の getter/setter
+    public long getPlayTimeSeconds() {
+        return playTimeSeconds;
+    }
 
-        // 武器が剣タイプかどうかを判定（あなたの実装に合わせて調整）
-        if (!(weapon.getType() instanceof SwordType)) {
-            return null;
+    // setter（ロード時などに呼ぶ。上限でクランプ）
+    public void setPlayTimeSeconds(long seconds) {
+        if (seconds < 0) seconds = 0;
+        this.playTimeSeconds = Math.min(seconds, MAX_PLAY_SECONDS);
+        this.playTimeAccumulator = 0.0;
+    }
+
+    /**
+     * 毎フレーム呼ぶ。deltaSeconds はそのフレームの経過秒
+     */
+
+    public void updatePlayTime(double deltaSeconds) {
+        if (deltaSeconds <= 0) return;
+        if (playTimeSeconds >= MAX_PLAY_SECONDS) return; // 既にカンストしていれば何もしない
+
+        playTimeAccumulator += deltaSeconds;
+        while (playTimeAccumulator >= 1.0) {
+            playTimeAccumulator -= 1.0;
+            if (playTimeSeconds < MAX_PLAY_SECONDS) {
+                playTimeSeconds++;
+                if (playTimeSeconds >= MAX_PLAY_SECONDS) {
+                    playTimeSeconds = MAX_PLAY_SECONDS;
+                    // 必要ならここでカンスト時のイベントを発火
+                }
+            } else {
+                // カンスト到達後はループを抜ける
+                playTimeAccumulator = 0.0;
+                break;
+            }
         }
-
-        // ObjSwordProjectile のプロトタイプからスプライトを取得（ロードを繰り返さない）
-        ObjSwordProjectile proto = ObjSwordProjectile.getPrototype(gameWindow);
-        return proto.getSprite(getDirection());
     }
 }

@@ -66,6 +66,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private boolean dialogueActive = false;
     private Map<String, Boolean> mapFlags = new HashMap<>();
     private Map<Integer, String> mapBgmMap = new HashMap<>();
+    private long lastUpdateTimeNano;
+    private long loadedPlayTimeSeconds = -1L;
+
 
     /**
      * GameWindow のコンストラクタ。
@@ -86,6 +89,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setUpGame() {
 
+        lastUpdateTimeNano = System.nanoTime();
         assetSetter.setNPC();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
@@ -382,6 +386,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
      */
 
     public void update() {
+
+        // --- フレーム間の経過秒を計算してプレイヤーに渡す ---
+        long nowNano = System.nanoTime();
+        double deltaSeconds = (nowNano - lastUpdateTimeNano) / 1_000_000_000.0;
+        // 極端に大きな delta を防ぐ（ウィンドウ切替や一時停止復帰時のジャンプ対策）
+        if (deltaSeconds < 0) deltaSeconds = 0;
+        if (deltaSeconds > 1.0) deltaSeconds = 1.0; // 1秒以上は切り捨て（必要に応じて調整）
+        lastUpdateTimeNano = nowNano;
+
+        // プレイ時間更新（1秒刻みで増える）
+        player.updatePlayTime(deltaSeconds);
+        // ----------------------------------------------------
 
         if (gameState == GameState.PLAY) {
 
@@ -960,25 +976,19 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
-    // ゲーム内から参照できるように getter も用意
-    public Map<String, Boolean> getMapFlags() {
-        return mapFlags;
-    }
-
-    // マップフラグを個別に設定するヘルパー
-    public void setMapFlag(String name, boolean value) {
-        mapFlags.put(name, value);
-    }
-
     public EventHandler getEventHandler() {
         return eventHandler;
     }
 
-    public void setEventHandler(EventHandler eventHandler) {
-        this.eventHandler = eventHandler;
-    }
-
     private String getBgmForMap(int mapId) {
         return mapBgmMap.get(mapId);
+    }
+
+    public long getLoadedPlayTimeSeconds() {
+        return loadedPlayTimeSeconds;
+    }
+
+    public void setLoadedPlayTimeSeconds(long seconds) {
+        this.loadedPlayTimeSeconds = seconds;
     }
 }

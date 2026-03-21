@@ -71,7 +71,8 @@ public class UI {
     private int saveMenuSelected = 0;           // 現在選択中のスロット（0-based）
     private boolean saveInProgress = false;     // 保存処理中フラグ
     private boolean saveMenuOpen = false;       // セーブメニューが開いているか
-    private long menuInputCooldownUntil = 0L;   // 開いた直後の短い無効化タイムスタンプ（ms）
+
+    private static final long MAX_PLAY_SECONDS = 3_599_999L;
 
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -197,6 +198,12 @@ public class UI {
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
             drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+
+
+            String pt = formatPlayTime(meta.getPlayTimeSeconds());
+            g2.setFont(g2.getFont().deriveFont(20f));
+            g2.setColor(Color.WHITE);
+            g2.drawString("プレイ時間: " + pt, frameX + 8, frameY + tileSize * 2);
         }
 
         g2.setColor(Color.WHITE);
@@ -226,6 +233,11 @@ public class UI {
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
             drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+
+            String pt = formatPlayTime(meta.getPlayTimeSeconds());
+            g2.setFont(g2.getFont().deriveFont(20f));
+            g2.setColor(Color.WHITE);
+            g2.drawString("プレイ時間: " + pt, frameX + 8, frameY + tileSize * 2);
         }
 
         g2.setColor(Color.WHITE);
@@ -255,6 +267,11 @@ public class UI {
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
             drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+
+            String pt = formatPlayTime(meta.getPlayTimeSeconds());
+            g2.setFont(g2.getFont().deriveFont(20f));
+            g2.setColor(Color.WHITE);
+            g2.drawString("プレイ時間: " + pt, frameX + 8, frameY + tileSize * 2);
         }
 
         g2.setColor(Color.WHITE);
@@ -308,7 +325,7 @@ public class UI {
         // トライフォース描画
         if (triforcePanel != null) {
             triforcePanel.startAnimation();
-            int triforcePx = FrameApp.getTileSize() * 6; // 表示サイズ（ピクセル）
+            int triforcePx = FrameApp.getTileSize() * 6;
             int centerX = FrameApp.getScreenWidth() / 2;
             int topY = FrameApp.getTileSize() / 2;
 
@@ -341,8 +358,10 @@ public class UI {
 
     public void initLoadScreen() {
         saveMetas = new SaveMeta[SLOT_COUNT];
-        for (int i = 0; i < SLOT_COUNT; i++) { // SaveManager.loadMeta はセーブの存在チェックと簡易情報を返す想定
-            saveMetas[i] = SaveManager.loadMeta(i); // null ではなく SaveMeta を返す設計が望ましい
+        // SaveManager.loadMeta はセーブの存在チェックと簡易情報を返す想定
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            // null ではなく SaveMeta を返す設計
+            saveMetas[i] = SaveManager.loadMeta(i);
         }
         loadSlotIndex = 0;
     }
@@ -376,7 +395,8 @@ public class UI {
         if (saveMetas != null && saveMetas.length > 0 && saveMetas[0] != null && saveMetas[0].exists()) {
             SaveMeta meta = saveMetas[0];
             // ハートをサブウィンドウ左上に描く（微調整は y 座標で）
-            int lifeX0 = frameX; // frameX はそのスロットのサブウィンドウ左上
+            // frameX はそのスロットのサブウィンドウ左上
+            int lifeX0 = frameX;
             int lifeY0 = frameY;
             drawPlayerLifeAt(g2, lifeX0, lifeY0, meta.getHp(), meta.getMaxHp());
 
@@ -384,6 +404,11 @@ public class UI {
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
             drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+
+            String pt = formatPlayTime(meta.getPlayTimeSeconds());
+            g2.setFont(g2.getFont().deriveFont(20f));
+            g2.setColor(Color.WHITE);
+            g2.drawString("プレイ時間: " + pt, frameX + 8, frameY + tileSize * 2);
         }
 
         g2.setColor(Color.WHITE);
@@ -407,7 +432,8 @@ public class UI {
         if (saveMetas != null && saveMetas.length > 0 && saveMetas[1] != null && saveMetas[1].exists()) {
             SaveMeta meta = saveMetas[1];
             // ハートをサブウィンドウ左上に描く（微調整は y 座標で）
-            int lifeX1 = frameX; // frameX はそのスロットのサブウィンドウ左上
+            // frameX はそのスロットのサブウィンドウ左上
+            int lifeX1 = frameX;
             int lifeY1 = frameY;
             drawPlayerLifeAt(g2, lifeX1, lifeY1, meta.getHp(), meta.getMaxHp());
 
@@ -415,6 +441,12 @@ public class UI {
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
             drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+
+
+            String pt = formatPlayTime(meta.getPlayTimeSeconds());
+            g2.setFont(g2.getFont().deriveFont(20f));
+            g2.setColor(Color.WHITE);
+            g2.drawString("プレイ時間: " + pt, frameX + 8, frameY + tileSize * 2);
         }
 
         g2.setColor(Color.WHITE);
@@ -438,7 +470,8 @@ public class UI {
         if (saveMetas != null && saveMetas.length > 0 && saveMetas[2] != null && saveMetas[2].exists()) {
             SaveMeta meta = saveMetas[2];
             // ハートをサブウィンドウ左上に描く（微調整は y 座標で）
-            int lifeX2 = frameX; // frameX はそのスロットのサブウィンドウ左上
+            // frameX はそのスロットのサブウィンドウ左上
+            int lifeX2 = frameX;
             int lifeY2 = frameY;
             drawPlayerLifeAt(g2, lifeX2, lifeY2, meta.getHp(), meta.getMaxHp());
 
@@ -446,6 +479,11 @@ public class UI {
             int previewX = frameX + frameWidth - tileSize * 3;
             int previewY = frameY + 8;
             drawSpritePreview(g2, meta, previewX, previewY, tileSize * 2, tileSize * 2);
+
+            String pt = formatPlayTime(meta.getPlayTimeSeconds());
+            g2.setFont(g2.getFont().deriveFont(20f));
+            g2.setColor(Color.WHITE);
+            g2.drawString("プレイ時間: " + pt, frameX + 8, frameY + tileSize * 2);
         }
 
         g2.setColor(Color.WHITE);
@@ -667,7 +705,7 @@ public class UI {
 
         final int frameX = tileSize / 2;
         final int frameY = tileSize / 2;
-        final int frameWidth = tileSize * 5;
+        final int frameWidth = tileSize * 6;
         final int frameHeight = tileSize * 10;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
@@ -696,13 +734,31 @@ public class UI {
         textY += lineHeight;
         g2.drawString("所持金", textX, textY);
         textY += lineHeight;
-        g2.drawString("右手", textX, textY + 20);
+        g2.drawString("右手", textX, textY);
         textY += lineHeight;
-        g2.drawString("左手", textX, textY + 38);
+        g2.drawString("左手", textX, textY);
+        textY += lineHeight;
 
-        g2.drawString(gameWindow.getPlayer().getCurrentWeapon().getName(), textX + 80, textY - 15);
+
+        // プレイ時間を取得して整形（日本語表示）
+        long playSeconds = gameWindow.getPlayer().getPlayTimeSeconds();
+        String playTimeText = "プレイ時間: " + formatPlayTime(playSeconds);
+        g2.drawString(playTimeText, textX - 15, textY + 25);
+
+        // 保存時プレイ時間（ロードされた値）を表示
+        long savedSeconds = gameWindow.getLoadedPlayTimeSeconds();
+        String savedText;
+        if (savedSeconds >= 0 && savedSeconds == playSeconds) {
+            savedText = "プレイ時間: " + formatPlayTime(savedSeconds);
+            g2.drawString(savedText, textX - 15, textY + 25);
+        } else {
+            savedText = "保存データ: なし";
+        }
+
+
+        g2.drawString(gameWindow.getPlayer().getCurrentWeapon().getName(), textX + 100, textY - tileSize - 25);
         textY += lineHeight;
-        g2.drawString(gameWindow.getPlayer().getCurrentShield().getName(), textX + 90, textY + 5);
+        g2.drawString(gameWindow.getPlayer().getCurrentShield().getName(), textX + 100, textY - tileSize - 25);
 
         int tailX = (frameX + frameWidth) - 30;
         textY = frameY + tileSize;
@@ -752,6 +808,19 @@ public class UI {
         value = String.valueOf(gameWindow.getPlayer().getCoin());
         textX = getXForAlignToRightText(g2, value, tailX);
         g2.drawString(value, textX, textY);
+    }
+
+    private String formatPlayTime(long seconds) {
+        // 二重チェックでクランプ
+        if (seconds < 0) seconds = 0;
+        if (seconds >= MAX_PLAY_SECONDS) {
+            return "999:59:59";
+        }
+        long s = seconds % 60;
+        long m = (seconds / 60) % 60;
+        long h = seconds / 3600;
+        // 時を3桁ゼロ埋めで表示（000, 001, ..., 999）
+        return String.format("%03d:%02d:%02d", h, m, s);
     }
 
     private void drawBattleLogMessage(Graphics2D g2) {
@@ -1070,5 +1139,13 @@ public class UI {
 
     public Font getArial40() {
         return arial40;
+    }
+
+    // saveMetas が null の場合は initLoadScreen() を呼んで初期化する想定
+    public void setSaveMeta(int slot, SaveMeta meta) {
+        if (saveMetas == null) initLoadScreen();
+        if (slot >= 0 && slot < saveMetas.length) {
+            saveMetas[slot] = meta;
+        }
     }
 }
