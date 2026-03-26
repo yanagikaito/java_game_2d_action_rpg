@@ -1,0 +1,19 @@
+[
+  {
+    "type": "pickup",
+    "weight": 40,
+    "amount": 10
+  },
+  {
+    "type": "red_potion",
+    "weight": 25
+  },
+  {
+    "type": "green_potion",
+    "weight": 20
+  },
+  {
+    "type": "blue_potion",
+    "weight": 15
+  }
+]

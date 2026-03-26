@@ -29,6 +29,7 @@ public class Player extends Entity {
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 5;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 15;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 25;
+    private static final int DEFAULT_INVENTORY_CAPACITY = 20;
     private static final int MAX_KB_FRAMES = 10;
     private static final int ATTACK_ANIMATION_FRAMES = SPRITE_ATTACKING_THRESHOLD_NUM3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
@@ -37,6 +38,7 @@ public class Player extends Entity {
     private BufferedImage[][] currentAttackSprites;
     private int characterTypeId;
     private static final long FIRE_COOLDOWN_MS = 1000;
+    private int interactIndex = 999;
     private long lastFireTime = 0;
     private int fireCooldown = 0;
     private int coin = 0;
@@ -68,9 +70,6 @@ public class Player extends Entity {
     // aura 用キャッシュ画像（事前レンダリング）
     private ObjAura aura;
 
-    // Blue potion buff
-    private boolean bluePotionActive = false;
-    private long bluePotionExpireAt = 0L;
     // 3分
     private static final long BLUE_POTION_DURATION_MS = 3 * 60 * 1000L;
 
@@ -91,6 +90,10 @@ public class Player extends Entity {
 
     public Player(GameWindow gameWindow, KeyHandler keyHandler) {
         super(gameWindow);
+        // inventory が null の可能性があるなら初期化しておく
+        if (this.getInventory() == null) {
+            this.setInventory(new ArrayList<>(DEFAULT_INVENTORY_CAPACITY));
+        }
         this.gameWindow = gameWindow;
         this.keyHandler = keyHandler;
         this.spriteKey = "player_basic";
@@ -422,6 +425,7 @@ public class Player extends Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         gameWindow.getEventHandler().checkEvent();
+        int nearbyIndex = findNearbyObjectIndex();
         int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
         gameWindow.changeMap(collidedTileId);
 
@@ -475,6 +479,9 @@ public class Player extends Entity {
 
         // 入力受付
         processInput();
+
+        // ここでエンター押下をチェックして近接オブジェクトに対する処理を行う
+        handleInteractInput(nearbyIndex);
 
         if (moving) {
             updateMovement();
@@ -822,23 +829,6 @@ public class Player extends Entity {
 
 
     /**
-     * 方向文字列をラジアンに変換するユーティリティ。
-     * 右 = 0, 下 = +PI/2, 左 = PI, 上 = -PI/2 を返します。
-     */
-
-    public static double directionToAngle(String dir) {
-        if (dir == null) return 0.0;
-        return switch (dir.toLowerCase()) {
-            case "right" -> 0.0;
-            case "down" -> Math.PI / 2.0;
-            case "left" -> Math.PI;
-            case "up" -> -Math.PI / 2.0;
-            default -> 0.0; // 未知の方向は右向き(0)を返す
-        };
-    }
-
-
-    /**
      * ファイアボールを発射する処理を行う。
      * ショットキー入力、射出可能状態、マナ消費、クールダウン判定を満たしたときに
      * プロジェクタイルを生成し、リストに追加して効果音を再生。
@@ -928,22 +918,110 @@ public class Player extends Entity {
      */
 
     public void pickUpObject(int i) {
+        if (i == 999) return;
 
-        if (i != 999) {
+        Entity obj = gameWindow.getObj()[i];
+        if (obj == null) return;
 
-            String text;
+        // 宝箱なら拾わず開封処理を呼ぶ
+        if (obj instanceof object.ObjChest) {
+            object.ObjChest chest = (object.ObjChest) obj;
+            chest.interact(this); // chest 内で中身生成・インベントリ追加・落下処理を行う
 
-            if (getInventory().size() != getMaxInventorySize()) {
-
-                getInventory().add(gameWindow.getObj()[i]);
-                text = gameWindow.getObj()[i].getName() + "を手に入れた!";
-            } else {
-                text = "手に入れていない!";
+            // chest が開いて中身処理が終わったらマップ上の宝箱を削除
+            if (chest.isOpened()) {
+                gameWindow.getObj()[i] = null;
             }
-            gameWindow.getUi().addMessage(text);
-            gameWindow.getObj()[i] = null;
+            return;
         }
+
+        // 通常アイテムの取得処理
+        String text;
+        if (getInventory().size() < getMaxInventorySize()) {
+            getInventory().add(obj);
+            text = obj.getName() + " を手に入れた!";
+            updateInvincibility();
+            gameWindow.getObj()[i] = null;
+        } else {
+            text = "手に入れていない!";
+        }
+        gameWindow.getUi().addMessage(text);
     }
+
+
+    // 近接オブジェクトを探してインデックスを返す（見つからなければ 999）
+    private int findNearbyObjectIndex() {
+        Rectangle playerRect = new Rectangle(getWorldX() + getSolidArea().x,
+                getWorldY() + getSolidArea().y,
+                getSolidArea().width,
+                getSolidArea().height);
+
+        Entity[] objs = gameWindow.getObj(); // または gameWindow.getCurrentMap().getObjects()
+        if (objs == null) return 999;
+
+        for (int idx = 0; idx < objs.length; idx++) {
+            Entity obj = objs[idx];
+            if (obj == null) continue;
+            if (!(obj instanceof object.ObjChest)) continue; // 宝箱以外も検出したければ条件を変える
+
+            Rectangle objRect = new Rectangle(obj.getWorldX() + obj.getSolidArea().x,
+                    obj.getWorldY() + obj.getSolidArea().y,
+                    obj.getSolidArea().width,
+                    obj.getSolidArea().height);
+
+            if (playerRect.intersects(objRect)) {
+                // 近接したらプロンプトを出す（毎フレーム出すと重複するなら UI 側で抑制）
+                gameWindow.getUi().addMessage("エンターで調べる");
+                return idx;
+            }
+        }
+        return 999;
+    }
+
+    // Player.java
+    private void handleInteractInput(int i) {
+        if (i == 999) return;
+
+        var keyHandler = gameWindow.getKeyHandler();
+        if (!keyHandler.isPlayerEnter()) return; // 押した瞬間だけ true を返す実装を想定
+
+        Entity obj = gameWindow.getObj()[i];
+        if (obj == null) {
+            return;
+        }
+
+        // 宝箱なら開封処理を呼ぶ（ObjChest が中身を生成してくれる）
+        if (obj instanceof object.ObjChest) {
+            object.ObjChest chest = (object.ObjChest) obj;
+            chest.interact(this); // chest 内で opened = true にする、ドロップは chest.open() が行う
+
+            // chest が開いて中身を取り終えたら配列から削除（配列管理の場合）
+            if (chest.isOpened()) {
+                gameWindow.getObj()[i] = null;
+            }
+
+            gameWindow.setGameState(GameState.DIALOGUE);
+            return;
+        }
+
+        // 宝箱以外（地面アイテムなど）は従来どおりインベントリに入れる
+        gameWindow.setGameState(GameState.DIALOGUE);
+        String text;
+        if (getInventory().size() < getMaxInventorySize()) {
+            getInventory().add(obj);
+//            text = obj.getName() + " を手に入れた!";
+            // CollisionChecker や Player 側の拾う処理の直前に入れる
+            System.out.println("DEBUG pickup attempt: obj=" + obj + " at " + obj.getWorldX() + "," + obj.getWorldY() + " stacktrace:");
+            Thread.dumpStack();
+
+            updateInvincibility();
+            gameWindow.getObj()[i] = null;
+        } else {
+            text = "手に入れていない!";
+        }
+//        gameWindow.getUi().addMessage(text);
+    }
+
 
     /**
      * NPCとのインタラクトを行う。
@@ -1612,5 +1690,33 @@ public class Player extends Entity {
                 break;
             }
         }
+    }
+
+    /**
+     * 単一アイテムをインベントリに追加するラッパー。
+     * 成功したら true、満杯などで失敗したら false を返す。
+     */
+
+    public boolean setInventory(Entity object) {
+        if (object == null) return false;
+
+        // コインは所持金として扱う場合の特別処理
+        if (object instanceof object.ObjCoinBronze) {
+            object.ObjCoinBronze coin = (object.ObjCoinBronze) object;
+            addCoin(coin);
+            // マップに置かれたインスタンスを削除する責務は呼び出し側で行うかここで行う
+            return true;
+        }
+
+        // インベントリ容量チェック（簡易）
+        int capacity = DEFAULT_INVENTORY_CAPACITY;
+        // もし capacity をフィールドで持っているならそちらを使う
+        if (this.getInventory().size() >= capacity) {
+            return false;
+        }
+
+        // アイテムをインベントリに追加
+        this.getInventory().add(object);
+        return true;
     }
 }

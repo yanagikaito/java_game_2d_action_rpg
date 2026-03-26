@@ -6,6 +6,7 @@ import entity.Entity;
 import event.EventHandler;
 import frame.FrameApp;
 import game.GameState;
+import map.GameMap;
 import npc.NpcOldMan;
 import object.ObjCoinBronze;
 import object.ObjGreenPotion;
@@ -44,6 +45,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private AssetSetter assetSetter = new AssetSetter(this);
     private EventHandler eventHandler = new EventHandler(this);
     private SoundManager soundManager = new SoundManager(this);
+    private GameMap currentMap;
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
     private Entity[] obj = new Entity[10];
@@ -61,7 +63,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private int frameCount = 0;
     private final int TRANSITION_DURATION = 30;
     private int pendingMapId;
-    private int currentMap = 1;
+    private int currentMapIndex = 1;
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
     private Map<String, Boolean> mapFlags = new HashMap<>();
@@ -94,6 +96,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
+        assetSetter.setObjChest();
         gameState = GameState.TITLE;
         initMapBgm();
         getSoundmanager().stopBGM();
@@ -410,7 +413,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             for (Entity entity : npc) {
                 if (entity != null) {
-                    if (entity.getMapId() != currentMap) continue;
+                    if (entity.getMapId() != currentMapIndex) continue;
                     entity.update();
                 }
             }
@@ -490,10 +493,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void changeMap(int newMap) {
 
         int tileSize = FrameApp.getTileSize();
-        currentMap = newMap;
+        currentMapIndex = newMap;
 
         // BGM 切替（フェードアウト→新BGM再生）
-        String newBgm = getBgmForMap(currentMap);
+        String newBgm = getBgmForMap(currentMapIndex);
         if (newBgm != null) {
             // 既に同じBGMが流れているなら何もしない
             if (!newBgm.equals(getSoundmanager().getCurrentBgmName())) {
@@ -510,7 +513,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
 
 
-        if (currentMap == TileManager.HUT_TILE_ID) {
+        if (currentMapIndex == TileManager.HUT_TILE_ID) {
 
             Arrays.fill(npc, null);
             Arrays.fill(monster, null);
@@ -530,7 +533,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             repaint();
 
-        } else if (currentMap == TileManager.MEADOW_TILE_ID) {
+        } else if (currentMapIndex == TileManager.MEADOW_TILE_ID) {
 
             Arrays.fill(npc, null);
             getKeyHandler().clearAllKeys();
@@ -543,10 +546,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
+            assetSetter.setObjChest();
 
             repaint();
 
-        } else if (currentMap == TileManager.FOREST_TILE_ID) {
+        } else if (currentMapIndex == TileManager.FOREST_TILE_ID) {
 
             Arrays.fill(npc, null);
             Arrays.fill(monster, null);
@@ -990,5 +994,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setLoadedPlayTimeSeconds(long seconds) {
         this.loadedPlayTimeSeconds = seconds;
+    }
+
+    public map.GameMap getCurrentMap() {
+        return currentMap;
+    }
+
+    public void setCurrentMap(map.GameMap map) {
+        this.currentMap = map;
     }
 }

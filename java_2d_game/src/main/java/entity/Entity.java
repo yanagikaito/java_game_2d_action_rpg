@@ -44,6 +44,7 @@ public abstract class Entity {
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     protected String spriteKey = "entity_default";
+    protected boolean autoPickup = false;
 
     public enum Direction {UP, DOWN, LEFT, RIGHT}
 
@@ -118,6 +119,7 @@ public abstract class Entity {
 
     private Color targetColor;
     private boolean targetColorOn;
+    protected BufferedImage[] animationFrames;
 
     /**
      * Entity を初期化。
@@ -1939,5 +1941,21 @@ public abstract class Entity {
 
     public void setHpBarCounter(int hpBarCounter) {
         this.hpBarCounter = hpBarCounter;
+    }
+
+    // ゲッター
+    public void getAnimationFrames() {
+        // 変更されないようコピーを返す（安全策）
+        if (animationFrames != null) {
+            animationFrames.clone();
+        }
+    }
+
+    public boolean isAutoPickup() {
+        return autoPickup;
+    }
+
+    public void setAutoPickup(boolean v) {
+        autoPickup = v;
     }
 }

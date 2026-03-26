@@ -1,0 +1,222 @@
+package object;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import entity.Entity;
+import entity.LootConfigEntry;
+import factory.EntityFactory;
+import frame.FrameApp;
+import player.Player;
+import window.GameWindow;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
+
+public class ObjChest extends Entity {
+
+    private final Random random = new Random();
+    private GameWindow gameWindow;
+    private Entity loot;
+    private final EntityFactory entityFactory;
+    private boolean opened = false;
+    private BufferedImage[] chestFrames;
+    private int chestFrameIndex = 0;
+    private int chestFrameDelay = 10;
+    private int chestFrameCounter = 0;
+    private boolean animatingOpen = false;
+
+    private static class LootEntry {
+        final Supplier<Entity> factory;
+        final int weight;
+
+        LootEntry(Supplier<Entity> factory, int weight) {
+            this.factory = factory;
+            this.weight = weight;
+        }
+    }
+
+    private final List<LootEntry> lootTable = new ArrayList<>();
+
+    public ObjChest(GameWindow gameWindow, Entity loot, EntityFactory entityFactory) {
+        super(gameWindow);
+        this.gameWindow = gameWindow;
+        this.entityFactory = entityFactory;
+        this.loot = loot;
+        setName("宝箱");
+
+        try {
+
+            loadAnimationFrames(
+                    "object/chest.gif",
+                    "object/chest-open-1.gif",
+                    "object/chest-open-2.gif",
+                    FrameApp.getTileSize()
+            );
+            setImage(getImage(), FrameApp.getTileSize());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        loadLootTableFromJson("items/loot_table.json"); // クラスパスから読み込む例
+
+        setCollision(true);
+
+        getSolidArea().x = 4;
+        getSolidArea().y = 16;
+        getSolidArea().width = 40;
+        getSolidArea().height = 32;
+        setSolidAreaDefaultX(getSolidArea().x);
+        setSolidAreaDefaultY(getSolidArea().y);
+    }
+
+    @Override
+    public void update() {
+        if (animatingOpen) {
+            chestFrameCounter++;
+            if (chestFrameCounter >= chestFrameDelay) {
+                chestFrameCounter = 0;
+                chestFrameIndex++;
+                if (chestFrameIndex >= chestFrames.length) {
+                    chestFrameIndex = chestFrames.length - 1;
+                    animatingOpen = false;
+                }
+                setImage(chestFrames[chestFrameIndex], FrameApp.getTileSize());
+            }
+        }
+    }
+
+    private void loadLootTableFromJson(String resourcePath) {
+        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                // リソースが見つからない場合はデフォルトテーブルを使う
+                buildDefaultLootTable();
+                return;
+            }
+            InputStreamReader reader = new InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8);
+            Type listType = new TypeToken<List<LootConfigEntry>>() {
+            }.getType();
+            List<LootConfigEntry> configs = new Gson().fromJson(reader, listType);
+            buildLootTableFromConfig(configs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            buildDefaultLootTable();
+        }
+    }
+
+    private void buildLootTableFromConfig(List<LootConfigEntry> configs) {
+        lootTable.clear();
+        if (configs == null || configs.isEmpty()) {
+            buildDefaultLootTable();
+            return;
+        }
+        for (LootConfigEntry c : configs) {
+            if (c == null || c.weight <= 0 || c.type == null) continue;
+            Supplier<Entity> factory = switch (c.type) {
+                case "coin" -> () -> entityFactory.createCoinEntity();
+                case "red_potion" -> () -> entityFactory.createRedPotionEntity();
+                case "green_potion" -> () -> entityFactory.createGreenPotionEntity();
+                case "blue_potion" -> () -> entityFactory.createBluePotionEntity();
+                default -> () -> null;
+            };
+            lootTable.add(new LootEntry(factory, c.weight));
+        }
+    }
+
+    private void buildDefaultLootTable() {
+        lootTable.clear();
+        lootTable.add(new LootEntry(() -> entityFactory.createCoinEntity(), 40));
+        lootTable.add(new LootEntry(() -> entityFactory.createRedPotionEntity(), 25));
+        lootTable.add(new LootEntry(() -> entityFactory.createGreenPotionEntity(), 20));
+        lootTable.add(new LootEntry(() -> entityFactory.createBluePotionEntity(), 15));
+    }
+
+    private Entity createRandomLoot() {
+        if (lootTable.isEmpty()) return null;
+        int total = lootTable.stream().mapToInt(e -> e.weight).sum();
+        if (total <= 0) return null;
+        int pick = random.nextInt(total);
+        int acc = 0;
+        for (LootEntry e : lootTable) {
+            acc += e.weight;
+            if (pick < acc) {
+                try {
+                    Entity result = e.factory.get();
+                    // デバッグ出力
+                    if (result == null) {
+                        System.out.println("DEBUG loot factory returned null for entry weight=" + e.weight);
+                        gameWindow.getUi().addMessage("DEBUG loot factory returned null for entry weight=" + e.weight);
+                    } else {
+                        System.out.println("DEBUG loot factory returned: " + result.getClass().getName());
+                    }
+                    return result;
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void interact(Player player) {
+        if (opened) {
+            gameWindow.getUi().addMessage("宝箱は空です");
+            return;
+        }
+        open(player);
+    }
+
+    private void open(Player player) {
+        opened = true;
+        // アニメ開始
+        if (chestFrames != null && chestFrames.length > 1) {
+            animatingOpen = true;
+            chestFrameIndex = 1;
+            chestFrameCounter = 0;
+            setImage(chestFrames[chestFrameIndex], FrameApp.getTileSize());
+        }
+
+        Entity dropped = createRandomLoot();
+        if (dropped != null) {
+            if (dropped instanceof ObjCoinBronze) {
+                // コインはインベントリに入れず所持金に加算
+                ObjCoinBronze coin = (ObjCoinBronze) dropped;
+                player.addCoin(coin);
+            } else {
+                // 通常アイテムはインベントリに追加（成功判定を取る）
+                boolean added = player.getInventory().add(dropped);
+                if (added) {
+                    gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
+                } else {
+                    dropped.setWorldX(this.getWorldX());
+                    dropped.setWorldY(this.getWorldY());
+                    gameWindow.getCurrentMap().addObject(dropped);
+                    gameWindow.getUi().addMessage(dropped.getName() + " が落ちた！");
+                }
+            }
+        } else {
+            gameWindow.getUi().addMessage("何も出なかった...");
+        }
+    }
+
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public void draw(Graphics2D g2) {
+
+        int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
+        int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+
+        g2.drawImage(this.getImage(), screenX, screenY, null);
+    }
+}

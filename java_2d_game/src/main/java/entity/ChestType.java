@@ -1,14 +1,14 @@
 package entity;
 
-public record BluePotionType() implements EntityType {
+public record ChestType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 8;
+        return 12;
     }
 
     @Override
     public String name() {
-        return "blue_potion";
+        return "chest";
     }
 }

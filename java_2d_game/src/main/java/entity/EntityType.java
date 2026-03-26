@@ -5,7 +5,7 @@ public sealed interface EntityType permits PlayerType, NpcType, MonsterType,
         RedPotionType, GreenPotionType,
         BluePotionType,
         PickupOnlyType, BombType,
-        BossMonsterType {
+        BossMonsterType, ChestType {
 
     int typeId();
 
