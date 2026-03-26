@@ -9,6 +9,6 @@ public record PickupOnlyType() implements EntityType {
 
     @Override
     public String name() {
-        return "pickup";
+        return "coin";
     }
 }

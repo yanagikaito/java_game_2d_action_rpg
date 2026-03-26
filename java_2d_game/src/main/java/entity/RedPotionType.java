@@ -9,6 +9,6 @@ public record RedPotionType() implements EntityType {
 
     @Override
     public String name() {
-        return "red";
+        return "red_potion";
     }
 }
