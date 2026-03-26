@@ -29,4 +29,20 @@ public class EntityFactory {
             default -> null;
         };
     }
+
+    public Entity createCoinEntity() {
+        return new ObjCoinBronze(gameWindow);
+    }
+
+    public Entity createRedPotionEntity() {
+        return new ObjRedPotion(gameWindow);
+    }
+
+    public Entity createGreenPotionEntity() {
+        return new ObjGreenPotion(gameWindow);
+    }
+
+    public Entity createBluePotionEntity() {
+        return new ObjBluePotion(gameWindow);
+    }
 }

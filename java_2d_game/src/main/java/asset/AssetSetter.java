@@ -1,6 +1,7 @@
 package asset;
 
 import entity.Entity;
+import factory.EntityFactory;
 import frame.FrameApp;
 import monster.MonGreenGoblin;
 import monster.MonGreenSlime;
@@ -9,6 +10,7 @@ import npc.NpcMerChant;
 import npc.NpcOldMan;
 import npc.NpcSave;
 import object.ObjAxe;
+import object.ObjChest;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
@@ -85,6 +87,18 @@ public class AssetSetter {
         obj[i] = createObjAxe(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
     }
 
+    public void setObjChest() {
+
+        Entity[] obj = gameWindow.getObj();
+        int i = 0;
+
+        obj[i] = createObjChest(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 20);
+        i++;
+        obj[i] = createObjChest(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
+        i++;
+        obj[i] = createObjChest(FrameApp.getTileSize() * 34, FrameApp.getTileSize() * 22);
+    }
+
     private MonGreenSlime createMonGreenSlime(int worldX, int worldY) {
         MonGreenSlime monster = new MonGreenSlime(gameWindow);
         monster.setWorldX(worldX);
@@ -111,6 +125,15 @@ public class AssetSetter {
         objAxe.setWorldX(worldX);
         objAxe.setWorldY(worldY);
         return objAxe;
+    }
+
+    private ObjChest createObjChest(int worldX, int worldY) {
+        Entity lootPrototype = null;
+        EntityFactory factory = new EntityFactory(gameWindow);
+        ObjChest objChest = new ObjChest(gameWindow, lootPrototype, factory);
+        objChest.setWorldX(worldX);
+        objChest.setWorldY(worldY);
+        return objChest;
     }
 
     public void setInteractiveTile() {
