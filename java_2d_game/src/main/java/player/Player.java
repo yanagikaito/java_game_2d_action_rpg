@@ -489,6 +489,7 @@ public class Player extends Entity {
             updateAnimation();
             updateTileMovement();
         }
+        updateInvincibility();
     }
 
     public void updateAura(long deltaMs) {
