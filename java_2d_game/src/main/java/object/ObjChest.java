@@ -9,6 +9,7 @@ import frame.FrameApp;
 import player.Player;
 import window.GameWindow;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class ObjChest extends Entity {
     private int chestFrameDelay = 10;
     private int chestFrameCounter = 0;
     private boolean animatingOpen = false;
+    private boolean playerNearby = false;
 
     private static class LootEntry {
         final Supplier<Entity> factory;
@@ -53,20 +55,20 @@ public class ObjChest extends Entity {
         setName("宝箱");
 
         try {
-
-            loadAnimationFrames(
-                    "object/chest.gif",
-                    "object/chest-open-1.gif",
-                    "object/chest-open-2.gif",
-                    FrameApp.getTileSize()
-            );
-            setImage(getImage(), FrameApp.getTileSize());
-
+            // 画像ファイルを個別に読み込む
+            chestFrames = new BufferedImage[]{
+                    ImageIO.read(getClass().getResourceAsStream("/object/chest.gif")),
+                    ImageIO.read(getClass().getResourceAsStream("/object/chest-open-1.gif")),
+                    ImageIO.read(getClass().getResourceAsStream("/object/chest-open-2.gif"))
+            };
+            // 初期表示は閉じたフレーム
+            setImage(chestFrames[0], FrameApp.getTileSize());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        loadLootTableFromJson("items/loot_table.json"); // クラスパスから読み込む例
+        // クラスパスから読み込む
+        loadLootTableFromJson("items/loot_table.json");
 
         setCollision(true);
 
@@ -80,7 +82,8 @@ public class ObjChest extends Entity {
 
     @Override
     public void update() {
-        if (animatingOpen) {
+        // 既存のアニメ処理
+        if (animatingOpen && chestFrames != null) {
             chestFrameCounter++;
             if (chestFrameCounter >= chestFrameDelay) {
                 chestFrameCounter = 0;
@@ -92,7 +95,20 @@ public class ObjChest extends Entity {
                 setImage(chestFrames[chestFrameIndex], FrameApp.getTileSize());
             }
         }
+
+        // プレイヤー近接判定
+        Player player = gameWindow.getPlayer();
+        int dx = Math.abs(player.getWorldX() - getWorldX());
+        int dy = Math.abs(player.getWorldY() - getWorldY());
+        int threshold = FrameApp.getTileSize();
+        playerNearby = dx < threshold && dy < threshold;
+
+        // 近くにいて Enter 押下なら開く
+        if (playerNearby && !opened && gameWindow.getKeyHandler().isPlayerEnter()) {
+            open(player);
+        }
     }
+
 
     private void loadLootTableFromJson(String resourcePath) {
         try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
@@ -172,7 +188,6 @@ public class ObjChest extends Entity {
             gameWindow.getUi().addMessage("宝箱は空です");
             return;
         }
-        open(player);
     }
 
     private void open(Player player) {
@@ -185,22 +200,25 @@ public class ObjChest extends Entity {
             setImage(chestFrames[chestFrameIndex], FrameApp.getTileSize());
         }
 
-        Entity dropped = createRandomLoot();
-        if (dropped != null) {
-            if (dropped instanceof ObjCoinBronze) {
-                // コインはインベントリに入れず所持金に加算
-                ObjCoinBronze coin = (ObjCoinBronze) dropped;
-                player.addCoin(coin);
-            } else {
-                // 通常アイテムはインベントリに追加（成功判定を取る）
-                boolean added = player.getInventory().add(dropped);
-                if (added) {
-                    gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
+        if (opened) {
+            Entity dropped = createRandomLoot();
+            if (dropped != null) {
+                if (dropped instanceof ObjCoinBronze) {
+                    // コインはインベントリに入れず所持金に加算
+                    ObjCoinBronze coin = (ObjCoinBronze) dropped;
+                    player.addCoin(coin);
                 } else {
-                    dropped.setWorldX(this.getWorldX());
-                    dropped.setWorldY(this.getWorldY());
-                    gameWindow.getCurrentMap().addObject(dropped);
-                    gameWindow.getUi().addMessage(dropped.getName() + " が落ちた！");
+                    // 通常アイテムはインベントリに追加（成功判定を取る）
+                    boolean added = player.getInventory().add(dropped);
+                    if (added) {
+                        gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
+                        gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
+                    } else {
+                        dropped.setWorldX(this.getWorldX());
+                        dropped.setWorldY(this.getWorldY());
+                        gameWindow.getCurrentMap().addObject(dropped);
+                        gameWindow.getUi().addMessage(dropped.getName() + " が落ちた！");
+                    }
                 }
             }
         } else {

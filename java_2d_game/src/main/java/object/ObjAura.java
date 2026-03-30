@@ -187,8 +187,8 @@ public class ObjAura extends Entity {
         return active && System.currentTimeMillis() < expireAt;
     }
 
-    public boolean setActive(boolean active) {
-        return this.active = active && System.currentTimeMillis() < expireAt;
+    public void setActive(boolean active) {
+        this.active = active && System.currentTimeMillis() < expireAt;
     }
 
     // 内部フラグをそのまま返すデバッグ用
