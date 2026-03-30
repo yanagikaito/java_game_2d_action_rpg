@@ -92,11 +92,11 @@ public class AssetSetter {
         Entity[] obj = gameWindow.getObj();
         int i = 0;
 
-        obj[i] = createObjChest(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 20);
+        obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 22);
         i++;
-        obj[i] = createObjChest(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
+        obj[i] = createObjChest(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 21);
         i++;
-        obj[i] = createObjChest(FrameApp.getTileSize() * 34, FrameApp.getTileSize() * 22);
+        obj[i] = createObjChest(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 22);
     }
 
     private MonGreenSlime createMonGreenSlime(int worldX, int worldY) {

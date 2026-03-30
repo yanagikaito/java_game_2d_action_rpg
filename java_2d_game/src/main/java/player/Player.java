@@ -926,7 +926,7 @@ public class Player extends Entity {
         // 宝箱なら拾わず開封処理を呼ぶ
         if (obj instanceof object.ObjChest) {
             object.ObjChest chest = (object.ObjChest) obj;
-            chest.interact(this); // chest 内で中身生成・インベントリ追加・落下処理を行う
+            chest.interact(this);
 
             // chest が開いて中身処理が終わったらマップ上の宝箱を削除
             if (chest.isOpened()) {
@@ -949,20 +949,20 @@ public class Player extends Entity {
     }
 
 
-    // 近接オブジェクトを探してインデックスを返す（見つからなければ 999）
+    // 近接オブジェクトを探してインデックスを返す
     private int findNearbyObjectIndex() {
         Rectangle playerRect = new Rectangle(getWorldX() + getSolidArea().x,
                 getWorldY() + getSolidArea().y,
                 getSolidArea().width,
                 getSolidArea().height);
 
-        Entity[] objs = gameWindow.getObj(); // または gameWindow.getCurrentMap().getObjects()
+        Entity[] objs = gameWindow.getObj();
         if (objs == null) return 999;
 
         for (int idx = 0; idx < objs.length; idx++) {
             Entity obj = objs[idx];
             if (obj == null) continue;
-            if (!(obj instanceof object.ObjChest)) continue; // 宝箱以外も検出したければ条件を変える
+            if (!(obj instanceof object.ObjChest)) continue;
 
             Rectangle objRect = new Rectangle(obj.getWorldX() + obj.getSolidArea().x,
                     obj.getWorldY() + obj.getSolidArea().y,
@@ -970,7 +970,7 @@ public class Player extends Entity {
                     obj.getSolidArea().height);
 
             if (playerRect.intersects(objRect)) {
-                // 近接したらプロンプトを出す（毎フレーム出すと重複するなら UI 側で抑制）
+                // 近接したらプロンプトを出す
                 gameWindow.getUi().addMessage("エンターで調べる");
                 return idx;
             }
@@ -978,12 +978,11 @@ public class Player extends Entity {
         return 999;
     }
 
-    // Player.java
     private void handleInteractInput(int i) {
         if (i == 999) return;
 
         var keyHandler = gameWindow.getKeyHandler();
-        if (!keyHandler.isPlayerEnter()) return; // 押した瞬間だけ true を返す実装を想定
+        if (!keyHandler.isPlayerEnter()) return;
 
         Entity obj = gameWindow.getObj()[i];
         if (obj == null) {
@@ -993,24 +992,19 @@ public class Player extends Entity {
         // 宝箱なら開封処理を呼ぶ（ObjChest が中身を生成してくれる）
         if (obj instanceof object.ObjChest) {
             object.ObjChest chest = (object.ObjChest) obj;
-            chest.interact(this); // chest 内で opened = true にする、ドロップは chest.open() が行う
+            chest.interact(this);
 
-            // chest が開いて中身を取り終えたら配列から削除（配列管理の場合）
+            // chest が開いて中身を取り終えたら配列から削除
             if (chest.isOpened()) {
                 gameWindow.getObj()[i] = null;
             }
-
-            gameWindow.setGameState(GameState.DIALOGUE);
             return;
         }
-
-        // 宝箱以外（地面アイテムなど）は従来どおりインベントリに入れる
-        gameWindow.setGameState(GameState.DIALOGUE);
+        
         String text;
         if (getInventory().size() < getMaxInventorySize()) {
             getInventory().add(obj);
-//            text = obj.getName() + " を手に入れた!";
-            // CollisionChecker や Player 側の拾う処理の直前に入れる
+            text = obj.getName() + " を手に入れた!";
             System.out.println("DEBUG pickup attempt: obj=" + obj + " at " + obj.getWorldX() + "," + obj.getWorldY() + " stacktrace:");
             Thread.dumpStack();
 
@@ -1019,7 +1013,7 @@ public class Player extends Entity {
         } else {
             text = "手に入れていない!";
         }
-//        gameWindow.getUi().addMessage(text);
+        gameWindow.getUi().addMessage(text);
     }
 
 
@@ -1690,33 +1684,5 @@ public class Player extends Entity {
                 break;
             }
         }
-    }
-
-    /**
-     * 単一アイテムをインベントリに追加するラッパー。
-     * 成功したら true、満杯などで失敗したら false を返す。
-     */
-
-    public boolean setInventory(Entity object) {
-        if (object == null) return false;
-
-        // コインは所持金として扱う場合の特別処理
-        if (object instanceof object.ObjCoinBronze) {
-            object.ObjCoinBronze coin = (object.ObjCoinBronze) object;
-            addCoin(coin);
-            // マップに置かれたインスタンスを削除する責務は呼び出し側で行うかここで行う
-            return true;
-        }
-
-        // インベントリ容量チェック（簡易）
-        int capacity = DEFAULT_INVENTORY_CAPACITY;
-        // もし capacity をフィールドで持っているならそちらを使う
-        if (this.getInventory().size() >= capacity) {
-            return false;
-        }
-
-        // アイテムをインベントリに追加
-        this.getInventory().add(object);
-        return true;
     }
 }
