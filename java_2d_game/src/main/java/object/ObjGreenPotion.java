@@ -14,7 +14,6 @@ public class ObjGreenPotion extends Entity {
 
     private GameWindow gameWindow;
     private int healAmount = 20;
-    private int stackSize = 1;
 
     public ObjGreenPotion(GameWindow gameWindow) {
         super(gameWindow);
@@ -23,6 +22,7 @@ public class ObjGreenPotion extends Entity {
         setName("グリーンポーション");
         setDescription("[" + getName() + "]\n 魔力を20回復する");
         setPrice(10);
+        setStackable(true);
         try {
 
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/green-potion.gif"));

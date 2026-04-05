@@ -209,7 +209,7 @@ public class ObjChest extends Entity {
                     player.addCoin(coin);
                 } else {
                     // 通常アイテムはインベントリに追加（成功判定を取る）
-                    boolean added = player.getInventory().add(dropped);
+                    boolean added = player.canObtainItem(dropped);
                     if (added) {
                         gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
                         gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
