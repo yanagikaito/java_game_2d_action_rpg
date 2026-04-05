@@ -45,6 +45,8 @@ public abstract class Entity {
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     protected String spriteKey = "entity_default";
     protected boolean autoPickup = false;
+    private boolean stackable = false;
+    private int amount = 1;
 
     public enum Direction {UP, DOWN, LEFT, RIGHT}
 
@@ -1943,19 +1945,19 @@ public abstract class Entity {
         this.hpBarCounter = hpBarCounter;
     }
 
-    // ゲッター
-    public void getAnimationFrames() {
-        // 変更されないようコピーを返す（安全策）
-        if (animationFrames != null) {
-            animationFrames.clone();
-        }
+    public boolean isStackable() {
+        return stackable;
     }
 
-    public boolean isAutoPickup() {
-        return autoPickup;
+    public void setStackable(boolean stackable) {
+        this.stackable = stackable;
     }
 
-    public void setAutoPickup(boolean v) {
-        autoPickup = v;
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

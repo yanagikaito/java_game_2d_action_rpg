@@ -926,6 +926,25 @@ public class UI {
 
             g2.drawImage(item.getImage(), slotX, slotY, tileSize, tileSize, null);
 
+            // アイテム画面に追加
+            if (entity.getInventory().get(i).getAmount() > 1) {
+                g2.setFont(g2.getFont().deriveFont(32f));
+                int amountX;
+                int amountY;
+
+                String s = "" + entity.getInventory().get(i).getAmount();
+                amountX = getXForAlignToRightText(g2, s, slotX + 44);
+                amountY = slotY + tileSize;
+
+                // 影
+                g2.setColor(new Color(60, 60, 60));
+                g2.drawString(s, amountX, amountY);
+
+                // 数字
+                g2.setColor(Color.WHITE);
+                g2.drawString(s, amountX - 3, amountY - 3);
+            }
+
             slotX += slotSize;
 
             if (i == 4 || i == 9 || i == 14) {

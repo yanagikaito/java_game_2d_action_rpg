@@ -318,10 +318,16 @@ public class Player extends Entity {
             }
             gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
             gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
-            getInventory().remove(index);
-            return;
-        } else {
-            System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
+            // スタック処理：1個だけ減らす。0ならスロット削除
+            int current = potion.getAmount();
+            if (current > 1) {
+                potion.setAmount(current - 1);
+                gameWindow.getUi().addMessage("残り " + (current - 1) + " 個");
+            } else {
+                // 1個だったのでスロットを削除
+                getInventory().remove(index);
+                gameWindow.getUi().addMessage("残り 0 個（スロットを空けました）");
+            }
         }
     }
 
@@ -350,10 +356,16 @@ public class Player extends Entity {
             setMana(Math.min(getMana() + heal, getMaxMana()));
             gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
             gameWindow.getSoundmanager().greenPotionWAV("sound/potion-sound.wav");
-            getInventory().remove(index);
-            return;
-        } else {
-            System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
+            // スタック処理：1個だけ減らす。0ならスロット削除
+            int current = potion.getAmount();
+            if (current > 1) {
+                potion.setAmount(current - 1);
+                gameWindow.getUi().addMessage("残り " + (current - 1) + " 個");
+            } else {
+                // 1個だったのでスロットを削除
+                getInventory().remove(index);
+                gameWindow.getUi().addMessage("残り 0 個（スロットを空けました）");
+            }
         }
     }
 
@@ -375,10 +387,16 @@ public class Player extends Entity {
             setMana(Math.min(getMana() + heal, getMaxMana()));
             gameWindow.getUi().addMessage("ブルーポーションを使った。MPが全回復！");
             gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
-            getInventory().remove(index);
-            return;
-        } else {
-            System.out.println("選択アイテムはポーションではありません: " + e.getClass().getSimpleName());
+            // スタック処理：1個だけ減らす。0ならスロット削除
+            int current = potion.getAmount();
+            if (current > 1) {
+                potion.setAmount(current - 1);
+                gameWindow.getUi().addMessage("残り " + (current - 1) + " 個");
+            } else {
+                // 1個だったのでスロットを削除
+                getInventory().remove(index);
+                gameWindow.getUi().addMessage("残り 0 個（スロットを空けました）");
+            }
         }
     }
 
@@ -937,10 +955,8 @@ public class Player extends Entity {
 
         // 通常アイテムの取得処理
         String text;
-        if (getInventory().size() < getMaxInventorySize()) {
-            getInventory().add(obj);
+        if (canObtainItem(obj) == true) {
             text = obj.getName() + " を手に入れた!";
-            updateInvincibility();
             gameWindow.getObj()[i] = null;
         } else {
             text = "手に入れていない!";
@@ -1000,7 +1016,7 @@ public class Player extends Entity {
             }
             return;
         }
-        
+
         String text;
         if (getInventory().size() < getMaxInventorySize()) {
             getInventory().add(obj);
@@ -1316,6 +1332,50 @@ public class Player extends Entity {
         if (item == null) return false;
         return item.equals(getCurrentWeapon())
                 || item.equals(getCurrentShield());
+    }
+
+    public int searchItemInInventory(String itemName) {
+
+        int itemIndex = 999;
+
+        for (int i = 0; i < getInventory().size(); i++) {
+            if (getInventory().get(i).getName().equals(itemName)) {
+                itemIndex = i;
+                break;
+            }
+        }
+        return itemIndex;
+    }
+
+    public boolean canObtainItem(Entity item) {
+
+        boolean canObtain = false;
+
+        //スタック可能かチェックする
+        if (item.isStackable() == true) {
+
+            int index = searchItemInInventory(item.getName());
+
+            if (index != 999) {
+                getInventory().get(index).setAmount(getInventory().get(index).getAmount() + 1);
+                canObtain = true;
+
+                // 新しいアイテムの空きスロットをチェックする
+            } else {
+                if (getInventory().size() != getMaxInventorySize()) {
+                    getInventory().add(item);
+                    canObtain = true;
+                }
+            }
+
+            // スタック不可能なので空きスロットを確認する
+        } else {
+            if (getInventory().size() != getMaxInventorySize()) {
+                getInventory().add(item);
+                canObtain = true;
+            }
+        }
+        return canObtain;
     }
 
     /**

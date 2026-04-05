@@ -9,8 +9,7 @@ import monster.MonMintSoldier;
 import npc.NpcMerChant;
 import npc.NpcOldMan;
 import npc.NpcSave;
-import object.ObjAxe;
-import object.ObjChest;
+import object.*;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
@@ -90,13 +89,70 @@ public class AssetSetter {
     public void setObjChest() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 0;
+        int i = 1;
 
         obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 22);
         i++;
         obj[i] = createObjChest(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 21);
         i++;
         obj[i] = createObjChest(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 22);
+    }
+
+    public void setObjRedPotion() {
+
+        Entity[] obj = gameWindow.getObj();
+        int i = 4;
+
+        obj[i] = createObjRedPotion(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 23);
+        i++;
+        obj[i] = createObjRedPotion(FrameApp.getTileSize() * 34, FrameApp.getTileSize() * 24);
+        i++;
+        obj[i] = createObjRedPotion(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 25);
+    }
+
+    public void setObjGreenPotion() {
+
+        Entity[] obj = gameWindow.getObj();
+        int i = 7;
+
+        obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 36, FrameApp.getTileSize() * 26);
+        i++;
+        obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 37, FrameApp.getTileSize() * 27);
+        i++;
+        obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 38, FrameApp.getTileSize() * 28);
+    }
+
+    public void setObjBluePotion() {
+
+        Entity[] obj = gameWindow.getObj();
+        int i = 10;
+
+        obj[i] = createObjBluePotion(FrameApp.getTileSize() * 39, FrameApp.getTileSize() * 29);
+        i++;
+        obj[i] = createObjBluePotion(FrameApp.getTileSize() * 40, FrameApp.getTileSize() * 30);
+        i++;
+        obj[i] = createObjBluePotion(FrameApp.getTileSize() * 41, FrameApp.getTileSize() * 31);
+    }
+
+    private ObjRedPotion createObjRedPotion(int worldX, int worldY) {
+        ObjRedPotion red = new ObjRedPotion(gameWindow);
+        red.setWorldX(worldX);
+        red.setWorldY(worldY);
+        return red;
+    }
+
+    private ObjGreenPotion createObjGreenPotion(int worldX, int worldY) {
+        ObjGreenPotion green = new ObjGreenPotion(gameWindow);
+        green.setWorldX(worldX);
+        green.setWorldY(worldY);
+        return green;
+    }
+
+    private ObjBluePotion createObjBluePotion(int worldX, int worldY) {
+        ObjBluePotion blue = new ObjBluePotion(gameWindow);
+        blue.setWorldX(worldX);
+        blue.setWorldY(worldY);
+        return blue;
     }
 
     private MonGreenSlime createMonGreenSlime(int worldX, int worldY) {
