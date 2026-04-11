@@ -21,10 +21,21 @@ import javax.swing.Timer;
 
 public class Player extends Entity {
 
+    // 状態列挙
+    private enum PlayerState {IDLE, WALK, PICKUP, HOLD_WALK, THROW}
+
+    private PlayerState state = PlayerState.IDLE;
+
+    // 持つ処理用
+    private boolean holding = false;
+    private ObjBomb heldBomb = null; // 爆弾限定なら型固定
+    private Map<String, Point> holdOffset = new HashMap<>();
+
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     private static final String[] AXE_DIRECTIONS = {"axeUp", "axeDown", "axeLeft", "axeRight"};
     private static final int SPRITE_COUNT = 3;
+    private static final int PICKUP_SPRITE_COUNT = 4;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 5;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 15;
@@ -35,10 +46,10 @@ public class Player extends Entity {
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] axeSprites = new BufferedImage[AXE_DIRECTIONS.length][SPRITE_COUNT];
+    private BufferedImage[][] pickupSprites = new BufferedImage[DIRECTIONS.length][PICKUP_SPRITE_COUNT];
     private BufferedImage[][] currentAttackSprites;
     private int characterTypeId;
     private static final long FIRE_COOLDOWN_MS = 1000;
-    private int interactIndex = 999;
     private long lastFireTime = 0;
     private int fireCooldown = 0;
     private int coin = 0;
@@ -69,9 +80,6 @@ public class Player extends Entity {
 
     // aura 用キャッシュ画像（事前レンダリング）
     private ObjAura aura;
-
-    // 3分
-    private static final long BLUE_POTION_DURATION_MS = 3 * 60 * 1000L;
 
     // 保存・表示する秒単位のプレイ時間
     private long playTimeSeconds = 0L;
@@ -124,6 +132,8 @@ public class Player extends Entity {
 //        getAttackArea().height = 36;
         loadPlayerImages();
         loadAllAttackSprites();
+        loadPickupSprites();
+        initHoldOffsets();
         setItems();
     }
 
@@ -208,6 +218,14 @@ public class Player extends Entity {
         setInventory(items);
     }
 
+    private void initHoldOffsets() {
+        // 向きごとの描画オフセット
+        holdOffset.put("down", new Point(+6, -10));
+        holdOffset.put("up", new Point(+4, -18));
+        holdOffset.put("left", new Point(-8, -6));
+        holdOffset.put("right", new Point(+14, -6));
+    }
+
     /**
      * 歩行スプライトをディレクション・フレームごとに読み込み、タイルサイズにリサイズする。
      * リソースパス: /player/image-{direction}-{frame}.gif
@@ -269,6 +287,39 @@ public class Player extends Entity {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * pickup（持ち上げ）用スプライトを読み込む。
+     * リソース名は "player/image-pickup-{direction}-{frame}.gif" を想定。
+     * 読み込み失敗時は既存の歩行フレームを代替としてセットする。
+     */
+
+    private void loadPickupSprites() {
+        int tileSize = FrameApp.getTileSize();
+        for (int dir = 0; dir < DIRECTIONS.length; dir++) {
+            for (int i = 0; i < PICKUP_SPRITE_COUNT; i++) {
+                String path = "player/image-pickup-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif";
+                try {
+                    var is = getClass().getClassLoader().getResourceAsStream(path);
+                    if (is == null) {
+                        throw new IOException("resource not found: " + path);
+                    }
+                    BufferedImage img = ImageIO.read(is);
+                    pickupSprites[dir][i] = createImage(img, tileSize, tileSize);
+                } catch (IOException e) {
+                    // ロード失敗時はログを出して既存歩行フレームを代替に使う
+                    System.err.println("pickup sprite load failed: " + path + " -> using fallback sprite");
+                    // sprites が読み込まれていれば同方向の第0フレームを代替にする
+                    if (sprites != null && sprites.length > dir && sprites[dir][0] != null) {
+                        pickupSprites[dir][i] = sprites[dir][0];
+                    } else {
+                        // 最終手段：空の画像を作る（NullPointer を避ける）
+                        pickupSprites[dir][i] = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB);
+                    }
                 }
             }
         }
@@ -490,6 +541,7 @@ public class Player extends Entity {
             if (gameWindow.getKeyHandler().isBombKeyPressed() && fireCooldown == 0) {
                 fireCooldown = COOLDOWN_FRAMES;
                 playerAttackingBomb();
+                placeBomb();
             } else if (gameWindow.getKeyHandler().isShotKeyPressed() && fireCooldown == 0) {
                 playerAttackingFireball();
             }
@@ -501,6 +553,55 @@ public class Player extends Entity {
         // ここでエンター押下をチェックして近接オブジェクトに対する処理を行う
         handleInteractInput(nearbyIndex);
 
+        // Enter の瞬間判定を使う（押しっぱなしでの二重処理を防ぐ）
+        if (gameWindow.getKeyHandler().isPlayerEnterJustPressed()) {
+            if (!holding && state != PlayerState.PICKUP) {
+                // 近くに置かれた爆弾やアイテムを拾う（startPickup は pickUpObject を呼ぶ等）
+                startPickup(nearbyIndex);
+            } else if (holding && state == PlayerState.HOLD_WALK) {
+                // 所持中かつ通常歩行状態のときだけ投げる
+                throwHeldBomb();
+            }
+        }
+
+        if (state == PlayerState.PICKUP) {
+            if (getSpriteNum() == PICKUP_SPRITE_COUNT - 1 && getSpriteCounter() > SPRITE_ANIMATION_THRESHOLD) {
+                holding = true;
+                state = PlayerState.HOLD_WALK;
+                setSpriteNum(0);
+                setSpriteCounter(0);
+
+                // 所持中は爆弾をプレイヤー頭上に固定表示するため UI/描画用のオフセットを設定
+                if (heldBomb != null) {
+                    // heldBomb のワールド座標はプレイヤーの頭上に合わせる
+                    int headX = getWorldX();
+                    int headY = getWorldY() - FrameApp.getTileSize();
+                    heldBomb.setWorldX(headX);
+                    heldBomb.setWorldY(headY);
+                    heldBomb.setAlive(false);
+                }
+            }
+        }
+
+        // 歩行中は持ち物の表示位置を更新（持っている間）
+        if (holding && heldBomb != null) {
+            // プレイヤーの頭上に追従させる（毎フレーム）
+            int headX = getWorldX();
+            int headY = getWorldY() - FrameApp.getTileSize();
+            heldBomb.setWorldX(headX);
+            heldBomb.setWorldY(headY);
+        }
+
+        // 拾うボタン（Enter）を押したら startPickup を呼ぶ
+        if (gameWindow.getKeyHandler().isPlayerEnter()) {
+            if (!holding && state != PlayerState.PICKUP) {
+                startPickup(nearbyIndex);
+            } else if (holding) {
+                // 持っている状態でインタラクトなら放す（投げる）
+                throwHeldBomb();
+            }
+        }
+
         if (moving) {
             updateMovement();
             updateCollision();
@@ -508,6 +609,102 @@ public class Player extends Entity {
             updateTileMovement();
         }
         updateInvincibility();
+    }
+
+    private void startPickup(int nearbyIndex) {
+        Entity[] objs = gameWindow.getObj();
+        if (objs == null || nearbyIndex < 0 || nearbyIndex >= objs.length) {
+            gameWindow.getUi().addMessage("拾えるものがない");
+            return;
+        }
+
+        Entity obj = objs[nearbyIndex];
+        if (!(obj instanceof ObjBomb)) {
+            gameWindow.getUi().addMessage("拾えるものがない");
+            return;
+        }
+
+        ObjBomb bomb = (ObjBomb) obj;
+        // pickable と alive を必ず確認
+        if (!bomb.isPickable() || !bomb.getAlive()) {
+            gameWindow.getUi().addMessage("拾えるものがない");
+            return;
+        }
+
+        objs[nearbyIndex] = null;
+        bomb.setAlive(false);
+        bomb.setPickable(false);
+
+        heldBomb = bomb;
+        holding = true;
+        state = PlayerState.PICKUP;
+
+        gameWindow.getUi().addMessage(bomb.getName() + " を投げた");
+
+        System.out.println("DEBUG: picked up bomb -> heldBomb=" + heldBomb);
+    }
+
+    // Player.throwHeldBomb()
+    private void throwHeldBomb() {
+        if (!holding || heldBomb == null) return;
+
+        // 投げる距離（タイル数）と重力（ObjBomb 側の gravity を参照）
+        int tiles = 3;
+        int ts = FrameApp.getTileSize();
+        double distance = tiles * ts; // ピクセル単位の水平到達距離
+
+        // ObjBomb の重力を参照
+        double g = heldBomb.getGravity();
+
+        // 向きに応じた水平成分 sign
+        String dir = getDirection();
+        int sign = dir.equals("left") ? -1 : 1;
+
+        // 目標水平速度 vx と初速度 vy を計算する（単純な放物運動の逆算）
+        // ここでは放物線の頂点を飛行中間に置く想定で、初期角度45度相当の近似を使う。
+        // より正確にするなら角度を固定して vx, vy を計算する。
+        double vx = sign * Math.sqrt(distance * g / Math.sin(2 * Math.toRadians(45)));
+        double vy = -Math.abs(vx); // 上向きに初速を与える（負は上方向）
+
+        // 安全にするため最大速度制限
+        double maxSpeed = 20.0;
+        if (Math.abs(vx) > maxSpeed) vx = Math.signum(vx) * maxSpeed;
+        if (Math.abs(vy) > maxSpeed) vy = Math.signum(vy) * maxSpeed;
+
+        // heldBomb を投げる準備
+        heldBomb.setWorldX(getWorldX());
+        heldBomb.setWorldY(getWorldY() - FrameApp.getTileSize() / 2); // 少し上から投げる
+        heldBomb.setUser(this);
+        heldBomb.setThrown(true);
+        heldBomb.setPickable(false);
+        heldBomb.setAlive(true);
+        heldBomb.setLife(heldBomb.getMaxLife());
+
+        // ObjBomb に速度を与える（既存の setVelocity を利用）
+        heldBomb.setVelocity(vx, vy);
+
+        // ワールドに戻す（gameWindow.addObject があれば使う）
+        boolean added = false;
+        try {
+            added = gameWindow.addObject(heldBomb);
+        } catch (Throwable ignored) {
+        }
+        if (!added) {
+            Entity[] arr = gameWindow.getObj();
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] == null) {
+                    arr[i] = heldBomb;
+                    added = true;
+                    break;
+                }
+            }
+        }
+
+        // 所持解除
+        heldBomb = null;
+        holding = false;
+        state = PlayerState.THROW;
+//        gameWindow.getSoundmanager().playSE("sound/throw.wav");
     }
 
     public void updateAura(long deltaMs) {
@@ -906,7 +1103,7 @@ public class Player extends Entity {
             if (now - lastFireTime >= FIRE_COOLDOWN_MS) {
                 lastFireTime = now;
 
-                System.out.println("DEBUG: Fキーが押されている");
+                System.out.println("DEBUG: Bキーが押されている");
 
                 ObjBomb bom = new ObjBomb(gameWindow);
                 bom.set(
@@ -928,32 +1125,65 @@ public class Player extends Entity {
         }
     }
 
-    /**
-     * 指定したオブジェクト配列インデックスのオブジェクトを拾う処理を行う。
-     * インベントリに空きがあれば追加し、メッセージを表示。オブジェクトをマップから削除。
-     *
-     * @param i オブジェクト配列内のインデックス
-     */
+    private void placeBomb() {
+        ObjBomb b = new ObjBomb(gameWindow);
+        b.setWorldX(getWorldX());
+        b.setWorldY(getWorldY());
+        b.setUser(this);
+        b.setPickable(true);
+        b.setThrown(false);
+        b.setAlive(true);
+        b.setLife(b.getMaxLife());
+        gameWindow.addObject(b);
+    }
 
     public void pickUpObject(int i) {
+
         if (i == 999) return;
 
-        Entity obj = gameWindow.getObj()[i];
+        Entity[] objs = gameWindow.getObj();
+        if (objs == null) return;
+        if (i < 0 || i >= objs.length) return;
+
+        Entity obj = objs[i];
         if (obj == null) return;
 
-        // 宝箱なら拾わず開封処理を呼ぶ
+        // 宝箱は開ける処理（既存）
         if (obj instanceof object.ObjChest) {
             object.ObjChest chest = (object.ObjChest) obj;
             chest.interact(this);
-
-            // chest が開いて中身処理が終わったらマップ上の宝箱を削除
             if (chest.isOpened()) {
                 gameWindow.getObj()[i] = null;
             }
             return;
         }
 
-        // 通常アイテムの取得処理
+        // --- 爆弾は「持ち上げた」扱いにする ---
+        if (obj instanceof object.ObjBomb) {
+            object.ObjBomb bomb = (object.ObjBomb) obj;
+
+            // pickable / alive のチェック（必要に応じて）
+            if (!bomb.isPickable() || !bomb.getAlive()) {
+                gameWindow.getUi().addMessage("拾えるものがない");
+                return;
+            }
+
+            // ワールドから除去して所持に移す
+            gameWindow.getObj()[i] = null;
+            bomb.setAlive(false);
+            bomb.setPickable(false);
+            bomb.setThrown(false);
+            bomb.setVelocity(0, 0);
+
+            this.heldBomb = bomb;
+            this.holding = true;
+            this.state = PlayerState.PICKUP;
+
+            gameWindow.getUi().addMessage(bomb.getName() + " を持ち上げた");
+
+            return;
+        }
+
         String text;
         if (canObtainItem(obj) == true) {
             text = obj.getName() + " を手に入れた!";
@@ -967,35 +1197,24 @@ public class Player extends Entity {
 
     // 近接オブジェクトを探してインデックスを返す
     private int findNearbyObjectIndex() {
-        Rectangle playerRect = new Rectangle(getWorldX() + getSolidArea().x,
-                getWorldY() + getSolidArea().y,
-                getSolidArea().width,
-                getSolidArea().height);
-
         Entity[] objs = gameWindow.getObj();
-        if (objs == null) return 999;
-
-        for (int idx = 0; idx < objs.length; idx++) {
-            Entity obj = objs[idx];
-            if (obj == null) continue;
-            if (!(obj instanceof object.ObjChest)) continue;
-
-            Rectangle objRect = new Rectangle(obj.getWorldX() + obj.getSolidArea().x,
-                    obj.getWorldY() + obj.getSolidArea().y,
-                    obj.getSolidArea().width,
-                    obj.getSolidArea().height);
-
-            if (playerRect.intersects(objRect)) {
-                // 近接したらプロンプトを出す
-                gameWindow.getUi().addMessage("エンターで調べる");
-                return idx;
+        if (objs == null) return -1;
+        Rectangle pBox = this.getCollisionBoxWorld();
+        for (int i = 0; i < objs.length; i++) {
+            Entity o = objs[i];
+            if (o == null || !o.getAlive()) continue;
+            if (o instanceof ObjBomb) {
+                ObjBomb b = (ObjBomb) o;
+                if (!b.isPickable()) continue;
             }
+            Rectangle oBox = o.getCollisionBoxWorld();
+            if (pBox.intersects(oBox)) return i;
         }
-        return 999;
+        return -1;
     }
 
     private void handleInteractInput(int i) {
-        if (i == 999) return;
+        if (i == -1) return;
 
         var keyHandler = gameWindow.getKeyHandler();
         if (!keyHandler.isPlayerEnter()) return;
@@ -1014,6 +1233,27 @@ public class Player extends Entity {
             if (chest.isOpened()) {
                 gameWindow.getObj()[i] = null;
             }
+            return;
+        }
+
+        // --- 爆弾はインベントリに入れず地面に落とす（pickable にする） ---
+        if (obj instanceof object.ObjBomb) {
+            object.ObjBomb bomb = (object.ObjBomb) obj;
+
+            // 初期化：ワールドに置ける状態にする
+            bomb.setPickable(true);
+            bomb.setThrown(false);
+            bomb.setAlive(true);
+            bomb.setLife(bomb.getMaxLife());
+            bomb.setVelocity(0, 0);
+
+            // チェスト位置に落とす（必要なら少しオフセット）
+            bomb.setWorldX(this.getWorldX());
+            bomb.setWorldY(this.getWorldY());
+
+//            // マップに追加
+//            gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
+//            gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
             return;
         }
 
@@ -1350,6 +1590,8 @@ public class Player extends Entity {
     public boolean canObtainItem(Entity item) {
 
         boolean canObtain = false;
+        if (item == null) return false;
+        if (item instanceof object.ObjBomb) return false;
 
         //スタック可能かチェックする
         if (item.isStackable() == true) {

@@ -121,6 +121,10 @@ public abstract class Projectile extends Entity {
         }
     }
 
+    public void setUser(Entity user) {
+        this.user = user;
+    }
+
     public Entity getUser() {
         return user;
     }

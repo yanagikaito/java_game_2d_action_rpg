@@ -961,27 +961,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return onTransition;
     }
 
-    public ArrayList<Entity> getItemList() {
-        return itemList;
-    }
-
-    public void setItemList(ArrayList<Entity> itemList) {
-        this.itemList = itemList;
-    }
-
     public void setPlayer(Player player) {
         this.player = player;
-    }
-
-    // マップフラグを上書きセット
-    public void setMapFlags(Map<String, Boolean> flags) {
-        // null対策してから代入するのが安全
-        if (flags == null) {
-            this.mapFlags.clear();
-        } else {
-            this.mapFlags.clear();
-            this.mapFlags.putAll(flags);
-        }
     }
 
     public EventHandler getEventHandler() {
@@ -1004,7 +985,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return currentMap;
     }
 
-    public void setCurrentMap(map.GameMap map) {
-        this.currentMap = map;
+    public boolean addObject(Entity e) {
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] == null) {
+                obj[i] = e;
+                return true;
+            }
+        }
+        return false;
     }
 }

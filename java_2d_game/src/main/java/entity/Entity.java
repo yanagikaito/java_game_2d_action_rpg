@@ -1960,4 +1960,14 @@ public abstract class Entity {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
+    public Rectangle getCollisionBoxWorld() {
+        Rectangle r = new Rectangle(
+                getWorldX() + getSolidArea().x,
+                getWorldY() + getSolidArea().y,
+                getSolidArea().width,
+                getSolidArea().height
+        );
+        return r;
+    }
 }

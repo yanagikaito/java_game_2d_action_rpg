@@ -207,18 +207,38 @@ public class ObjChest extends Entity {
                     // コインはインベントリに入れず所持金に加算
                     ObjCoinBronze coin = (ObjCoinBronze) dropped;
                     player.addCoin(coin);
+                    return;
+                }
+                // --- 爆弾はインベントリに入れず地面に落とす（pickable にする） ---
+                if (dropped instanceof object.ObjBomb) {
+                    object.ObjBomb bomb = (object.ObjBomb) dropped;
+
+                    // 初期化：ワールドに置ける状態にする
+                    bomb.setPickable(true);
+                    bomb.setThrown(false);
+                    bomb.setAlive(true);
+                    bomb.setLife(bomb.getMaxLife());
+                    bomb.setVelocity(0, 0);
+
+                    // チェスト位置に落とす（必要なら少しオフセット）
+                    bomb.setWorldX(this.getWorldX());
+                    bomb.setWorldY(this.getWorldY());
+
+                    // マップに追加
+                    gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
+                    gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
+                    return;
+                }
+                // 通常アイテムはインベントリに追加（成功判定を取る）
+                boolean added = player.canObtainItem(dropped);
+                if (added) {
+                    gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
+                    gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
                 } else {
-                    // 通常アイテムはインベントリに追加（成功判定を取る）
-                    boolean added = player.canObtainItem(dropped);
-                    if (added) {
-                        gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
-                        gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
-                    } else {
-                        dropped.setWorldX(this.getWorldX());
-                        dropped.setWorldY(this.getWorldY());
-                        gameWindow.getCurrentMap().addObject(dropped);
-                        gameWindow.getUi().addMessage(dropped.getName() + " が落ちた！");
-                    }
+                    dropped.setWorldX(this.getWorldX());
+                    dropped.setWorldY(this.getWorldY());
+                    gameWindow.getCurrentMap().addObject(dropped);
+                    gameWindow.getUi().addMessage(dropped.getName() + " が落ちた！");
                 }
             }
         } else {
