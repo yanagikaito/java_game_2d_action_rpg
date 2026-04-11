@@ -22,6 +22,15 @@ public class KeyHandler implements KeyListener {
     private int commandNum;
     private static final int MAX_COL = 3;
     private static final int MAX_ROW = 4;
+    private boolean prevEnter = false;
+    private boolean enter = false; // 実際のキー状態をセットする箇所あり
+    private boolean enterJustPressed = false;
+
+    public void update() {
+        // ここで enter を実際のキー状態に更新する
+        enterJustPressed = enter && !prevEnter;
+        prevEnter = enter;
+    }
 
     public KeyHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -57,6 +66,10 @@ public class KeyHandler implements KeyListener {
 
     public boolean isBombKeyPressed() {
         return bombKeyPressed;
+    }
+
+    public boolean isPlayerEnterJustPressed() {
+        return enterJustPressed;
     }
 
     public void setPlayerUp(boolean playerUp) {
