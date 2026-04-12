@@ -221,4 +221,45 @@ public class ObjBomb extends Projectile {
         this.thrown = true;
         setAlive(true);
     }
+
+    /**
+     * 所持中に Player が頭上に描画するためのスプライトを返す。
+     * デフォルトは Down 方向の最初のフレームを使い、タイルサイズに合わせてリサイズする。
+     */
+
+    // ObjBomb.java に追加
+
+// 所持時に使う1枚を返す
+    public BufferedImage getHeldSprite() {
+        int ts = FrameApp.getTileSize();
+        int downIndex = 1; // DIRS = {"Up","Down","Left","Right"} の Down
+        int frameIndex = 0; // 所持時は最初のフレームを使う
+        if (sprites != null && sprites.length > downIndex && sprites[downIndex].length > frameIndex) {
+            BufferedImage src = sprites[downIndex][frameIndex];
+            // 小さめにリサイズして返す（任意）
+            int w = ts * 3 / 4;
+            int h = ts * 3 / 4;
+            BufferedImage buf = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = buf.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(src, 0, 0, w, h, null);
+            g.dispose();
+            return buf;
+        }
+        return null;
+    }
+
+    // 投げるときの向き・フレーム別スプライトを返す（存在しなければ null を返す）
+    public BufferedImage getThrowSprite(String dir, int frame) {
+        // ここでは sprites の向きインデックスとフレームをそのまま使う例
+        int dirIndex = 1; // default Down
+        switch (dir) {
+            case "up" -> dirIndex = 0;
+            case "down" -> dirIndex = 1;
+            case "left" -> dirIndex = 2;
+            case "right" -> dirIndex = 3;
+        }
+        int frameIndex = Math.max(0, Math.min(frame, sprites[dirIndex].length - 1));
+        return sprites[dirIndex][frameIndex];
+    }
 }
