@@ -19,15 +19,16 @@ public class KeyHandler implements KeyListener {
     private boolean showDebugText;
     private boolean shotKeyPressed;
     private boolean bombKeyPressed;
+    private boolean throwKeyPressed;
     private int commandNum;
     private static final int MAX_COL = 3;
     private static final int MAX_ROW = 4;
     private boolean prevEnter = false;
-    private boolean enter = false; // 実際のキー状態をセットする箇所あり
+    private boolean enter = false;
     private boolean enterJustPressed = false;
 
     public void update() {
-        // ここで enter を実際のキー状態に更新する
+        // enter を実際のキー状態に更新する
         enterJustPressed = enter && !prevEnter;
         prevEnter = enter;
     }
@@ -72,6 +73,10 @@ public class KeyHandler implements KeyListener {
         return enterJustPressed;
     }
 
+    public boolean isThrowKeyPressed() {
+        return throwKeyPressed;
+    }
+
     public void setPlayerUp(boolean playerUp) {
         this.playerUp = playerUp;
     }
@@ -102,6 +107,10 @@ public class KeyHandler implements KeyListener {
 
     public void setBombKeyPressed(boolean bombKeyPressed) {
         this.bombKeyPressed = bombKeyPressed;
+    }
+
+    public void setThrowKeyPressed(boolean throwKeyPressed) {
+        this.throwKeyPressed = throwKeyPressed;
     }
 
     @Override
@@ -193,6 +202,9 @@ public class KeyHandler implements KeyListener {
             }
             case KeyEvent.VK_B -> {
                 setBombKeyPressed(true);
+            }
+            case KeyEvent.VK_SPACE -> {
+                setThrowKeyPressed(true);
             }
         }
 
@@ -363,6 +375,7 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_D -> setPlayerRight(false);
                 case KeyEvent.VK_F -> setShotKeyPressed(false);
                 case KeyEvent.VK_B -> setBombKeyPressed(false);
+                case KeyEvent.VK_SPACE -> setThrowKeyPressed(false);
             }
         }
     }
@@ -374,6 +387,7 @@ public class KeyHandler implements KeyListener {
         setPlayerRight(false);
         setShotKeyPressed(false);
         setBombKeyPressed(false);
+        setThrowKeyPressed(false);
     }
 
     private void togglePause() {
@@ -449,6 +463,10 @@ public class KeyHandler implements KeyListener {
         } else if (this.showDebugText == true) {
             setShowDebugText(false);
         }
+    }
+
+    public void consumeThrowOnce() {
+        this.throwKeyPressed = false;
     }
 
     public int getCommandNum() {

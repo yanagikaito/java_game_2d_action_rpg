@@ -20,6 +20,7 @@ public class ObjBomb extends Projectile {
     private boolean damageGiven = false;
 
     // 投げられたときの物理挙動用
+    private boolean hasShadow = false;
     private double vx = 0;
     private double vy = 0;
     // 毎フレーム vy に加算する重力
@@ -104,35 +105,44 @@ public class ObjBomb extends Projectile {
             } else {
                 // 地面に置かれている状態
                 if (!pickable) {
-                    // pickable でないなら従来通り life を減らす
                     setLife(getLife() - 1);
                     if (getLife() <= 0) startExplosion();
                 } else {
-                    // pickable == true の間はプレイヤーが拾うまで爆発させない
-                    // もし「置いてから自動で爆発」させたいなら別タイマーを使う
                 }
             }
 
         } else {
             // 爆発中の処理は既存のまま
-            if (!damageGiven) damageGiven = true;
+            if (!damageGiven) {
+                damageGiven = true;
+                giveExplosionDamage();
+            }
             explosionFrame++;
             if (explosionFrame >= SPRITE_COUNT) {
-                giveExplosionDamage();
                 setAlive(false);
                 thrown = false;
+                explosionFrame = SPRITE_COUNT - 1;
             }
         }
 
-        updateAnimation();
+        if (thrown) {
+            updateAnimation();
+        }
     }
 
-    private void startExplosion() {
+    public void startExplosion() {
+
+        if (exploding) return;
+
         exploding = true;
         explosionFrame = 0;
+        damageGiven = false;
     }
 
     private void updateAnimation() {
+
+        if (exploding) return;
+
         setSpriteCounter(getSpriteCounter() + 1);
         if (getSpriteCounter() > 12) {
             setSpriteNum((getSpriteNum() % SPRITE_COUNT) + 1);
@@ -170,21 +180,37 @@ public class ObjBomb extends Projectile {
 
     @Override
     public void draw(Graphics2D g2) {
+
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
-        int dirIndex = 1; // デフォルト下
-        if (Math.abs(vx) > Math.abs(vy)) {
-            dirIndex = vx < 0 ? 2 : 3; // left=2, right=3 (DIRS 配列に合わせる)
+        int dirIndex = 1;
+        if (Math.abs(vx) > Math.abs(vy)) dirIndex = vx < 0 ? 2 : 3;
+        else dirIndex = vy < 0 ? 0 : 1;
+
+        if (sprites == null || dirIndex < 0 || dirIndex >= sprites.length || sprites[dirIndex] == null) return;
+
+        int maxIndex = sprites[dirIndex].length - 1;
+        int spriteIndex;
+        if (exploding) {
+            spriteIndex = Math.max(0, Math.min(explosionFrame, maxIndex));
         } else {
-            dirIndex = vy < 0 ? 0 : 1; // up=0, down=1
+            spriteIndex = Math.max(0, getSpriteNum());
+            if (spriteIndex > maxIndex) spriteIndex = maxIndex;
         }
 
-        int spriteIndex = exploding ? Math.min(explosionFrame, SPRITE_COUNT - 1) : Math.max(0, getSpriteNum());
-        g2.drawImage(sprites[dirIndex][spriteIndex], screenX, screenY, null);
+        BufferedImage img = sprites[dirIndex][spriteIndex];
+        if (img != null) g2.drawImage(img, screenX, screenY, null);
     }
 
-    // セッター／ゲッター
+    // 拾ったときに呼ぶ
+    public void onPickedUp() {
+        setPickable(false);
+        setAlive(false);
+        setThrown(false);
+        setLife(getMaxLife());
+    }
+
     public void setPickable(boolean pickable) {
         this.pickable = pickable;
     }
@@ -220,6 +246,14 @@ public class ObjBomb extends Projectile {
         this.vy = vy;
         this.thrown = true;
         setAlive(true);
+    }
+
+    public void setHasShadow(boolean v) {
+        this.hasShadow = v;
+    }
+
+    public boolean hasShadow() {
+        return this.hasShadow;
     }
 
     /**

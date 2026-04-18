@@ -22,7 +22,7 @@ import javax.swing.Timer;
 public class Player extends Entity {
 
     // 状態列挙
-    private enum PlayerState {IDLE, WALK, PICKUP, HOLD_WALK, THROW}
+    public enum PlayerState {IDLE, WALK, PICKUP, HOLD_WALK, THROW}
 
     private PlayerState state = PlayerState.IDLE;
 
@@ -88,6 +88,12 @@ public class Player extends Entity {
     private double playTimeAccumulator = 0;
     // 999時間59分59秒 = 3,599,999 秒
     public static final long MAX_PLAY_SECONDS = 3_599_999L;
+
+    // クラスフィールドに追加
+    private int pickupCooldown = 0; // フレーム単位の猶予。0 のとき投げ判定有効
+    private static final int PICKUP_COOLDOWN_FRAMES = 5; // 調整可（5フレーム程度が目安）
+    // ピックアップ対象を保持しておく（アニメ終了時に実際に取得する）
+    private int pendingPickupIndex = -1;
 
 
     /**
@@ -479,6 +485,8 @@ public class Player extends Entity {
     @Override
     public void update() {
 
+        if (pickupCooldown > 0) pickupCooldown--;
+
         updateAura(500);
 
         // 1) フレーム先頭で移動フラグと衝突フラグをリセット
@@ -557,7 +565,9 @@ public class Player extends Entity {
 
         // Enter の瞬間判定を使う
         if (gameWindow.getKeyHandler().isPlayerEnterJustPressed()) {
-            if (!holding && state != PlayerState.PICKUP) {
+            if (pickupCooldown > 0) {
+                // 拾った直後の猶予中は何もしない（誤トリガ防止）
+            } else if (!holding && state != PlayerState.PICKUP) {
                 // 近くに置かれた爆弾やアイテムを拾う
                 startPickup(nearbyIndex);
             } else if (holding && state == PlayerState.HOLD_WALK) {
@@ -574,40 +584,40 @@ public class Player extends Entity {
                 setSpriteNum(getSpriteNum() + 1);
                 // 終了判定：PICKUP_SPRITE_COUNT を超えたら持ち状態へ遷移
                 if (getSpriteNum() > PICKUP_SPRITE_COUNT) {
-                    setSpriteNum(1);
-                    setSpriteCounter(0);
-                    holding = true;
-                    state = PlayerState.HOLD_WALK;
+                    finishPickup();
                 }
             }
             return;
         }
 
-        // 所持中は爆弾をプレイヤー頭上に固定表示
-        if (heldBomb != null) {
-            // heldBomb のワールド座標はプレイヤーの頭上に合わせる
-            int headX = getWorldX();
-            int headY = getWorldY() - FrameApp.getTileSize();
-            heldBomb.setWorldX(headX);
-            heldBomb.setWorldY(headY);
-            heldBomb.setAlive(false);
+        if (state == PlayerState.HOLD_WALK) {
+            // 所持中は爆弾をプレイヤー頭上に固定表示
+            if (heldBomb != null) {
+                // heldBomb のワールド座標はプレイヤーの頭上に合わせる
+                int headX = getWorldX();
+                int headY = getWorldY() - FrameApp.getTileSize();
+                heldBomb.setWorldX(headX);
+                heldBomb.setWorldY(headY);
+                heldBomb.setAlive(false);
+            }
+
+            // 歩行中は持ち物の表示位置を更新
+            if (holding && heldBomb != null) {
+                // プレイヤーの頭上に追従させる
+                int headX = getWorldX();
+                int headY = getWorldY() - FrameApp.getTileSize();
+                heldBomb.setWorldX(headX);
+                heldBomb.setWorldY(headY);
+            }
         }
 
-        // 歩行中は持ち物の表示位置を更新
-        if (holding && heldBomb != null) {
-            // プレイヤーの頭上に追従させる
-            int headX = getWorldX();
-            int headY = getWorldY() - FrameApp.getTileSize();
-            heldBomb.setWorldX(headX);
-            heldBomb.setWorldY(headY);
-        }
-
-        // 拾うボタン（Enter）を押したら startPickup を呼ぶ
-        if (gameWindow.getKeyHandler().isPlayerEnter()) {
-            if (!holding && state != PlayerState.PICKUP) {
+        // 拾うボタン（SPACE）を押したら startPickup を呼ぶ
+        if (gameWindow.getKeyHandler().isThrowKeyPressed()) {
+            if (state == PlayerState.PICKUP) {
+                // ピックアップ中は無視
+            } else if (!holding) {
                 startPickup(nearbyIndex);
-            } else if (holding) {
-                // 持っている状態でインタラクトなら放す（投げる）
+            } else if (holding && state == PlayerState.HOLD_WALK) {
                 throwHeldBomb();
             }
         }
@@ -621,7 +631,56 @@ public class Player extends Entity {
         updateInvincibility();
     }
 
+    private void finishPickup() {
+
+        // 既に持っているなら何もしない
+        if (this.holding) {
+            setState(PlayerState.HOLD_WALK);
+            return;
+        }
+
+        // pendingPickupIndex を使って取得
+        int index = this.pendingPickupIndex;
+        this.pendingPickupIndex = -1; // 消す
+
+        ObjBomb[] objs = (ObjBomb[]) gameWindow.getObj();
+        if (objs == null || index < 0 || index >= objs.length) {
+            // 対象が消えていた場合は所持遷移だけ
+            setState(PlayerState.HOLD_WALK);
+            setSpriteNum(1);
+            setSpriteCounter(0);
+            return;
+        }
+
+        ObjBomb bomb = objs[index];
+        if (bomb == null || !bomb.isPickable() || !bomb.getAlive()) {
+            setState(PlayerState.HOLD_WALK);
+            setSpriteNum(1);
+            setSpriteCounter(0);
+            return;
+        }
+
+        // ワールドから除去
+        objs[index] = null;
+
+        // 所持状態にする
+        this.heldBomb = bomb;
+        this.holding = true;
+
+        // オブジェクト側の状態更新
+        bomb.onPickedUp();
+
+        // プレイヤー状態を所持歩行に変更
+        setState(PlayerState.HOLD_WALK);
+        setSpriteNum(1);
+        setSpriteCounter(0);
+
+        // 投げ誤トリガ防止の猶予
+        this.pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+    }
+
     private void startPickup(int nearbyIndex) {
+
         Entity[] objs = gameWindow.getObj();
         if (objs == null || nearbyIndex < 0 || nearbyIndex >= objs.length) {
             gameWindow.getUi().addMessage("拾えるものがない");
@@ -642,19 +701,19 @@ public class Player extends Entity {
         }
 
         objs[nearbyIndex] = null;
-        bomb.setAlive(false);
-        bomb.setPickable(false);
+        bomb.onPickedUp();
 
         heldBomb = bomb;
         holding = true;
+        this.pendingPickupIndex = nearbyIndex;
         this.state = PlayerState.PICKUP;
-        setSpriteNum(1);
+        setSpriteNum(0);
         setSpriteCounter(0);
         setAttacking(false);
 
-        gameWindow.getUi().addMessage(bomb.getName() + " を投げた");
+        gameWindow.getUi().addMessage(bomb.getName() + " を持ち上げた");
 
-        System.out.println("DEBUG: picked up bomb -> heldBomb=" + heldBomb);
+        getGameWindow().getUi().addMessage("DEBUG: pic bomb -> heldBomb=" + heldBomb);
     }
 
     // Player.throwHeldBomb()
@@ -662,7 +721,7 @@ public class Player extends Entity {
         if (!holding || heldBomb == null) return;
 
         // 投げる距離（タイル数）と重力（ObjBomb 側の gravity を参照）
-        int tiles = 3;
+        int tiles = 2;
         int tileSize = FrameApp.getTileSize();
         double distance = tiles * tileSize;
 
@@ -1046,7 +1105,7 @@ public class Player extends Entity {
         gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
         gameWindow.getUi().addMessage("剣を発射した！");
 
-        // 追加：発射直後にプロジェクタイル側でエフェクトを初期化させる
+        // 発射直後にプロジェクタイル側でエフェクトを初期化させる
         sp.onFire(getDirection());
 
         // 発射クールダウンやカウンタ類を必要に応じて設定
@@ -1161,7 +1220,6 @@ public class Player extends Entity {
                 b.setPickable(true);
                 b.setThrown(false);
                 b.setAlive(true);
-                b.setLife(b.getMaxLife());
                 gameWindow.addObject(b);
                 gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
             }
@@ -1190,7 +1248,7 @@ public class Player extends Entity {
         }
 
         // --- 爆弾は「持ち上げた」扱いにする ---
-        if (obj instanceof object.ObjBomb) {
+        if (obj instanceof object.ObjBomb && keyHandler.isPlayerEnter()) {
             object.ObjBomb bomb = (object.ObjBomb) obj;
 
             // pickable / alive のチェック（必要に応じて）
@@ -1206,12 +1264,12 @@ public class Player extends Entity {
             bomb.setThrown(false);
             bomb.setVelocity(0, 0);
 
+
             this.heldBomb = bomb;
             this.holding = true;
             this.state = PlayerState.PICKUP;
 
             gameWindow.getUi().addMessage(bomb.getName() + " を持ち上げた");
-
             return;
         }
 
@@ -1673,18 +1731,12 @@ public class Player extends Entity {
 
         Composite original = g2.getComposite();
         if (getInvincible()) {
-            g2.setComposite(
-                    AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)
-            );
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         }
 
-        // aura の描画
+        // aura の描画（省略せず安全に）
         if (aura != null) {
-            // ワールド座標が未初期化(0,0)なら描画しない
-            if (aura.getWorldX() == 0 && aura.getWorldY() == 0) {
-                // 初期化待ちのフレームなので描画をスキップ
-            } else {
-                // プレイヤーのHPが満タンのときだけaura描画
+            if (!(aura.getWorldX() == 0 && aura.getWorldY() == 0)) {
                 Player p = this;
                 if (p.getLife() == p.getMaxLife()) {
                     aura.setActive(true);
@@ -1705,101 +1757,103 @@ public class Player extends Entity {
             }
         }
 
-        BufferedImage img;
-        if (!getAttacking()) {
-            int walkDirIndex = Arrays.asList(DIRECTIONS)
-                    .indexOf(getDirection());
-            if (walkDirIndex >= 0) {
-                img = sprites[walkDirIndex][getSpriteNum() - 1];
-                g2.drawImage(img, screenX, screenY, tileSize, tileSize, null);
+        BufferedImage img = null;
 
-                // デバッグ
-//              g2.setColor(new Color(255, 0, 0, 255));
-//              g2.drawRect(screenX, screenY, getSolidArea().width, getSolidArea().height);
+        // --- 通常歩行／待機描画 ---
+        if (!getAttacking()) {
+            int walkDirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
+            if (walkDirIndex >= 0) {
+                // sprites 配列の存在と長さチェック
+                if (sprites != null && walkDirIndex < sprites.length && sprites[walkDirIndex] != null) {
+                    int spriteNumIndex = Math.max(0, getSpriteNum() - 1);
+                    int maxIndex = sprites[walkDirIndex].length - 1;
+                    if (spriteNumIndex > maxIndex) spriteNumIndex = maxIndex;
+                    if (spriteNumIndex < 0) spriteNumIndex = 0;
+                    img = sprites[walkDirIndex][spriteNumIndex];
+                    if (img != null) g2.drawImage(img, screenX, screenY, tileSize, tileSize, null);
+                }
             }
         } else {
-            boolean isAxe = getCurrentWeapon().getType() instanceof AxeType;
-            String[] animationKeys = isAxe
-                    ? AXE_DIRECTIONS
-                    : ATTACK_DIRECTIONS;
-            BufferedImage[][] spriteSet = isAxe
-                    ? axeSprites
-                    : attackSprites;
+            // --- 攻撃アニメ描画（axe/attack） ---
+            boolean isAxe = getCurrentWeapon() != null && getCurrentWeapon().getType() instanceof AxeType;
+            String[] animationKeys = isAxe ? AXE_DIRECTIONS : ATTACK_DIRECTIONS;
+            BufferedImage[][] spriteSet = isAxe ? axeSprites : attackSprites;
 
-            int directionIndex = Arrays.asList(animationKeys)
-                    .indexOf(getAttackDirection());
-            if (directionIndex >= 0) {
-                int frameIndex = Math.max(0,
-                        Math.min(getSpriteNum() - 1, SPRITE_COUNT - 1)
-                );
+            int directionIndex = Arrays.asList(animationKeys).indexOf(getAttackDirection());
+            if (directionIndex >= 0 && spriteSet != null && directionIndex < spriteSet.length && spriteSet[directionIndex] != null) {
+                int frameIndex = Math.max(0, getSpriteNum() - 1);
+                int maxIndex = spriteSet[directionIndex].length - 1;
+                if (frameIndex > maxIndex) frameIndex = maxIndex;
+                if (frameIndex < 0) frameIndex = 0;
                 img = spriteSet[directionIndex][frameIndex];
 
-                int drawWidth = (directionIndex == 2 || directionIndex == 3)
-                        ? tileSize * 2 : tileSize;
-                int drawHeight = (directionIndex == 0 || directionIndex == 1)
-                        ? tileSize * 2 : tileSize;
-                int drawX = animationKeys[directionIndex]
-                        .endsWith("Left") ? screenX - tileSize : screenX;
-                int drawY = animationKeys[directionIndex]
-                        .endsWith("Up") ? screenY - tileSize : screenY;
-
-                g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
-            }
-        }
-
-        // 所持中の爆弾を頭上に描画
-        if (this.holding && this.heldBomb != null) {
-            BufferedImage heldImg = heldBomb.getHeldSprite();
-            if (heldImg != null) {
-                int ts = FrameApp.getTileSize();
-
-                // プレイヤー当たり矩形中心を基準に頭上に置く
-                Rectangle sa = getSolidArea();
-                int headScreenX = screenX + sa.x + sa.width / 2 - heldImg.getWidth() / 2;
-                int headScreenY = screenY + sa.y - heldImg.getHeight(); // 頭上に乗せる
-
-                // 向きに応じた微調整
-                switch (getDirection()) {
-                    case "up" -> headScreenY -= ts / 8;
-                    case "down" -> headScreenY += ts / 16;
-                    case "left" -> headScreenX -= ts / 8;
-                    case "right" -> headScreenX += ts / 8;
+                if (img != null) {
+                    int drawWidth = (directionIndex == 2 || directionIndex == 3) ? tileSize * 2 : tileSize;
+                    int drawHeight = (directionIndex == 0 || directionIndex == 1) ? tileSize * 2 : tileSize;
+                    int drawX = animationKeys[directionIndex].endsWith("Left") ? screenX - tileSize : screenX;
+                    int drawY = animationKeys[directionIndex].endsWith("Up") ? screenY - tileSize : screenY;
+                    g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
                 }
-
-                // 軽い影（任意）
-                Composite before = g2.getComposite();
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
-                g2.setColor(new Color(0, 0, 0, 80));
-                int shadowW = heldImg.getWidth() * 9 / 10;
-                int shadowH = Math.max(2, heldImg.getHeight() / 8);
-                g2.fillOval(headScreenX + (heldImg.getWidth() - shadowW) / 2,
-                        headScreenY + heldImg.getHeight() - shadowH / 2,
-                        shadowW, shadowH);
-                g2.setComposite(before);
-
-                // 爆弾スプライトを描画
-                g2.drawImage(heldImg, headScreenX, headScreenY, null);
             }
         }
 
+        // --- 所持中の爆弾を頭上に描画 ---
+        if (state == PlayerState.HOLD_WALK) {
+            if (this.holding && this.heldBomb != null) {
+                BufferedImage heldImg = heldBomb.getHeldSprite();
+                if (heldImg != null) {
+                    int ts = FrameApp.getTileSize();
+                    Rectangle sa = getSolidArea();
+                    int headScreenX = screenX + sa.x + sa.width / 2 - heldImg.getWidth() / 2;
+                    int headScreenY = screenY + sa.y - heldImg.getHeight();
+
+                    switch (getDirection()) {
+                        case "up" -> headScreenY -= ts / 8;
+                        case "down" -> headScreenY += ts / 16;
+                        case "left" -> headScreenX -= ts / 8;
+                        case "right" -> headScreenX += ts / 8;
+                    }
+
+                    Composite before = g2.getComposite();
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+                    g2.setColor(new Color(0, 0, 0, 80));
+                    int shadowW = heldImg.getWidth() * 9 / 10;
+                    int shadowH = Math.max(2, heldImg.getHeight() / 8);
+                    g2.fillOval(headScreenX + (heldImg.getWidth() - shadowW) / 2,
+                            headScreenY + heldImg.getHeight() - shadowH / 2,
+                            shadowW, shadowH);
+                    g2.setComposite(before);
+
+                    g2.drawImage(heldImg, headScreenX, headScreenY, null);
+                }
+            }
+        }
+
+        // --- PICKUP アニメ描画（安全に） ---
         if (state == PlayerState.PICKUP) {
             int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
-            int frameIndex = Math.max(0, Math.min(getSpriteNum() - 1, PICKUP_SPRITE_COUNT - 1));
-            BufferedImage pickImg = pickupSprites[dirIndex][frameIndex];
-            if (pickImg != null) {
-                g2.drawImage(pickImg, screenX, screenY, tileSize, tileSize, null);
+            if (dirIndex >= 0 && pickupSprites != null && dirIndex < pickupSprites.length && pickupSprites[dirIndex] != null) {
+                int frameIndex = Math.max(0, getSpriteNum() - 1);
+                int maxIndex = pickupSprites[dirIndex].length - 1;
+                if (frameIndex > maxIndex) frameIndex = maxIndex;
+                if (frameIndex < 0) frameIndex = 0;
+                BufferedImage pickImg = pickupSprites[dirIndex][frameIndex];
+                if (pickImg != null) {
+                    g2.drawImage(pickImg, screenX, screenY, tileSize, tileSize, null);
+                }
             }
             g2.setComposite(original);
             return;
         }
 
+        // --- THROW アニメ描画（安全に） ---
         if (state == PlayerState.THROW) {
             if (heldBomb != null) {
                 String dir = getDirection();
-                int frame = Math.max(0, Math.min(getSpriteNum() - 1, SPRITE_COUNT - 1));
+                int frame = Math.max(0, getSpriteNum() - 1);
+                // SPRITE_COUNT と実際の heldBomb throw sprite 配列長の整合性をチェック
                 BufferedImage throwImg = heldBomb.getThrowSprite(dir, frame);
                 if (throwImg != null) {
-                    // 投げはプレイヤーの手元から出るようにオフセット
                     int tx = screenX;
                     int ty = screenY;
                     switch (dir) {
@@ -2060,6 +2114,14 @@ public class Player extends Entity {
         if (seconds < 0) seconds = 0;
         this.playTimeSeconds = Math.min(seconds, MAX_PLAY_SECONDS);
         this.playTimeAccumulator = 0.0;
+    }
+
+    public PlayerState getState() {
+        return state;
+    }
+
+    public PlayerState setState(PlayerState state) {
+        return this.state = state;
     }
 
     /**
