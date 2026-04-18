@@ -1,10 +1,13 @@
 package collision;
 
 import entity.Entity;
+import object.ObjBomb;
 import frame.FrameApp;
 import tile.Tile;
 import tile.TileManager;
 import window.GameWindow;
+
+import java.awt.Rectangle;
 
 public class CollisionChecker {
 
@@ -14,6 +17,10 @@ public class CollisionChecker {
         this.gameWindow = gameWindow;
     }
 
+    /**
+     * タイル衝突判定（エンティティの solidArea を直接変更しない）
+     */
+
     public void checkTile(Entity entity) {
 
         int tileSize = FrameApp.getTileSize();
@@ -21,10 +28,13 @@ public class CollisionChecker {
         int[][] mapTileNum = tileManager.getMapTileNum();
         Tile[] tiles = tileManager.getTiles();
 
-        int entityLeftX = entity.getWorldX() + entity.getSolidArea().x;
-        int entityRightX = entity.getWorldX() + entity.getSolidArea().x + entity.getSolidArea().width;
-        int entityTopY = entity.getWorldY() + entity.getSolidArea().y;
-        int entityBottomY = entity.getWorldY() + entity.getSolidArea().y + entity.getSolidArea().height;
+        // 衝突判定に使う矩形（ワールド座標）
+        Rectangle r = worldSolid(entity);
+
+        int entityLeftX = r.x;
+        int entityRightX = r.x + r.width;
+        int entityTopY = r.y;
+        int entityBottomY = r.y + r.height;
 
         int entityLeftCol = entityLeftX / tileSize;
         int entityRightCol = entityRightX / tileSize;
@@ -34,7 +44,7 @@ public class CollisionChecker {
         int tileNum1, tileNum2;
 
         String direction = entity.getDirection();
-        if (entity.isInKnockBack() == true) {
+        if (entity.isInKnockBack()) {
             direction = entity.getKnockBackDirection();
         }
 
@@ -76,54 +86,76 @@ public class CollisionChecker {
         }
     }
 
+    /**
+     * エンティティ同士の衝突判定（targets 配列）
+     * ObjBomb の「設置状態」は衝突判定から除外するガードを入れている
+     */
+
     public int checkEntity(Entity entity, Entity[] targets) {
 
         int index = 999;
 
         String direction = entity.getDirection();
-        if (entity.isInKnockBack() == true) {
+        if (entity.isInKnockBack()) {
             direction = entity.getKnockBackDirection();
         }
 
         for (int i = 0; i < targets.length; i++) {
 
-            if (targets[i] != null) {
-                updateSolidArea(entity);
-                updateSolidArea(targets[i]);
+            if (targets[i] == null) continue;
 
-                int offsetX = 0;
-                int offsetY = 0;
-                switch (direction) {
-                    case "up" -> offsetY = -entity.getSpeed();
-                    case "down" -> offsetY = entity.getSpeed();
-                    case "left" -> offsetX = -entity.getSpeed();
-                    case "right" -> offsetX = entity.getSpeed();
+            // 設置中の爆弾は衝突判定対象外にする（必要なら条件を調整）
+            if (targets[i] instanceof ObjBomb) {
+                ObjBomb tb = (ObjBomb) targets[i];
+                if (!tb.isThrown() && tb.isPickable()) {
+                    continue;
                 }
+            }
 
-                entity.getSolidArea().x += offsetX;
-                entity.getSolidArea().y += offsetY;
+            Rectangle rEntity = worldSolid(entity);
+            Rectangle rTarget = worldSolid(targets[i]);
 
-                if (entity.getSolidArea().intersects(targets[i].getSolidArea())) {
-                    // 自分自身との衝突ではないことを確認
-                    if (targets[i] != entity) {
-                        entity.setCollision(true);
-                        index = i;
-                    }
+            int offsetX = 0;
+            int offsetY = 0;
+            switch (direction) {
+                case "up" -> offsetY = -entity.getSpeed();
+                case "down" -> offsetY = entity.getSpeed();
+                case "left" -> offsetX = -entity.getSpeed();
+                case "right" -> offsetX = entity.getSpeed();
+            }
+
+            // コピーにオフセットを適用して判定
+            Rectangle moved = new Rectangle(rEntity);
+            moved.translate(offsetX, offsetY);
+
+            if (moved.intersects(rTarget)) {
+                if (targets[i] != entity) {
+                    entity.setCollision(true);
+                    index = i;
                 }
-
-                resetSolidArea(entity);
-                resetSolidArea(targets[i]);
             }
         }
         return index;
     }
 
+    /**
+     * プレイヤーとの接触判定（地面設置の爆弾は除外）
+     */
+
     public boolean checkPlayer(Entity entity) {
+
+        // 設置中の爆弾はプレイヤー接触で即爆発させない（拾う処理で扱う）
+        if (entity instanceof ObjBomb) {
+            ObjBomb bomb = (ObjBomb) entity;
+            if (!bomb.isThrown() && bomb.isPickable()) {
+                return false;
+            }
+        }
 
         boolean contactPlayer = false;
 
-        updateSolidArea(entity);
-        updateSolidArea(gameWindow.getPlayer());
+        Rectangle rEntity = worldSolid(entity);
+        Rectangle rPlayer = worldSolid(gameWindow.getPlayer());
 
         int offsetX = 0;
         int offsetY = 0;
@@ -134,27 +166,25 @@ public class CollisionChecker {
             case "right" -> offsetX = entity.getSpeed();
         }
 
-        entity.getSolidArea().x += offsetX;
-        entity.getSolidArea().y += offsetY;
+        Rectangle moved = new Rectangle(rEntity);
+        moved.translate(offsetX, offsetY);
 
-        if (entity.getSolidArea().intersects(gameWindow.getPlayer().getSolidArea())) {
+        if (moved.intersects(rPlayer)) {
             entity.setCollision(true);
             contactPlayer = true;
         }
 
-        resetSolidArea(entity);
-        resetSolidArea(gameWindow.getPlayer());
-
         return contactPlayer;
     }
 
-    private void updateSolidArea(Entity entity) {
-        entity.getSolidArea().x = entity.getWorldX() + entity.getSolidArea().x;
-        entity.getSolidArea().y = entity.getWorldY() + entity.getSolidArea().y;
-    }
+    /**
+     * エンティティの solidArea をワールド座標に変換したコピーを返す（元のオブジェクトは変更しない）
+     */
 
-    private void resetSolidArea(Entity entity) {
-        entity.getSolidArea().x = entity.getSolidAreaDefaultX();
-        entity.getSolidArea().y = entity.getSolidAreaDefaultY();
+    private Rectangle worldSolid(Entity e) {
+        Rectangle sa = e.getSolidArea();
+        int x = e.getWorldX() + e.getSolidAreaDefaultX();
+        int y = e.getWorldY() + e.getSolidAreaDefaultY();
+        return new Rectangle(x, y, sa.width, sa.height);
     }
 }
