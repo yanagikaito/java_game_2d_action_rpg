@@ -716,46 +716,84 @@ public class Player extends Entity {
         getGameWindow().getUi().addMessage("DEBUG: pic bomb -> heldBomb=" + heldBomb);
     }
 
-    // Player.throwHeldBomb()
     private void throwHeldBomb() {
+
         if (!holding || heldBomb == null) return;
 
-        // 投げる距離（タイル数）と重力（ObjBomb 側の gravity を参照）
         int tiles = 2;
         int tileSize = FrameApp.getTileSize();
         double distance = tiles * tileSize;
 
-        // ObjBomb の重力を参照
-        double g = heldBomb.getGravity();
+        // ObjBomb の重力（正の値で扱う）
+        double g = Math.abs(heldBomb.getGravity());
 
-        // 向きに応じた水平成分 sign
+        // プレイヤーの向き（"left","right","up","down" を返す）
         String dir = getDirection();
-        int sign = dir.equals("left") ? -1 : 1;
 
-        // 目標水平速度 vx と初速度 vy を計算する（単純な放物運動の逆算）
-        // ここでは放物線の頂点を飛行中間に置く想定で、初期角度45度相当の近似を使う。
-        // より正確にするなら角度を固定して vx, vy を計算する。
-        double vx = sign * Math.sqrt(distance * g / Math.sin(2 * Math.toRadians(45)));
-        double vy = -Math.abs(vx); // 上向きに初速を与える（負は上方向）
+        double vx = 0.0;
+        double vy = 0.0;
+        double initialVz;
 
-        // 安全にするため最大速度制限
-        double maxSpeed = 20.0;
+        // 基本的な水平速度の目安（45度近似）
+        double baseSpeed = Math.sqrt(Math.max(1.0, distance * g / Math.sin(2 * Math.toRadians(45))));
+
+        switch (dir) {
+            case "left" -> {
+                vx = -baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25; // 少し上向きに見せる
+                initialVz = 8.0;
+            }
+            case "right" -> {
+                vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = 8.0;
+            }
+            case "up" -> {
+                // 上投げ：垂直成分を強めに、画面Y速度は小さめ（上方向は負）
+                vx = 0.0;
+                vy = -baseSpeed * 0.5;
+                initialVz = -12.0; // 高く飛ぶ
+            }
+            case "down" -> {
+                // 下投げ：画面Y方向に下向きの速度を与え、垂直成分は下向き（地面に叩きつける）
+                vx = 0.0;
+                vy = baseSpeed * 0.6;
+                initialVz = 6.0; // 下向きに押し出す（正は下）
+            }
+            default -> {
+                // フェールセーフ：左右どちらかに投げる
+                if ("left".equals(getDirection())) vx = -baseSpeed;
+                else vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = -8.0;
+            }
+        }
+
+        // 速度制限（安全策）
+        double maxSpeed = 40.0;
         if (Math.abs(vx) > maxSpeed) vx = Math.signum(vx) * maxSpeed;
         if (Math.abs(vy) > maxSpeed) vy = Math.signum(vy) * maxSpeed;
+        if (initialVz > 40.0) initialVz = 40.0;
+        if (initialVz < -40.0) initialVz = -40.0;
 
         // heldBomb を投げる準備
         heldBomb.setWorldX(getWorldX());
-        heldBomb.setWorldY(getWorldY() - FrameApp.getTileSize() / 2);
+        heldBomb.setWorldY(getWorldY());
+        heldBomb.setZ(tileSize / 2.0);
+        heldBomb.setHasShadow(true);
         heldBomb.setUser(this);
         heldBomb.setThrown(true);
         heldBomb.setPickable(false);
         heldBomb.setAlive(true);
         heldBomb.setLife(heldBomb.getMaxLife());
 
-        // ObjBomb に速度を与える（既存の setVelocity を利用）
+        // 垂直成分（z/vz）と影を設定するためのメソッドを呼ぶ
+        heldBomb.setHasShadow(true);
+        heldBomb.setVerticalVelocity(initialVz);
+        // 水平成分は既存の setVelocity を利用
         heldBomb.setVelocity(vx, vy);
 
-        // ワールドに戻す
+        // ワールドに戻す（既存ロジック）
         boolean added = false;
         try {
             added = gameWindow.addObject(heldBomb);
@@ -772,12 +810,16 @@ public class Player extends Entity {
             }
         }
 
-        // 所持解除
+        // 所持解除と状態更新
         heldBomb = null;
         holding = false;
         state = PlayerState.THROW;
-//        gameWindow.getSoundmanager().playSE("sound/throw.wav");
+
+        // 投げた直後の誤拾い防止（pickupCooldown と入力消費があるなら設定）
+        this.pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+        gameWindow.getKeyHandler().consumeThrowOnce();
     }
+
 
     public void updateAura(long deltaMs) {
 
