@@ -751,8 +751,8 @@ public class Player extends Entity {
             case "up" -> {
                 // 上投げ：垂直成分を強めに、画面Y速度は小さめ（上方向は負）
                 vx = 0.0;
-                vy = -baseSpeed * 0.5;
-                initialVz = -12.0; // 高く飛ぶ
+                vy = -baseSpeed * 1.5;
+                initialVz = 12.0;
             }
             case "down" -> {
                 // 下投げ：画面Y方向に下向きの速度を与え、垂直成分は下向き（地面に叩きつける）
@@ -769,17 +769,17 @@ public class Player extends Entity {
             }
         }
 
-        // 速度制限（安全策）
+        System.out.println("THROW dir=" + dir + " initVz=" + initialVz + " setZ=" + heldBomb.getZ() + " worldY=" + heldBomb.getWorldY());
+
+        // 速度制限
         double maxSpeed = 40.0;
         if (Math.abs(vx) > maxSpeed) vx = Math.signum(vx) * maxSpeed;
         if (Math.abs(vy) > maxSpeed) vy = Math.signum(vy) * maxSpeed;
-        if (initialVz > 40.0) initialVz = 40.0;
-        if (initialVz < -40.0) initialVz = -40.0;
 
         // heldBomb を投げる準備
         heldBomb.setWorldX(getWorldX());
-        heldBomb.setWorldY(getWorldY());
-        heldBomb.setZ(tileSize / 2.0);
+        heldBomb.setWorldY(getWorldY() - tileSize / 4);
+        heldBomb.setZ(tileSize);
         heldBomb.setHasShadow(true);
         heldBomb.setUser(this);
         heldBomb.setThrown(true);
@@ -789,11 +789,11 @@ public class Player extends Entity {
 
         // 垂直成分（z/vz）と影を設定するためのメソッドを呼ぶ
         heldBomb.setHasShadow(true);
-        heldBomb.setVerticalVelocity(initialVz);
+        heldBomb.setVerticalVelocity(tiles);
         // 水平成分は既存の setVelocity を利用
         heldBomb.setVelocity(vx, vy);
 
-        // ワールドに戻す（既存ロジック）
+        // ワールドに戻す
         boolean added = false;
         try {
             added = gameWindow.addObject(heldBomb);
@@ -823,7 +823,7 @@ public class Player extends Entity {
 
     public void updateAura(long deltaMs) {
 
-        System.out.println("updateAura deltaMs=" + deltaMs + " ms");
+//      System.out.println("updateAura deltaMs=" + deltaMs + " ms");
 
         // 既存の移動・入力・アニメ更新処理...
         // プレイヤー座標にオーラを追従させる
@@ -831,10 +831,10 @@ public class Player extends Entity {
             aura.setWorldX(this.getWorldX());
             aura.setWorldY(this.getWorldY());
             aura.updateAnimation(deltaMs);
-            System.out.println("DEBUG: Enter判定 now=" + System.currentTimeMillis()
-                    + " aura.isActive()=" + aura.isActive()
-                    + " aura.expireAt=" + (aura != null ? aura.getExpireAt() : "null")
-                    + " aura.activeFlag=" + (aura != null ? aura.isActiveRaw() : "null"));
+//            System.out.println("DEBUG: Enter判定 now=" + System.currentTimeMillis()
+//                    + " aura.isActive()=" + aura.isActive()
+//                    + " aura.expireAt=" + (aura != null ? aura.getExpireAt() : "null")
+//                    + " aura.activeFlag=" + (aura != null ? aura.isActiveRaw() : "null"));
         }
     }
 

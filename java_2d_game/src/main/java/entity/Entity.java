@@ -44,8 +44,8 @@ public abstract class Entity {
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     protected String spriteKey = "entity_default";
-    protected boolean autoPickup = false;
     private boolean stackable = false;
+    private boolean thrown = false;
     private int amount = 1;
 
     public enum Direction {UP, DOWN, LEFT, RIGHT}
@@ -1969,5 +1969,13 @@ public abstract class Entity {
                 getSolidArea().height
         );
         return r;
+    }
+
+    public boolean isThrown() {
+        return thrown;
+    }
+
+    public void setThrown(boolean thrown) {
+        this.thrown = thrown;
     }
 }
