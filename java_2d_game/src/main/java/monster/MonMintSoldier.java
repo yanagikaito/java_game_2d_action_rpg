@@ -253,10 +253,10 @@ public class MonMintSoldier extends Entity {
 
     private void startAttack() {
         String dir = getDirection();
-        System.out.println("dir = " + dir);
+//        System.out.println("dir = " + dir);
         if (dir == null || dir.isEmpty()) dir = getDirection();
         String base = capitalize(dir);
-        System.out.println("base = " + base);
+//        System.out.println("base = " + base);
         if (getCurrentWeapon().getType() instanceof AxeType) {
             setAttackDirection("axe" + base);
         } else {
@@ -301,7 +301,7 @@ public class MonMintSoldier extends Entity {
 
         // 3フレームに1度だけスプライト更新する
         if (attackCounter / ANIMATION_RATE != 0) {
-            System.out.println("attackCounter = " + attackCounter / ANIMATION_RATE);
+//            System.out.println("attackCounter = " + attackCounter / ANIMATION_RATE);
             return;
         }
 

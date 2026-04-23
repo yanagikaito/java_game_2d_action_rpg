@@ -82,6 +82,8 @@ public class ObjBomb extends Projectile {
     @Override
     public void update() {
 
+        System.out.println("UPDATE z=" + z + " vz=" + vz + " worldY=" + getWorldY() + " vy=" + vy);
+
         if (!getAlive()) return;
 
         if (!exploding) {
@@ -89,46 +91,50 @@ public class ObjBomb extends Projectile {
             // --- 投げられている状態（空中） ---
             if (thrown) {
 
-                // 水平移動（既存）
+                // 水平移動
                 setWorldX(getWorldX() + (int) Math.round(vx));
                 setWorldY(getWorldY() + (int) Math.round(vy));
 
-                // 画面Y方向の重力（既存の挙動を維持するなら残す）
+                // 画面Y方向の重力（既存）
                 vy += gravity;
 
                 // 垂直（高さ）方向の更新（上向き正のルール）
-                z += vz;                 // 高さを速度で更新
-                vz -= verticalGravity;   // 重力で上向き速度を減らす（下向きに引っ張る）
+                z += vz;
+                vz -= verticalGravity;
 
+                // デバッグ出力（物理とワールド座標の両方を出す）
                 getGameWindow().getUi().addMessage("z = " + z);
                 getGameWindow().getUi().addMessage("vz = " + vz);
+                getGameWindow().getUi().addMessage("worldY = " + getWorldY());
 
-                // 空中でもエンティティ判定は行う（モンスター等に当たる）
-                if (user == gameWindow.getPlayer()) {
-                    int monsterHit = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-                    if (monsterHit != -1 && monsterHit != 999) {
-                        startExplosion();
+                // --- エンティティ当たり判定（低空のみ） ---
+                double hitThreshold = FrameApp.getTileSize() * 0.5; // 調整可
+                if (z <= hitThreshold) {
+                    if (user == gameWindow.getPlayer()) {
+                        int monsterHit = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
+                        if (monsterHit != -1 && monsterHit != 999) {
+                            startExplosion();
+                        }
+                    } else {
+                        boolean hitPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
+                        if (hitPlayer) startExplosion();
                     }
-                } else {
-                    boolean hitPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
-                    if (hitPlayer) startExplosion();
                 }
 
-                // 着地判定（地面に到達したら着地処理）
+                // --- 着地判定（z <= 0 のときだけ床判定を行う） ---
                 if (z <= 0) {
                     z = 0;
                     vz = 0;
 
-                    // 着地時にタイル判定を行い、衝突なら爆発、そうでなければ地面に置く
-                    gameWindow.getCollisionChecker().checkTile(this);
-                    if (this.isCollision()) {
-                        if (z > 0) {
-                            startExplosion();
-                        } else {
-                            thrown = false;
-                            pickable = true;
-                            hasShadow = false;
-                        }
+                    boolean tileCollision = gameWindow.getCollisionChecker().checkTile(this);
+                    if (tileCollision) {
+                        // 地面のタイルに衝突しているなら爆発
+                        startExplosion();
+                    } else {
+                        // 衝突していなければ地面に置く（拾えるようにする）
+                        thrown = false;
+                        pickable = true;
+                        hasShadow = false;
                     }
                 }
 
@@ -136,18 +142,16 @@ public class ObjBomb extends Projectile {
                 setLife(getLife() - 1);
                 if (getLife() <= 0) startExplosion();
 
-                // --- 地面に置かれている状態 ---
             } else {
+                // --- 地面に置かれている状態 ---
                 if (!pickable) {
                     setLife(getLife() - 1);
                     if (getLife() <= 0) startExplosion();
-                } else {
-                    // pickable == true のときは何もしない（プレイヤーが拾える状態）
                 }
             }
 
-            // --- 爆発中の処理 ---
         } else {
+            // --- 爆発中の処理 ---
             if (!damageGiven) {
                 damageGiven = true;
                 giveExplosionDamage();
@@ -245,6 +249,7 @@ public class ObjBomb extends Projectile {
         // 描画位置（スプライト基準を中心にしている想定）
         int drawX = screenX - spriteW / 2;
         int drawY = (screenY - spriteH / 2) - (int) Math.round(z);
+        System.out.println("DRAW screenY=" + screenY + " drawY=" + drawY + " z=" + z + " vz=" + vz + " vy=" + vy);
 
         // 影は先に描くと自然（地面→本体の順）
         if (hasShadow) {
@@ -328,9 +333,6 @@ public class ObjBomb extends Projectile {
      * デフォルトは Down 方向の最初のフレームを使い、タイルサイズに合わせてリサイズする。
      */
 
-    // ObjBomb.java に追加
-
-// 所持時に使う1枚を返す
     public BufferedImage getHeldSprite() {
         int ts = FrameApp.getTileSize();
         int downIndex = 1; // DIRS = {"Up","Down","Left","Right"} の Down
@@ -366,6 +368,10 @@ public class ObjBomb extends Projectile {
 
     public void setVerticalVelocity(double vz) {
         this.vz = Math.max(-40.0, Math.min(40.0, vz));
+    }
+
+    public double getZ() {
+        return z;
     }
 
     public void setZ(double z) {
