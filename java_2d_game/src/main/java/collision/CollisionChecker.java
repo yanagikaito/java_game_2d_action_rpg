@@ -21,7 +21,19 @@ public class CollisionChecker {
      * タイル衝突判定（エンティティの solidArea を直接変更しない）
      * 戻り値: 衝突があれば true を返す
      */
+
     public boolean checkTile(Entity entity) {
+
+        try {
+            System.out.println("[DBG-CHECKTILE-ENTRY] this=" + this.getClass().getName() + "@" + this.hashCode()
+                    + " gameWindow=" + (gameWindow != null ? gameWindow.getClass().getName() + "@" + gameWindow.hashCode() : "null")
+                    + " callerCollisionCheckerHash=" + (gameWindow != null && gameWindow.getCollisionChecker() != null ? gameWindow.getCollisionChecker().hashCode() : "null")
+                    + " entityClass=" + entity.getClass().getName()
+                    + " thrown=" + entity.isThrown()
+                    + " worldY=" + entity.getWorldY());
+        } catch (Throwable t) {
+            System.out.println("[DBG-CHECKTILE-ENTRY-ERR] " + t);
+        }
 
         int tileSize = FrameApp.getTileSize();
         TileManager tileManager = gameWindow.getTileManager();
@@ -46,21 +58,34 @@ public class CollisionChecker {
 
         boolean collision = false;
 
-        // --- 特別扱い: 投げられたオブジェクト（空中から着地するもの）は底面タイルを直接チェック ---
+        // 投げられたオブジェクト（空中から着地するもの）は底面タイルを直接チェック
         // 着地時に確実に地面タイルに当たっているかを判定
         if (entity instanceof ObjBomb || entity.isThrown()) {
+
             // 底面のタイル（足元）をチェック
             int checkRow = Math.min(maxRow, Math.max(0, entityBottomRow));
+
+            // 投擲物は底面の1行上もチェックする
+            int checkRowAbove = Math.max(0, checkRow - 1);
+
             int leftCol = Math.min(maxCol, Math.max(0, entityLeftCol));
             int rightCol = Math.min(maxCol, Math.max(0, entityRightCol));
 
             int tileNum1 = mapTileNum[leftCol][checkRow];
             int tileNum2 = mapTileNum[rightCol][checkRow];
+            int tileNum3 = mapTileNum[leftCol][checkRowAbove];
+            int tileNum4 = mapTileNum[rightCol][checkRowAbove];
 
-            if (tiles[tileNum1].collision || tiles[tileNum2].collision) {
+            // collisionとbombCollisionの衝突判定をチェックする
+            if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision
+                    || tiles[tileNum2].collision || tiles[tileNum2].bombCollision
+                    || tiles[tileNum3].collision || tiles[tileNum3].bombCollision
+                    || tiles[tileNum4].collision || tiles[tileNum4].bombCollision) {
                 collision = true;
             }
 
+            gameWindow.getUi().addMessage("[checkTile] bomb branch: collision=" + collision +
+                    " checkRow=" + checkRow + " checkRowAbove=" + checkRowAbove);
             entity.setCollision(collision);
             return collision;
         }

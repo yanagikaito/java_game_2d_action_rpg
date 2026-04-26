@@ -37,6 +37,11 @@ public class ObjBomb extends Projectile {
     // 置かれていて拾える状態
     private boolean pickable = false;
 
+    // 新規フィールド（着地→タイマー）
+    private boolean landed = false;                 // 地面に着地しているか
+    private long landedAt = 0L;                     // 着地時刻（ms）
+    private final long fuseDurationMs = 3000L;      // 3秒（変更可）
+
 
     public ObjBomb(GameWindow gameWindow) {
         super(gameWindow, DIRS.length, SPRITE_COUNT);
@@ -82,76 +87,15 @@ public class ObjBomb extends Projectile {
     @Override
     public void update() {
 
-        System.out.println("UPDATE z=" + z + " vz=" + vz + " worldY=" + getWorldY() + " vy=" + vy);
+        System.out.println("[DBG-BOMB-UPDATE-ENTRY] id=" + this.getType()
+                + " class=" + this.getClass().getName()
+                + " thrown=" + this.isThrown()
+                + " z=" + this.z + " worldY=" + this.getWorldY());
 
         if (!getAlive()) return;
 
-        if (!exploding) {
-
-            // --- 投げられている状態（空中） ---
-            if (thrown) {
-
-                // 水平移動
-                setWorldX(getWorldX() + (int) Math.round(vx));
-                setWorldY(getWorldY() + (int) Math.round(vy));
-
-                // 画面Y方向の重力（既存）
-                vy += gravity;
-
-                // 垂直（高さ）方向の更新（上向き正のルール）
-                z += vz;
-                vz -= verticalGravity;
-
-                // デバッグ出力（物理とワールド座標の両方を出す）
-                getGameWindow().getUi().addMessage("z = " + z);
-                getGameWindow().getUi().addMessage("vz = " + vz);
-                getGameWindow().getUi().addMessage("worldY = " + getWorldY());
-
-                // --- エンティティ当たり判定（低空のみ） ---
-                double hitThreshold = FrameApp.getTileSize() * 0.5; // 調整可
-                if (z <= hitThreshold) {
-                    if (user == gameWindow.getPlayer()) {
-                        int monsterHit = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-                        if (monsterHit != -1 && monsterHit != 999) {
-                            startExplosion();
-                        }
-                    } else {
-                        boolean hitPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
-                        if (hitPlayer) startExplosion();
-                    }
-                }
-
-                // --- 着地判定（z <= 0 のときだけ床判定を行う） ---
-                if (z <= 0) {
-                    z = 0;
-                    vz = 0;
-
-                    boolean tileCollision = gameWindow.getCollisionChecker().checkTile(this);
-                    if (tileCollision) {
-                        // 地面のタイルに衝突しているなら爆発
-                        startExplosion();
-                    } else {
-                        // 衝突していなければ地面に置く（拾えるようにする）
-                        thrown = false;
-                        pickable = true;
-                        hasShadow = false;
-                    }
-                }
-
-                // 寿命管理
-                setLife(getLife() - 1);
-                if (getLife() <= 0) startExplosion();
-
-            } else {
-                // --- 地面に置かれている状態 ---
-                if (!pickable) {
-                    setLife(getLife() - 1);
-                    if (getLife() <= 0) startExplosion();
-                }
-            }
-
-        } else {
-            // --- 爆発中の処理 ---
+        // --- 爆発中処理（優先） ---
+        if (exploding) {
             if (!damageGiven) {
                 damageGiven = true;
                 giveExplosionDamage();
@@ -162,11 +106,90 @@ public class ObjBomb extends Projectile {
                 thrown = false;
                 explosionFrame = SPRITE_COUNT - 1;
             }
+            return;
         }
 
-        // アニメ更新（投げ中のみ等）
+        // --- 着地してからのタイマー判定 ---
+        if (landed && !exploding) {
+            long now = System.currentTimeMillis();
+            long elapsed = now - landedAt;
+            // UI/デバッグ表示（任意）
+            gameWindow.getUi().addMessage("Fuse: " + (fuseDurationMs - elapsed) + "ms");
+            if (elapsed >= fuseDurationMs) {
+                startExplosion();
+                return;
+            }
+        }
+
+        // --- 投げられている状態（空中） ---
         if (thrown) {
+
+            // 水平移動
+            setWorldX(getWorldX() + (int) Math.round(vx));
+            setWorldY(getWorldY() + (int) Math.round(vy));
+
+            // 画面Y方向の重力（既存）
+            vy += gravity;
+
+            // 垂直（高さ）方向の更新（上向き正のルール）
+            z += vz;
+            vz -= verticalGravity;
+
+            // デバッグ出力（物理とワールド座標の両方を出す）
+            getGameWindow().getUi().addMessage("z = " + z);
+            getGameWindow().getUi().addMessage("vz = " + vz);
+            getGameWindow().getUi().addMessage("worldY = " + getWorldY());
+
+            // --- エンティティ当たり判定（低空のみ） ---
+            double hitThreshold = FrameApp.getTileSize() * 0.5; // 調整可
+            if (z <= hitThreshold) {
+                if (user == gameWindow.getPlayer()) {
+                    int monsterHit = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
+                    if (monsterHit != -1 && monsterHit != 999) {
+                        startExplosion();
+                    }
+                } else {
+                    boolean hitPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
+                    if (hitPlayer) startExplosion();
+                }
+            }
+
+            // --- 着地判定（z <= 0 のときだけ床判定を行う） ---
+
+            // 着地判定
+            if (z <= 0) {
+                z = 0;
+                vz = 0;
+
+                boolean tileCollision = gameWindow.getCollisionChecker().checkTile(this);
+                if (tileCollision) {
+                    // 即爆発させない。着地してからタイマーで爆発させる
+                    landed = true;
+                    landedAt = System.currentTimeMillis();
+                    thrown = false;      // 空中フラグを下げる
+                    pickable = false;    // 着地直後は拾えない
+                    hasShadow = false;
+                    System.out.println("[BOMB] landed id=" + getType() + " at worldY=" + getWorldY());
+                } else {
+                    // タイルに衝突していなければ地面に置く（拾えるようにする）
+                    thrown = false;
+                    pickable = true;
+                    hasShadow = false;
+                }
+            }
+
+            // 寿命管理（投擲中）
+            setLife(getLife() - 1);
+            if (getLife() <= 0) startExplosion();
+
+            // 投擲中アニメ
             updateAnimation();
+        } else {
+            // 地面に置かれている状態（着地済みだが fuse が動いているかもしれない）
+            if (!pickable && !landed) {
+                setLife(getLife() - 1);
+                if (getLife() <= 0) startExplosion();
+            }
         }
     }
 
@@ -177,6 +200,14 @@ public class ObjBomb extends Projectile {
         exploding = true;
         explosionFrame = 0;
         damageGiven = false;
+
+        // 爆発開始時は移動や拾得を無効化
+        thrown = false;
+        pickable = false;
+        hasShadow = false;
+        vx = 0;
+        vy = 0;
+        vz = 0;
     }
 
     private void updateAnimation() {
@@ -247,7 +278,7 @@ public class ObjBomb extends Projectile {
         int spriteH = img.getHeight();
 
         // 描画位置（スプライト基準を中心にしている想定）
-        int drawX = screenX - spriteW / 2;
+        int drawX = screenX;
         int drawY = (screenY - spriteH / 2) - (int) Math.round(z);
         System.out.println("DRAW screenY=" + screenY + " drawY=" + drawY + " z=" + z + " vz=" + vz + " vy=" + vy);
 
