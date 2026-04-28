@@ -38,9 +38,13 @@ public class ObjBomb extends Projectile {
     private boolean pickable = false;
 
     // 新規フィールド（着地→タイマー）
-    private boolean landed = false;                 // 地面に着地しているか
-    private long landedAt = 0L;                     // 着地時刻（ms）
-    private final long fuseDurationMs = 3000L;      // 3秒（変更可）
+    // 地面に着地しているか
+    private boolean landed = false;
+    // 着地時刻（ms）
+    private long landedAt = 0L;
+    // 3秒（変更可）
+    private final long fuseDurationMs = 3000L;
+    private final int DAMAGE_FRAME = 0;
 
 
     public ObjBomb(GameWindow gameWindow) {
@@ -87,6 +91,8 @@ public class ObjBomb extends Projectile {
     @Override
     public void update() {
 
+        explosionFrame++;
+
         System.out.println("[DBG-BOMB-UPDATE-ENTRY] id=" + this.getType()
                 + " class=" + this.getClass().getName()
                 + " thrown=" + this.isThrown()
@@ -95,16 +101,15 @@ public class ObjBomb extends Projectile {
         if (!getAlive()) return;
 
         // --- 爆発中処理（優先） ---
-        if (exploding) {
+        if (exploding && explosionFrame >= DAMAGE_FRAME) {
             if (!damageGiven) {
                 damageGiven = true;
                 giveExplosionDamage();
             }
-            explosionFrame++;
             if (explosionFrame >= SPRITE_COUNT) {
                 setAlive(false);
                 thrown = false;
-                explosionFrame = SPRITE_COUNT - 1;
+                explosionFrame = SPRITE_COUNT;
             }
             return;
         }
@@ -141,7 +146,7 @@ public class ObjBomb extends Projectile {
             getGameWindow().getUi().addMessage("worldY = " + getWorldY());
 
             // --- エンティティ当たり判定（低空のみ） ---
-            double hitThreshold = FrameApp.getTileSize() * 0.5; // 調整可
+            double hitThreshold = FrameApp.getTileSize() * 0.5;
             if (z <= hitThreshold) {
                 if (user == gameWindow.getPlayer()) {
                     int monsterHit = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
@@ -150,7 +155,9 @@ public class ObjBomb extends Projectile {
                     }
                 } else {
                     boolean hitPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
-                    if (hitPlayer) startExplosion();
+                    if (hitPlayer) {
+                        startExplosion();
+                    }
                 }
             }
 
@@ -169,6 +176,11 @@ public class ObjBomb extends Projectile {
                     thrown = false;      // 空中フラグを下げる
                     pickable = false;    // 着地直後は拾えない
                     hasShadow = false;
+                    this.setCollision(false);
+                    if (this.getSolidArea() != null) {
+                        this.getSolidArea().width = 0;
+                        this.getSolidArea().height = 0;
+                    }
                     System.out.println("[BOMB] landed id=" + getType() + " at worldY=" + getWorldY());
                 } else {
                     // タイルに衝突していなければ地面に置く（拾えるようにする）
@@ -224,27 +236,33 @@ public class ObjBomb extends Projectile {
     private void giveExplosionDamage() {
 
         if (getUser() == getGameWindow().getPlayer()) {
-
             int monsterHit = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
-
             if (monsterHit != 999) {
-
                 Entity target = getGameWindow().getMonster()[monsterHit];
                 getGameWindow().getPlayer().damageMonster(monsterHit, getAttack(), this.getKnockBackPower());
-                System.out.println("プレイヤ-が爆弾の衝突判定がありダメージを与えた!");
+                System.out.println("プレイヤーが爆弾の衝突判定がありダメージを与えた!");
                 generateParticle(this, target);
                 setAlive(false);
+
+                // ダメージを与えた直後に当たり判定を無効化して以降の判定を防ぐ
+                this.setCollision(false);
+                if (this.getSolidArea() != null) {
+                    this.getSolidArea().width = 0;
+                    this.getSolidArea().height = 0;
+                }
             }
-
         } else {
-
-
             boolean hit = getGameWindow().getCollisionChecker().checkPlayer(this);
-
-            if (getGameWindow().getPlayer().getInvincible() == false && hit == true) {
-
+            if (!getGameWindow().getPlayer().getInvincible() && hit) {
                 damagePlayer(getAttack(), getKnockBackPower());
                 setAlive(false);
+
+                // プレイヤーにダメージを与えたら当たり判定を無効化
+                this.setCollision(false);
+                if (this.getSolidArea() != null) {
+                    this.getSolidArea().width = 0;
+                    this.getSolidArea().height = 0;
+                }
             }
         }
     }
@@ -264,6 +282,7 @@ public class ObjBomb extends Projectile {
         int maxIndex = sprites[dirIndex].length - 1;
         int spriteIndex;
         if (exploding) {
+            if (explosionFrame >= SPRITE_COUNT) return;
             spriteIndex = Math.max(0, Math.min(explosionFrame, maxIndex));
         } else {
             spriteIndex = Math.max(0, getSpriteNum());
@@ -355,10 +374,6 @@ public class ObjBomb extends Projectile {
         this.hasShadow = v;
     }
 
-    public boolean hasShadow() {
-        return this.hasShadow;
-    }
-
     /**
      * 所持中に Player が頭上に描画するためのスプライトを返す。
      * デフォルトは Down 方向の最初のフレームを使い、タイルサイズに合わせてリサイズする。
@@ -370,7 +385,7 @@ public class ObjBomb extends Projectile {
         int frameIndex = 0; // 所持時は最初のフレームを使う
         if (sprites != null && sprites.length > downIndex && sprites[downIndex].length > frameIndex) {
             BufferedImage src = sprites[downIndex][frameIndex];
-            // 小さめにリサイズして返す（任意）
+            // 小さめにリサイズして返す
             int w = ts * 3 / 4;
             int h = ts * 3 / 4;
             BufferedImage buf = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);

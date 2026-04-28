@@ -550,7 +550,6 @@ public class Player extends Entity {
         } else {
             if (gameWindow.getKeyHandler().isBombKeyPressed() && bombCooldown == 0) {
                 bombCooldown = COOLDOWN_FRAMES;
-//                playerAttackingBomb();
                 placeBomb();
             } else if (gameWindow.getKeyHandler().isShotKeyPressed() && fireCooldown == 0) {
                 playerAttackingFireball();
@@ -1201,44 +1200,6 @@ public class Player extends Entity {
         }
     }
 
-    public void playerAttackingBomb() {
-
-        KeyHandler kh = gameWindow.getKeyHandler();
-
-        if (kh.isBombKeyPressed() &&
-                !getProjectile().getAlive() &&
-                getShotAvailableCounter() == 30 &&
-                consumeMana(FIREBALL_MANA_COST)) {
-
-            fireCooldown = COOLDOWN_FRAMES;
-
-            long now = System.currentTimeMillis();
-
-            if (now - lastFireTime >= FIRE_COOLDOWN_MS) {
-                lastFireTime = now;
-
-                System.out.println("DEBUG: Bキーが押されている");
-
-                ObjBomb bom = new ObjBomb(gameWindow);
-                bom.set(
-                        getWorldX(),
-                        getWorldY(),
-                        getDirection(),
-                        true,
-                        this
-                );
-                bom.setLife(bom.getMaxLife());
-                bom.setSpriteNum(1);
-                bom.setSpriteCounter(0);
-
-                gameWindow.getProjectileList().add(bom);
-                setShotAvailableCounter(0);
-                gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
-                System.out.println("DEBUG: ボム発射！向き=" + getDirection());
-            }
-        }
-    }
-
     private void placeBomb() {
 
         KeyHandler kh = gameWindow.getKeyHandler();
@@ -1290,7 +1251,7 @@ public class Player extends Entity {
         }
 
         // --- 爆弾は「持ち上げた」扱いにする ---
-        if (obj instanceof object.ObjBomb && keyHandler.isPlayerEnter()) {
+        if (obj instanceof object.ObjBomb && keyHandler.isThrowKeyPressed()) {
             object.ObjBomb bomb = (object.ObjBomb) obj;
 
             // pickable / alive のチェック（必要に応じて）

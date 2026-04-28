@@ -157,7 +157,7 @@ public class CollisionChecker {
 
             if (targets[i] == null) continue;
 
-            // 設置中の爆弾は衝突判定対象外にする（必要なら条件を調整）
+            // 設置中の爆弾は衝突判定対象外にする
             if (targets[i] instanceof ObjBomb) {
                 ObjBomb tb = (ObjBomb) targets[i];
                 if (!tb.isThrown() && tb.isPickable()) {
