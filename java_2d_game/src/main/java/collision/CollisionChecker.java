@@ -3,6 +3,7 @@ package collision;
 import entity.Entity;
 import object.ObjBomb;
 import frame.FrameApp;
+import object.ObjPot;
 import tile.Tile;
 import tile.TileManager;
 import window.GameWindow;
@@ -60,7 +61,7 @@ public class CollisionChecker {
 
         // 投げられたオブジェクト（空中から着地するもの）は底面タイルを直接チェック
         // 着地時に確実に地面タイルに当たっているかを判定
-        if (entity instanceof ObjBomb || entity.isThrown()) {
+        if (entity instanceof ObjBomb || entity instanceof ObjPot || entity.isThrown()) {
 
             // 底面のタイル（足元）をチェック
             int checkRow = Math.min(maxRow, Math.max(0, entityBottomRow));
@@ -77,10 +78,10 @@ public class CollisionChecker {
             int tileNum4 = mapTileNum[rightCol][checkRowAbove];
 
             // collisionとbombCollisionの衝突判定をチェックする
-            if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision
-                    || tiles[tileNum2].collision || tiles[tileNum2].bombCollision
-                    || tiles[tileNum3].collision || tiles[tileNum3].bombCollision
-                    || tiles[tileNum4].collision || tiles[tileNum4].bombCollision) {
+            if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision || tiles[tileNum1].potCollision
+                    || tiles[tileNum2].collision || tiles[tileNum2].bombCollision || tiles[tileNum2].potCollision
+                    || tiles[tileNum3].collision || tiles[tileNum3].bombCollision || tiles[tileNum3].potCollision
+                    || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision) {
                 collision = true;
             }
 
@@ -157,13 +158,19 @@ public class CollisionChecker {
 
             if (targets[i] == null) continue;
 
-            // 設置中の爆弾は衝突判定対象外にする
             if (targets[i] instanceof ObjBomb) {
                 ObjBomb tb = (ObjBomb) targets[i];
                 if (!tb.isThrown() && tb.isPickable()) {
                     continue;
                 }
             }
+            if (targets[i] instanceof ObjPot) {
+                ObjPot tp = (ObjPot) targets[i];
+                if (!tp.isThrown() && tp.isPickable()) {
+                    continue;
+                }
+            }
+
 
             Rectangle rEntity = worldSolid(entity);
             Rectangle rTarget = worldSolid(targets[i]);
@@ -201,6 +208,13 @@ public class CollisionChecker {
         if (entity instanceof ObjBomb) {
             ObjBomb bomb = (ObjBomb) entity;
             if (!bomb.isThrown() && bomb.isPickable()) {
+                return false;
+            }
+        }
+
+        if (entity instanceof ObjPot) {
+            ObjPot pot = (ObjPot) entity;
+            if (!pot.isThrown() && pot.isPickable()) {
                 return false;
             }
         }
