@@ -78,10 +78,22 @@ public class AssetSetter {
         gameWindow.setMonster(monsters);
     }
 
-    public void setObjAxe() {
+    public void setObjPot() {
 
         Entity[] obj = gameWindow.getObj();
         int i = 0;
+
+        obj[i] = createObjPot(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 15);
+        i++;
+        obj[i] = createObjPot(FrameApp.getTileSize() * 28, FrameApp.getTileSize() * 15);
+        i++;
+        obj[i] = createObjPot(FrameApp.getTileSize() * 29, FrameApp.getTileSize() * 15);
+    }
+
+    public void setObjAxe() {
+
+        Entity[] obj = gameWindow.getObj();
+        int i = 3;
 
         obj[i] = createObjAxe(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
     }
@@ -89,7 +101,7 @@ public class AssetSetter {
     public void setObjChest() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 1;
+        int i = 4;
 
         obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 22);
         i++;
@@ -101,7 +113,7 @@ public class AssetSetter {
     public void setObjRedPotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 4;
+        int i = 7;
 
         obj[i] = createObjRedPotion(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 23);
         i++;
@@ -113,7 +125,7 @@ public class AssetSetter {
     public void setObjGreenPotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 7;
+        int i = 10;
 
         obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 36, FrameApp.getTileSize() * 26);
         i++;
@@ -125,7 +137,7 @@ public class AssetSetter {
     public void setObjBluePotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 10;
+        int i = 13;
 
         obj[i] = createObjBluePotion(FrameApp.getTileSize() * 39, FrameApp.getTileSize() * 29);
         i++;
@@ -190,6 +202,19 @@ public class AssetSetter {
         objChest.setWorldX(worldX);
         objChest.setWorldY(worldY);
         return objChest;
+    }
+
+    private ObjPot createObjPot(int worldX, int worldY) {
+        ObjPot objPot = new ObjPot(gameWindow);
+        objPot.setWorldX(worldX);
+        objPot.setWorldY(worldY);
+        objPot.setPickable(true);
+        objPot.setUser(gameWindow.getPlayer());
+        objPot.setPickable(true);
+        objPot.setThrown(false);
+        objPot.setAlive(true);
+        gameWindow.getUi().addMessage(" pickable=" + objPot.isPickable());
+        return objPot;
     }
 
     public void setInteractiveTile() {
