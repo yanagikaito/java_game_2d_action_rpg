@@ -210,7 +210,6 @@ public class AssetSetter {
         objPot.setWorldY(worldY);
         objPot.setPickable(true);
         objPot.setUser(gameWindow.getPlayer());
-        objPot.setPickable(true);
         objPot.setThrown(false);
         objPot.setAlive(true);
         gameWindow.getUi().addMessage(" pickable=" + objPot.isPickable());

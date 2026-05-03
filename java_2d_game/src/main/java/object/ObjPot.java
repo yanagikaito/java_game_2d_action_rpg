@@ -106,15 +106,19 @@ public class ObjPot extends Projectile {
 
         if (!getAlive()) return;
 
-        // 割れ中はアニメ進行のみ（shattering フラグは親クラスに合わせてください）
+        // 割れ中はアニメ進行のみ
         if (shattering) {
-            shatterFrame++;
             // ダメージや破片生成は所定フレームで一度だけ
-            if (!damageGiven && shatterFrame >= 0) { // 0 を適宜調整
+            if (!damageGiven) {
                 damageGiven = true;
                 giveShatterDamageAndSpawnFragments();
+            } else {
+                shatterFrame++;
             }
-            if (shatterFrame >= STONE_SCATTER_SPRITE_COUNT) {
+            int maxIndex = Math.max(0, Math.min(STONE_SCATTER_SPRITE_COUNT - 1,
+                    fragmentSprites != null && fragmentSprites[0] != null ?
+                            fragmentSprites[0].length - 1 : STONE_SCATTER_SPRITE_COUNT - 1));
+            if (shatterFrame > maxIndex) {
                 setAlive(false);
             }
             return;
@@ -199,11 +203,12 @@ public class ObjPot extends Projectile {
         if (shattering) return;
         shattering = true;
         shatterFrame = 0;
+        damageGiven = false;
         thrown = false;
         pickable = false;
         hasShadow = false;
         vx = vy = vz = 0;
-        // 当たり判定はダメージ付与後に無効化するためここでは消さない
+        setAlive(true);
     }
 
     private void giveShatterDamageAndSpawnFragments() {
@@ -284,22 +289,24 @@ public class ObjPot extends Projectile {
         if (Math.abs(vx) > Math.abs(vy)) dirIndex = vx < 0 ? 2 : 3;
         else dirIndex = vy < 0 ? 0 : 1;
 
-        if (potSprites == null || dirIndex < 0 || dirIndex >= potSprites.length || potSprites[dirIndex] == null) return;
+        BufferedImage[][] useSprites = shattering ? fragmentSprites : potSprites;
+        if (useSprites == null) return;
+        if (dirIndex < 0 || dirIndex >= useSprites.length) return;
+        if (useSprites[dirIndex] == null) return;
 
-        int maxIndex = potSprites[dirIndex].length - 1;
+        int maxIndex = useSprites[dirIndex].length - 1;
         int spriteIndex;
         if (shattering) {
             if (shatterFrame >= STONE_SCATTER_SPRITE_COUNT) return;
             spriteIndex = Math.max(0, Math.min(shatterFrame, maxIndex));
         } else {
-            spriteIndex = Math.max(0, getSpriteNum());
-            if (spriteIndex > maxIndex) spriteIndex = maxIndex;
+            spriteIndex = Math.max(0, Math.min(getSpriteNum(), maxIndex));
         }
 
-        BufferedImage img = potSprites[dirIndex][spriteIndex];
+        BufferedImage img = useSprites[dirIndex][spriteIndex];
         if (img == null) return;
 
-        // スプライトサイズを img から取得（未定義変数を使わない）
+        // スプライトサイズを img から取得
         int spriteW = img.getWidth();
         int spriteH = img.getHeight();
 
@@ -308,8 +315,10 @@ public class ObjPot extends Projectile {
         int drawY = (screenY - spriteH / 2) - (int) Math.round(z);
         System.out.println("DRAW screenY=" + screenY + " drawY=" + drawY + " z=" + z + " vz=" + vz + " vy=" + vy);
 
+        g2.drawImage(img, drawX, drawY, null);
+
         // 影は先に描くと自然（地面→本体の順）
-        if (hasShadow) {
+        if (hasShadow && !shattering) {
             int baseTile = FrameApp.getTileSize();
             float alpha = Math.max(0.15f, 1.0f - (float) (z / (baseTile * 2.0)));
             double scale = Math.max(0.4, 1.0 - (z / (baseTile * 3.0)));
@@ -346,6 +355,10 @@ public class ObjPot extends Projectile {
 
     public void setHasShadow(boolean v) {
         this.hasShadow = v;
+    }
+
+    public double getZ() {
+        return z;
     }
 
     public void setZ(double z) {
