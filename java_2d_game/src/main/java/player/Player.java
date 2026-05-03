@@ -505,9 +505,6 @@ public class Player extends Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         gameWindow.getEventHandler().checkEvent();
         int nearbyIndex = findNearbyObjectIndex();
-        if (nearbyIndex != -1 && gameWindow.getKeyHandler().isThrowKeyPressed()) {
-            startPickup(nearbyIndex);
-        }
         int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
         gameWindow.changeMap(collidedTileId);
 
@@ -569,13 +566,19 @@ public class Player extends Entity {
         // Enter の瞬間判定を使う
         if (gameWindow.getKeyHandler().isPlayerEnterJustPressed()) {
             if (pickupCooldown > 0) {
-                // 拾った直後の猶予中は何もしない（誤トリガ防止）
+                // 拾った直後の猶予中は何もしない
             } else if (!holding && state != PlayerState.PICKUP) {
                 // 近くに置かれた爆弾やアイテムを拾う
                 startPickup(nearbyIndex);
             } else if (holding && state == PlayerState.HOLD_WALK) {
                 // 所持中かつ通常歩行状態のときだけ投げる
-                throwHeld();
+                if (heldBomb != null) {
+                    // 爆弾を持っているなら爆弾を投げる
+                    throwHeldBom();
+                } else if (heldPot != null) {
+                    // 壺を持っているなら壺を投げる
+                    throwHeldPot();
+                }
             }
         }
 
@@ -640,7 +643,11 @@ public class Player extends Entity {
             } else if (!holding) {
                 startPickup(nearbyIndex);
             } else if (holding && state == PlayerState.HOLD_WALK) {
-                throwHeld();
+                if (heldBomb != null) {
+                    throwHeldBom();
+                } else if (heldPot != null) {
+                    throwHeldPot();
+                }
             }
         }
 
@@ -806,7 +813,7 @@ public class Player extends Entity {
         }
     }
 
-    private void throwHeld() {
+    private void throwHeldBom() {
 
         if (!holding || heldBomb == null) return;
 
@@ -910,6 +917,111 @@ public class Player extends Entity {
         gameWindow.getKeyHandler().consumeThrowOnce();
     }
 
+    private void throwHeldPot() {
+
+        gameWindow.getUi().addMessage("throwHeldPot()呼ばれた");
+
+        if (!holding || heldPot == null) return;
+
+        int tiles = 2;
+        int tileSize = FrameApp.getTileSize();
+        double distance = tiles * tileSize;
+
+        // ObjPot の重力（正の値で扱う）
+        double gPot = Math.abs(heldPot.getGravity());
+
+        // プレイヤーの向き（"left","right","up","down" を返す）
+        String dir = getDirection();
+
+        double vx = 0.0;
+        double vy = 0.0;
+        double initialVz;
+
+        // 基本的な水平速度の目安（45度近似）
+        double baseSpeed = Math.sqrt(Math.max(1.0, distance * gPot / Math.sin(2 * Math.toRadians(45))));
+
+        switch (dir) {
+            case "left" -> {
+                vx = -baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25; // 少し上向きに見せる
+                initialVz = 8.0;
+            }
+            case "right" -> {
+                vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = 8.0;
+            }
+            case "up" -> {
+                // 上投げ：垂直成分を強めに、画面Y速度は小さめ（上方向は負）
+                vx = 0.0;
+                vy = -baseSpeed * 1.5;
+                initialVz = 12.0;
+            }
+            case "down" -> {
+                // 下投げ：画面Y方向に下向きの速度を与え、垂直成分は下向き（地面に叩きつける）
+                vx = 0.0;
+                vy = baseSpeed * 0.6;
+                initialVz = 6.0; // 下向きに押し出す（正は下）
+            }
+            default -> {
+                // フェールセーフ：左右どちらかに投げる
+                if ("left".equals(getDirection())) vx = -baseSpeed;
+                else vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = -8.0;
+            }
+        }
+
+        System.out.println("THROW dir=" + dir + " initVz=" + initialVz + " setZ=" + heldPot.getZ() + " worldY=" + heldPot.getWorldY());
+
+        // 速度制限
+        double maxSpeed = 40.0;
+        if (Math.abs(vx) > maxSpeed) vx = Math.signum(vx) * maxSpeed;
+        if (Math.abs(vy) > maxSpeed) vy = Math.signum(vy) * maxSpeed;
+
+        // heldPot を投げる準備
+        heldPot.setWorldX(getWorldX());
+        heldPot.setWorldY(getWorldY() - tileSize / 4);
+        heldPot.setZ(tileSize);
+        heldPot.setHasShadow(true);
+        heldPot.setUser(this);
+        heldPot.setThrown(true);
+        heldPot.setPickable(false);
+        heldPot.setAlive(true);
+        heldPot.setLife(heldPot.getMaxLife());
+
+        // 垂直成分（z/vz）と影を設定するためのメソッドを呼ぶ
+        heldPot.setHasShadow(true);
+        heldPot.setVerticalVelocity(tiles);
+        // 水平成分は既存の setVelocity を利用
+        heldPot.setVelocity(vx, vy);
+
+        // ワールドに戻す
+        boolean added = false;
+        try {
+            added = gameWindow.addObject(heldPot);
+        } catch (Throwable ignored) {
+        }
+        if (!added) {
+            Entity[] arr = gameWindow.getObj();
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] == null) {
+                    arr[i] = heldPot;
+                    added = true;
+                    break;
+                }
+            }
+        }
+
+        // 所持解除と状態更新
+        heldPot = null;
+        holding = false;
+        state = PlayerState.THROW;
+
+        // 投げた直後の誤拾い防止（pickupCooldown と入力消費があるなら設定）
+        this.pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+        gameWindow.getKeyHandler().consumeThrowOnce();
+    }
 
     public void updateAura(long deltaMs) {
 
@@ -1324,10 +1436,10 @@ public class Player extends Entity {
 
         if (i == 999) return;
 
-//        if (!gameWindow.getKeyHandler().isPlayerEnterJustPressed() &&
-//                !gameWindow.getKeyHandler().isThrowKeyPressed()) {
-//            return;
-//        }
+        if (!gameWindow.getKeyHandler().isPlayerEnterJustPressed() &&
+                !gameWindow.getKeyHandler().isThrowKeyPressed()) {
+            return;
+        }
 
         Entity[] objs = gameWindow.getObj();
         if (objs == null) return;
@@ -2048,10 +2160,29 @@ public class Player extends Entity {
                     int th = tileSize;
                     g2.drawImage(throwImg, tx, ty, tw, th, null);
                 }
+            } else if (heldPot != null) {
+                String dir = getDirection();
+                int frame = Math.max(0, getSpriteNum() - 1);
+                // SPRITE_COUNT と実際の heldBomb throw sprite 配列長の整合性をチェック
+                BufferedImage throwImg = heldPot.getThrowSprite(dir, frame);
+                if (throwImg != null) {
+                    int tx = screenX;
+                    int ty = screenY;
+                    switch (dir) {
+                        case "up" -> ty -= tileSize;
+                        case "down" -> ty += tileSize / 2;
+                        case "left" -> tx -= tileSize;
+                        case "right" -> tx += tileSize;
+                    }
+                    int tw = tileSize;
+                    int th = tileSize;
+                    g2.drawImage(throwImg, tx, ty, tw, th, null);
+                }
             }
         }
 
         g2.setComposite(original);
+
     }
 
     /**

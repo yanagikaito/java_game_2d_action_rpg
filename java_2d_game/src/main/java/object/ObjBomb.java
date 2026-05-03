@@ -292,11 +292,11 @@ public class ObjBomb extends Projectile {
         BufferedImage img = sprites[dirIndex][spriteIndex];
         if (img == null) return;
 
-        // スプライトサイズを img から取得（未定義変数を使わない）
+        // スプライトサイズを img から取得
         int spriteW = img.getWidth();
         int spriteH = img.getHeight();
 
-        // 描画位置（スプライト基準を中心にしている想定）
+        // 描画位置（スプライト基準を中心にしている）
         int drawX = screenX;
         int drawY = (screenY - spriteH / 2) - (int) Math.round(z);
         System.out.println("DRAW screenY=" + screenY + " drawY=" + drawY + " z=" + z + " vz=" + vz + " vy=" + vy);
