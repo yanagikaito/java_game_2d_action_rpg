@@ -205,7 +205,8 @@ public class AssetSetter {
     }
 
     private ObjPot createObjPot(int worldX, int worldY) {
-        ObjPot objPot = new ObjPot(gameWindow);
+        EntityFactory factory = new EntityFactory(gameWindow);
+        ObjPot objPot = new ObjPot(gameWindow, factory);
         objPot.setWorldX(worldX);
         objPot.setWorldY(worldY);
         objPot.setPickable(true);
