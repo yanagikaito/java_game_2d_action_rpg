@@ -1,4 +1,4 @@
-package entity;
+package entity.loot;
 
 public class LootConfigEntry {
     public String type;

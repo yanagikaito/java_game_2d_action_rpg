@@ -1,14 +1,27 @@
 package object;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import entity.Entity;
 import entity.PotType;
+import entity.loot.LootConfigEntry;
+import entity.loot.LootEntry;
+import factory.EntityFactory;
 import frame.FrameApp;
+import player.Player;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class ObjPot extends Projectile {
 
@@ -18,6 +31,9 @@ public class ObjPot extends Projectile {
     private static final int STONE_SCATTER_SPRITE_COUNT = 3;
     private BufferedImage[][] potSprites;
     private BufferedImage[][] fragmentSprites;
+    private final EntityFactory entityFactory;
+    private final List<LootEntry> lootTable = new ArrayList<>();
+    private final Random random = new Random();
 
     // 投げられたときの物理挙動用
     private boolean hasShadow = false;
@@ -46,9 +62,10 @@ public class ObjPot extends Projectile {
     private int shatterFrame = 0;
     private boolean damageGiven = false;
 
-    public ObjPot(GameWindow gameWindow) {
+    public ObjPot(GameWindow gameWindow, EntityFactory entityFactory) {
         super(gameWindow, DIRS.length, OBJ_POT_SPRITE_COUNT);
         this.gameWindow = gameWindow;
+        this.entityFactory = entityFactory;
 
         setType(new PotType());
         setName("壺");
@@ -59,6 +76,9 @@ public class ObjPot extends Projectile {
         setUseCost(5);
         setAlive(false);
         loadSprites();
+
+        // クラスパスから読み込む
+        loadLootTableFromJson("items/loot_table.json");
     }
 
     @Override
@@ -104,6 +124,8 @@ public class ObjPot extends Projectile {
     @Override
     public void update() {
 
+        Player player = gameWindow.getPlayer();
+
         if (!getAlive()) return;
 
         // 割れ中はアニメ進行のみ
@@ -111,7 +133,7 @@ public class ObjPot extends Projectile {
             // ダメージや破片生成は所定フレームで一度だけ
             if (!damageGiven) {
                 damageGiven = true;
-                giveShatterDamageAndSpawnFragments();
+                giveShatterDamageAndSpawnFragments(player);
             } else {
                 shatterFrame++;
             }
@@ -188,6 +210,79 @@ public class ObjPot extends Projectile {
         }
     }
 
+    private void loadLootTableFromJson(String resourcePath) {
+        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                // リソースが見つからない場合はデフォルトテーブルを使う
+                buildDefaultLootTable();
+                return;
+            }
+            InputStreamReader reader = new InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8);
+            Type listType = new TypeToken<List<LootConfigEntry>>() {
+            }.getType();
+            List<LootConfigEntry> configs = new Gson().fromJson(reader, listType);
+            buildLootTableFromConfig(configs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            buildDefaultLootTable();
+        }
+    }
+
+    private void buildLootTableFromConfig(List<LootConfigEntry> configs) {
+        lootTable.clear();
+        if (configs == null || configs.isEmpty()) {
+            buildDefaultLootTable();
+            return;
+        }
+        for (LootConfigEntry c : configs) {
+            if (c == null || c.weight <= 0 || c.type == null) continue;
+            Supplier<Entity> factory = switch (c.type) {
+                case "coin" -> () -> entityFactory.createCoinEntity();
+                case "red_potion" -> () -> entityFactory.createRedPotionEntity();
+                case "green_potion" -> () -> entityFactory.createGreenPotionEntity();
+                case "blue_potion" -> () -> entityFactory.createBluePotionEntity();
+                default -> () -> null;
+            };
+            lootTable.add(new LootEntry(factory, c.weight));
+        }
+    }
+
+    private void buildDefaultLootTable() {
+        lootTable.clear();
+        lootTable.add(new LootEntry(() -> entityFactory.createCoinEntity(), 40));
+        lootTable.add(new LootEntry(() -> entityFactory.createRedPotionEntity(), 25));
+        lootTable.add(new LootEntry(() -> entityFactory.createGreenPotionEntity(), 20));
+        lootTable.add(new LootEntry(() -> entityFactory.createBluePotionEntity(), 15));
+    }
+
+    private Entity createRandomLoot() {
+        if (lootTable.isEmpty()) return null;
+        int total = lootTable.stream().mapToInt(LootEntry::weight).sum();
+        if (total <= 0) return null;
+        int pick = random.nextInt(total);
+        int acc = 0;
+        for (LootEntry e : lootTable) {
+            acc += e.weight();
+            if (pick < acc) {
+                try {
+                    Entity result = e.factory().get();
+                    // デバッグ出力
+                    if (result == null) {
+                        System.out.println("DEBUG loot factory returned null for entry weight=" + e.weight());
+                        gameWindow.getUi().addMessage("DEBUG loot factory returned null for entry weight=" + e.weight());
+                    } else {
+                        System.out.println("DEBUG loot factory returned: " + result.getClass().getName());
+                    }
+                    return result;
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
     private void updateAnimation() {
 
         if (shattering) return;
@@ -211,19 +306,62 @@ public class ObjPot extends Projectile {
         setAlive(true);
     }
 
-    private void giveShatterDamageAndSpawnFragments() {
+    private void giveShatterDamageAndSpawnFragments(Player player) {
 
-        // 1) ダメージ判定（必要なら）
+        // ダメージ判定
         int monsterHit = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         if (monsterHit != 999 && monsterHit != -1) {
             gameWindow.getPlayer().damageMonster(monsterHit, getAttack(), getKnockBackPower());
         }
 
-        // 3) 当たり判定を無効化して以降の判定を防ぐ
+        // 当たり判定を無効化して以降の判定を防ぐ
         this.setCollision(false);
         if (this.getSolidArea() != null) {
             this.getSolidArea().width = 0;
             this.getSolidArea().height = 0;
+        }
+
+        Entity dropped = createRandomLoot();
+        if (dropped != null) {
+            if (dropped instanceof ObjCoinBronze) {
+                // コインはインベントリに入れず所持金に加算
+                ObjCoinBronze coin = (ObjCoinBronze) dropped;
+                player.addCoin(coin);
+                return;
+            }
+            // --- 爆弾はインベントリに入れず地面に落とす（pickable にする） ---
+            if (dropped instanceof object.ObjBomb) {
+                object.ObjBomb bomb = (object.ObjBomb) dropped;
+
+                // 初期化：ワールドに置ける状態にする
+                bomb.setPickable(true);
+                bomb.setThrown(false);
+                bomb.setAlive(true);
+                bomb.setLife(bomb.getMaxLife());
+                bomb.setVelocity(0, 0);
+
+                // チェスト位置に落とす（必要なら少しオフセット）
+                bomb.setWorldX(this.getWorldX());
+                bomb.setWorldY(this.getWorldY());
+
+                // マップに追加
+                gameWindow.getCurrentMap().addObject(bomb);
+                gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
+                return;
+            }
+            // 通常アイテムはインベントリに追加（成功判定を取る）
+            boolean added = player.canObtainItem(dropped);
+            if (added) {
+                gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
+                gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
+            } else {
+                dropped.setWorldX(this.getWorldX());
+                dropped.setWorldY(this.getWorldY());
+                gameWindow.getCurrentMap().addObject(dropped);
+                gameWindow.getUi().addMessage(dropped.getName() + " が落ちた！");
+            }
+        } else {
+            gameWindow.getUi().addMessage("何も出なかった...");
         }
     }
 

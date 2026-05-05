@@ -3,7 +3,8 @@ package object;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import entity.Entity;
-import entity.LootConfigEntry;
+import entity.loot.LootConfigEntry;
+import entity.loot.LootEntry;
 import factory.EntityFactory;
 import frame.FrameApp;
 import player.Player;
@@ -34,16 +35,6 @@ public class ObjChest extends Entity {
     private int chestFrameCounter = 0;
     private boolean animatingOpen = false;
     private boolean playerNearby = false;
-
-    private static class LootEntry {
-        final Supplier<Entity> factory;
-        final int weight;
-
-        LootEntry(Supplier<Entity> factory, int weight) {
-            this.factory = factory;
-            this.weight = weight;
-        }
-    }
 
     private final List<LootEntry> lootTable = new ArrayList<>();
 
@@ -157,19 +148,19 @@ public class ObjChest extends Entity {
 
     private Entity createRandomLoot() {
         if (lootTable.isEmpty()) return null;
-        int total = lootTable.stream().mapToInt(e -> e.weight).sum();
+        int total = lootTable.stream().mapToInt(LootEntry::weight).sum();
         if (total <= 0) return null;
         int pick = random.nextInt(total);
         int acc = 0;
         for (LootEntry e : lootTable) {
-            acc += e.weight;
+            acc += e.weight();
             if (pick < acc) {
                 try {
-                    Entity result = e.factory.get();
+                    Entity result = e.factory().get();
                     // デバッグ出力
                     if (result == null) {
-                        System.out.println("DEBUG loot factory returned null for entry weight=" + e.weight);
-                        gameWindow.getUi().addMessage("DEBUG loot factory returned null for entry weight=" + e.weight);
+                        System.out.println("DEBUG loot factory returned null for entry weight=" + e.weight());
+                        gameWindow.getUi().addMessage("DEBUG loot factory returned null for entry weight=" + e.weight());
                     } else {
                         System.out.println("DEBUG loot factory returned: " + result.getClass().getName());
                     }
@@ -225,7 +216,7 @@ public class ObjChest extends Entity {
                     bomb.setWorldY(this.getWorldY());
 
                     // マップに追加
-                    gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
+                    gameWindow.getCurrentMap().addObject(bomb);
                     gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
                     return;
                 }
