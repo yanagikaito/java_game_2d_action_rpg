@@ -92,7 +92,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void setUpGame() {
 
         lastUpdateTimeNano = System.nanoTime();
-        assetSetter.setNPC();
+        assetSetter.setNpcOldMan();
+        assetSetter.setNpcChicken();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
@@ -244,7 +245,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().restoreLifeAndMan();
         getPlayer().setItems();
         getPlayer().setCoin(500);
-        assetSetter.setNPC();
+        assetSetter.setNpcOldMan();
+        assetSetter.setNpcChicken();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
@@ -534,7 +536,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 29);
             getPlayer().setWorldY(tileSize * 14);
-            assetSetter.setMerchant();
+            assetSetter.setNpcMerChant();
             assetSetter.setNpcSave();
 
             repaint();
@@ -548,7 +550,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldX(tileSize * 23);
             getPlayer().setWorldY(tileSize * 10);
 
-            assetSetter.setNPC();
+            assetSetter.setNpcOldMan();
+            assetSetter.setNpcChicken();
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();

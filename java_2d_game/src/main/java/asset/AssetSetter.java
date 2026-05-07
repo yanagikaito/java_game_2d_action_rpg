@@ -6,6 +6,7 @@ import frame.FrameApp;
 import monster.MonGreenGoblin;
 import monster.MonGreenSlime;
 import monster.MonMintSoldier;
+import npc.NpcChicken;
 import npc.NpcMerChant;
 import npc.NpcOldMan;
 import npc.NpcSave;
@@ -22,7 +23,7 @@ public class AssetSetter {
         this.gameWindow = gameWindow;
     }
 
-    public void setNPC() {
+    public void setNpcOldMan() {
         NpcOldMan npcOldMan = new NpcOldMan(gameWindow);
         npcOldMan.setWorldX(FrameApp.getTileSize() * 21);
         npcOldMan.setWorldY(FrameApp.getTileSize() * 21);
@@ -31,7 +32,16 @@ public class AssetSetter {
         gameWindow.setNPC(npcArray);
     }
 
-    public void setMerchant() {
+    public void setNpcChicken() {
+        NpcChicken npcChicken = new NpcChicken(gameWindow);
+        npcChicken.setWorldX(FrameApp.getTileSize() * 22);
+        npcChicken.setWorldY(FrameApp.getTileSize() * 22);
+        Entity[] npcArray = gameWindow.getNPC();
+        npcArray[1] = npcChicken;
+        gameWindow.setNPC(npcArray);
+    }
+
+    public void setNpcMerChant() {
         NpcMerChant npcMerChant = new NpcMerChant(gameWindow);
         npcMerChant.setWorldX(FrameApp.getTileSize() * 29);
         npcMerChant.setWorldY(FrameApp.getTileSize() * 11);
