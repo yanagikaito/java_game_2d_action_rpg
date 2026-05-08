@@ -4,6 +4,8 @@ import entity.*;
 import frame.FrameApp;
 import game.GameState;
 import key.KeyHandler;
+import map.GameMap;
+import npc.NpcChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
 import object.*;
@@ -1735,70 +1737,79 @@ public class Player extends Entity {
 
         long start = System.nanoTime();
 
-        if (i != 999) {
-            if (!gameWindow.getMonster()[i].getInvincible()) {
-                gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
+        if (i == 999) return;
 
-                if (knockBackPower > 0) {
-                    setKnockBack(gameWindow.getMonster()[i], this, knockBackPower);
+        Entity target = gameWindow.getMonster()[i];
+
+        // 無敵チェック（ニワトリもここで無敵なら処理しない）
+        if (target.getInvincible()) return;
+
+        gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
+
+        if (knockBackPower > 0) {
+            setKnockBack(target, this, knockBackPower);
+        }
+
+        long end = System.nanoTime();
+        System.out.println("サウンド再生にかかった時間: " + (end - start) + " ns");
+
+        // プレイヤーのダメージ量（防御差し引き）
+        int damage = setAttack(attack - target.getDefense());
+        if (damage < 0) damage = 0;
+
+        // --- ニワトリならモンスター用の死亡処理を行わず、専用の takeDamage を呼ぶ ---
+        if (target instanceof NpcChicken) {
+            // NpcChicken 側で life を Math.max(1, ...) にしている想定
+            ((NpcChicken) target).takeDamage(damage, knockBackPower);
+            // UI メッセージ等は NpcChicken.takeDamage 内で行うか、ここで行っても良い
+            gameWindow.getUi().addMessage(damage + "ダメージ!");
+            return;
+        }
+
+        // モンスター処理
+        target.setLife(target.getLife() - damage);
+        gameWindow.getUi().addMessage(damage + "ダメージ!");
+        target.setInvincible(true);
+        target.damageReaction();
+        gameWindow.getUi().addMessage(target.getName() + "のHP:" + target.getLife());
+
+        if (target.getLife() <= 0) {
+            Entity monster = target;
+
+            target.setAlive(false);
+            target.setDying(true);
+
+            List<Supplier<Entity>> drops = Arrays.asList(
+                    () -> new ObjCoinBronze(gameWindow),
+                    () -> new ObjRedPotion(gameWindow),
+                    () -> new ObjGreenPotion(gameWindow)
+            );
+
+            Collections.shuffle(drops);
+            Entity dropped = drops.get(0).get();
+
+            gameWindow.dropItem(dropped, monster);
+            System.out.println("drops = " + drops);
+
+            gameWindow.getUi().addMessage(target.getName() + "を倒した!");
+            int gainedExp = target.getExp();
+            setExp(getExp() + gainedExp);
+            gameWindow.getUi().addMessage("経験値" + gainedExp + " 入手!");
+            checkLevelUp();
+            gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
+
+            int aliveCount = 0;
+            for (Entity m : gameWindow.getMonster()) {
+                if (m != null && !m.getDying() && m.getLife() > 0) {
+                    aliveCount++;
                 }
+            }
 
+            if (aliveCount == 0 && !monster.isRespawning()) {
+                monster.setRespawning(true);
 
-                long end = System.nanoTime();
-
-                System.out.println("サウンド再生にかかった時間: " + (end - start) + " ns");
-
-                // プレイヤーのダメージ量
-                int damage = setAttack(attack - gameWindow.getMonster()[i].getDefense());
-                if (damage < 0) {
-                    damage = 0;
-                }
-                gameWindow.getMonster()[i].setLife(gameWindow.getMonster()[i].getLife() - damage);
-                gameWindow.getUi().addMessage(damage + "ダメージ!");
-                gameWindow.getMonster()[i].setInvincible(true);
-                gameWindow.getMonster()[i].damageReaction();
-                System.out.println("スライムのHP:" + gameWindow.getMonster()[i].getLife());
-
-                if (gameWindow.getMonster()[i].getLife() <= 0) {
-
-                    Entity monster = gameWindow.getMonster()[i];
-
-                    gameWindow.getMonster()[i].setAlive(false);
-                    gameWindow.getMonster()[i].setDying(true);
-
-                    List<Supplier<Entity>> drops = Arrays.asList(
-                            () -> new ObjCoinBronze(gameWindow),
-                            () -> new ObjRedPotion(gameWindow),
-                            () -> new ObjGreenPotion(gameWindow)
-                    );
-
-                    Collections.shuffle(drops);
-                    Entity dropped = drops.get(0).get();
-
-                    gameWindow.dropItem(dropped, monster);
-                    System.out.println("drops = " + drops);
-
-                    gameWindow.getUi().addMessage(gameWindow.getMonster()[i].getName() + "を倒した!");
-                    int gainedExp = gameWindow.getMonster()[i].getExp();
-                    setExp(getExp() + gainedExp);
-                    gameWindow.getUi().addMessage("経験値" + gainedExp + " 入手!");
-                    checkLevelUp();
-                    gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
-
-                    int aliveCount = 0;
-                    for (Entity m : gameWindow.getMonster()) {
-                        if (m != null && !m.getDying() && m.getLife() > 0) {
-                            aliveCount++;
-                        }
-                    }
-
-                    if (aliveCount == 0 && !monster.isRespawning()) {
-                        monster.setRespawning(true);
-
-                        Timer respawnTimer = getTimer(monster);
-                        respawnTimer.start();
-                    }
-                }
+                Timer respawnTimer = getTimer(monster);
+                respawnTimer.start();
             }
         }
     }

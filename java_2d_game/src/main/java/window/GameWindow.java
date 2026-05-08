@@ -93,7 +93,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         lastUpdateTimeNano = System.nanoTime();
         assetSetter.setNpcOldMan();
-        assetSetter.setNpcChicken();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
@@ -246,7 +245,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().setItems();
         getPlayer().setCoin(500);
         assetSetter.setNpcOldMan();
-        assetSetter.setNpcChicken();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
@@ -551,7 +549,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldY(tileSize * 10);
 
             assetSetter.setNpcOldMan();
-            assetSetter.setNpcChicken();
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
@@ -989,6 +986,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public map.GameMap getCurrentMap() {
         return currentMap;
+    }
+
+    public void setCurrentMap(GameMap currentMap) {
+        this.currentMap = currentMap;
     }
 
     public boolean addObject(Entity e) {
