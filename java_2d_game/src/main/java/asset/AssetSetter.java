@@ -32,15 +32,6 @@ public class AssetSetter {
         gameWindow.setNPC(npcArray);
     }
 
-    public void setNpcChicken() {
-        NpcChicken npcChicken = new NpcChicken(gameWindow);
-        npcChicken.setWorldX(FrameApp.getTileSize() * 22);
-        npcChicken.setWorldY(FrameApp.getTileSize() * 22);
-        Entity[] npcArray = gameWindow.getNPC();
-        npcArray[1] = npcChicken;
-        gameWindow.setNPC(npcArray);
-    }
-
     public void setNpcMerChant() {
         NpcMerChant npcMerChant = new NpcMerChant(gameWindow);
         npcMerChant.setWorldX(FrameApp.getTileSize() * 29);
@@ -74,6 +65,8 @@ public class AssetSetter {
         i++;
 
         monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 39);
+
+        monsters[i] = createMonNpcChicken(FrameApp.getTileSize() * 22, FrameApp.getTileSize() * 22);
 
         gameWindow.setMonster(monsters);
     }
@@ -189,6 +182,13 @@ public class AssetSetter {
         monster.setWorldX(worldX);
         monster.setWorldY(worldY);
         return monster;
+    }
+
+    public NpcChicken createMonNpcChicken(int worldX, int worldY) {
+        NpcChicken monChicken = new NpcChicken(gameWindow);
+        monChicken.setWorldX(worldX);
+        monChicken.setWorldY(worldY);
+        return monChicken;
     }
 
     private MonGreenGoblin createMonGreenGoblin(int worldX, int worldY) {
