@@ -1,4 +1,3 @@
-// map/GameMap.java
 package map;
 
 import entity.Entity;
