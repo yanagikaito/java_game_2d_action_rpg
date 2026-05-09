@@ -66,7 +66,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private int currentMapIndex = 1;
     private boolean showHitBoxes = false;
     private boolean dialogueActive = false;
-    private Map<String, Boolean> mapFlags = new HashMap<>();
     private Map<Integer, String> mapBgmMap = new HashMap<>();
     private long lastUpdateTimeNano;
     private long loadedPlayTimeSeconds = -1L;
@@ -92,6 +91,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void setUpGame() {
 
         lastUpdateTimeNano = System.nanoTime();
+        this.currentMap = new GameMap();
         assetSetter.setNpcOldMan();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();

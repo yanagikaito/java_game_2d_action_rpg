@@ -1,10 +1,8 @@
 package npc;
 
-
 import collision.CollisionChecker;
 import entity.Entity;
 import entity.MonsterType;
-import entity.NpcType;
 import frame.FrameApp;
 import map.GameMap;
 import window.GameWindow;
@@ -31,7 +29,7 @@ public class NpcChicken extends Entity {
     private final CollisionChecker collisionChecker;
 
     private int hitCount = 0;
-    private static final int HELP_TRIGGER_THRESHOLD = 30; // 30回で発動
+    private static final int HELP_TRIGGER_THRESHOLD = 10; // 30回で発動
     private int life = 30;
     private boolean hasTriggeredHelp = false; // 同一個体からの重複防止
     private static final long TRIGGER_COOLDOWN_MS = 30_000L; // 個体ごとの再発動クールダウン
@@ -51,8 +49,8 @@ public class NpcChicken extends Entity {
         setSpeed(1);
         getSolidArea().x = 1;
         getSolidArea().y = 1;
-        getSolidArea().width = 46;
-        getSolidArea().height = 46;
+        getSolidArea().width = FrameApp.getTileSize() * 2;
+        getSolidArea().height = FrameApp.getTileSize() * 2;
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
         loadNPCImages();
@@ -147,6 +145,7 @@ public class NpcChicken extends Entity {
     }
 
     private void callForHelp() {
+        getGameWindow().getUi().addMessage("callForHelp()が呼ばれた");
         GameMap map = getGameWindow().getCurrentMap();
         int current = map.countChickens();
         int allowed = Math.max(0, GameMap.GLOBAL_MAX_CHICKENS - current);
@@ -244,6 +243,7 @@ public class NpcChicken extends Entity {
         // 被攻撃回数カウント
         hitCount++;
         long now = System.currentTimeMillis();
+        getGameWindow().getUi().addMessage("hitCount =" + hitCount);
         if (!hasTriggeredHelp && hitCount >= HELP_TRIGGER_THRESHOLD && (now - lastTriggerTime) >= TRIGGER_COOLDOWN_MS) {
             hasTriggeredHelp = true;
             lastTriggerTime = now;

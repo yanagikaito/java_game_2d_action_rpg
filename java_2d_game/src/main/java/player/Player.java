@@ -4,7 +4,6 @@ import entity.*;
 import frame.FrameApp;
 import game.GameState;
 import key.KeyHandler;
-import map.GameMap;
 import npc.NpcChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
@@ -128,8 +127,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = (int) (FrameApp.getTileSize() - 1.3);
-        getSolidArea().height = (int) (FrameApp.getTileSize() - 1.2);
+        getSolidArea().width = (FrameApp.getTileSize() - 2);
+        getSolidArea().height = (FrameApp.getTileSize() - 2);
 
 
         setHitBoxX(getSolidArea().x);
@@ -2067,6 +2066,17 @@ public class Player extends Entity {
                     int drawY = animationKeys[directionIndex].endsWith("Up") ? screenY - tileSize : screenY;
                     g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
                 }
+
+                // デバッグ：攻撃エリアを矩形で描画
+//                int drawWidth = (directionIndex == 2 || directionIndex == 3) ? tileSize * 2 : tileSize;
+//                int drawHeight = (directionIndex == 0 || directionIndex == 1) ? tileSize * 2 : tileSize;
+//                int drawX = animationKeys[directionIndex].endsWith("Left") ? screenX - tileSize : screenX;
+//                int drawY = animationKeys[directionIndex].endsWith("Up") ? screenY - tileSize : screenY;
+//                Rectangle attackBox = new Rectangle(drawX, drawY, drawWidth, drawHeight);
+//                gameWindow.getUi().addMessage("drawWidth =" + drawWidth);
+//                gameWindow.getUi().addMessage("drawWidth =" + drawHeight);
+//                g2.setColor(new Color(255, 0, 0, 255));
+//                g2.drawRect(attackBox.x, attackBox.y, attackBox.width, attackBox.height);
             }
         }
 
