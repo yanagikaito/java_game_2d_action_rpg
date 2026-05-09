@@ -45,7 +45,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private AssetSetter assetSetter = new AssetSetter(this);
     private EventHandler eventHandler = new EventHandler(this);
     private SoundManager soundManager = new SoundManager(this);
-    private GameMap currentMap;
+    private GameMap currentMap = new GameMap(this);
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[20];
     private Entity[] obj = new Entity[20];
@@ -91,7 +91,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void setUpGame() {
 
         lastUpdateTimeNano = System.nanoTime();
-        this.currentMap = new GameMap();
         assetSetter.setNpcOldMan();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
@@ -180,6 +179,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
             // セーブデータからロード
             Entity loadedPlayer = LoadManager.loadPlayer(slot, this);
             if (loadedPlayer != null) {
+                // 新規開始時はマップを初期化（ニワトリを含む）
+                if (currentMap != null) {
+                    currentMap.resetChickensState();
+                    currentMap.removeAllChickens();
+                    assetSetter.setNpcOldMan();
+                    assetSetter.setMonster();
+                    assetSetter.setInteractiveTile();
+                }
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
                 System.out.println("Resuming from Map" + loadedPlayer.getMapId());
@@ -189,6 +196,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         // セーブデータなし or ロード失敗 → 新規ゲーム
         restartSafely();
+
         setGameState(GameState.PLAY);
         System.out.println("Starting a new game");
     }
@@ -1000,5 +1008,19 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
         return false;
+    }
+
+    public void registerMonster(Entity e) {
+        for (int i = 0; i < monster.length; i++) {
+            if (monster[i] == null) {
+                monster[i] = e;
+                return;
+            }
+        }
+        System.out.println("registerMonster：空きスロットがありません");
+    }
+
+    public void clearMonsters() {
+        for (int i = 0; i < monster.length; i++) monster[i] = null;
     }
 }

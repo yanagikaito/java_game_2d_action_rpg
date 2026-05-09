@@ -29,13 +29,12 @@ public class NpcChicken extends Entity {
     private final CollisionChecker collisionChecker;
 
     private int hitCount = 0;
-    private static final int HELP_TRIGGER_THRESHOLD = 10; // 30回で発動
+    private static final int HELP_TRIGGER_THRESHOLD = 30;
     private int life = 30;
-    private boolean hasTriggeredHelp = false; // 同一個体からの重複防止
-    private static final long TRIGGER_COOLDOWN_MS = 30_000L; // 個体ごとの再発動クールダウン
+    private boolean hasTriggeredHelp = false;
+    private static final long TRIGGER_COOLDOWN_MS = 30_000L;
     private long lastTriggerTime = 0L;
     private boolean following = false;
-    // プレイヤー追跡用フラグ（ルート追従の following と分離）
     private boolean playerFollowing = false;
 
 
@@ -84,17 +83,15 @@ public class NpcChicken extends Entity {
             if (invincibleCounter <= 0) setInvincible(false);
         }
 
-        if (playerFollowing) {
-            // プレイヤー追跡優先
-            callForHelp();
-            checkPlayerCollision();
-        } else if (following) {
-            // 既存のルート追従（following は route 用）
+        // 追尾フラグが立っていれば常にプレイヤー追尾
+        if (playerFollowing || following) {
             followPlayerStep();
             checkPlayerCollision();
-        } else {
-            randomWalkStep();
+            return;
         }
+
+        // それ以外は従来のランダム歩行
+        randomWalkStep();
     }
 
     private void randomWalkStep() {
@@ -129,22 +126,28 @@ public class NpcChicken extends Entity {
     public void setFollowing(boolean f) {
         this.following = f;
         if (f) {
-            setSpeed(2); // 追跡時に速くしたければ調整
+            setSpeed(2);
         } else {
-            setSpeed(1); // 元に戻す
+            setSpeed(1);
         }
     }
 
+    // NpcChicken.java に追加
     public void setPlayerFollowing(boolean f) {
         this.playerFollowing = f;
         if (f) {
-            setSpeed(2); // 追跡時に速くする（調整可）
+            setSpeed(2); // 追尾時に速くする（必要なら調整）
         } else {
             setSpeed(1); // 元に戻す
         }
     }
 
+    public boolean isPlayerFollowing() {
+        return this.playerFollowing;
+    }
+
     private void callForHelp() {
+
         getGameWindow().getUi().addMessage("callForHelp()が呼ばれた");
         GameMap map = getGameWindow().getCurrentMap();
         int current = map.countChickens();
@@ -154,7 +157,7 @@ public class NpcChicken extends Entity {
 
         int tileSize = FrameApp.getTileSize();
 
-        // カメラが無ければプレイヤー基準で逆算
+        // プレイヤー基準で逆算
         int cameraWorldX = getGameWindow().getPlayer().getWorldX() - getGameWindow().getPlayer().getScreenX();
 
         int spawnX = cameraWorldX + FrameApp.getScreenWidth() + tileSize * 2;
@@ -174,7 +177,7 @@ public class NpcChicken extends Entity {
             baby.setWorldY(spawnY);
             baby.setFollowing(true);
             baby.setDirection("left");
-            map.addNpc(baby);
+            map.addMonster(baby);
         }
     }
 
@@ -245,10 +248,20 @@ public class NpcChicken extends Entity {
         long now = System.currentTimeMillis();
         getGameWindow().getUi().addMessage("hitCount =" + hitCount);
         if (!hasTriggeredHelp && hitCount >= HELP_TRIGGER_THRESHOLD && (now - lastTriggerTime) >= TRIGGER_COOLDOWN_MS) {
+            hitCount = 0;
             hasTriggeredHelp = true;
             lastTriggerTime = now;
             callForHelp();
         }
+    }
+
+    public void resetState() {
+        this.hitCount = 0;
+        this.hasTriggeredHelp = false;
+        this.lastTriggerTime = 0L;
+        this.setInvincible(false);
+        this.playerFollowing = false;
+        this.following = false;
     }
 
     private BufferedImage createImage(BufferedImage original, int width, int height) {
