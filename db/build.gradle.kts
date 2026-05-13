@@ -7,7 +7,7 @@ version = "1.0-SNAPSHOT"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(23))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
     withJavadocJar()
     withSourcesJar()
