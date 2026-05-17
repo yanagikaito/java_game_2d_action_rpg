@@ -1,4 +1,4 @@
-package triforce;
+package hex;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -12,7 +12,7 @@ import java.awt.geom.Path2D;
  * </p>
  */
 
-public final class TriforceRenderer {
+public final class GreenHexRenderer {
 
     // 三角形形状係数
     private static final double TRI_TOP_Y = 0.0;           // 三角形の頂点 X（基準）
@@ -27,13 +27,13 @@ public final class TriforceRenderer {
     private static final double SMALL_TRI_HALF_HEIGHT_FACTOR = 0.9; // 底辺の高さ係数
 
     // 描画色（fill / stroke）およびアルファ
-    private static final Color SMALL_TRI_FILL = new Color(1.0f, 0.95f, 0.2f);
-    private static final Color SMALL_TRI_STROKE = new Color(0.5f, 0.35f, 0.0f);
+    private static final Color SMALL_TRI_FILL = new Color(0.18f, 0.9f, 0.45f, 200f / 255f);
+    private static final Color SMALL_TRI_STROKE = new Color(0.18f, 0.9f, 0.45f, 200f / 255f);
     private static final float SMALL_TRI_STROKE_WIDTH = 0.006f;
 
-    private static final Color BIG_TRIFORCE_FILL = new Color(1.0f, 0.9f, 0.2f, 0.25f);
+    private static final Color BIG_TRIFORCE_FILL = new Color(0.0f, 0.0f, 0.0f, 200f / 255f);
 
-    private TriforceRenderer() {
+    private GreenHexRenderer() {
         // ユーティリティクラスのためインスタンス化禁止
     }
 
@@ -47,9 +47,9 @@ public final class TriforceRenderer {
      * @param formDuration 合体にかける総時間（秒）
      */
 
-    public static void drawTriforce(Graphics2D g2, SmallTri[] tris, boolean forming, double formTime, double formDuration) {
+    public static void drawGreenHex(Graphics2D g2, SmallHex[] tris, boolean forming, double formTime, double formDuration) {
         // 小三角形を描画
-        for (SmallTri t : tris) {
+        for (SmallHex t : tris) {
             AffineTransform old = g2.getTransform();
             try {
                 g2.translate(t.x, t.y);

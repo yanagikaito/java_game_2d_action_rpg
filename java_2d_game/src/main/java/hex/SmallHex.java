@@ -1,4 +1,4 @@
-package triforce;
+package hex;
 
 /**
  * トライフォースを構成する小さな三角形の状態を保持するデータクラス。
@@ -8,7 +8,7 @@ package triforce;
  * </p>
  */
 
-public class SmallTri {
+public class SmallHex {
 
     /**
      * 初期回転角度（度）
@@ -62,7 +62,7 @@ public class SmallTri {
      * @param angularVel 回転速度（度/秒）
      */
 
-    public SmallTri(double x, double y, double size, double vy, double angularVel) {
+    public SmallHex(double x, double y, double size, double vy, double angularVel) {
         this.x = x;
         this.y = y;
         this.size = size;

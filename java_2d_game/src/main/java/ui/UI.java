@@ -4,14 +4,14 @@ import entity.Entity;
 import entity.EntityType;
 import frame.FrameApp;
 import game.GameState;
+import hex.GreenHexPanel;
 import npc.NpcMerChant;
 import object.*;
 import player.Player;
 import player.SpriteManager;
 import save.SaveManager;
 import save.SaveMeta;
-import triforce.TriforcePanel;
-import triforce.TriforceRenderer;
+import hex.GreenHexRenderer;
 import ui.state.trade.TradeScreenContext;
 import ui.state.trade.load.LoadScreenContext;
 import ui.state.trade.save.SaveScreenContext;
@@ -41,7 +41,7 @@ public class UI {
     private String currentDialogueMessage;
     private ArrayList<String> message = new ArrayList<>();
     private ArrayList<Integer> messageCounter = new ArrayList<>();
-    private TriforcePanel triforcePanel = new TriforcePanel();
+    private GreenHexPanel greenHexPanel = new GreenHexPanel();
     private SpriteManager spriteManager = new SpriteManager();
 
     private BufferedImage heartFull;
@@ -323,8 +323,8 @@ public class UI {
         }
 
         // トライフォース描画
-        if (triforcePanel != null) {
-            triforcePanel.startAnimation();
+        if (greenHexPanel != null) {
+            greenHexPanel.startAnimation();
             int triforcePx = FrameApp.getTileSize() * 6;
             int centerX = FrameApp.getScreenWidth() / 2;
             int topY = FrameApp.getTileSize() / 2;
@@ -343,12 +343,12 @@ public class UI {
                 tg.scale(scale, -scale);
 
                 // Renderer を呼ぶ（TriforcePanel の状態を渡す）
-                TriforceRenderer.drawTriforce(
+                GreenHexRenderer.drawGreenHex(
                         tg,
-                        triforcePanel.getTris(),
-                        triforcePanel.isForming(),
-                        triforcePanel.getFormTime(),
-                        triforcePanel.getFormDuration()
+                        greenHexPanel.getTris(),
+                        greenHexPanel.isForming(),
+                        greenHexPanel.getFormTime(),
+                        greenHexPanel.getFormDuration()
                 );
             } finally {
                 tg.dispose();
@@ -551,8 +551,8 @@ public class UI {
         gameWindow.setGameState(GameState.TITLE);
 
         SwingUtilities.invokeLater(() -> {
-            triforcePanel.resetAnimation();
-            triforcePanel.startAnimation();
+            greenHexPanel.resetAnimation();
+            greenHexPanel.startAnimation();
         });
     }
 
@@ -1111,8 +1111,8 @@ public class UI {
         this.coin = coin;
     }
 
-    public TriforcePanel getTriforcePanel() {
-        return triforcePanel;
+    public GreenHexPanel getTriforcePanel() {
+        return greenHexPanel;
     }
 
     public boolean getSaveInProgress() {
