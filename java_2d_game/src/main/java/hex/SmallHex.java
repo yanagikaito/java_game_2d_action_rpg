@@ -52,6 +52,8 @@ public class SmallHex {
     // アニメーション補助（色やバリエーションの種）
     int colorSeed;
 
+    public double displayAngle = 0.0;
+
     /**
      * SmallTri を生成します。
      *
