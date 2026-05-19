@@ -228,13 +228,13 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_ENTER -> {
                     int selected = getCommandNum();
                     if (selected == 0) {
-                        gameWindow.setGameState(GameState.PLAY);
+                        gameWindow.setGameState(GameState.LOAD);
+                        gameWindow.getUi().initLoadScreen();
                         gameWindow.restart();
                         clearAllKeys();
                     } else if (selected == 1) {
-                        gameWindow.setGameState(GameState.LOAD);
-                        gameWindow.getUi().initLoadScreen(); // 2. ロード画面用データを初期化（saveMetas 読み込み）
-                        gameWindow.repaint();
+                        gameWindow.setGameState(GameState.PLAY);
+                        gameWindow.restart();
                     } else if (selected == 2) {
                         System.exit(0);
                     }
