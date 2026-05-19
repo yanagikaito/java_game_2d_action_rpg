@@ -298,31 +298,31 @@ public class UI {
 
         g2.setFont(g2.getFont().deriveFont(50f));
 
-        text = "ニューゲーム";
+        text = "ロードゲーム";
         x = getXForCenteredText(g2, text);
-        y += tileSize * 4;
+        y += tileSize * 5;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 0) {
             g2.drawString(">", x - 40, y);
         }
 
-        text = "ゲームロード";
+        text = "ニューゲーム";
         x = getXForCenteredText(g2, text);
-        y += tileSize + 7;
+        y += tileSize + 8;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 1) {
             g2.drawString(">", x - 40, y);
         }
 
-        text = "ゲーム終了";
+        text = "終了";
         x = getXForCenteredText(g2, text);
-        y += tileSize + 7;
+        y += tileSize + 8;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 2) {
             g2.drawString(">", x - 40, y);
         }
 
-        // トライフォース描画
+        // 六芒星エンブレム描画
         if (greenHexPanel != null) {
             greenHexPanel.startAnimation();
             int triforcePx = FrameApp.getTileSize() * 6;
@@ -335,14 +335,14 @@ public class UI {
                 // 移動：描画領域の中心に合わせる（正規化座標系を想定）
                 tg.translate(centerX, topY + triforcePx / 2);
 
-                // scale は TriforceRenderer が期待する scale に合わせる
-                // TriforcePanel と同じ係数
+                // scale は GreenHexRenderer が期待する scale に合わせる
+                // GreenHexPanel と同じ係数
                 double scale = Math.min(triforcePx, triforcePx) / 2.6;
 
                 // Y反転して正規化座標系にする
                 tg.scale(scale, -scale);
 
-                // Renderer を呼ぶ（TriforcePanel の状態を渡す）
+                // Renderer を呼ぶ（GreenHexPanel の状態を渡す）
                 GreenHexRenderer.drawGreenHex(
                         tg,
                         greenHexPanel.getTris(),
