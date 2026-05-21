@@ -17,6 +17,9 @@ public class SaveManager {
     // DB 関連
     static final String DB_URL = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE";
 
+    private static final int SLOT_COUNT = 3;
+    private static final SaveMeta[] metas = new SaveMeta[SLOT_COUNT];
+
     // JSON メタ関連
     private static final String SAVE_DIR = "saves";
     private static final String SLOT_PREFIX = "slot";
@@ -230,6 +233,26 @@ public class SaveManager {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean hasSave(int slotNumber) {
+        try {
+            int idx = slotNumber - 1;
+            if (idx < 0 || idx >= SLOT_COUNT) return false;
+
+            // metas が初期化済みならそれを優先
+            SaveMeta meta = metas[idx];
+            if (meta != null) {
+                return meta.exists();
+            }
+
+            // フォールバック: ファイルを直接チェック（loadMeta を使う）
+            SaveMeta diskMeta = loadMeta(idx);
+            return diskMeta != null && diskMeta.exists();
+        } catch (Exception e) {
+            System.err.println("hasSave check failed for slot " + slotNumber + ": " + e.getMessage());
             return false;
         }
     }

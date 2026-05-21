@@ -49,6 +49,21 @@ public class LoadManager {
             // 3. 装備復元
             loadEquipment(conn, slot, player, gameWindow);
 
+            // 4. メタからプレイ時間を復元（SaveMeta は JSON ファイルに保存されている想定）
+            try {
+                int metaIndex = slot - 1; // SaveManager.loadMeta は 0-based を受ける
+                SaveMeta meta = SaveManager.loadMeta(metaIndex);
+                if (meta != null && meta.exists()) {
+                    player.setPlayTimeSeconds(meta.getPlayTimeSeconds());
+                    System.out.println("DEBUG: Restored playTimeSeconds=" + meta.getPlayTimeSeconds() + " for slot " + slot);
+                } else {
+                    // メタがない場合は DB 側に playTime を保存しているならそちらを使う（なければ 0 のまま）
+                    System.out.println("DEBUG: No meta found for slot " + slot + ", playTime left as default");
+                }
+            } catch (Exception e) {
+                System.err.println("Warning: failed to restore playTimeSeconds for slot " + slot + ": " + e.getMessage());
+            }
+
             return player;
 
         } catch (SQLException e) {

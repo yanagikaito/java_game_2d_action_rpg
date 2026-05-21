@@ -230,7 +230,6 @@ public class KeyHandler implements KeyListener {
                     if (selected == 0) {
                         gameWindow.setGameState(GameState.LOAD);
                         gameWindow.getUi().initLoadScreen();
-                        gameWindow.restart();
                         clearAllKeys();
                     } else if (selected == 1) {
                         gameWindow.setGameState(GameState.PLAY);

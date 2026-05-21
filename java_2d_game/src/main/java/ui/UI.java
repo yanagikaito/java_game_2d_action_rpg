@@ -9,6 +9,7 @@ import npc.NpcMerChant;
 import object.*;
 import player.Player;
 import player.SpriteManager;
+import save.LoadManager;
 import save.SaveManager;
 import save.SaveMeta;
 import hex.GreenHexRenderer;
@@ -180,7 +181,7 @@ public class UI {
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
 
-        text = "slot0";
+        text = "slot1";
         x = getXForCenteredText(g2, text);
         y = tileSize * 2;
         g2.drawString(text, x, y);
@@ -215,7 +216,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot1";
+        text = "slot2";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
@@ -249,7 +250,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot2";
+        text = "slot3";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
@@ -358,12 +359,39 @@ public class UI {
 
     public void initLoadScreen() {
         saveMetas = new SaveMeta[SLOT_COUNT];
-        // SaveManager.loadMeta はセーブの存在チェックと簡易情報を返す想定
         for (int i = 0; i < SLOT_COUNT; i++) {
-            // null ではなく SaveMeta を返す設計
-            saveMetas[i] = SaveManager.loadMeta(i);
+            saveMetas[i] = SaveManager.loadMeta(i); // 0-based index
         }
+
+        // 初期選択を「最初に存在するセーブ」にする（なければ 0 のまま）
         loadSlotIndex = 0;
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            if (saveMetas[i] != null && saveMetas[i].exists()) {
+                loadSlotIndex = i;
+                break;
+            }
+        }
+    }
+
+    public void confirmLoadSelectedSlot(int slotIndex) {
+        int slotNumber = slotIndex + 1;
+        if (!SaveManager.hasSave(slotNumber)) {
+            // 空スロットのフィードバック
+            addMessage("空のスロットです");
+            return;
+        }
+
+        Entity loaded = LoadManager.loadPlayer(slotNumber, GameWindow.getInstance());
+        if (loaded != null) {
+            // ロード成功：最後にロードしたスロットを記憶
+            GameWindow.getInstance().setLastLoadedSlot(slotNumber);
+            GameWindow.getInstance().setPlayer((Player) loaded);
+            GameWindow.getInstance().setGameState(GameState.PLAY);
+        } else {
+            // ロード失敗時の処理
+            GameWindow.getInstance().setLastLoadedSlot(-1);
+            addMessage("ロードに失敗しました");
+        }
     }
 
     public void drawDialogueLoadScreen(Graphics2D g2) {
@@ -383,7 +411,7 @@ public class UI {
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
 
-        text = "slot0";
+        text = "slot1";
         x = getXForCenteredText(g2, text);
         y = tileSize * 2;
         g2.drawString(text, x, y);
@@ -420,7 +448,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot1";
+        text = "slot2";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
@@ -458,7 +486,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot2";
+        text = "slot3";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);

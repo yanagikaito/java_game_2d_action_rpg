@@ -2,6 +2,7 @@ package save;
 
 public class SaveMeta {
 
+    // セーブスロットに有効なセーブデータが存在するかどうか
     private boolean exists;
     private int hp;
     private int maxHp;
