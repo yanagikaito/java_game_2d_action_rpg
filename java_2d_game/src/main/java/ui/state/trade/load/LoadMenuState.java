@@ -37,10 +37,12 @@ public class LoadMenuState implements LoadScreenState {
         // カーソル移動（上下のみ）
         if (code == KeyEvent.VK_W && keyHandler.getCommandNum() > 0) {
             keyHandler.setCommandNum(keyHandler.getCommandNum() - 1);
+            loadScreenContext.kh().clearAllKeys();
             return;
         }
         if (code == KeyEvent.VK_S && keyHandler.getCommandNum() < options.size() - 1) {
             keyHandler.setCommandNum(keyHandler.getCommandNum() + 1);
+            loadScreenContext.kh().clearAllKeys();
             return;
         }
 
@@ -64,16 +66,19 @@ public class LoadMenuState implements LoadScreenState {
             if (slot == LOAD_SLOT0) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
+                loadScreenContext.ui().confirmLoadSelectedSlot(slot);
                 return;
             }
             if (slot == LOAD_SLOT1) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
+                loadScreenContext.ui().confirmLoadSelectedSlot(slot);
                 return;
             }
             if (slot == LOAD_SLOT2) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
+                loadScreenContext.ui().confirmLoadSelectedSlot(slot);
                 return;
             }
         }

@@ -69,6 +69,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Map<Integer, String> mapBgmMap = new HashMap<>();
     private long lastUpdateTimeNano;
     private long loadedPlayTimeSeconds = -1L;
+    // 最後にロードしたスロット（未ロードなら -1）
+    private int lastLoadedSlot = -1;
 
 
     /**
@@ -173,13 +175,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void retry() {
 
-        int slot = keyHandler.getCommandNum();
-        if (LoadManager.hasSaveData(slot)) {
+        // 優先スロット：最後にロードしたスロットがあればそれを使う
+        int slotToTry = (lastLoadedSlot >= 1 && lastLoadedSlot <= 3) ? lastLoadedSlot : keyHandler.getCommandNum();
 
-            // セーブデータからロード
-            Entity loadedPlayer = LoadManager.loadPlayer(slot, this);
+        if (LoadManager.hasSaveData(slotToTry)) {
+            Entity loadedPlayer = LoadManager.loadPlayer(slotToTry, this);
             if (loadedPlayer != null) {
-                // 新規開始時はマップを初期化（ニワトリを含む）
+                // マップやエンティティを再初期化してからプレイヤーを差し替える
                 if (currentMap != null) {
                     currentMap.resetChickensState();
                     currentMap.removeAllChickens();
@@ -189,14 +191,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 }
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
-                System.out.println("Resuming from Map" + loadedPlayer.getMapId());
+                System.out.println("Resuming from slot " + slotToTry + " Map" + loadedPlayer.getMapId());
                 return;
             }
         }
 
         // セーブデータなし or ロード失敗 → 新規ゲーム
         restartSafely();
-
         setGameState(GameState.PLAY);
         System.out.println("Starting a new game");
     }
@@ -245,7 +246,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
      */
 
     public void restart() {
-
+        lastLoadedSlot = -1;
         getSoundmanager().playBGM("sound/meadow_G110.wav");
         getPlayer().setDefaultValues();
         getPlayer().setDefaultPositions();
@@ -998,6 +999,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setCurrentMap(GameMap currentMap) {
         this.currentMap = currentMap;
+    }
+
+    public int getLastLoadedSlot() {
+        return lastLoadedSlot;
+    }
+
+    public void setLastLoadedSlot(int slot) {
+        this.lastLoadedSlot = slot;
     }
 
     public boolean addObject(Entity e) {
