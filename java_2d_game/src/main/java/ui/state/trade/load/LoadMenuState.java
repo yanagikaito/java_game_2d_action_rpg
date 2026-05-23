@@ -35,14 +35,29 @@ public class LoadMenuState implements LoadScreenState {
         skipNextEnter = true;
 
         // カーソル移動（上下のみ）
-        if (code == KeyEvent.VK_W && keyHandler.getCommandNum() > 0) {
-            keyHandler.setCommandNum(keyHandler.getCommandNum() - 1);
-            loadScreenContext.kh().clearAllKeys();
+        if (code == KeyEvent.VK_W) {
+            int cmd = keyHandler.getCommandNum() - 1;
+            if (cmd < 0) {
+                cmd = options.size() - 1;
+            }
+            keyHandler.setCommandNum(cmd);
+            loadScreenContext.gw().getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+
+            // 移動したらここでキー状態をクリアして処理を終了（fall-through を防ぐ）
+            keyHandler.clearAllKeys();
             return;
         }
-        if (code == KeyEvent.VK_S && keyHandler.getCommandNum() < options.size() - 1) {
-            keyHandler.setCommandNum(keyHandler.getCommandNum() + 1);
-            loadScreenContext.kh().clearAllKeys();
+
+        if (code == KeyEvent.VK_S) {
+            int cmd = keyHandler.getCommandNum() + 1;
+            if (cmd >= options.size()) {
+                cmd = 0;
+            }
+            keyHandler.setCommandNum(cmd);
+            loadScreenContext.gw().getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+
+            // 移動したらここでキー状態をクリアして処理を終了
+            keyHandler.clearAllKeys();
             return;
         }
 
@@ -67,18 +82,21 @@ public class LoadMenuState implements LoadScreenState {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
                 loadScreenContext.ui().confirmLoadSelectedSlot(slot);
+                keyHandler.clearAllKeys();
                 return;
             }
             if (slot == LOAD_SLOT1) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
                 loadScreenContext.ui().confirmLoadSelectedSlot(slot);
+                keyHandler.clearAllKeys();
                 return;
             }
             if (slot == LOAD_SLOT2) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
                 loadScreenContext.ui().confirmLoadSelectedSlot(slot);
+                keyHandler.clearAllKeys();
                 return;
             }
         }
