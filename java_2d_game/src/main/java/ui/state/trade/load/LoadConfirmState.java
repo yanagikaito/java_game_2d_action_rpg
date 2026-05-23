@@ -15,7 +15,7 @@ import java.awt.*;
 public class LoadConfirmState implements LoadScreenState {
 
     private final LoadScreenContext ctx;
-    private final int slot; // 0-based
+    private final int slot;
     private boolean started = false;
     private boolean loading = false;
 
@@ -29,17 +29,13 @@ public class LoadConfirmState implements LoadScreenState {
 
     @Override
     public void handleKey(int code) {
-
+        // 確認ダイアログでキー操作を受け付ける場合はここに実装
     }
 
     @Override
     public void draw(Graphics2D g2) {
         System.out.println("DEBUG: LoadConfirmState.draw called slot=" + slot + " started=" + started);
         System.out.println("DEBUG: LoadConfirmState.draw called slot=" + slot + " loading=" + loading);
-
-        if (started) {
-            started = false;
-        }
 
         // 保存処理は一度だけ開始する
         if (!started) {
@@ -77,16 +73,27 @@ public class LoadConfirmState implements LoadScreenState {
             ctx.ui().setSaveInProgress(true);
         } catch (Throwable ignored) {
         }
+
         new Thread(() -> {
             Entity loaded = null;
             boolean ok = false;
             try {
-                loaded = LoadManager.loadPlayer(slot, ctx.gw());
-                ok = (loaded != null);
+                // UI の slot は 0-based、DB/LoadManager は 1-based
+                int slotNumber = slot + 1;
+
+                // 存在チェック（存在しなければロードしない）
+                if (!SaveManager.hasSave(slotNumber)) {
+                    System.out.println("DEBUG: no save exists for slot " + slotNumber);
+                    ok = false;
+                } else {
+                    loaded = LoadManager.loadPlayer(slotNumber, ctx.gw());
+                    ok = (loaded != null);
+                }
             } catch (Throwable ex) {
                 ex.printStackTrace();
                 ok = false;
             }
+
             final Entity finalLoaded = loaded;
             final boolean finalOk = ok;
             SwingUtilities.invokeLater(() -> {
@@ -99,7 +106,7 @@ public class LoadConfirmState implements LoadScreenState {
                     if (finalOk && finalLoaded instanceof Player) {
                         // メタを読み込んでプレイ時間を復元・保持・UI反映
                         try {
-                            SaveMeta meta = SaveManager.loadMeta(slot);
+                            SaveMeta meta = SaveManager.loadMeta(slot); // loadMeta は 0-based
                             if (meta != null && meta.exists()) {
                                 long savedSeconds = meta.getPlayTimeSeconds();
 
@@ -109,7 +116,7 @@ public class LoadConfirmState implements LoadScreenState {
                                 // GameWindow に「保存時プレイ時間」を保持
                                 ctx.gw().setLoadedPlayTimeSeconds(savedSeconds);
 
-                                // UI の saveMetas も更新しておく（ロード画面やセーブ画面に反映）
+                                // UI の saveMetas も更新しておく（0-based）
                                 try {
                                     ctx.ui().setSaveMeta(slot, meta);
                                 } catch (Throwable uiEx) {
@@ -122,7 +129,6 @@ public class LoadConfirmState implements LoadScreenState {
                             }
                         } catch (Throwable metaEx) {
                             metaEx.printStackTrace();
-                            // 失敗時は安全側の初期化
                             ((Player) finalLoaded).setPlayTimeSeconds(0L);
                             ctx.gw().setLoadedPlayTimeSeconds(-1L);
                         }
@@ -131,17 +137,19 @@ public class LoadConfirmState implements LoadScreenState {
                         ctx.gw().setPlayer((Player) finalLoaded);
                         ctx.gw().setGameState(GameState.PLAY);
 
-                        // メッセージ表示
-                        ctx.ui().addMessage("ロードしました（Slot " + slot + "）");
+                        // メッセージ表示（ユーザー向けは 1-based 表示）
+                        ctx.ui().addMessage("ロードしました（Slot " + (slot + 1) + "）");
 
-                        // 再描画
                         try {
                             ctx.gw().repaint();
                         } catch (Throwable ignored) {
                         }
 
                     } else {
-                        ctx.ui().addMessage("ロードに失敗しました");
+                        // 存在しないスロットやロード失敗時の挙動
+                        if (!finalOk) {
+                            ctx.ui().addMessage("ロードに失敗しました");
+                        }
                         ctx.setState(new LoadMenuState(ctx));
                     }
                 } finally {

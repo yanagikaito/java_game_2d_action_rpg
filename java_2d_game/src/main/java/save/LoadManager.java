@@ -10,13 +10,13 @@ import java.sql.*;
 
 public class LoadManager {
 
-    public static Entity loadPlayer(int slot, GameWindow gameWindow) {
+    public static Entity loadPlayer(int slotNumber, GameWindow gameWindow) {
 
         String sql = "SELECT * FROM saves WHERE id = ?";
         try (Connection conn = DbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, slot);
+            pstmt.setInt(1, slotNumber);
             ResultSet rs = pstmt.executeQuery();
 
             if (!rs.next()) return null;
@@ -44,24 +44,28 @@ public class LoadManager {
             player.setCoin(rs.getInt("coin"));
 
             // 2. インベントリ復元
-            loadInventory(conn, slot, player, gameWindow);
+            loadInventory(conn, slotNumber, player, gameWindow);
 
             // 3. 装備復元
-            loadEquipment(conn, slot, player, gameWindow);
+            loadEquipment(conn, slotNumber, player, gameWindow);
 
             // 4. メタからプレイ時間を復元（SaveMeta は JSON ファイルに保存されている想定）
             try {
-                int metaIndex = slot - 1; // SaveManager.loadMeta は 0-based を受ける
+                // SaveManager.loadMeta は 0-based を受ける
+                int metaIndex = slotNumber - 1;
                 SaveMeta meta = SaveManager.loadMeta(metaIndex);
                 if (meta != null && meta.exists()) {
                     player.setPlayTimeSeconds(meta.getPlayTimeSeconds());
-                    System.out.println("DEBUG: Restored playTimeSeconds=" + meta.getPlayTimeSeconds() + " for slot " + slot);
+                    System.out.println("DEBUG: Restored playTimeSeconds="
+                            + meta.getPlayTimeSeconds() + " for slotNumber " + slotNumber);
                 } else {
                     // メタがない場合は DB 側に playTime を保存しているならそちらを使う（なければ 0 のまま）
-                    System.out.println("DEBUG: No meta found for slot " + slot + ", playTime left as default");
+                    System.out.println("DEBUG: No meta found for slotNumber "
+                            + slotNumber + ", playTime left as default");
                 }
             } catch (Exception e) {
-                System.err.println("Warning: failed to restore playTimeSeconds for slot " + slot + ": " + e.getMessage());
+                System.err.println("Warning: failed to restore playTimeSeconds for slotNumber "
+                        + slotNumber + ": " + e.getMessage());
             }
 
             return player;
@@ -80,7 +84,8 @@ public class LoadManager {
 
             pstmt.setInt(1, slot);
             try (ResultSet rs = pstmt.executeQuery()) {
-                return rs.next(); // データがあれば true
+                // データがあれば true
+                return rs.next();
             }
         } catch (SQLException e) {
             e.printStackTrace();
