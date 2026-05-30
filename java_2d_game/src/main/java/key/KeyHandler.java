@@ -16,6 +16,7 @@ public class KeyHandler implements KeyListener {
     private boolean playerLeft;
     private boolean playerRight;
     private boolean playerEnter;
+    private boolean playerSpace;
     private boolean showDebugText;
     private boolean shotKeyPressed;
     private boolean bombKeyPressed;
@@ -23,15 +24,7 @@ public class KeyHandler implements KeyListener {
     private int commandNum;
     private static final int MAX_COL = 3;
     private static final int MAX_ROW = 4;
-    private boolean prevEnter = false;
-    private boolean enter = false;
     private boolean enterJustPressed = false;
-
-    public void update() {
-        // enter を実際のキー状態に更新する
-        enterJustPressed = enter && !prevEnter;
-        prevEnter = enter;
-    }
 
     public KeyHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -55,6 +48,10 @@ public class KeyHandler implements KeyListener {
 
     public boolean isPlayerEnter() {
         return playerEnter;
+    }
+
+    public boolean isPlayerSpace() {
+        return playerSpace;
     }
 
     public boolean isShowDebugText() {
@@ -95,6 +92,10 @@ public class KeyHandler implements KeyListener {
 
     public void setPlayerEnter(boolean playerEnter) {
         this.playerEnter = playerEnter;
+    }
+
+    public void setPlayerSpace(boolean playerSpace) {
+        this.playerSpace = playerSpace;
     }
 
     public void setShowDebugText(boolean showDebugText) {
@@ -197,13 +198,20 @@ public class KeyHandler implements KeyListener {
                     clearAllKeys();
                 }
             }
+            case KeyEvent.VK_SPACE -> {
+                setPlayerSpace(true);
+
+                if (gameWindow.getPlayer().hasLeftShield()) {
+                    gameWindow.getPlayer().startBlockingLeft();
+                }
+            }
             case KeyEvent.VK_F -> {
                 setShotKeyPressed(true);
             }
             case KeyEvent.VK_B -> {
                 setBombKeyPressed(true);
             }
-            case KeyEvent.VK_SPACE -> {
+            case KeyEvent.VK_G -> {
                 setThrowKeyPressed(true);
             }
         }
@@ -374,7 +382,11 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_D -> setPlayerRight(false);
                 case KeyEvent.VK_F -> setShotKeyPressed(false);
                 case KeyEvent.VK_B -> setBombKeyPressed(false);
-                case KeyEvent.VK_SPACE -> setThrowKeyPressed(false);
+                case KeyEvent.VK_G -> setThrowKeyPressed(false);
+                case KeyEvent.VK_SPACE -> {
+                    setPlayerSpace(false);
+                    gameWindow.getPlayer().stopBlockingLeft();
+                }
             }
         }
     }

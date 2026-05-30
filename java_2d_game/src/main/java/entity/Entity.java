@@ -28,7 +28,7 @@ public abstract class Entity {
     private int defaultSpeed;
     private String direction;
     private String attackDirection;
-    private String axeDirection;
+    private String guardDirection;
     protected BufferedImage[][] sprites;
     private BufferedImage[][] attackSprites;
     private BufferedImage image;
@@ -43,6 +43,7 @@ public abstract class Entity {
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
+    private static final String[] GUARD_DIRECTIONS = {"guardUp", "guardDown", "guardLeft", "guardRight"};
     protected String spriteKey = "entity_default";
     private boolean stackable = false;
     private boolean thrown = false;
@@ -75,6 +76,7 @@ public abstract class Entity {
     private EntityType type;
     private int value = 1;
     private boolean attacking = false;
+    private boolean guarding = false;
     private boolean alive = true;
     private boolean dying = false;
     private boolean hpBarOn = false;
@@ -883,6 +885,14 @@ public abstract class Entity {
         this.attacking = attacking;
     }
 
+    public boolean isGuarding() {
+        return guarding;
+    }
+
+    public void setGuarding(boolean guarding) {
+        this.guarding = guarding;
+    }
+
     /**
      * 現在選択中の攻撃方向を取得します。
      *
@@ -1122,6 +1132,14 @@ public abstract class Entity {
 
     public void setDefense(int defense) {
         this.defense = defense;
+    }
+
+    public String getGuardDirection() {
+        return guardDirection;
+    }
+
+    public void setGuardDirection(String guardDirection) {
+        this.guardDirection = guardDirection;
     }
 
     /**
