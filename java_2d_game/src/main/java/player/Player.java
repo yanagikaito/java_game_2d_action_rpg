@@ -35,6 +35,7 @@ public class Player extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
+    private static final String[] GUARD_DIRECTIONS = {"guardUp", "guardDown", "guardLeft", "guardRight"};
     private static final String[] AXE_DIRECTIONS = {"axeUp", "axeDown", "axeLeft", "axeRight"};
     private static final int SPRITE_COUNT = 3;
     private static final int PICKUP_SPRITE_COUNT = 4;
@@ -42,25 +43,31 @@ public class Player extends Entity {
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM1 = 5;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 15;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 25;
+    private static final int SPRITE_GUARDING_THRESHOLD_NUM1 = 5;
+    private static final int SPRITE_GUARDING_THRESHOLD_NUM2 = 15;
+    private static final int SPRITE_GUARDING_THRESHOLD_NUM3 = 25;
     private static final int DEFAULT_INVENTORY_CAPACITY = 20;
-    private static final int MAX_KB_FRAMES = 10;
     private static final int ATTACK_ANIMATION_FRAMES = SPRITE_ATTACKING_THRESHOLD_NUM3;
+    private static final int GUARD_ANIMATION_FRAMES = SPRITE_GUARDING_THRESHOLD_NUM3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
+    private BufferedImage[][] guardSprites = new BufferedImage[GUARD_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] axeSprites = new BufferedImage[AXE_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] pickupSprites = new BufferedImage[DIRECTIONS.length][PICKUP_SPRITE_COUNT];
     private BufferedImage[][] currentAttackSprites;
+    private BufferedImage[][] currentGuardSprites;
     private int characterTypeId;
     private static final long FIRE_COOLDOWN_MS = 1000;
     private long lastFireTime = 0;
     private int fireCooldown = 0;
     private int bombCooldown = 0;
-    private int coin = 0;
     private static final int COOLDOWN_FRAMES = 60 * 3;
     private int invincibleCounter = 0;
     private final int INVINCIBLE_DURATION = 60; // 60フレーム無敵
     private int attackCounter;
-    private boolean invincible = false;
+    private int guardCounter;
+
+    private boolean blockingLeft = false;
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
@@ -91,9 +98,8 @@ public class Player extends Entity {
     // 999時間59分59秒 = 3,599,999 秒
     public static final long MAX_PLAY_SECONDS = 3_599_999L;
 
-    // クラスフィールドに追加
-    private int pickupCooldown = 0; // フレーム単位の猶予。0 のとき投げ判定有効
-    private static final int PICKUP_COOLDOWN_FRAMES = 5; // 調整可（5フレーム程度が目安）
+    private int pickupCooldown = 0;
+    private static final int PICKUP_COOLDOWN_FRAMES = 5;
     // ピックアップ対象を保持しておく（アニメ終了時に実際に取得する）
     private int pendingPickupIndex = -1;
 
@@ -141,6 +147,7 @@ public class Player extends Entity {
 //        getAttackArea().height = 36;
         loadPlayerImages();
         loadAllAttackSprites();
+        loadGuardSprites();
         loadPickupSprites();
         initHoldOffsets();
         setItems();
@@ -301,6 +308,28 @@ public class Player extends Entity {
         }
     }
 
+    private void loadGuardSprites() {
+
+        int tileSize = FrameApp.getTileSize();
+
+        // 盾
+        for (int d = 0; d < GUARD_DIRECTIONS.length; d++) {
+            for (int i = 0; i < SPRITE_COUNT; i++) {
+                String path = "player/image-" + GUARD_DIRECTIONS[d] + "-" + (i + 1) + ".gif";
+                try {
+                    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    if (d == 0 || d == 1) {
+                        guardSprites[d][i] = createImage(img, tileSize, tileSize);
+                    } else {
+                        guardSprites[d][i] = createImage(img, tileSize, tileSize);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /**
      * pickup（持ち上げ）用スプライトを読み込む。
      * リソース名は "player/image-pickup-{direction}-{frame}.gif" を想定。
@@ -343,6 +372,12 @@ public class Player extends Entity {
             currentAttackSprites = axeSprites;
         } else {
             currentAttackSprites = attackSprites;
+        }
+    }
+
+    private void updateCurrentGuardSprites() {
+        if (getCurrentShield().getType() instanceof ShieldType) {
+            currentGuardSprites = guardSprites;
         }
     }
 
@@ -478,6 +513,33 @@ public class Player extends Entity {
         updateCurrentAttackSprites();
     }
 
+    private void startGuard() {
+
+        String base = capitalize(getDirection());
+        if (getCurrentShield().getType() instanceof ShieldType) {
+            setGuardDirection("guard" + base);
+        }
+
+        updateCurrentGuardSprites();
+    }
+
+    public void startBlockingLeft() {
+        if (!hasLeftShield()) return;
+        if (!blockingLeft) {
+            blockingLeft = true;
+            setGuarding(true); // 既存のガード状態と同期
+            // アニメや音、スタミナ処理など
+        }
+    }
+
+    public void stopBlockingLeft() {
+        if (blockingLeft) {
+            blockingLeft = false;
+            setGuarding(false);
+            // アニメ停止など
+        }
+    }
+
     /**
      * 毎フレーム呼び出される更新処理。
      * 無敵時間のカウントダウン、攻撃クールダウンの減算、攻撃・移動入力の判定、
@@ -548,6 +610,12 @@ public class Player extends Entity {
         if (getAttacking()) {
             startAttack();
             playerAttacking();
+            return;
+        } else if (isGuarding()) {
+            gameWindow.getUi().addMessage("isGuarding() = " + isGuarding());
+            gameWindow.getUi().addMessage("isBlockingLeft() = " + isBlockingLeft());
+            startGuard();
+            playerGuarding();
             return;
         } else {
             if (gameWindow.getKeyHandler().isBombKeyPressed() && bombCooldown == 0) {
@@ -637,7 +705,7 @@ public class Player extends Entity {
             }
         }
 
-        // 拾うボタン（SPACE）を押したら startPickup を呼ぶ
+        // 拾うボタン（G）を押したら startPickup を呼ぶ
         if (gameWindow.getKeyHandler().isThrowKeyPressed()) {
             if (state == PlayerState.PICKUP) {
                 // ピックアップ中は無視
@@ -1084,6 +1152,13 @@ public class Player extends Entity {
                 setDirection("left");
             }
             moving = true;
+        } else {
+            if (isBlockingLeft() || isGuarding()) {
+                startBlockingLeft();
+                moving = false;
+            } else {
+                moving = false;
+            }
         }
     }
 
@@ -1314,6 +1389,32 @@ public class Player extends Entity {
         setWorldY(originalWorldY);
         getSolidArea().width = originalSolidWidth;
         getSolidArea().height = originalSolidHeight;
+    }
+
+    public void playerGuarding() {
+
+        guardCounter++;
+
+        int counter = getSpriteCounter() + 1;
+        setSpriteCounter(counter);
+
+        if (counter <= SPRITE_GUARDING_THRESHOLD_NUM1) {
+            setSpriteNum(1);
+//            System.out.println("counter:" + counter + " num:" + getSpriteNum());
+        } else if (counter <= SPRITE_GUARDING_THRESHOLD_NUM2) {
+            setSpriteNum(2);
+//            System.out.println("counter:" + counter + " num:" + getSpriteNum());
+        } else if (counter <= SPRITE_GUARDING_THRESHOLD_NUM3) {
+            setSpriteNum(3);
+//            System.out.println("counter:" + counter + " num:" + getSpriteNum());
+        } else if (guardCounter >= GUARD_ANIMATION_FRAMES) {
+            // 状態をリセット
+            guardCounter = 0;
+            setSpriteCounter(0);
+            setGuarding(false);
+            setSpriteNum(1);
+            return;
+        }
     }
 
     /**
@@ -2031,8 +2132,30 @@ public class Player extends Entity {
 
         BufferedImage img = null;
 
+        // --- ガード（盾）描画を判定 ---
+        boolean isShield = getCurrentShield() != null && getCurrentShield().getType() instanceof ShieldType;
+        if (isGuarding() && isShield) {
+            String[] animationKeys = GUARD_DIRECTIONS;   // ガード用方向配列
+            BufferedImage[][] spriteSet = guardSprites;  // ガード用スプライト配列
+
+            int dirIndex = Arrays.asList(animationKeys).indexOf(getGuardDirection()); // ガードは向きベース
+            if (dirIndex >= 0 && spriteSet != null && dirIndex < spriteSet.length && spriteSet[dirIndex] != null) {
+                int frameIndex = Math.max(0, getSpriteNum() - 1);
+                int maxIndex = spriteSet[dirIndex].length - 1;
+                if (frameIndex > maxIndex) frameIndex = maxIndex;
+                img = spriteSet[dirIndex][frameIndex];
+                if (img != null) {
+                    int drawWidth = (dirIndex == 2 || dirIndex == 3) ? tileSize : tileSize;
+                    int drawHeight = (dirIndex == 0 || dirIndex == 1) ? tileSize : tileSize;
+                    int drawX = animationKeys[dirIndex].endsWith("Left") ? screenX : screenX;
+                    int drawY = animationKeys[dirIndex].endsWith("Up") ? screenY : screenY;
+                    g2.drawImage(img, drawX, drawY, drawWidth, drawHeight, null);
+                }
+            }
+        }
+
         // --- 通常歩行／待機描画 ---
-        if (!getAttacking()) {
+        else if (!getAttacking()) {
             int walkDirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
             if (walkDirIndex >= 0) {
                 // sprites 配列の存在と長さチェック
@@ -2046,10 +2169,14 @@ public class Player extends Entity {
                 }
             }
         } else {
-            // --- 攻撃アニメ描画（axe/attack） ---
-            boolean isAxe = getCurrentWeapon() != null && getCurrentWeapon().getType() instanceof AxeType;
-            String[] animationKeys = isAxe ? AXE_DIRECTIONS : ATTACK_DIRECTIONS;
-            BufferedImage[][] spriteSet = isAxe ? axeSprites : attackSprites;
+            // --- 攻撃アニメ/盾アニメ描画（axe/attack） ---
+            boolean isWeapon = getCurrentWeapon() != null && getCurrentWeapon().getType() instanceof AxeType;
+
+            String[] animationKeys;
+            BufferedImage[][] spriteSet;
+
+            animationKeys = isWeapon ? AXE_DIRECTIONS : ATTACK_DIRECTIONS;
+            spriteSet = isWeapon ? axeSprites : attackSprites;
 
             int directionIndex = Arrays.asList(animationKeys).indexOf(getAttackDirection());
             if (directionIndex >= 0 && spriteSet != null && directionIndex < spriteSet.length && spriteSet[directionIndex] != null) {
@@ -2481,5 +2608,13 @@ public class Player extends Entity {
                 break;
             }
         }
+    }
+
+    public boolean isBlockingLeft() {
+        return blockingLeft;
+    }
+
+    public boolean hasLeftShield() {
+        return getCurrentShield() != null && getCurrentShield().getType() instanceof ShieldType;
     }
 }

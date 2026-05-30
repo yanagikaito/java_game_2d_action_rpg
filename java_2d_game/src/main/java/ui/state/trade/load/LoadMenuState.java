@@ -100,9 +100,6 @@ public class LoadMenuState implements LoadScreenState {
                 return;
             }
         }
-        System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
-        loadScreenContext.setState(new LoadConfirmState(loadScreenContext, keyHandler.getCommandNum()));
-        System.out.println("DBG: LoadMenuState setState -> LoadConfirmState done");
     }
 
     @Override

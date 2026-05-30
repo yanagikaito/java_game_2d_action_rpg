@@ -43,3 +43,6 @@ build/
 
 # MapDB のデータベースファイル
 data/mapdb.mv.db
+
+# プロジェクト内のすべての data フォルダ内の MapDB ファイルを無視
+**/data/*.mv.db
