@@ -99,6 +99,7 @@ public abstract class Entity {
     private int defenseValue;
     private boolean respawning = false;
     private boolean knockBack = false;
+    private boolean transparent = false;
     private int knockBackPower = 0;
     private String description = "";
     private int maxMana;
@@ -280,6 +281,19 @@ public abstract class Entity {
         }
     }
 
+    public String getOppositeDirection(String direction) {
+
+        String oppositeDirection = "";
+
+        switch (direction) {
+            case "up" -> oppositeDirection = "down";
+            case "down" -> oppositeDirection = "up";
+            case "left" -> oppositeDirection = "right";
+            case "right" -> oppositeDirection = "left";
+        }
+        return oppositeDirection;
+    }
+
     private void attacking() {
         // 攻撃アニメーションのフレーム進行
         setSpriteCounter(getSpriteCounter() + 1);
@@ -313,25 +327,53 @@ public abstract class Entity {
 
         Player player = gameWindow.getPlayer();
 
-        if (!gameWindow.getPlayer().getInvincible()) {
+        if (!player.getInvincible()) {
 
-            gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
+            int damage = setAttack(Math.max(attack - player.calculateTotalDefense(), 1));
 
-            // ノックバック
-            if (knockBackPower > 0) {
-                setKnockBack(player, this, knockBackPower);
+            // モンスターの攻撃の反対方向を取得する
+            String canGuardDirection = getOppositeDirection(direction);
+
+            // ガード判定：プレイヤーがガード中で、向きが攻撃の反対（＝正面を向いている）かつ盾を装備している
+            boolean hasShield = player.getCurrentShield() != null && player.getCurrentShield().getType() instanceof ShieldType;
+            boolean guardActive = (player.isBlockingLeft() || player.isGuarding()) && hasShield && player.getDirection().equals(canGuardDirection);
+
+            if (guardActive) {
+                // ガード成功：ダメージを軽減
+                damage = Math.max(0, damage / 3);
+                gameWindow.getUi().addMessage(getName() + " damage (blocked) = " + damage);
+                gameWindow.getSoundmanager().defeatedWAV("sound/thrust-sound.wav");
+
+                // ガード成功時はノックバック・透明化・無敵化を与えない
+                if (damage > 0) {
+                    // ガードでも微ダメージを通す設計ならここでライフを減らす
+                    player.setLife(player.getLife() - damage);
+                    gameWindow.getUi().addMessage("Player life = " + player.getLife());
+                }
+            } else {
+                // ガード失敗（通常の被ダメ処理）
+                gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
+                if (damage < 1) damage = 1;
+
+                if (damage != 0) {
+                    gameWindow.getUi().addMessage(getName() + " damage = " + damage);
+                    // 被ダメ時の視覚フィードバック（透明化）を付与
+                    player.setTransparent(true);
+                }
+
+                // ノックバック（ガード成功時はここに来ないのでノックバックは与えられない）
+                if (knockBackPower > 0) {
+                    setKnockBack(player, this, knockBackPower);
+                }
+
+                // ライフ減少・無敵化
+                player.setLife(player.getLife() - damage);
+                player.setInvincible(true);
+                setInvincibleCounter(0);
             }
-
-            int damage = setAttack(Math.max(attack - gameWindow.getPlayer().calculateTotalDefense(), 1));
-            if (damage < 0) {
-                damage = 0;
-            }
-
-            gameWindow.getPlayer().setLife(gameWindow.getPlayer().getLife() - damage);
-            gameWindow.getPlayer().setInvincible(true);
-            setInvincibleCounter(0);
         }
 
+        // ゲームオーバー判定
         if (gameWindow.getPlayer().getLife() <= 0) {
             gameWindow.getPlayer().setLife(0);
             gameWindow.setGameState(GameState.GAME_OVER);
@@ -891,6 +933,14 @@ public abstract class Entity {
 
     public void setGuarding(boolean guarding) {
         this.guarding = guarding;
+    }
+
+    public boolean isTransparent() {
+        return transparent;
+    }
+
+    public void setTransparent(boolean transparent) {
+        this.transparent = transparent;
     }
 
     /**
