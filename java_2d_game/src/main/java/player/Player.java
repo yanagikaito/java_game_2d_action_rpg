@@ -133,8 +133,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = (FrameApp.getTileSize() - 2);
-        getSolidArea().height = (FrameApp.getTileSize() - 2);
+        getSolidArea().width = (FrameApp.getTileSize() - 3);
+        getSolidArea().height = (FrameApp.getTileSize() - 3);
 
 
         setHitBoxX(getSolidArea().x);
@@ -600,6 +600,8 @@ public class Player extends Entity {
         if (getInvincible()) {
             if (++invincibleCounter > INVINCIBLE_DURATION) {
                 setInvincible(false);
+                // 透明フラグを解除して通常表示に戻す
+                setTransparent(false);
                 invincibleCounter = 0;
             }
         }
@@ -612,8 +614,9 @@ public class Player extends Entity {
             playerAttacking();
             return;
         } else if (isGuarding()) {
-            gameWindow.getUi().addMessage("isGuarding() = " + isGuarding());
-            gameWindow.getUi().addMessage("isBlockingLeft() = " + isBlockingLeft());
+            // デバッグ
+//            gameWindow.getUi().addMessage("isGuarding() = " + isGuarding());
+//            gameWindow.getUi().addMessage("isBlockingLeft() = " + isBlockingLeft());
             startGuard();
             playerGuarding();
             return;
@@ -1803,8 +1806,10 @@ public class Player extends Entity {
 
             // スライムのダメージ量
             int damage = setAttack(Math.max(gameWindow.getMonster()[monsterIndex].getAttack() - calculateTotalDefense(), 1));
-            if (damage < 0) {
-                damage = 0;
+            if (damage < 1) {
+                damage = 1;
+                setInvincible(true);
+                setTransparent(true);
             }
 
             System.out.println("isCollision() = " + isCollision());
@@ -2103,7 +2108,9 @@ public class Player extends Entity {
                 + gameWindow.getPlayer().getScreenY();
 
         Composite original = g2.getComposite();
-        if (getInvincible()) {
+
+        // 透明表示
+        if (isTransparent()) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         }
 

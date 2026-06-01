@@ -384,7 +384,6 @@ public class KeyHandler implements KeyListener {
                 case KeyEvent.VK_B -> setBombKeyPressed(false);
                 case KeyEvent.VK_G -> setThrowKeyPressed(false);
                 case KeyEvent.VK_SPACE -> {
-                    setPlayerSpace(false);
                     gameWindow.getPlayer().stopBlockingLeft();
                 }
             }
