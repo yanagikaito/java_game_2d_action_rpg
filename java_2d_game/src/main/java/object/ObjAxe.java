@@ -1,6 +1,6 @@
 package object;
 
-import entity.AxeType;
+import entity.type.AxeType;
 import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;

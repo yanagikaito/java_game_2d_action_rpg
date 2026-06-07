@@ -1,7 +1,7 @@
 package object;
 
 import entity.Entity;
-import entity.ShieldType;
+import entity.type.ShieldType;
 import frame.FrameApp;
 import window.GameWindow;
 

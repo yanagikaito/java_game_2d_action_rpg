@@ -1,7 +1,7 @@
 package object;
 
 import entity.Entity;
-import entity.PickupOnlyType;
+import entity.type.PickupOnlyType;
 import frame.FrameApp;
 import window.GameWindow;
 

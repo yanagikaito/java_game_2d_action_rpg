@@ -3,7 +3,7 @@ package object;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import entity.Entity;
-import entity.PotType;
+import entity.type.PotType;
 import entity.loot.LootConfigEntry;
 import entity.loot.LootEntry;
 import factory.EntityFactory;

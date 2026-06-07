@@ -1,7 +1,7 @@
 package ui;
 
 import entity.Entity;
-import entity.EntityType;
+import entity.type.EntityType;
 import frame.FrameApp;
 import game.GameState;
 import hex.GreenHexPanel;

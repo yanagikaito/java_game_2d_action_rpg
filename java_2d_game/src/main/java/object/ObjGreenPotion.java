@@ -1,7 +1,7 @@
 package object;
 
 import entity.Entity;
-import entity.GreenPotionType;
+import entity.type.GreenPotionType;
 import frame.FrameApp;
 import window.GameWindow;
 

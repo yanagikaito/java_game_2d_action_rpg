@@ -2,6 +2,7 @@ package save;
 
 import db.DbManager;
 import entity.*;
+import entity.type.*;
 import factory.EntityFactory;
 import player.Player;
 import window.GameWindow;

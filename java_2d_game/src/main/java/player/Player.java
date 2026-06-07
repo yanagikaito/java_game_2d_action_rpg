@@ -1,6 +1,7 @@
 package player;
 
 import entity.*;
+import entity.type.*;
 import frame.FrameApp;
 import game.GameState;
 import key.KeyHandler;
@@ -29,8 +30,9 @@ public class Player extends Entity {
 
     // 持つ処理用
     private boolean holding = false;
-    private ObjBomb heldBomb = null; // 爆弾限定なら型固定
+    private ObjBomb heldBomb = null;
     private ObjPot heldPot = null;
+    private NpcChicken heldChicken = null;
     private Map<String, Point> holdOffset = new HashMap<>();
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
@@ -635,8 +637,8 @@ public class Player extends Entity {
         // ここでエンター押下をチェックして近接オブジェクトに対する処理を行う
         handleInteractInput(nearbyIndex);
 
-        // Enter の瞬間判定を使う
-        if (gameWindow.getKeyHandler().isPlayerEnterJustPressed()) {
+        // G の瞬間判定を使う
+        if (gameWindow.getKeyHandler().isThrowKeyPressed()) {
             if (pickupCooldown > 0) {
                 // 拾った直後の猶予中は何もしない
             } else if (!holding && state != PlayerState.PICKUP) {
@@ -650,6 +652,9 @@ public class Player extends Entity {
                 } else if (heldPot != null) {
                     // 壺を持っているなら壺を投げる
                     throwHeldPot();
+                } else if (heldChicken != null) {
+                    // ニワトリを持っているならニワトリを投げる
+                    throwHeldChicken();
                 }
             }
         }
@@ -688,9 +693,9 @@ public class Player extends Entity {
                 heldBomb.setWorldY(headY);
             }
 
-            // 所持中は爆弾をプレイヤー頭上に固定表示
+            // 所持中は壺をプレイヤー頭上に固定表示
             if (heldPot != null) {
-                // heldBomb のワールド座標はプレイヤーの頭上に合わせる
+                // heldPot のワールド座標はプレイヤーの頭上に合わせる
                 int headX = getWorldX();
                 int headY = getWorldY() - FrameApp.getTileSize();
                 heldPot.setWorldX(headX);
@@ -706,6 +711,25 @@ public class Player extends Entity {
                 heldPot.setWorldX(headX);
                 heldPot.setWorldY(headY);
             }
+
+            // 所持中はニワトリをプレイヤー頭上に固定表示
+            if (heldChicken != null) {
+                // heldChicken のワールド座標はプレイヤーの頭上に合わせる
+                int headX = getWorldX();
+                int headY = getWorldY() - FrameApp.getTileSize();
+                heldChicken.setWorldX(headX);
+                heldChicken.setWorldY(headY);
+                heldChicken.setAlive(false);
+            }
+
+            // 歩行中は持ち物の表示位置を更新
+            if (holding && heldChicken != null) {
+                // プレイヤーの頭上に追従させる
+                int headX = getWorldX();
+                int headY = getWorldY() - FrameApp.getTileSize();
+                heldChicken.setWorldX(headX);
+                heldChicken.setWorldY(headY);
+            }
         }
 
         // 拾うボタン（G）を押したら startPickup を呼ぶ
@@ -719,6 +743,8 @@ public class Player extends Entity {
                     throwHeldBom();
                 } else if (heldPot != null) {
                     throwHeldPot();
+                } else if (heldChicken != null) {
+                    throwHeldChicken();
                 }
             }
         }
@@ -778,18 +804,38 @@ public class Player extends Entity {
             return;
         }
 
+        NpcChicken[] npcChicken = (NpcChicken[]) gameWindow.getMonster();
+        if (npcChicken == null || index < 0 || index >= npcChicken.length) {
+            // 対象が消えていた場合は所持遷移だけ
+            setState(PlayerState.HOLD_WALK);
+            setSpriteNum(1);
+            setSpriteCounter(0);
+            return;
+        }
+
+        NpcChicken chicken = npcChicken[index];
+        if (chicken == null || !pot.isPickable() || !pot.getAlive()) {
+            setState(PlayerState.HOLD_WALK);
+            setSpriteNum(1);
+            setSpriteCounter(0);
+            return;
+        }
+
         // ワールドから除去
         objs[index] = null;
         objPot[index] = null;
+        npcChicken[index] = null;
 
         // 所持状態にする
         this.heldBomb = bomb;
         this.heldPot = pot;
+        this.heldChicken = chicken;
         this.holding = true;
 
         // オブジェクト側の状態更新
         bomb.onPickedUp();
         pot.onPickedUp();
+        chicken.onPickedUp();
 
         // プレイヤー状態を所持歩行に変更
         setState(PlayerState.HOLD_WALK);
@@ -805,84 +851,127 @@ public class Player extends Entity {
         if (pickupCooldown > 0) return;
 
         Entity[] objs = gameWindow.getObj();
-        if (objs == null || nearbyIndex < 0 || nearbyIndex >= objs.length) {
-            gameWindow.getUi().addMessage("拾えるものがない");
-            return;
-        }
 
-        Entity obj = objs[nearbyIndex];
+        // オブジェクト側取得（存在しない場合は null）
+        Entity obj = (objs != null && nearbyIndex >= 0 && nearbyIndex < objs.length) ? objs[nearbyIndex] : null;
+
         if (obj == null) {
-            gameWindow.getUi().addMessage("拾えるものがない");
+            gameWindow.getUi().addMessage("objの拾えるものがない");
             return;
         }
 
-        // 宝箱は既存処理
-        if (obj instanceof object.ObjChest) {
-            object.ObjChest chest = (object.ObjChest) obj;
-            chest.interact(this);
-            if (chest.isOpened()) {
-                gameWindow.getObj()[nearbyIndex] = null;
-            }
-            return;
-        }
+        if (obj != null) {
 
-        // --- 爆弾を拾う ---
-        if (obj instanceof object.ObjBomb) {
-            object.ObjBomb bomb = (object.ObjBomb) obj;
-            if (!bomb.isPickable() || !bomb.getAlive()) {
-                gameWindow.getUi().addMessage("拾えるものがない");
+            // 宝箱は既存処理
+            if (obj instanceof object.ObjChest) {
+                object.ObjChest chest = (object.ObjChest) obj;
+                chest.interact(this);
+                if (chest.isOpened()) {
+                    gameWindow.getObj()[nearbyIndex] = null;
+                }
                 return;
             }
 
-            // ワールドから除去して所持に移す
-            gameWindow.getObj()[nearbyIndex] = null;
+            // --- 爆弾を拾う ---
+            if (obj instanceof object.ObjBomb) {
+                object.ObjBomb bomb = (object.ObjBomb) obj;
+                if (!bomb.isPickable() || !bomb.getAlive()) {
+                    gameWindow.getUi().addMessage("拾えるものがない");
+                    return;
+                }
 
-            // オブジェクト側の状態更新（onPickedUp 内で setAlive(false) 等を行う想定）
-            bomb.onPickedUp();
+                // ワールドから除去して所持に移す
+                gameWindow.getObj()[nearbyIndex] = null;
 
-            // プレイヤー側の所持フィールドにセット（既存の heldBomb を使用）
-            this.heldBomb = bomb;
-            this.heldPot = null; // 片方だけ保持する
-            this.holding = true;
-            this.pendingPickupIndex = nearbyIndex;
-            this.state = PlayerState.PICKUP;
-            setSpriteNum(0);
-            setSpriteCounter(0);
-            setAttacking(false);
+                // オブジェクト側の状態更新（onPickedUp 内で setAlive(false) 等を行う想定）
+                bomb.onPickedUp();
 
-            gameWindow.getUi().addMessage(bomb.getName() + " を持ち上げた");
-            getGameWindow().getUi().addMessage("DEBUG: pic bomb -> heldBomb=" + heldBomb);
+                // プレイヤー側の所持フィールドにセット（既存の heldBomb を使用）
+                this.heldBomb = bomb;
+                this.heldPot = null; // 片方だけ保持する
+                this.heldChicken = null;
+                this.holding = true;
+                this.pendingPickupIndex = nearbyIndex;
+                this.state = PlayerState.PICKUP;
+                setSpriteNum(0);
+                setSpriteCounter(0);
+                setAttacking(false);
+
+                gameWindow.getUi().addMessage(bomb.getName() + " を持ち上げた");
+                getGameWindow().getUi().addMessage("DEBUG: pic bomb -> heldBomb=" + heldBomb);
+                return;
+            }
+
+            // --- 壺を拾う ---
+            if (obj instanceof object.ObjPot) {
+                object.ObjPot pot = (object.ObjPot) obj;
+                if (!pot.isPickable() || !pot.getAlive()) {
+                    gameWindow.getUi().addMessage("拾えるものがない");
+                    pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+                    return;
+                }
+
+                // ワールドから除去して所持に移す
+                gameWindow.getObj()[nearbyIndex] = null;
+
+                // オブジェクト側の状態更新
+                pot.onPickedUp();
+
+                // プレイヤー側の所持フィールドにセット
+                this.heldPot = pot;
+                this.heldBomb = null; // 片方だけ保持する
+                this.heldChicken = null;
+                this.holding = true;
+                this.pendingPickupIndex = nearbyIndex;
+                this.state = PlayerState.PICKUP;
+                setSpriteNum(0);
+                setSpriteCounter(0);
+                setAttacking(false);
+
+                gameWindow.getUi().addMessage(pot.getName() + " を持ち上げた");
+                getGameWindow().getUi().addMessage("DEBUG: pic pot -> heldPot=" + heldPot);
+            }
+        }
+
+        gameWindow.getUi().addMessage("拾えるものがない");
+    }
+
+    private void startPickupMonster(int nearbyIndex) {
+
+        Entity[] chickens = gameWindow.getMonster();
+
+        Entity monster = (chickens != null && nearbyIndex >= 0 && nearbyIndex < chickens.length) ? chickens[nearbyIndex] : null;
+
+        if (monster == null) {
+            gameWindow.getUi().addMessage("monsterの拾えるものがない");
             return;
         }
 
-        // --- 壺を拾う ---
-        if (obj instanceof object.ObjPot) {
-            object.ObjPot pot = (object.ObjPot) obj;
-            if (!pot.isPickable() || !pot.getAlive()) {
+        // --- ニワトリを拾う ---
+        if (monster != null && monster instanceof npc.NpcChicken) {
+            npc.NpcChicken ch = (npc.NpcChicken) monster;
+            if (!ch.isPickable() || !ch.getAlive()) {
                 gameWindow.getUi().addMessage("拾えるものがない");
                 pickupCooldown = PICKUP_COOLDOWN_FRAMES;
                 return;
             }
-
             // ワールドから除去して所持に移す
-            gameWindow.getObj()[nearbyIndex] = null;
-
-            // オブジェクト側の状態更新
-            pot.onPickedUp();
-
-            // プレイヤー側の所持フィールドにセット
-            this.heldPot = pot;
-            this.heldBomb = null; // 片方だけ保持する
+            gameWindow.getMonster()[nearbyIndex] = null;
+            ch.onPickedUp();
+            this.heldChicken = ch;
+            this.heldBomb = null;
+            this.heldPot = null;
             this.holding = true;
             this.pendingPickupIndex = nearbyIndex;
             this.state = PlayerState.PICKUP;
             setSpriteNum(0);
             setSpriteCounter(0);
             setAttacking(false);
-
-            gameWindow.getUi().addMessage(pot.getName() + " を持ち上げた");
-            getGameWindow().getUi().addMessage("DEBUG: pic pot -> heldPot=" + heldPot);
+            gameWindow.getUi().addMessage(ch.getName() + " を持ち上げた");
+            return;
         }
+
+        gameWindow.getUi().addMessage("拾えるものがない");
     }
 
     private void throwHeldBom() {
@@ -1095,6 +1184,112 @@ public class Player extends Entity {
         gameWindow.getKeyHandler().consumeThrowOnce();
     }
 
+    public void throwHeldChicken() {
+
+        gameWindow.getUi().addMessage("throwHeldChicken()呼ばれた");
+
+        if (!holding || heldChicken == null) return;
+
+        int tiles = 2;
+        int tileSize = FrameApp.getTileSize();
+        double distance = tiles * tileSize;
+
+        // ObjPot の重力（正の値で扱う）
+        double gPot = Math.abs(heldChicken.getGravity());
+
+        // プレイヤーの向き（"left","right","up","down" を返す）
+        String dir = getDirection();
+
+        double vx = 0.0;
+        double vy = 0.0;
+        double initialVz;
+
+        // 基本的な水平速度の目安（45度近似）
+        double baseSpeed = Math.sqrt(Math.max(1.0, distance * gPot / Math.sin(2 * Math.toRadians(45))));
+
+        switch (dir) {
+            case "left" -> {
+                vx = -baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25; // 少し上向きに見せる
+                initialVz = 8.0;
+            }
+            case "right" -> {
+                vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = 8.0;
+            }
+            case "up" -> {
+                // 上投げ：垂直成分を強めに、画面Y速度は小さめ（上方向は負）
+                vx = 0.0;
+                vy = -baseSpeed * 1.5;
+                initialVz = 12.0;
+            }
+            case "down" -> {
+                // 下投げ：画面Y方向に下向きの速度を与え、垂直成分は下向き（地面に叩きつける）
+                vx = 0.0;
+                vy = baseSpeed * 0.6;
+                initialVz = 6.0; // 下向きに押し出す（正は下）
+            }
+            default -> {
+                // フェールセーフ：左右どちらかに投げる
+                if ("left".equals(getDirection())) vx = -baseSpeed;
+                else vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = -8.0;
+            }
+        }
+
+        System.out.println("THROW dir=" + dir + " initVz=" + initialVz + " setZ=" + heldChicken.getZ() + " worldY=" + heldChicken.getWorldY());
+
+        // 速度制限
+        double maxSpeed = 40.0;
+        if (Math.abs(vx) > maxSpeed) vx = Math.signum(vx) * maxSpeed;
+        if (Math.abs(vy) > maxSpeed) vy = Math.signum(vy) * maxSpeed;
+
+        // heldChicken を投げる準備
+        heldChicken.setWorldX(getWorldX());
+        heldChicken.setWorldY(getWorldY() - tileSize / 4);
+        heldChicken.setZ(tileSize);
+        heldChicken.setHasShadow(true);
+        heldChicken.setUser(this);
+        heldChicken.setThrown(true);
+        heldChicken.setPickable(false);
+        heldChicken.setAlive(true);
+        heldChicken.setLife(heldChicken.getMaxLife());
+
+        // 垂直成分（z/vz）と影を設定するためのメソッドを呼ぶ
+        heldChicken.setHasShadow(true);
+        heldChicken.setVerticalVelocity(tiles);
+        // 水平成分は既存の setVelocity を利用
+        heldChicken.setVelocity(vx, vy);
+
+        // ワールドに戻す
+        boolean added = false;
+        try {
+            added = gameWindow.addObject(heldChicken);
+        } catch (Throwable ignored) {
+        }
+        if (!added) {
+            Entity[] arr = gameWindow.getMonster();
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] == null) {
+                    arr[i] = heldChicken;
+                    added = true;
+                    break;
+                }
+            }
+        }
+
+        // 所持解除と状態更新
+        heldChicken = null;
+        holding = false;
+        state = PlayerState.THROW;
+
+        // 投げた直後の誤拾い防止（pickupCooldown と入力消費があるなら設定）
+        this.pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+        gameWindow.getKeyHandler().consumeThrowOnce();
+    }
+
     public void updateAura(long deltaMs) {
 
 //      System.out.println("updateAura deltaMs=" + deltaMs + " ms");
@@ -1270,17 +1465,22 @@ public class Player extends Entity {
 
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         if (monsterIndex != 999 && !getInvincible()) {
-            Entity slime = gameWindow.getMonster()[monsterIndex];
-            contactMonster(monsterIndex, this, slime.getKnockBackPower());
-            setInvincible(true);
+            Entity monster = gameWindow.getMonster()[monsterIndex];
+
+            // タイプ側で hostile を判定
+            if (monster.getType().isHostileToPlayer()) {
+                contactMonster(monsterIndex, this, monster.getKnockBackPower());
+                setInvincible(true);
+            } else {
+                // 非敵（ニワトリ等）：ダメージ処理は行わない
+                startPickupMonster(monsterIndex);
+            }
 
             int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
             damageInteractiveTile(iTileIndex);
 
-
             int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
             gameWindow.changeMap(collidedTileId);
-
         }
     }
 
@@ -1608,6 +1808,29 @@ public class Player extends Entity {
             return;
         }
 
+        if (obj instanceof NpcChicken && keyHandler.isThrowKeyPressed()) {
+            NpcChicken chicken = (NpcChicken) obj;
+            // pickable / alive のチェック（必要に応じて）
+            if (!chicken.isPickable() || !chicken.getAlive()) {
+                gameWindow.getUi().addMessage("拾えるものがない");
+                return;
+            }
+
+            // ワールドから除去して所持に移す
+            gameWindow.getObj()[i] = null;
+            chicken.setAlive(false);
+            chicken.setPickable(false);
+            chicken.setThrown(false);
+            chicken.setVelocity(0, 0);
+
+            this.heldChicken = chicken;
+            this.holding = true;
+            this.state = PlayerState.PICKUP;
+
+            gameWindow.getUi().addMessage(this.heldChicken.getName() + " を持ち上げた");
+            return;
+        }
+
         String text;
         if (canObtainItem(obj) == true) {
             text = obj.getName() + " を手に入れた!";
@@ -1635,6 +1858,10 @@ public class Player extends Entity {
                 ObjPot p = (ObjPot) o;
                 if (!p.isPickable()) continue;
             }
+            if (o instanceof NpcChicken) {
+                NpcChicken c = (NpcChicken) o;
+                if (!c.isPickable()) continue;
+            }
             Rectangle oBox = o.getCollisionBoxWorld();
             // findNearbyObjectIndex のヒット箇所に一時ログ
             if (pBox.intersects(oBox)) {
@@ -1656,6 +1883,8 @@ public class Player extends Entity {
         if (!keyHandler.isPlayerEnter()) return;
 
         Entity obj = gameWindow.getObj()[i];
+        Entity chicken = gameWindow.getMonster()[i];
+
         if (obj == null) {
             return;
         }
@@ -1706,6 +1935,26 @@ public class Player extends Entity {
             // チェスト位置に落とす（必要なら少しオフセット）
             pot.setWorldX(this.getWorldX());
             pot.setWorldY(this.getWorldY());
+
+//            // マップに追加
+//            gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
+//            gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
+            return;
+        }
+
+        if (chicken instanceof NpcChicken) {
+            NpcChicken npcChicken = (NpcChicken) chicken;
+
+            // 初期化：ワールドに置ける状態にする
+            npcChicken.setPickable(true);
+            npcChicken.setThrown(false);
+            npcChicken.setAlive(true);
+            npcChicken.setLife(chicken.getMaxLife());
+            npcChicken.setVelocity(0, 0);
+
+            // チェスト位置に落とす（必要なら少しオフセット）
+            npcChicken.setWorldX(this.getWorldX());
+            npcChicken.setWorldY(this.getWorldY());
 
 //            // マップに追加
 //            gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
@@ -1804,7 +2053,7 @@ public class Player extends Entity {
                 setKnockBack(gameWindow.getMonster()[monsterIndex], attacker, slime.getKnockBackPower());
             }
 
-            // スライムのダメージ量
+            // モンスターのダメージ量
             int damage = setAttack(Math.max(gameWindow.getMonster()[monsterIndex].getAttack() - calculateTotalDefense(), 1));
             if (damage < 1) {
                 damage = 1;
@@ -2278,6 +2527,38 @@ public class Player extends Entity {
             }
         }
 
+        // --- 所持中のニワトリを頭上に描画 ---
+        if (state == PlayerState.HOLD_WALK) {
+            if (this.holding && this.heldChicken != null) {
+                BufferedImage heldImg = heldChicken.getHeldSprite();
+                if (heldImg != null) {
+                    int ts = FrameApp.getTileSize();
+                    Rectangle sa = getSolidArea();
+                    int headScreenX = screenX + sa.x + sa.width / 2 - heldImg.getWidth() / 2;
+                    int headScreenY = screenY + sa.y - heldImg.getHeight();
+
+                    switch (getDirection()) {
+                        case "up" -> headScreenY -= ts / 8;
+                        case "down" -> headScreenY += ts / 16;
+                        case "left" -> headScreenX -= ts / 8;
+                        case "right" -> headScreenX += ts / 8;
+                    }
+
+                    Composite before = g2.getComposite();
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+                    g2.setColor(new Color(0, 0, 0, 80));
+                    int shadowW = heldImg.getWidth() * 9 / 10;
+                    int shadowH = Math.max(2, heldImg.getHeight() / 8);
+                    g2.fillOval(headScreenX + (heldImg.getWidth() - shadowW) / 2,
+                            headScreenY + heldImg.getHeight() - shadowH / 2,
+                            shadowW, shadowH);
+                    g2.setComposite(before);
+
+                    g2.drawImage(heldImg, headScreenX, headScreenY, null);
+                }
+            }
+        }
+
         // --- PICKUP アニメ描画（安全に） ---
         if (state == PlayerState.PICKUP) {
             int dirIndex = Arrays.asList(DIRECTIONS).indexOf(getDirection());
@@ -2333,11 +2614,30 @@ public class Player extends Entity {
                     int th = tileSize;
                     g2.drawImage(throwImg, tx, ty, tw, th, null);
                 }
+            } else if (heldChicken != null) {
+
+                String dir = getDirection();
+                int frame = Math.max(0, getSpriteNum() - 1);
+                // SPRITE_COUNT と実際の heldChicken throw sprite 配列長の整合性をチェック
+                BufferedImage throwImg = heldChicken.getThrowSprite(dir, frame);
+                if (throwImg != null) {
+                    int tx = screenX;
+                    int ty = screenY;
+                    switch (dir) {
+                        case "up" -> ty -= tileSize;
+                        case "down" -> ty += tileSize / 2;
+                        case "left" -> tx -= tileSize;
+                        case "right" -> tx += tileSize;
+                    }
+                    int tw = tileSize;
+                    int th = tileSize;
+                    g2.drawImage(throwImg, tx, ty, tw, th, null);
+
+                }
             }
+
+            g2.setComposite(original);
         }
-
-        g2.setComposite(original);
-
     }
 
     /**

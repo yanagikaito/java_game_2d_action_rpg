@@ -2,7 +2,7 @@ package npc;
 
 import collision.CollisionChecker;
 import entity.Entity;
-import entity.MonsterType;
+import entity.type.ChickenType;
 import frame.FrameApp;
 import map.GameMap;
 import window.GameWindow;
@@ -16,7 +16,7 @@ import java.util.Random;
 public class NpcChicken extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
-    private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
+    private BufferedImage[][] spritesChicken = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private static final int SPRITE_COUNT = 3;
     private static final int ACTION_LOCK_THRESHOLD = 120;
     private static final int MAX_RANDOM_VALUE = 100;
@@ -28,6 +28,13 @@ public class NpcChicken extends Entity {
     private int actionLockCounter = 0;
     private final CollisionChecker collisionChecker;
 
+    private static final long PICKABLE_DELAY_MS = 500L;
+    private long landedAt = 0L;
+    private int solidAreaDefaultX;
+    private int solidAreaDefaultY;
+    private int solidAreaDefaultW;
+    private int solidAreaDefaultH;
+
     private int hitCount = 0;
     private static final int HELP_TRIGGER_THRESHOLD = 30;
     private int life = 30;
@@ -37,12 +44,39 @@ public class NpcChicken extends Entity {
     private boolean following = false;
     private boolean playerFollowing = false;
 
+    // 投げられたときの物理挙動用
+    private boolean hasShadow = false;
+    private double vx = 0;
+    private double vy = 0;
+    // 高さ方向速度（上向き正）
+    private double vz = 0.0;
+    // 地面からの高さ（ピクセル）
+    private double z = 0.0;
+    // 毎フレーム vy に加算する重力
+    private double gravity = 0.3;
+    // 垂直重力（正、調整可）
+    private double verticalGravity = 0.45;
+    // 投げられて飛んでいる状態
+    private boolean thrown = false;
+    private Entity user = null;
+    // 置かれていて拾える状態
+    private boolean pickable = false;
+
+    // 新規フィールド（着地→タイマー）
+    // 地面に着地しているか
+    private boolean landed = false;
+
+    // 割れ管理
+    private boolean shattering = false;
+    private int shatterFrame = 0;
+    private boolean damageGiven = false;
+
 
     public NpcChicken(GameWindow gameWindow) {
         super(gameWindow);
         this.collisionChecker = new CollisionChecker(gameWindow);
         setDirection("down");
-        setType(new MonsterType());
+        setType(new ChickenType());
         setMaxLife(life);
         setLife(getMaxLife());
         setSpeed(1);
@@ -52,13 +86,19 @@ public class NpcChicken extends Entity {
         getSolidArea().height = FrameApp.getTileSize() * 2;
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
+
+        this.solidAreaDefaultX = getSolidArea().x;
+        this.solidAreaDefaultY = getSolidArea().y;
+        this.solidAreaDefaultW = getSolidArea().width;
+        this.solidAreaDefaultH = getSolidArea().height;
+
         loadNPCImages();
     }
 
     public void loadNPCImages() {
 
         int s = 2;
-        setSprites(sprites);
+        setSprites(spritesChicken);
         try {
             int tileSize = FrameApp.getTileSize();
             for (int dir = 0; dir < DIRECTIONS.length; dir++) {
@@ -67,7 +107,7 @@ public class NpcChicken extends Entity {
                             getClass().getClassLoader()
                                     .getResourceAsStream("npc/chicken-" + DIRECTIONS[dir] + "-" + (i + 1) + ".gif"));
                     BufferedImage processed = createImage(original, tileSize * s, tileSize * s);
-                    sprites[dir][i] = processed;
+                    spritesChicken[dir][i] = processed;
                 }
             }
         } catch (IOException e) {
@@ -77,6 +117,24 @@ public class NpcChicken extends Entity {
 
     @Override
     public void setAction() {
+
+        // 着地後の復元処理
+        if (landed && !pickable) {
+            long now = System.currentTimeMillis();
+            if (now - landedAt >= PICKABLE_DELAY_MS) {
+                // solidArea を復元して拾えるようにする
+                pickable = true;
+                landed = false;
+                this.setCollision(true);
+                if (this.getSolidArea() != null) {
+                    this.getSolidArea().x = this.solidAreaDefaultX;
+                    this.getSolidArea().y = this.solidAreaDefaultY;
+                    this.getSolidArea().width = this.solidAreaDefaultW;
+                    this.getSolidArea().height = this.solidAreaDefaultH;
+                }
+                System.out.println("[CHICKEN] pickable now true at world=(" + getWorldX() + "," + getWorldY() + ")");
+            }
+        }
 
         if (getInvincible()) {
             invincibleCounter--;
@@ -88,6 +146,61 @@ public class NpcChicken extends Entity {
             followPlayerStep();
             checkPlayerCollision();
             return;
+        }
+
+        // --- 投げられている状態（空中） ---
+        if (thrown) {
+
+            // 水平移動
+            setWorldX(getWorldX() + (int) Math.round(vx));
+            setWorldY(getWorldY() + (int) Math.round(vy));
+
+            // 画面Y方向の重力（既存）
+            vy += gravity;
+
+            // 垂直（高さ）方向の更新（上向き正のルール）
+            z += vz;
+            vz -= verticalGravity;
+
+            // デバッグ出力（物理とワールド座標の両方を出す）
+            getGameWindow().getUi().addMessage("z = " + z);
+            getGameWindow().getUi().addMessage("vz = " + vz);
+            getGameWindow().getUi().addMessage("worldY = " + getWorldY());
+
+
+            // --- 着地判定（z <= 0 のときだけ床判定を行う） ---
+
+            // 着地判定
+            if (z <= 0) {
+                z = 0;
+                vz = 0;
+
+                boolean tileCollision = getGameWindow().getCollisionChecker().checkTile(this);
+                if (tileCollision) {
+                    landed = true;
+                    thrown = false;
+                    pickable = false;
+                    hasShadow = false;
+                    this.setCollision(false);
+
+                    if (this.getSolidArea() != null) {
+                        this.getSolidArea().width = 0;
+                        this.getSolidArea().height = 0;
+                    }
+                    System.out.println("[BOMB] landed id=" + getType() + " at worldY=" + getWorldY());
+                } else {
+                    // タイルに衝突していなければ地面に置く
+                    thrown = false;
+                    pickable = true;
+                    hasShadow = false;
+                }
+            }
+
+        } else {
+            // 地面に置かれている状態
+            if (!pickable && !landed) {
+                randomWalkStep();
+            }
         }
 
         // それ以外は従来のランダム歩行
@@ -270,5 +383,175 @@ public class NpcChicken extends Entity {
         g2.drawImage(original, 0, 0, width, height, null);
         g2.dispose();
         return result;
+    }
+
+    /**
+     * 所持中に Player が頭上に描画するためのスプライトを返す。
+     * デフォルトは Down 方向の最初のフレームを使い、タイルサイズに合わせてリサイズする。
+     */
+
+    public BufferedImage getHeldSprite() {
+        int ts = FrameApp.getTileSize();
+        int downIndex = 1;
+        int frameIndex = 0; // 所持時は最初のフレームを使う
+        if (spritesChicken != null && spritesChicken.length > downIndex && spritesChicken[downIndex].length > frameIndex) {
+            BufferedImage src = spritesChicken[downIndex][frameIndex];
+            // 小さめにリサイズして返す
+            int w = ts * 3 / 2;
+            int h = ts * 3 / 2;
+            BufferedImage buf = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = buf.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(src, 0, 0, w, h, null);
+            g.dispose();
+            return buf;
+        }
+        return null;
+    }
+
+    // 投げるときの向き・フレーム別スプライトを返す（存在しなければ null を返す）
+    public BufferedImage getThrowSprite(String dir, int frame) {
+        // ここでは sprites の向きインデックスとフレームをそのまま使う例
+        int dirIndex = 1; // default Down
+        switch (dir) {
+            case "up" -> dirIndex = 0;
+            case "down" -> dirIndex = 1;
+            case "left" -> dirIndex = 2;
+            case "right" -> dirIndex = 3;
+        }
+        int frameIndex = Math.max(0, Math.min(frame, spritesChicken[dirIndex].length - 1));
+        return spritesChicken[dirIndex][frameIndex];
+    }
+
+    public void onPickedUp() {
+        setPickable(false);
+        setAlive(false);
+        setThrown(false);
+        setLife(getMaxLife());
+    }
+
+    public void setVelocity(double vx, double vy) {
+        this.vx = vx;
+        this.vy = vy;
+        this.thrown = true;
+        setAlive(true);
+    }
+
+    public boolean isHasShadow() {
+        return hasShadow;
+    }
+
+    public void setHasShadow(boolean hasShadow) {
+        this.hasShadow = hasShadow;
+    }
+
+    public double getVx() {
+        return vx;
+    }
+
+    public void setVx(double vx) {
+        this.vx = vx;
+    }
+
+    public double getVy() {
+        return vy;
+    }
+
+    public void setVy(double vy) {
+        this.vy = vy;
+    }
+
+    public double getVz() {
+        return vz;
+    }
+
+    public void setVz(double vz) {
+        this.vz = vz;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
+    }
+
+    public double getGravity() {
+        return gravity;
+    }
+
+    public void setGravity(double gravity) {
+        this.gravity = gravity;
+    }
+
+    public double getVerticalGravity() {
+        return verticalGravity;
+    }
+
+    public void setVerticalGravity(double verticalGravity) {
+        this.verticalGravity = verticalGravity;
+    }
+
+    public void setVerticalVelocity(double vz) {
+        this.vz = Math.max(-40.0, Math.min(40.0, vz));
+    }
+
+    @Override
+    public boolean isThrown() {
+        return thrown;
+    }
+
+    @Override
+    public void setThrown(boolean thrown) {
+        this.thrown = thrown;
+    }
+
+    public Entity getUser() {
+        return user;
+    }
+
+    public void setUser(Entity user) {
+        this.user = user;
+    }
+
+    public boolean isPickable() {
+        return pickable;
+    }
+
+    public void setPickable(boolean pickable) {
+        this.pickable = pickable;
+    }
+
+    public boolean isLanded() {
+        return landed;
+    }
+
+    public void setLanded(boolean landed) {
+        this.landed = landed;
+    }
+
+    public boolean isShattering() {
+        return shattering;
+    }
+
+    public void setShattering(boolean shattering) {
+        this.shattering = shattering;
+    }
+
+    public int getShatterFrame() {
+        return shatterFrame;
+    }
+
+    public void setShatterFrame(int shatterFrame) {
+        this.shatterFrame = shatterFrame;
+    }
+
+    public boolean isDamageGiven() {
+        return damageGiven;
+    }
+
+    public void setDamageGiven(boolean damageGiven) {
+        this.damageGiven = damageGiven;
     }
 }

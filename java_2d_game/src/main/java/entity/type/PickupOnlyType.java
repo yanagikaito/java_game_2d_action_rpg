@@ -1,10 +1,10 @@
-package entity;
+package entity.type;
 
 public record PickupOnlyType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 9;
+        return 10;
     }
 
     @Override
