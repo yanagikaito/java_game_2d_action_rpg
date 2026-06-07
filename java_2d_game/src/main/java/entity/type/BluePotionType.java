@@ -1,10 +1,10 @@
-package entity;
+package entity.type;
 
 public record BluePotionType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 8;
+        return 9;
     }
 
     @Override

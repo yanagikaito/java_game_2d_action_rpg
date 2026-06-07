@@ -1,6 +1,6 @@
-package entity;
+package entity.type;
 
-public sealed interface EntityType permits PlayerType, NpcType, MonsterType,
+public sealed interface EntityType permits PlayerType, NpcType, MonsterType, ChickenType,
         SwordType, AxeType, ShieldType,
         RedPotionType, GreenPotionType,
         BluePotionType,
@@ -11,4 +11,8 @@ public sealed interface EntityType permits PlayerType, NpcType, MonsterType,
     int typeId();
 
     String name();
+
+    default boolean isHostileToPlayer() {
+        return true;
+    }
 }

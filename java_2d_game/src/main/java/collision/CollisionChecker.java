@@ -61,7 +61,9 @@ public class CollisionChecker {
 
         // 投げられたオブジェクト（空中から着地するもの）は底面タイルを直接チェック
         // 着地時に確実に地面タイルに当たっているかを判定
-        if (entity instanceof ObjBomb || entity instanceof ObjPot || entity.isThrown()) {
+        boolean isThrowableCheck = (entity instanceof ObjBomb) || (entity instanceof ObjPot) || entity.isThrown();
+
+        if (isThrowableCheck) {
 
             // 底面のタイル（足元）をチェック
             int checkRow = Math.min(maxRow, Math.max(0, entityBottomRow));

@@ -1,7 +1,7 @@
 package object;
 
 import entity.Entity;
-import entity.RedPotionType;
+import entity.type.RedPotionType;
 import frame.FrameApp;
 import window.GameWindow;
 

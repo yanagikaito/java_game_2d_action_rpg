@@ -1,6 +1,6 @@
-package entity;
+package entity.type;
 
-public record ShieldType() implements EntityType {
+public record AxeType() implements EntityType {
 
     @Override
     public int typeId() {
@@ -9,6 +9,6 @@ public record ShieldType() implements EntityType {
 
     @Override
     public String name() {
-        return "shield";
+        return "axe";
     }
 }

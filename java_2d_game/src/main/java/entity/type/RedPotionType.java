@@ -1,10 +1,10 @@
-package entity;
+package entity.type;
 
 public record RedPotionType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 6;
+        return 7;
     }
 
     @Override

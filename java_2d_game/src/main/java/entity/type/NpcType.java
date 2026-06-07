@@ -1,4 +1,4 @@
-package entity;
+package entity.type;
 
 public record NpcType() implements EntityType {
 

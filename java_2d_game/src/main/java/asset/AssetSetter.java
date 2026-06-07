@@ -65,8 +65,9 @@ public class AssetSetter {
         i++;
 
         monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 39);
+        i++;
 
-        monsters[i] = createMonNpcChicken(FrameApp.getTileSize() * 22, FrameApp.getTileSize() * 22);
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 17);
 
         gameWindow.setMonster(monsters);
     }
@@ -184,13 +185,6 @@ public class AssetSetter {
         return monster;
     }
 
-    public NpcChicken createMonNpcChicken(int worldX, int worldY) {
-        NpcChicken monChicken = new NpcChicken(gameWindow);
-        monChicken.setWorldX(worldX);
-        monChicken.setWorldY(worldY);
-        return monChicken;
-    }
-
     private MonGreenGoblin createMonGreenGoblin(int worldX, int worldY) {
         MonGreenGoblin monster = new MonGreenGoblin(gameWindow);
         monster.setWorldX(worldX);
@@ -225,6 +219,17 @@ public class AssetSetter {
         objPot.setAlive(true);
         gameWindow.getUi().addMessage(" pickable=" + objPot.isPickable());
         return objPot;
+    }
+
+    public NpcChicken createNpcChicken(int worldX, int worldY) {
+        NpcChicken npcChicken = new NpcChicken(gameWindow);
+        npcChicken.setWorldX(worldX);
+        npcChicken.setWorldY(worldY);
+        npcChicken.setPickable(true);
+        npcChicken.setUser(gameWindow.getPlayer());
+        npcChicken.setThrown(false);
+        npcChicken.setAlive(true);
+        return npcChicken;
     }
 
     public void setInteractiveTile() {

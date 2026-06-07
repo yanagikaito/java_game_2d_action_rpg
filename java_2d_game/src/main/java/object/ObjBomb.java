@@ -1,6 +1,6 @@
 package object;
 
-import entity.BombType;
+import entity.type.BombType;
 import entity.Entity;
 import frame.FrameApp;
 import window.GameWindow;

@@ -177,11 +177,11 @@ public class GameMap {
      */
 
     public void resetChickensState() {
-        Entity[] monsters = gameWindow.getMonster();
-        if (monsters == null) return;
-        for (Entity e : monsters) {
-            if (e instanceof npc.NpcChicken) {
-                npc.NpcChicken c = (npc.NpcChicken) e;
+        Entity[] chickens = gameWindow.getObj();
+        if (chickens == null) return;
+        for (Entity e : chickens) {
+            if (e instanceof NpcChicken) {
+                NpcChicken c = (NpcChicken) e;
                 c.setFollowing(false);
                 c.setPlayerFollowing(false);
                 c.resetState();

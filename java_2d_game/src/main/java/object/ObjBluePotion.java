@@ -1,8 +1,7 @@
 package object;
 
-import entity.BluePotionType;
+import entity.type.BluePotionType;
 import entity.Entity;
-import entity.RedPotionType;
 import frame.FrameApp;
 import window.GameWindow;
 

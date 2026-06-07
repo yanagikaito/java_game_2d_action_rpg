@@ -1,7 +1,7 @@
 package monster;
 
 import entity.Entity;
-import entity.MonsterType;
+import entity.type.MonsterType;
 import frame.FrameApp;
 import object.ObjStone;
 import window.GameWindow;

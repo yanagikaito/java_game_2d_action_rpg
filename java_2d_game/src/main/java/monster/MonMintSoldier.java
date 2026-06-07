@@ -1,8 +1,8 @@
 package monster;
 
-import entity.AxeType;
+import entity.type.AxeType;
 import entity.Entity;
-import entity.MonsterType;
+import entity.type.MonsterType;
 import frame.FrameApp;
 import object.ObjAxe;
 import window.GameWindow;

@@ -2,6 +2,10 @@ package entity;
 
 import entity.particle.FireworkParticle;
 import entity.particle.Particle;
+import entity.type.BossMonsterType;
+import entity.type.EntityType;
+import entity.type.MonsterType;
+import entity.type.ShieldType;
 import frame.FrameApp;
 import game.GameState;
 import object.Projectile;

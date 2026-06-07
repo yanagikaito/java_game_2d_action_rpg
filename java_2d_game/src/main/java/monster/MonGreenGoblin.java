@@ -1,6 +1,6 @@
 package monster;
 
-import entity.BossMonsterType;
+import entity.type.BossMonsterType;
 import entity.Entity;
 import frame.FrameApp;
 import player.Player;

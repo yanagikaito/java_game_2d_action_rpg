@@ -1,7 +1,7 @@
 package object;
 
 import entity.Entity;
-import entity.SwordType;
+import entity.type.SwordType;
 import frame.FrameApp;
 import window.GameWindow;
 
