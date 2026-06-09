@@ -37,7 +37,6 @@ public class ObjBomb extends Projectile {
     // 置かれていて拾える状態
     private boolean pickable = false;
 
-    // 新規フィールド（着地→タイマー）
     // 地面に着地しているか
     private boolean landed = false;
     // 着地時刻（ms）
