@@ -44,6 +44,13 @@ public class NpcChicken extends Entity {
     private boolean following = false;
     private boolean playerFollowing = false;
 
+    // 1体あたりのダメージ（
+    private int attackDamage = 2;
+    // 1体が連続で与える最短間隔（ms）
+    private long attackCooldownMs = 800L;
+    // 最後に攻撃した時刻
+    private long lastAttackAt = 0L;
+
     // 投げられたときの物理挙動用
     private boolean hasShadow = false;
     private double vx = 0;
@@ -62,7 +69,6 @@ public class NpcChicken extends Entity {
     // 置かれていて拾える状態
     private boolean pickable = false;
 
-    // 新規フィールド（着地→タイマー）
     // 地面に着地しているか
     private boolean landed = false;
 
@@ -225,9 +231,17 @@ public class NpcChicken extends Entity {
      */
 
     private void checkPlayerCollision() {
-        boolean contactPlayer = collisionChecker.checkPlayer(this);
-        if (contactPlayer) {
-            onHitPlayer();
+        if (getGameWindow().getCollisionChecker().checkPlayer(this)) {
+            long now = System.currentTimeMillis();
+            if (now - lastAttackAt >= attackCooldownMs) {
+                lastAttackAt = now;
+                try {
+                    getGameWindow().getPlayer().takeDamage(attackDamage);
+                    onHitPlayer();
+                } catch (Exception e) {
+                    System.out.println("[CHICKEN] failed to damage player: " + e);
+                }
+            }
         }
     }
 
@@ -245,13 +259,12 @@ public class NpcChicken extends Entity {
         }
     }
 
-    // NpcChicken.java に追加
     public void setPlayerFollowing(boolean f) {
         this.playerFollowing = f;
         if (f) {
-            setSpeed(2); // 追尾時に速くする（必要なら調整）
+            setSpeed(2);
         } else {
-            setSpeed(1); // 元に戻す
+            setSpeed(1);
         }
     }
 
@@ -336,7 +349,7 @@ public class NpcChicken extends Entity {
         } catch (Exception ignored) {
         }
 
-        // ノックバック（簡易）
+        // ノックバック
         int kbX = 0, kbY = 0;
         switch (getDirection()) {
             case "up" -> kbY = -knockBackPower;
@@ -344,7 +357,7 @@ public class NpcChicken extends Entity {
             case "left" -> kbX = -knockBackPower;
             case "right" -> kbX = knockBackPower;
         }
-        // 衝突を考慮するなら CollisionChecker を使って移動可否を確認する
+        // CollisionChecker を使って移動可否を確認する
         setWorldX(getWorldX() + kbX);
         setWorldY(getWorldY() + kbY);
 
