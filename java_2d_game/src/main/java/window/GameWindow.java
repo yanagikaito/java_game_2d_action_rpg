@@ -47,7 +47,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private SoundManager soundManager = new SoundManager(this);
     private GameMap currentMap = new GameMap(this);
     private Entity[] npc = new Entity[10];
-    private Entity[] monster = new Entity[20];
+    private Entity[] monster = new Entity[50];
     private Entity[] obj = new Entity[20];
     private InteractiveTile[] iTile = new InteractiveTile[50];
     private UI ui = new UI(this);

@@ -27,7 +27,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[10];
+        tiles = new Tile[11];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -88,6 +88,10 @@ public class TileManager {
 
             tiles[9] = new Tile();
             tiles[9].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/forest.png"));
+
+            tiles[10] = new Tile();
+            tiles[10].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree‑stump.png"));
+            tiles[10].collision = true;
 
         } catch (IOException e) {
             e.printStackTrace();

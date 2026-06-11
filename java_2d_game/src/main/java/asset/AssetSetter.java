@@ -67,7 +67,34 @@ public class AssetSetter {
         monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 39);
         i++;
 
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 17);
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 30);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 33);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 35);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 37);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 39);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 30);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 32);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 34);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 36);
+        i++;
+
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 38);
 
         gameWindow.setMonster(monsters);
     }
