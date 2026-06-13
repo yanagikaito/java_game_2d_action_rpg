@@ -8,4 +8,5 @@ public class Tile {
     public boolean collision = false;
     public boolean bombCollision = false;
     public boolean potCollision = false;
+    public boolean chickenCollision = false;
 }

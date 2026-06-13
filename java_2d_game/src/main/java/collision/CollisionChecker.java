@@ -1,6 +1,7 @@
 package collision;
 
 import entity.Entity;
+import npc.NpcChicken;
 import object.ObjBomb;
 import frame.FrameApp;
 import object.ObjPot;
@@ -49,45 +50,57 @@ public class CollisionChecker {
         int entityTopY = r.y;
         int entityBottomY = r.y + r.height;
 
-        int entityLeftCol = Math.max(0, entityLeftX / tileSize);
-        int entityRightCol = Math.max(0, entityRightX / tileSize);
-        int entityTopRow = Math.max(0, entityTopY / tileSize);
-        int entityBottomRow = Math.max(0, entityBottomY / tileSize);
+        // ワールド座標 -> タイル座標（負座標対応）
+        int entityLeftCol = Math.floorDiv(entityLeftX, tileSize);
+        int entityRightCol = Math.floorDiv(entityRightX, tileSize);
+        int entityTopRow = Math.floorDiv(entityTopY, tileSize);
+        int entityBottomRow = Math.floorDiv(entityBottomY, tileSize);
 
+        // マップの最大インデックス
         int maxCol = mapTileNum.length - 1;
         int maxRow = mapTileNum[0].length - 1;
+
+        // ここで全て clamp しておく（以降は clamp済みの値を使う）
+        int clampedLeftCol = Math.max(0, Math.min(maxCol, entityLeftCol));
+        int clampedRightCol = Math.max(0, Math.min(maxCol, entityRightCol));
+        int clampedTopRow = Math.max(0, Math.min(maxRow, entityTopRow));
+        int clampedBottomRow = Math.max(0, Math.min(maxRow, entityBottomRow));
 
         boolean collision = false;
 
         // 投げられたオブジェクト（空中から着地するもの）は底面タイルを直接チェック
-        // 着地時に確実に地面タイルに当たっているかを判定
         boolean isThrowableCheck = (entity instanceof ObjBomb) || (entity instanceof ObjPot) || entity.isThrown();
 
         if (isThrowableCheck) {
 
-            // 底面のタイル（足元）をチェック
-            int checkRow = Math.min(maxRow, Math.max(0, entityBottomRow));
-
-            // 投擲物は底面の1行上もチェックする
+            // 底面のタイル（足元）をチェック（clamp済み）
+            int checkRow = Math.min(maxRow, Math.max(0, clampedBottomRow));
             int checkRowAbove = Math.max(0, checkRow - 1);
 
-            int leftCol = Math.min(maxCol, Math.max(0, entityLeftCol));
-            int rightCol = Math.min(maxCol, Math.max(0, entityRightCol));
+            int leftCol = Math.min(maxCol, Math.max(0, clampedLeftCol));
+            int rightCol = Math.min(maxCol, Math.max(0, clampedRightCol));
 
+            // 安全に tileId を取得（念のため bounds チェック）
             int tileNum1 = mapTileNum[leftCol][checkRow];
             int tileNum2 = mapTileNum[rightCol][checkRow];
             int tileNum3 = mapTileNum[leftCol][checkRowAbove];
             int tileNum4 = mapTileNum[rightCol][checkRowAbove];
 
-            // collisionとbombCollisionの衝突判定をチェックする
-            if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision || tiles[tileNum1].potCollision
-                    || tiles[tileNum2].collision || tiles[tileNum2].bombCollision || tiles[tileNum2].potCollision
-                    || tiles[tileNum3].collision || tiles[tileNum3].bombCollision || tiles[tileNum3].potCollision
-                    || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision) {
+            if (isTileIndexValid(tileNum1, tiles) && isTileIndexValid(tileNum2, tiles)
+                    && isTileIndexValid(tileNum3, tiles) && isTileIndexValid(tileNum4, tiles)) {
+
+                if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision || tiles[tileNum1].potCollision
+                        || tiles[tileNum2].collision || tiles[tileNum2].bombCollision || tiles[tileNum2].potCollision
+                        || tiles[tileNum3].collision || tiles[tileNum3].bombCollision || tiles[tileNum3].potCollision
+                        || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision) {
+                    collision = true;
+                }
+            } else {
+                // tileId が不正なら安全側で衝突扱いにする
                 collision = true;
             }
 
-            gameWindow.getUi().addMessage("[checkTile] bomb branch: collision=" + collision +
+            gameWindow.getUi().addMessage("[checkTile] chicken branch: tiles[tileNum1] =" + tiles[tileNum1].chickenCollision +
                     " checkRow=" + checkRow + " checkRowAbove=" + checkRowAbove);
             entity.setCollision(collision);
             return collision;
@@ -102,44 +115,71 @@ public class CollisionChecker {
 
         switch (direction) {
             case "up" -> {
-                int newTopRow = (entityTopY - entity.getSpeed()) / tileSize;
+                int newTopRow = Math.floorDiv(entityTopY - entity.getSpeed(), tileSize);
                 newTopRow = Math.max(0, Math.min(maxRow, newTopRow));
-                tileNum1 = mapTileNum[entityLeftCol][newTopRow];
-                tileNum2 = mapTileNum[entityRightCol][newTopRow];
-                if (tiles[tileNum1].collision || tiles[tileNum2].collision) collision = true;
+                int leftCol = clampedLeftCol;
+                int rightCol = clampedRightCol;
+                tileNum1 = mapTileNum[leftCol][newTopRow];
+                tileNum2 = mapTileNum[rightCol][newTopRow];
+                if (isTileIndexValid(tileNum1, tiles) && isTileIndexValid(tileNum2, tiles)) {
+                    if (tiles[tileNum1].collision || tiles[tileNum2].collision)
+                        collision = true;
+                } else collision = true;
             }
             case "down" -> {
-                int newBottomRow = (entityBottomY + entity.getSpeed()) / tileSize;
+                int newBottomRow = Math.floorDiv(entityBottomY + entity.getSpeed(), tileSize);
                 newBottomRow = Math.max(0, Math.min(maxRow, newBottomRow));
-                tileNum1 = mapTileNum[entityLeftCol][newBottomRow];
-                tileNum2 = mapTileNum[entityRightCol][newBottomRow];
-                if (tiles[tileNum1].collision || tiles[tileNum2].collision) collision = true;
+                int leftCol = clampedLeftCol;
+                int rightCol = clampedRightCol;
+                tileNum1 = mapTileNum[leftCol][newBottomRow];
+                tileNum2 = mapTileNum[rightCol][newBottomRow];
+                if (isTileIndexValid(tileNum1, tiles) && isTileIndexValid(tileNum2, tiles)) {
+                    if (tiles[tileNum1].collision || tiles[tileNum2].collision)
+                        collision = true;
+                } else collision = true;
             }
             case "left" -> {
-                int newLeftCol = (entityLeftX - entity.getSpeed()) / tileSize;
+                int newLeftCol = Math.floorDiv(entityLeftX - entity.getSpeed(), tileSize);
                 newLeftCol = Math.max(0, Math.min(maxCol, newLeftCol));
-                tileNum1 = mapTileNum[newLeftCol][entityTopRow];
-                tileNum2 = mapTileNum[newLeftCol][entityBottomRow];
-                if (tiles[tileNum1].collision || tiles[tileNum2].collision) collision = true;
+                int topRow = clampedTopRow;
+                int bottomRow = clampedBottomRow;
+                tileNum1 = mapTileNum[newLeftCol][topRow];
+                tileNum2 = mapTileNum[newLeftCol][bottomRow];
+                if (isTileIndexValid(tileNum1, tiles) && isTileIndexValid(tileNum2, tiles)) {
+                    if (tiles[tileNum1].collision || tiles[tileNum2].collision)
+                        collision = true;
+                } else collision = true;
             }
             case "right" -> {
-                int newRightCol = (entityRightX + entity.getSpeed()) / tileSize;
+                int newRightCol = Math.floorDiv(entityRightX + entity.getSpeed(), tileSize);
                 newRightCol = Math.max(0, Math.min(maxCol, newRightCol));
-                tileNum1 = mapTileNum[newRightCol][entityTopRow];
-                tileNum2 = mapTileNum[newRightCol][entityBottomRow];
-                if (tiles[tileNum1].collision || tiles[tileNum2].collision) collision = true;
+                int topRow = clampedTopRow;
+                int bottomRow = clampedBottomRow;
+                tileNum1 = mapTileNum[newRightCol][topRow];
+                tileNum2 = mapTileNum[newRightCol][bottomRow];
+                if (isTileIndexValid(tileNum1, tiles) && isTileIndexValid(tileNum2, tiles)) {
+                    if (tiles[tileNum1].collision || tiles[tileNum2].collision)
+                        collision = true;
+                } else collision = true;
             }
             default -> {
-                // 方向不明時は現在の底面タイルをチェックしておく
-                int col = Math.max(0, Math.min(maxCol, entityLeftCol));
-                int row = Math.max(0, Math.min(maxRow, entityBottomRow));
+                int col = Math.max(0, Math.min(maxCol, clampedLeftCol));
+                int row = Math.max(0, Math.min(maxRow, clampedBottomRow));
                 int tileNum = mapTileNum[col][row];
-                if (tiles[tileNum].collision) collision = true;
+                if (isTileIndexValid(tileNum, tiles)) {
+                    if (tiles[tileNum].collision)
+                        collision = true;
+                } else collision = true;
             }
         }
 
         entity.setCollision(collision);
         return collision;
+    }
+
+    // 補助: tiles 配列に対する tileId の妥当性チェック
+    private boolean isTileIndexValid(int tileId, Tile[] tiles) {
+        return tileId >= 0 && tileId < tiles.length;
     }
 
     /**

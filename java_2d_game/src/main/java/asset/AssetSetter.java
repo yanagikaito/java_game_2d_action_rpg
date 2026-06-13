@@ -6,10 +6,7 @@ import frame.FrameApp;
 import monster.MonGreenGoblin;
 import monster.MonGreenSlime;
 import monster.MonMintSoldier;
-import npc.NpcChicken;
-import npc.NpcMerChant;
-import npc.NpcOldMan;
-import npc.NpcSave;
+import npc.*;
 import object.*;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
@@ -25,10 +22,19 @@ public class AssetSetter {
 
     public void setNpcOldMan() {
         NpcOldMan npcOldMan = new NpcOldMan(gameWindow);
-        npcOldMan.setWorldX(FrameApp.getTileSize() * 21);
-        npcOldMan.setWorldY(FrameApp.getTileSize() * 21);
+        npcOldMan.setWorldX(FrameApp.getTileSize() * 22);
+        npcOldMan.setWorldY(FrameApp.getTileSize() * 22);
         Entity[] npcArray = gameWindow.getNPC();
         npcArray[0] = npcOldMan;
+        gameWindow.setNPC(npcArray);
+    }
+
+    public void setNpcMalonyChicken() {
+        NpcMalonyChicken npcMalonyChicken = new NpcMalonyChicken(gameWindow);
+        npcMalonyChicken.setWorldX(FrameApp.getTileSize() * 37);
+        npcMalonyChicken.setWorldY(FrameApp.getTileSize() * 20);
+        Entity[] npcArray = gameWindow.getNPC();
+        npcArray[1] = npcMalonyChicken;
         gameWindow.setNPC(npcArray);
     }
 
@@ -58,7 +64,7 @@ public class AssetSetter {
         monsters[i] = createMonMintSoldier(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 3);
         i++;
 
-        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 38);
+        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 26);
         i++;
 
         monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 38);
@@ -91,10 +97,10 @@ public class AssetSetter {
         monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 34);
         i++;
 
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 36);
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 42, FrameApp.getTileSize() * 23);
         i++;
 
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 38);
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 42, FrameApp.getTileSize() * 21);
 
         gameWindow.setMonster(monsters);
     }

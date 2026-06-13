@@ -94,6 +94,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         lastUpdateTimeNano = System.nanoTime();
         assetSetter.setNpcOldMan();
+        assetSetter.setNpcMalonyChicken();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
