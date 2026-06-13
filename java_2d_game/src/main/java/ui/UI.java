@@ -73,6 +73,12 @@ public class UI {
     private boolean saveInProgress = false;     // 保存処理中フラグ
     private boolean saveMenuOpen = false;       // セーブメニューが開いているか
 
+    private boolean awaitingChoice = false;
+    private Entity currentChoiceNpc = null; // NpcMalonyChicken など
+    private String choiceTitle = null;
+    private String[] currentOptions = null;
+    private int selectedOption = 0;
+
     private static final long MAX_PLAY_SECONDS = 3_599_999L;
 
     public UI(GameWindow gameWindow) {
@@ -725,6 +731,10 @@ public class UI {
         x += tileSize;
         y += tileSize;
         g2.drawString(currentDialogueMessage, x, y);
+
+        if (isAwaitingChoice()) {
+            drawChoice(g2);
+        }
     }
 
     private void drawCharacterScreen(Graphics2D g2) {
@@ -1194,5 +1204,95 @@ public class UI {
         if (slot >= 0 && slot < saveMetas.length) {
             saveMetas[slot] = meta;
         }
+    }
+
+    public boolean isAwaitingChoice() {
+        return awaitingChoice;
+    }
+
+    public void showChoice(String title, String[] options, Entity npc) {
+        this.awaitingChoice = true;
+        this.choiceTitle = title;
+        this.currentOptions = options;
+        this.currentChoiceNpc = npc;
+        this.selectedOption = 0;
+        // ダイアログ領域にタイトルだけ表示したければここで setCurrentDialogueMessage(title) を呼ぶ
+    }
+
+    private void drawChoice(Graphics2D g2) {
+
+        // レイアウト定義（必要に応じて調整）
+        int boxX = 50;
+        int boxY = 400;
+        int boxW = 700;
+        int boxH = 120;
+        int padding = 20;
+
+        // 背景ボックス
+        g2.setColor(new Color(0, 0, 0, 180));
+        g2.fillRoundRect(boxX, boxY, boxW, boxH, 12, 12);
+
+        // タイトル
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("MS Gothic", Font.PLAIN, 20));
+        int titleX = boxX + padding;
+        int titleY = boxY + padding + 20;
+        g2.drawString(choiceTitle, titleX, titleY);
+
+        // 選択肢を横並びで描画
+        if (currentOptions == null) return;
+        g2.setFont(new Font("MS Gothic", Font.PLAIN, 18));
+        int optionY = titleY + 40;
+        int optionStartX = boxX + padding;
+        int gap = 220; // 選択肢間の間隔
+
+        for (int i = 0; i < currentOptions.length; i++) {
+            int optX = optionStartX + i * gap;
+            String text = currentOptions[i];
+
+            // 選択中の装飾（矢印と色）
+            if (i == selectedOption) {
+                g2.setColor(Color.YELLOW);
+                g2.drawString(">", optX - 20, optionY);
+                g2.setColor(Color.WHITE);
+                // 選択中の背景
+                g2.setColor(new Color(255, 255, 255, 30));
+                g2.fillRoundRect(optX - 10, optionY - 20, 180, 30, 8, 8);
+                g2.setColor(Color.WHITE);
+            } else {
+                g2.setColor(Color.LIGHT_GRAY);
+            }
+
+            g2.drawString(text, optX, optionY);
+        }
+
+        // ヒント（A/B キー）
+        g2.setFont(new Font("MS Gothic", Font.PLAIN, 14));
+        g2.setColor(Color.GRAY);
+        g2.drawString("[A] 決定  [←/→] 選択  [B] キャンセル", boxX + padding, boxY + boxH - 10);
+    }
+
+    public void clearChoice() {
+        this.awaitingChoice = false;
+        this.currentOptions = null;
+        this.currentChoiceNpc = null;
+    }
+
+    public Entity getCurrentChoiceNpc() {
+        return currentChoiceNpc;
+    }
+
+    public void moveChoiceLeft() {
+        if (!awaitingChoice || currentOptions == null) return;
+        selectedOption = Math.max(0, selectedOption - 1);
+    }
+
+    public void moveChoiceRight() {
+        if (!awaitingChoice || currentOptions == null) return;
+        selectedOption = Math.min(currentOptions.length - 1, selectedOption + 1);
+    }
+
+    public int getSelectedOption() {
+        return selectedOption;
     }
 }

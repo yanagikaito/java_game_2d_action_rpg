@@ -1,6 +1,8 @@
 package key;
 
+import entity.Entity;
 import game.GameState;
+import npc.NpcMalonyChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
 import window.GameWindow;
@@ -164,6 +166,50 @@ public class KeyHandler implements KeyListener {
         }
 
         if (gameWindow.isOnTransition()) return;
+
+        if (gameWindow.getUi().isAwaitingChoice()) {
+            // 左右で選択移動
+            if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A) {
+                gameWindow.getUi().moveChoiceLeft();
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                return;
+            }
+            if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
+                gameWindow.getUi().moveChoiceRight();
+                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                return;
+            }
+
+            // 決定（Enter または専用キー）
+            if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_Z) {
+                Entity npc = gameWindow.getUi().getCurrentChoiceNpc();
+                int choice = gameWindow.getUi().getSelectedOption();
+                if (npc != null) {
+                    try {
+                        npc.getClass().getMethod("onPlayerChoice", int.class).invoke(npc, choice);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                gameWindow.getUi().clearChoice();
+                gameWindow.getSoundmanager().cursorWAV("sound/confirm.wav");
+                return;
+            }
+
+            // キャンセル（Esc）
+            if (code == KeyEvent.VK_ESCAPE) {
+                Entity npc = gameWindow.getUi().getCurrentChoiceNpc();
+                if (npc instanceof NpcMalonyChicken malony) {
+                    malony.onPlayerChoice(1); // 断る
+                }
+                gameWindow.getUi().clearChoice();
+                gameWindow.getSoundmanager().cursorWAV("sound/cancel.wav");
+                return;
+            }
+
+            // 選択肢表示中は他のキーを無視
+            return;
+        }
 
         switch (code) {
             case KeyEvent.VK_W -> setPlayerUp(true);

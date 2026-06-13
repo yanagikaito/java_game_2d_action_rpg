@@ -2,12 +2,10 @@ package entity;
 
 import entity.particle.FireworkParticle;
 import entity.particle.Particle;
-import entity.type.BossMonsterType;
-import entity.type.EntityType;
-import entity.type.MonsterType;
-import entity.type.ShieldType;
+import entity.type.*;
 import frame.FrameApp;
 import game.GameState;
+import npc.NpcChicken;
 import object.Projectile;
 import player.Player;
 import window.GameWindow;
@@ -246,6 +244,11 @@ public abstract class Entity {
         // 方向を設定（フロー・フィールドで決定）
         setAction();
         checkCollision();
+        if (thrown) {
+            // thrown の場合、setAction() 内で空中の座標更新や着地判定を行っているはず
+            // ただし、着地直後にマップ通知が必要なら setAction() 側で行うこと
+            return;
+        }
 
         if (!isCollision()) {
             move();
@@ -1773,7 +1776,7 @@ public abstract class Entity {
         }
 
         // デバッグ
-//        if (getType() instanceof MonsterType && targetColorOn) {
+//        if (getType() instanceof ChickenType && targetColorOn) {
 //
 //            int margine = 2;
 //            int size = FrameApp.getTileSize() - (margine * 2);

@@ -1,7 +1,10 @@
 package map;
 
+import entity.Coop;
 import entity.Entity;
+import frame.FrameApp;
 import npc.NpcChicken;
+import object.GameObject;
 import window.GameWindow;
 
 import java.awt.*;
@@ -49,6 +52,8 @@ public class GameMap {
 
     public static final int SWARM_SPAWN_COUNT = 20;
 
+    private GameObject[][] tileObjects;
+
     /**
      * 指定した GameWindow に紐づく GameMap を生成。
      *
@@ -57,6 +62,9 @@ public class GameMap {
 
     public GameMap(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
+        int cols = FrameApp.getMaxWorldCol();
+        int rows = FrameApp.getMaxWorldRow();
+        tileObjects = new GameObject[cols][rows];
     }
 
     /**
@@ -153,6 +161,45 @@ public class GameMap {
             if (r.intersects(er)) return false;
         }
         return true;
+    }
+
+    public GameObject getObjectAtTile(int tileX, int tileY) {
+        if (tileX < 0 || tileY < 0) return null;
+        if (tileX >= tileObjects.length || tileY >= tileObjects[0].length) return null;
+        return tileObjects[tileX][tileY];
+    }
+
+    public Coop getCoopAtTile(int tileX, int tileY) {
+        GameObject obj = getObjectAtTile(tileX, tileY);
+        if (obj instanceof Coop) return (Coop) obj;
+        return null;
+    }
+
+    public void setObjectAtTile(int tileX, int tileY, GameObject obj) {
+        if (tileX < 0 || tileY < 0) return;
+        if (tileX >= tileObjects.length || tileY >= tileObjects[0].length) return;
+        tileObjects[tileX][tileY] = obj;
+        if (obj != null) obj.setTilePosition(tileX, tileY);
+    }
+
+    // onEntityMoved をここに置く（NpcChicken の移動通知を受ける）
+    public void onEntityMoved(Entity e, int newTileX, int newTileY) {
+        if (e instanceof NpcChicken) {
+            NpcChicken chicken = (NpcChicken) e;
+            Coop coop = getCoopAtTile(newTileX, newTileY);
+            if (coop != null) {
+                if (!chicken.isInCoop()) {
+                    chicken.setInCoop(true);
+                    coop.addChicken(chicken);
+                }
+            } else {
+                Coop prev = getCoopAtTile(chicken.getPrevTileX(), chicken.getPrevTileY());
+                if (prev != null && chicken.isInCoop()) {
+                    chicken.setInCoop(false);
+                    prev.removeChicken(chicken);
+                }
+            }
+        }
     }
 
     /**

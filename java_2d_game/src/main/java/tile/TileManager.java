@@ -60,6 +60,7 @@ public class TileManager {
 
             tiles[1] = new Tile();
             tiles[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/meadow.png"));
+            tiles[1].chickenCollision = true;
 
             tiles[2] = new Tile();
             tiles[2].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/pond.png"));
@@ -71,6 +72,7 @@ public class TileManager {
             tiles[4] = new Tile();
             tiles[4].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree.png"));
             tiles[4].collision = true;
+            tiles[4].chickenCollision = true;
 
             tiles[5] = new Tile();
             tiles[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/wall.png"));
@@ -92,6 +94,7 @@ public class TileManager {
             tiles[10] = new Tile();
             tiles[10].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree‑stump.png"));
             tiles[10].collision = true;
+            tiles[10].chickenCollision = true;
 
         } catch (IOException e) {
             e.printStackTrace();

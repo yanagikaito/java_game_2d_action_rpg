@@ -1,10 +1,12 @@
 package npc;
 
 import collision.CollisionChecker;
+import entity.Coop;
 import entity.Entity;
 import entity.type.ChickenType;
 import frame.FrameApp;
 import map.GameMap;
+import tile.TileManager;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -30,10 +32,6 @@ public class NpcChicken extends Entity {
 
     private static final long PICKABLE_DELAY_MS = 500L;
     private long landedAt = 0L;
-    private int solidAreaDefaultX;
-    private int solidAreaDefaultY;
-    private int solidAreaDefaultW;
-    private int solidAreaDefaultH;
 
     private int hitCount = 0;
     private static final int HELP_TRIGGER_THRESHOLD = 30;
@@ -44,7 +42,12 @@ public class NpcChicken extends Entity {
     private boolean following = false;
     private boolean playerFollowing = false;
 
-    // 1体あたりのダメージ（
+    private boolean inCoop = false;
+    private int prevTileX = -1;
+    private int prevTileY = -1;
+    private GameMap gameMap;
+
+    // 1体あたりのダメージ
     private int attackDamage = 2;
     // 1体が連続で与える最短間隔（ms）
     private long attackCooldownMs = 800L;
@@ -85,7 +88,8 @@ public class NpcChicken extends Entity {
         setType(new ChickenType());
         setMaxLife(life);
         setLife(getMaxLife());
-        setSpeed(1);
+        setSpeed(2);
+        setCollision(true);
         getSolidArea().x = 1;
         getSolidArea().y = 1;
         getSolidArea().width = FrameApp.getTileSize() * 2;
@@ -93,10 +97,11 @@ public class NpcChicken extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        this.solidAreaDefaultX = getSolidArea().x;
-        this.solidAreaDefaultY = getSolidArea().y;
-        this.solidAreaDefaultW = getSolidArea().width;
-        this.solidAreaDefaultH = getSolidArea().height;
+        try {
+            this.gameMap = gameWindow.getCurrentMap();
+        } catch (Exception e) {
+            this.gameMap = null;
+        }
 
         loadNPCImages();
     }
@@ -124,19 +129,33 @@ public class NpcChicken extends Entity {
     @Override
     public void setAction() {
 
-        // 着地後の復元処理
+        prevTileX = worldToTile(getWorldX());
+        prevTileY = worldToTile(getWorldY());
+
+        if (!thrown) {
+
+            // 移動後のタイル
+            int newTileX = worldToTile(getWorldX());
+            int newTileY = worldToTile(getWorldY());
+
+            // タイルが変わったときだけ通知する
+            if ((newTileX != prevTileX || newTileY != prevTileY) && gameMap != null) {
+                gameMap.onEntityMoved(this, newTileX, newTileY);
+            }
+        }
+
+        // --- 着地後の復元処理 ---
         if (landed && !pickable) {
             long now = System.currentTimeMillis();
             if (now - landedAt >= PICKABLE_DELAY_MS) {
-                // solidArea を復元して拾えるようにする
                 pickable = true;
                 landed = false;
                 this.setCollision(true);
                 if (this.getSolidArea() != null) {
-                    this.getSolidArea().x = this.solidAreaDefaultX;
-                    this.getSolidArea().y = this.solidAreaDefaultY;
-                    this.getSolidArea().width = this.solidAreaDefaultW;
-                    this.getSolidArea().height = this.solidAreaDefaultH;
+                    this.getSolidArea().x = 1;
+                    this.getSolidArea().y = 1;
+                    this.getSolidArea().width = 48;
+                    this.getSolidArea().height = 48;
                 }
                 System.out.println("[CHICKEN] pickable now true at world=(" + getWorldX() + "," + getWorldY() + ")");
             }
@@ -156,56 +175,80 @@ public class NpcChicken extends Entity {
 
         // --- 投げられている状態（空中） ---
         if (thrown) {
-
-            // 水平移動
+            // 空中では move() を使わず world 座標を直接更新する
             setWorldX(getWorldX() + (int) Math.round(vx));
             setWorldY(getWorldY() + (int) Math.round(vy));
 
-            // 画面Y方向の重力（既存）
             vy += gravity;
 
-            // 垂直（高さ）方向の更新（上向き正のルール）
             z += vz;
             vz -= verticalGravity;
 
-            // デバッグ出力（物理とワールド座標の両方を出す）
             getGameWindow().getUi().addMessage("z = " + z);
             getGameWindow().getUi().addMessage("vz = " + vz);
             getGameWindow().getUi().addMessage("worldY = " + getWorldY());
 
-
-            // --- 着地判定（z <= 0 のときだけ床判定を行う） ---
-
-            // 着地判定
             if (z <= 0) {
                 z = 0;
                 vz = 0;
 
                 boolean tileCollision = getGameWindow().getCollisionChecker().checkTile(this);
+
                 if (tileCollision) {
                     landed = true;
                     thrown = false;
                     pickable = false;
                     hasShadow = false;
-                    this.setCollision(false);
 
+                    int tileX = worldToTile(getWorldX());
+                    int tileY = worldToTile(getWorldY());
+
+                    // 1) 可能なら gameMap の既存ロジックを呼ぶ
+                    if (gameMap != null) {
+                        gameMap.onEntityMoved(this, tileX, tileY);
+                    } else {
+                        // 2) フォールバック: TileManager 経由で Coop を探して登録
+                        try {
+                            TileManager tm = getGameWindow().getTileManager();
+                            if (tm != null) {
+                                try {
+                                    Object maybe = tm.getClass().getMethod("getCoopAtTile", int.class, int.class)
+                                            .invoke(tm, tileX, tileY);
+                                    if (maybe instanceof Coop) {
+                                        Coop coop = (Coop) maybe;
+                                        if (!this.isInCoop()) {
+                                            this.setInCoop(true);
+                                            coop.addChicken(this);
+                                        }
+                                    }
+                                } catch (NoSuchMethodException ignored) {
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // 判定が済んだら当たり判定を縮める
+                    this.setCollision(false);
                     if (this.getSolidArea() != null) {
                         this.getSolidArea().width = 0;
                         this.getSolidArea().height = 0;
                     }
-                    System.out.println("[BOMB] landed id=" + getType() + " at worldY=" + getWorldY());
                 } else {
-                    // タイルに衝突していなければ地面に置く
                     thrown = false;
                     pickable = true;
                     hasShadow = false;
                 }
             }
 
+            // 空中処理のあと return して地上のランダム歩行を行わない
+            return;
         } else {
             // 地面に置かれている状態
             if (!pickable && !landed) {
                 randomWalkStep();
+                return;
             }
         }
 
@@ -266,10 +309,6 @@ public class NpcChicken extends Entity {
         } else {
             setSpeed(1);
         }
-    }
-
-    public boolean isPlayerFollowing() {
-        return this.playerFollowing;
     }
 
     private void callForHelp() {
@@ -450,6 +489,11 @@ public class NpcChicken extends Entity {
         setAlive(true);
     }
 
+    private int worldToTile(int worldCoord) {
+        int tileSize = FrameApp.getTileSize();
+        return Math.floorDiv(worldCoord, tileSize);
+    }
+
     public boolean isHasShadow() {
         return hasShadow;
     }
@@ -566,5 +610,21 @@ public class NpcChicken extends Entity {
 
     public void setDamageGiven(boolean damageGiven) {
         this.damageGiven = damageGiven;
+    }
+
+    public boolean isInCoop() {
+        return inCoop;
+    }
+
+    public void setInCoop(boolean v) {
+        inCoop = v;
+    }
+
+    public int getPrevTileX() {
+        return prevTileX;
+    }
+
+    public int getPrevTileY() {
+        return prevTileY;
     }
 }
