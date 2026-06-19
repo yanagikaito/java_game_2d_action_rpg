@@ -1,43 +1,52 @@
 package entity;
 
 import npc.NpcChicken;
+import npc.NpcMalonyChicken;
 import object.GameObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import window.GameWindow;
 
 public class Coop extends GameObject {
 
-    private int chickenCount = 0;
-    private final int TARGET = 10;
-    private boolean notified = false;
-    private final List<QuestListener> listeners = new ArrayList<>();
+    private final java.util.List<NpcChicken> chickens = new java.util.ArrayList<>();
 
     public Coop() {
         this.collision = true;
     }
 
-    public synchronized void addChicken(NpcChicken chicken) {
-        chickenCount++;
-        System.out.println("[Coop] addChicken -> count=" + chickenCount);
-        if (!notified && chickenCount >= TARGET) {
-            notified = true;
-            notifyTargetReached();
-        }
-    }
-
-    public synchronized void removeChicken(NpcChicken chicken) {
-        if (chickenCount > 0) chickenCount--;
-        System.out.println("[Coop] removeChicken -> count=" + chickenCount);
-    }
-
-    private void notifyTargetReached() {
-        for (QuestListener l : new ArrayList<>(listeners)) {
+    public void addChicken(NpcChicken chicken) {
+        if (chicken == null) return;
+        if (chickens.add(chicken)) {
             try {
-                l.onObjectiveReached("quest_fill_chicken_coop");
-            } catch (Exception e) {
-                e.printStackTrace();
+                chicken.setInCoop(true);
+            } catch (Throwable ignored) {
             }
+
+            int count = chickens.size();
+            chicken.getGameWindow().getUi().addMessage("[Coop] addChicken -> count=" + count);
+
+            // Malony に即時通知
+            try {
+                GameWindow gw = chicken.getGameWindow();
+                if (gw != null) {
+                    Entity[] monsters = gw.getObj();
+                    if (monsters != null) {
+                        for (Entity e : monsters) {
+                            if (e instanceof NpcMalonyChicken) {
+                                ((NpcMalonyChicken) e).checkCoopObjective();
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        } else {
+            System.out.println("[Coop] addChicken: already present");
         }
+    }
+
+    public int getChickenCount() {
+        return chickens.size();
     }
 }

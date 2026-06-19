@@ -1,10 +1,12 @@
 package npc;
 
 import collision.CollisionChecker;
+import entity.Coop;
 import entity.Entity;
 import entity.QuestListener;
 import frame.FrameApp;
 import game.GameState;
+import map.GameMap;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -92,12 +94,13 @@ public class NpcMalonyChicken extends Entity implements QuestListener {
      * 定期チェック用：クエスト受注中かつ未完了ならかごのニワトリ数を確認する
      */
 
-    private void checkCoopObjective() {
+    public void checkCoopObjective() {
 
+        GameMap map = getGameWindow().getCurrentMap();
+        int current = map.countChickens();
         if (!questAccepted || questCompleted) return;
-
-        int count = getCoopChickenCount();
-        if (count >= 10) {
+        getGameWindow().getUi().setCurrentDialogueMessage("残り: " + current + "羽");
+        if (current <= 0) {
             onQuestObjectiveCompleted();
         }
     }
@@ -118,22 +121,6 @@ public class NpcMalonyChicken extends Entity implements QuestListener {
         // プレイヤーの向きに合わせて NPC を振り向かせる（プレイヤーの向きの逆を向く）
         String playerDir = getGameWindow().getPlayer().getDirection();
         setDirection(getOppositeDirection(playerDir));
-
-        // もしクエスト受注済みかつ未完了なら、かごの達成をチェックして完了処理を呼ぶ
-        if (questAccepted && !questCompleted) {
-            int count = getCoopChickenCount();
-            if (count >= 10) {
-                // 直接完了処理を呼ぶ（UI 表示は onQuestObjectiveCompleted 内で行う）
-                onQuestObjectiveCompleted();
-                return;
-            }
-        }
-
-        // 既に完了済みなら報酬は渡している想定。会話を変える。
-        if (questCompleted) {
-            getGameWindow().getUi().setCurrentDialogueMessage("本当に助かったわ。ありがとう！");
-            return;
-        }
 
         // 通常の会話フロー
         showDialogueAndAdvance();
@@ -168,7 +155,6 @@ public class NpcMalonyChicken extends Entity implements QuestListener {
         String[] dialogues = getDialogue();
         int dialogueIndex = getDialogueIndex();
 
-        // 安全な境界チェック
         if (dialogues == null || dialogues.length == 0) return;
         if (dialogueIndex < 0 || dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null) {
             dialogueIndex = 0;
@@ -237,77 +223,17 @@ public class NpcMalonyChicken extends Entity implements QuestListener {
         if (!questAccepted || questCompleted) return;
 
         try {
-            getGameWindow().getPlayer().setCoin(questRewardCoins);
-        } catch (NoSuchMethodError | NullPointerException ex) {
             int current = getGameWindow().getPlayer().getCoin();
             getGameWindow().getPlayer().setCoin(current + questRewardCoins);
+        } catch (NoSuchMethodError | NullPointerException ex) {
         }
 
         questCompleted = true;
         questAccepted = false;
         getGameWindow().getUi().setCurrentDialogueMessage("クエスト完了！ " + questRewardCoins + "コインを受け取ったよ。");
+        getGameWindow().getSoundmanager().questChickenCompleteWAV("sound/chicken-quest-completed.wav");
 
     }
-
-    /**
-     * かご内のニワトリ数を返すヘルパー
-     * 実装はプロジェクト構成に合わせて書き換えてください。
-     * 例1: マップがエンティティリストを持っている場合はそれを走査して数える
-     * 例2: Coop オブジェクトがあれば Coop.getChickenCount() を呼ぶ
-     */
-
-    private int getCoopChickenCount() {
-        try {
-            try {
-                Object maybeList = getGameWindow().getClass().getMethod("getCurrentMap").invoke(getGameWindow());
-                if (maybeList instanceof java.util.List) {
-                    @SuppressWarnings("unchecked")
-                    java.util.List<Entity> entities = (java.util.List<Entity>) maybeList;
-                    int cnt = 0;
-                    for (Entity e : entities) {
-                        if (e instanceof NpcChicken && ((NpcChicken) e).isInCoop()) cnt++;
-                    }
-                    return cnt;
-                }
-            } catch (NoSuchMethodException ignored) {
-
-            }
-
-            try {
-                Object mapObj = getGameWindow().getClass().getMethod("getGameMap").invoke(getGameWindow());
-                if (mapObj != null) {
-                    int coopTileX = 10;
-                    int coopTileY = 5;
-
-                    Object coopObj = null;
-                    try {
-                        coopObj = mapObj.getClass().getMethod("getCoopAtTile", int.class, int.class)
-                                .invoke(mapObj, coopTileX, coopTileY);
-                    } catch (NoSuchMethodException nsme) {
-                        try {
-                            Object tileObj = mapObj.getClass().getMethod("getObjectAtTile", int.class, int.class)
-                                    .invoke(mapObj, coopTileX, coopTileY);
-                            if (tileObj != null && tileObj.getClass().getSimpleName().equals("Coop")) coopObj = tileObj;
-                        } catch (NoSuchMethodException ignored2) {
-                        }
-                    }
-
-                    if (coopObj != null) {
-                        try {
-                            Object res = coopObj.getClass().getMethod("getChickenCount").invoke(coopObj);
-                            if (res instanceof Integer) return (Integer) res;
-                        } catch (NoSuchMethodException ignored3) {
-                        }
-                    }
-                }
-            } catch (NoSuchMethodException ignored) {
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return 0;
-    }
-
 
     private BufferedImage createImage(BufferedImage original, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

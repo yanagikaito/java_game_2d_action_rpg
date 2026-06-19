@@ -81,6 +81,10 @@ public class SoundManager {
         playSE(filePath);
     }
 
+    public void questChickenCompleteWAV(String filePath) {
+        playSE(filePath);
+    }
+
     // 事前ロード
     public void preload(String filePath) {
         ioExecutor.submit(() -> {

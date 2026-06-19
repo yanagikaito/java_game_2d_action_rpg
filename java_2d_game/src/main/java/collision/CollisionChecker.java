@@ -92,7 +92,9 @@ public class CollisionChecker {
                 if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision || tiles[tileNum1].potCollision
                         || tiles[tileNum2].collision || tiles[tileNum2].bombCollision || tiles[tileNum2].potCollision
                         || tiles[tileNum3].collision || tiles[tileNum3].bombCollision || tiles[tileNum3].potCollision
-                        || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision) {
+                        || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision
+                        || tiles[tileNum1].chickenCollision || tiles[tileNum2].chickenCollision
+                        || tiles[tileNum3].chickenCollision || tiles[tileNum4].chickenCollision) {
                     collision = true;
                 }
             } else {
@@ -100,8 +102,7 @@ public class CollisionChecker {
                 collision = true;
             }
 
-            gameWindow.getUi().addMessage("[checkTile] chicken branch: tiles[tileNum1] =" + tiles[tileNum1].chickenCollision +
-                    " checkRow=" + checkRow + " checkRowAbove=" + checkRowAbove);
+//            gameWindow.getUi().addMessage("[checkTile] chicken branch: tiles[tileNum1] =" + tiles[tileNum1].chickenCollision);
             entity.setCollision(collision);
             return collision;
         }

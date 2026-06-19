@@ -6,7 +6,6 @@ import entity.Entity;
 import entity.type.ChickenType;
 import frame.FrameApp;
 import map.GameMap;
-import tile.TileManager;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -88,7 +87,7 @@ public class NpcChicken extends Entity {
         setType(new ChickenType());
         setMaxLife(life);
         setLife(getMaxLife());
-        setSpeed(2);
+        setSpeed(1);
         setCollision(true);
         getSolidArea().x = 1;
         getSolidArea().y = 1;
@@ -184,15 +183,17 @@ public class NpcChicken extends Entity {
             z += vz;
             vz -= verticalGravity;
 
-            getGameWindow().getUi().addMessage("z = " + z);
-            getGameWindow().getUi().addMessage("vz = " + vz);
-            getGameWindow().getUi().addMessage("worldY = " + getWorldY());
+//            getGameWindow().getUi().addMessage("z = " + z);
+//            getGameWindow().getUi().addMessage("vz = " + vz);
+//            getGameWindow().getUi().addMessage("worldY = " + getWorldY());
 
             if (z <= 0) {
                 z = 0;
                 vz = 0;
 
                 boolean tileCollision = getGameWindow().getCollisionChecker().checkTile(this);
+
+                getGameWindow().getUi().addMessage(" tileCollision =" + tileCollision);
 
                 if (tileCollision) {
                     landed = true;
@@ -202,30 +203,49 @@ public class NpcChicken extends Entity {
 
                     int tileX = worldToTile(getWorldX());
                     int tileY = worldToTile(getWorldY());
+                    System.out.println("[LAND] world=(" + getWorldX() + "," + getWorldY() + ") -> tile=(" + tileX + "," + tileY + ")");
 
-                    // 1) 可能なら gameMap の既存ロジックを呼ぶ
-                    if (gameMap != null) {
-                        gameMap.onEntityMoved(this, tileX, tileY);
-                    } else {
-                        // 2) フォールバック: TileManager 経由で Coop を探して登録
+                    GameMap map = getGameWindow().getCurrentMap();
+                    Coop coop = null;
+                    if (map != null) {
+                        coop = map.getCoopAtTile(tileX, tileY);
+                        if (coop == null) {
+                            Object obj = map.getObjectAtTile(tileX, tileY);
+                            if (obj instanceof Coop) coop = (Coop) obj;
+                        }
+                    }
+
+                    if (map != null) {
                         try {
-                            TileManager tm = getGameWindow().getTileManager();
-                            if (tm != null) {
-                                try {
-                                    Object maybe = tm.getClass().getMethod("getCoopAtTile", int.class, int.class)
-                                            .invoke(tm, tileX, tileY);
-                                    if (maybe instanceof Coop) {
-                                        Coop coop = (Coop) maybe;
-                                        if (!this.isInCoop()) {
-                                            this.setInCoop(true);
-                                            coop.addChicken(this);
-                                        }
+                            coop = map.getCoopAtTile(tileX, tileY);
+                        } catch (Throwable ignored) {
+                        }
+                        if (coop == null) {
+                            try {
+                                Object obj = map.getObjectAtTile(tileX, tileY);
+                                if (obj instanceof Coop) coop = (Coop) obj;
+                            } catch (Throwable ignored) {
+                            }
+                        }
+                        // 半径2で探索
+                        if (coop == null) {
+                            for (int dx = -2; dx <= 2 && coop == null; dx++) {
+                                for (int dy = -2; dy <= 2 && coop == null; dy++) {
+                                    try {
+                                        Object obj = map.getObjectAtTile(tileX + dx, tileY + dy);
+                                        if (obj instanceof Coop) coop = (Coop) obj;
+                                    } catch (Throwable ignored) {
                                     }
-                                } catch (NoSuchMethodException ignored) {
                                 }
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        }
+                    }
+                    if (coop != null && !this.isInCoop()) {
+                        System.out.println("[LAND-FB] found coop near tile=(" + tileX + "," + tileY + ")");
+                        coop.addChicken(this);
+                        try {
+                            getGameWindow().unregisterMonster(this);
+                        } catch (Throwable ignored) {
                         }
                     }
 
@@ -241,8 +261,6 @@ public class NpcChicken extends Entity {
                     hasShadow = false;
                 }
             }
-
-            // 空中処理のあと return して地上のランダム歩行を行わない
             return;
         } else {
             // 地面に置かれている状態
