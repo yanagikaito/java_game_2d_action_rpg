@@ -122,6 +122,18 @@ public class NpcMalonyChicken extends Entity implements QuestListener {
         String playerDir = getGameWindow().getPlayer().getDirection();
         setDirection(getOppositeDirection(playerDir));
 
+        // もしクエスト受注済みかつ未完了なら、かごの達成をチェックして完了処理を呼ぶ
+        if (questAccepted && !questCompleted) {
+
+            checkCoopObjective();
+        }
+
+        // 既に完了済みなら報酬は渡している想定。会話を変える。
+        if (questCompleted) {
+            getGameWindow().getUi().setCurrentDialogueMessage("本当に助かったわ。ありがとう！");
+            return;
+        }
+
         // 通常の会話フロー
         showDialogueAndAdvance();
 
@@ -155,6 +167,7 @@ public class NpcMalonyChicken extends Entity implements QuestListener {
         String[] dialogues = getDialogue();
         int dialogueIndex = getDialogueIndex();
 
+        // 安全な境界チェック
         if (dialogues == null || dialogues.length == 0) return;
         if (dialogueIndex < 0 || dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null) {
             dialogueIndex = 0;
