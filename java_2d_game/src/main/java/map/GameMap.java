@@ -171,7 +171,10 @@ public class GameMap {
 
     public Coop getCoopAtTile(int tileX, int tileY) {
         GameObject obj = getObjectAtTile(tileX, tileY);
-        if (obj instanceof Coop) return (Coop) obj;
+        setObjectAtTile(tileX, tileY, obj);
+        if (obj instanceof Coop) {
+            setObjectAtTile(tileX, tileY, obj);
+        }
         return null;
     }
 
@@ -182,21 +185,19 @@ public class GameMap {
         if (obj != null) obj.setTilePosition(tileX, tileY);
     }
 
-    // onEntityMoved をここに置く（NpcChicken の移動通知を受ける）
     public void onEntityMoved(Entity e, int newTileX, int newTileY) {
         if (e instanceof NpcChicken) {
             NpcChicken chicken = (NpcChicken) e;
-            Coop coop = getCoopAtTile(newTileX, newTileY);
-            if (coop != null) {
+            getCoopAtTile(newTileX, newTileY);
+            if (chicken != null) {
                 if (!chicken.isInCoop()) {
                     chicken.setInCoop(true);
-                    coop.addChicken(chicken);
                 }
             } else {
-                Coop prev = getCoopAtTile(chicken.getPrevTileX(), chicken.getPrevTileY());
-                if (prev != null && chicken.isInCoop()) {
+                getCoopAtTile(chicken.getPrevTileX(), chicken.getPrevTileY());
+                if (chicken != null && chicken.isInCoop()) {
                     chicken.setInCoop(false);
-                    prev.removeChicken(chicken);
+                    resetChickensState();
                 }
             }
         }

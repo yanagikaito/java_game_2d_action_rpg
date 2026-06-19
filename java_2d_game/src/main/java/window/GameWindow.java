@@ -255,6 +255,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().setItems();
         getPlayer().setCoin(500);
         assetSetter.setNpcOldMan();
+        assetSetter.setNpcMalonyChicken();
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
@@ -559,6 +560,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldY(tileSize * 10);
 
             assetSetter.setNpcOldMan();
+            assetSetter.setNpcMalonyChicken();
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
@@ -1029,6 +1031,31 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
         System.out.println("registerMonster：空きスロットがありません");
     }
+
+    public void unregisterMonster(Entity e) {
+        if (e == null) return;
+        synchronized (monster) {
+            int found = -1;
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] == e) {
+                    found = i;
+                    break;
+                }
+            }
+            if (found == -1) {
+                System.out.println("[GameWindow] unregisterMonster not found: " + e);
+                return;
+            }
+
+            // null にして後ろを前に詰める
+            for (int i = found; i < monster.length - 1; i++) {
+                monster[i] = monster[i + 1];
+            }
+            monster[monster.length - 1] = null;
+            System.out.println("[GameWindow] unregisterMonster removed at index " + found + ": " + e);
+        }
+    }
+
 
     public void clearMonsters() {
         for (int i = 0; i < monster.length; i++) monster[i] = null;

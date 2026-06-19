@@ -1,6 +1,7 @@
 package tile;
 
 import db.DbManager;
+import entity.Coop;
 import frame.FrameApp;
 import window.GameWindow;
 
@@ -83,6 +84,7 @@ public class TileManager {
 
             tiles[7] = new Tile();
             tiles[7].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/floor.png"));
+            tiles[7].chickenCollision = true;
 
             tiles[8] = new Tile();
             tiles[8].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/table.png"));
@@ -162,5 +164,17 @@ public class TileManager {
 
     public int[][] getMapTileNum() {
         return mapTileNum;
+    }
+
+    public Coop getCoopAtTile(int tileX, int tileY) {
+        // タイルデータやオブジェクト配列から Coop を返す実装
+        Object obj = getObjectAtTile(tileX, tileY);
+        if (obj instanceof Coop) return (Coop) obj;
+        return null;
+    }
+
+    public Object getObjectAtTile(int tileX, int tileY) {
+        // 実装に合わせて返す
+        return null;
     }
 }

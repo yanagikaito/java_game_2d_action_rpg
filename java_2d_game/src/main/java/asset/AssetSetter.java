@@ -64,7 +64,7 @@ public class AssetSetter {
         monsters[i] = createMonMintSoldier(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 3);
         i++;
 
-        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 26);
+        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 26);
         i++;
 
         monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 38);
@@ -97,10 +97,10 @@ public class AssetSetter {
         monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 34);
         i++;
 
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 42, FrameApp.getTileSize() * 23);
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 36, FrameApp.getTileSize() * 23);
         i++;
 
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 42, FrameApp.getTileSize() * 21);
+        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 36, FrameApp.getTileSize() * 21);
 
         gameWindow.setMonster(monsters);
     }
