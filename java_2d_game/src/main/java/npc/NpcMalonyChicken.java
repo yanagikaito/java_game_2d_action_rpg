@@ -1,21 +1,18 @@
 package npc;
 
 import collision.CollisionChecker;
-import entity.Coop;
 import entity.Entity;
-import entity.QuestListener;
 import frame.FrameApp;
 import game.GameState;
 import map.GameMap;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class NpcMalonyChicken extends Entity implements QuestListener {
+public class NpcMalonyChicken extends Entity {
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final int SPRITE_COUNT = 3;
@@ -254,17 +251,5 @@ public class NpcMalonyChicken extends Entity implements QuestListener {
         g2.drawImage(original, 0, 0, width, height, null);
         g2.dispose();
         return result;
-    }
-
-    @Override
-    public void onObjectiveReached(String questId) {
-        SwingUtilities.invokeLater(() -> {
-            if (!questAccepted) {
-                getGameWindow().getUi().setCurrentDialogueMessage("かごは満杯だけど、クエストを受けていないわ");
-                return;
-            }
-            if (questCompleted) return;
-            onQuestObjectiveCompleted();
-        });
     }
 }

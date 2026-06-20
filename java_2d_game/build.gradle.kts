@@ -38,6 +38,9 @@ dependencies {
     implementation(project(":pathfinding_editor"))
     implementation("com.h2database:h2:2.2.224")
     implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation("org.slf4j:slf4j-api:2.0.9")
+    implementation("ch.qos.logback:logback-classic:1.5.25")
 }
 
 tasks.withType<JavaExec>().configureEach {

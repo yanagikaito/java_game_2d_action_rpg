@@ -12,6 +12,8 @@ import object.ObjCoinBronze;
 import object.ObjGreenPotion;
 import object.ObjRedPotion;
 import object.Projectile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
@@ -27,6 +29,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static frame.FrameApp.baseDisplay;
 
@@ -37,6 +40,14 @@ import static frame.FrameApp.baseDisplay;
  */
 
 public class GameWindow extends JPanel implements Window, Runnable {
+
+    private static final int TARGET_FPS = 60;
+    private static final long NANOS_PER_SECOND = 1_000_000_000L;
+    private static final double NANOS_PER_FRAME = (double) NANOS_PER_SECOND / TARGET_FPS;
+    private volatile boolean running = false;
+    private Thread gameThread;
+    private static final Logger logger = LoggerFactory.getLogger(GameWindow.class);
+    private final AtomicBoolean repaintPending = new AtomicBoolean(false);
 
     private KeyHandler keyHandler = new KeyHandler(this);
     private Player player = new Player(this, keyHandler);
@@ -56,7 +67,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public ArrayList<Entity> itemList = new ArrayList<>();
     private static GameWindow instance;
     private GameState gameState = GameState.TITLE;
-    private Thread gameThread;
     private boolean onTransition = false;
     private boolean fadingOut = true;
     private float alpha = 0f;
@@ -290,33 +300,82 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     @Override
     public void run() {
-        int fps = 60;
-        int nanosecond = 1000000000;
-        double drawInterval = (double) nanosecond / fps;
-        double delta = 0;
+        running = true;
         long lastTime = System.nanoTime();
-        long currentTime;
-        long timer = 0;
-        int drawCount = 0;
+        // フレームの余り時間を数える
+        double accumulator = 0.0;
+        // FPS計測用タイマー（ナノ秒）
+        long fpsTimer = 0L;
+        // 1秒間のフレーム数カウント
+        int framesThisSecond = 0;
 
-        while (gameThread != null) {
-            currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            timer += (currentTime - lastTime);
-            lastTime = currentTime;
+        while (running && !Thread.currentThread().isInterrupted()) {
+            long now = System.nanoTime();
+            long elapsed = now - lastTime;
+            lastTime = now;
 
-            if (delta >= 1) {
-                update();
-                repaint();
-                delta--;
-                drawCount++;
+            accumulator += elapsed / NANOS_PER_FRAME;
+            if (accumulator > 10.0) accumulator = 10.0;
+
+            while (accumulator >= 1.0) {
+                safeUpdate();
+                accumulator -= 1.0;
             }
 
-            if (timer >= nanosecond) {
-                System.out.println("FPS :" + drawCount);
-                drawCount = 0;
-                timer = 0;
+            // 描画要求は「まだ要求していないときだけ」出す
+            if (repaintPending.compareAndSet(false, true)) {
+                // EDT に一度だけ描画を依頼する
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        repaint();
+                    } catch (RuntimeException e) {
+                        safeRepaint();
+                    } finally {
+                        // EDT 側で描画要求が処理されたらフラグを戻す
+                        repaintPending.set(false);
+                    }
+                });
             }
+
+            // FPS カウント処理
+            fpsTimer += elapsed;
+            framesThisSecond++;
+
+            if (fpsTimer >= NANOS_PER_SECOND) {
+                logger.debug("Loop FPS: {}", framesThisSecond);
+                framesThisSecond = 0;
+                fpsTimer = 0;
+            }
+
+            // FPS 計測
+            // 精密なスリープ（次フレームまで待つ）
+            long frameEnd = System.nanoTime();
+            long frameElapsed = frameEnd - now;
+            long sleepNanos = (long) NANOS_PER_FRAME - frameElapsed;
+            if (sleepNanos > 0) {
+                try {
+                    Thread.sleep(Math.max(0, sleepNanos / 1_000_000L));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void safeUpdate() {
+        try {
+            update(); // ゲームの状態更新（重い処理はここに入れない）
+        } catch (RuntimeException e) {
+            logger.error("Update error", e);
+        }
+    }
+
+    private void safeRepaint() {
+        try {
+            repaint(); // 実際の描画は paintComponent で行う
+        } catch (RuntimeException e) {
+            logger.error("Repaint error", e);
         }
     }
 
@@ -407,17 +466,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void update() {
 
-        // --- フレーム間の経過秒を計算してプレイヤーに渡す ---
         long nowNano = System.nanoTime();
         double deltaSeconds = (nowNano - lastUpdateTimeNano) / 1_000_000_000.0;
-        // 極端に大きな delta を防ぐ（ウィンドウ切替や一時停止復帰時のジャンプ対策）
         if (deltaSeconds < 0) deltaSeconds = 0;
-        if (deltaSeconds > 1.0) deltaSeconds = 1.0; // 1秒以上は切り捨て（必要に応じて調整）
+        if (deltaSeconds > 1.0) deltaSeconds = 1.0;
         lastUpdateTimeNano = nowNano;
 
         // プレイ時間更新（1秒刻みで増える）
         player.updatePlayTime(deltaSeconds);
-        // ----------------------------------------------------
 
         if (gameState == GameState.PLAY) {
 
@@ -610,7 +666,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         if (gameState == GameState.TITLE || gameState == GameState.LOAD) {
             getUi().draw(g2);
-
         } else {
 
             if (onTransition) {
