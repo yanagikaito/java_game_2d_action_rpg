@@ -1,7 +1,6 @@
 package npc;
 
 import collision.CollisionChecker;
-import entity.Coop;
 import entity.Entity;
 import entity.type.ChickenType;
 import frame.FrameApp;
@@ -131,18 +130,6 @@ public class NpcChicken extends Entity {
         prevTileX = worldToTile(getWorldX());
         prevTileY = worldToTile(getWorldY());
 
-        if (!thrown) {
-
-            // 移動後のタイル
-            int newTileX = worldToTile(getWorldX());
-            int newTileY = worldToTile(getWorldY());
-
-            // タイルが変わったときだけ通知する
-            if ((newTileX != prevTileX || newTileY != prevTileY) && gameMap != null) {
-                gameMap.onEntityMoved(this, newTileX, newTileY);
-            }
-        }
-
         // --- 着地後の復元処理 ---
         if (landed && !pickable) {
             long now = System.currentTimeMillis();
@@ -200,54 +187,6 @@ public class NpcChicken extends Entity {
                     thrown = false;
                     pickable = false;
                     hasShadow = false;
-
-                    int tileX = worldToTile(getWorldX());
-                    int tileY = worldToTile(getWorldY());
-                    System.out.println("[LAND] world=(" + getWorldX() + "," + getWorldY() + ") -> tile=(" + tileX + "," + tileY + ")");
-
-                    GameMap map = getGameWindow().getCurrentMap();
-                    Coop coop = null;
-                    if (map != null) {
-                        coop = map.getCoopAtTile(tileX, tileY);
-                        if (coop == null) {
-                            Object obj = map.getObjectAtTile(tileX, tileY);
-                            if (obj instanceof Coop) coop = (Coop) obj;
-                        }
-                    }
-
-                    if (map != null) {
-                        try {
-                            coop = map.getCoopAtTile(tileX, tileY);
-                        } catch (Throwable ignored) {
-                        }
-                        if (coop == null) {
-                            try {
-                                Object obj = map.getObjectAtTile(tileX, tileY);
-                                if (obj instanceof Coop) coop = (Coop) obj;
-                            } catch (Throwable ignored) {
-                            }
-                        }
-                        // 半径2で探索
-                        if (coop == null) {
-                            for (int dx = -2; dx <= 2 && coop == null; dx++) {
-                                for (int dy = -2; dy <= 2 && coop == null; dy++) {
-                                    try {
-                                        Object obj = map.getObjectAtTile(tileX + dx, tileY + dy);
-                                        if (obj instanceof Coop) coop = (Coop) obj;
-                                    } catch (Throwable ignored) {
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (coop != null && !this.isInCoop()) {
-                        System.out.println("[LAND-FB] found coop near tile=(" + tileX + "," + tileY + ")");
-                        coop.addChicken(this);
-                        try {
-                            getGameWindow().unregisterMonster(this);
-                        } catch (Throwable ignored) {
-                        }
-                    }
 
                     // 判定が済んだら当たり判定を縮める
                     this.setCollision(false);

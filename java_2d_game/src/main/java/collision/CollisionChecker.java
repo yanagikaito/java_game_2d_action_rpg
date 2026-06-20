@@ -1,7 +1,6 @@
 package collision;
 
 import entity.Entity;
-import npc.NpcChicken;
 import object.ObjBomb;
 import frame.FrameApp;
 import object.ObjPot;
@@ -92,9 +91,7 @@ public class CollisionChecker {
                 if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision || tiles[tileNum1].potCollision
                         || tiles[tileNum2].collision || tiles[tileNum2].bombCollision || tiles[tileNum2].potCollision
                         || tiles[tileNum3].collision || tiles[tileNum3].bombCollision || tiles[tileNum3].potCollision
-                        || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision
-                        || tiles[tileNum1].chickenCollision || tiles[tileNum2].chickenCollision
-                        || tiles[tileNum3].chickenCollision || tiles[tileNum4].chickenCollision) {
+                        || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision) {
                     collision = true;
                 }
             } else {
