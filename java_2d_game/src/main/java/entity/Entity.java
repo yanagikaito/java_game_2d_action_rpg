@@ -1,5 +1,6 @@
 package entity;
 
+import damage.DamagePopup;
 import entity.particle.FireworkParticle;
 import entity.particle.Particle;
 import entity.type.*;
@@ -368,13 +369,24 @@ public abstract class Entity {
                     player.setTransparent(true);
                 }
 
-                // ノックバック（ガード成功時はここに来ないのでノックバックは与えられない）
+                // ノックバック（ガード成功時はノックバックは与えられない）
                 if (knockBackPower > 0) {
                     setKnockBack(player, this, knockBackPower);
                 }
 
                 // ライフ減少・無敵化
                 player.setLife(player.getLife() - damage);
+
+                int tileSize = FrameApp.getTileSize();
+
+                int sx = gameWindow.getPlayer().getWorldX() - this.getWorldX() + gameWindow.getPlayer().getScreenX();
+                int sy = gameWindow.getPlayer().getWorldY() - this.getWorldY() + gameWindow.getPlayer().getScreenY();
+
+                sx += tileSize / 2;
+                sy -= tileSize / 2;
+
+                DamagePopup.PopupVariant variant = DamagePopup.PopupVariant.DAMAGE;
+                gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
                 player.setInvincible(true);
                 setInvincibleCounter(0);
             }

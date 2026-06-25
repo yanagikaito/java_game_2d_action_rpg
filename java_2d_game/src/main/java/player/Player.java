@@ -1,5 +1,6 @@
 package player;
 
+import damage.DamagePopup;
 import entity.*;
 import entity.type.*;
 import frame.FrameApp;
@@ -2030,10 +2031,10 @@ public class Player extends Entity {
         if (monsterIndex != 999) {
             gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
-            Entity slime = gameWindow.getMonster()[monsterIndex];
+            Entity monster = gameWindow.getMonster()[monsterIndex];
             // 相対ベクトルを計算
-            double dx = getWorldX() - slime.getWorldX();
-            double dy = getWorldY() - slime.getWorldY();
+            double dx = getWorldX() - monster.getWorldX();
+            double dy = getWorldY() - monster.getWorldY();
             double len = Math.hypot(dx, dy);
             if (len == 0) {
                 // 完全に重なっている場合は上方向に押し出す例
@@ -2050,7 +2051,7 @@ public class Player extends Entity {
             moving = false;
 
             if (knockBackPower > 0) {
-                setKnockBack(gameWindow.getMonster()[monsterIndex], attacker, slime.getKnockBackPower());
+                setKnockBack(gameWindow.getMonster()[monsterIndex], attacker, monster.getKnockBackPower());
             }
 
             // モンスターのダメージ量
@@ -2063,6 +2064,18 @@ public class Player extends Entity {
 
             System.out.println("isCollision() = " + isCollision());
             setLife(getLife() - damage);
+
+            int tileSize = FrameApp.getTileSize();
+
+            int sx = gameWindow.getPlayer().getWorldX() - this.getWorldX() + this.getScreenX();
+            int sy = gameWindow.getPlayer().getWorldY() - this.getWorldY() + this.getScreenY();
+
+            sx += tileSize / 2;
+            sy -= tileSize / 2;
+
+            DamagePopup.PopupVariant variant = DamagePopup.PopupVariant.DAMAGE;
+
+            gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
             setInvincible(true);
 
             if (getLife() <= 0) {
@@ -2107,22 +2120,30 @@ public class Player extends Entity {
         long end = System.nanoTime();
         System.out.println("サウンド再生にかかった時間: " + (end - start) + " ns");
 
-        // プレイヤーのダメージ量（防御差し引き）
+        // プレイヤーのダメージ量
         int damage = setAttack(attack - target.getDefense());
         if (damage < 0) damage = 0;
 
         // --- ニワトリならモンスター用の死亡処理を行わず、専用の takeDamage を呼ぶ ---
         if (target instanceof NpcChicken) {
-            // NpcChicken 側で life を Math.max(1, ...) にしている想定
             ((NpcChicken) target).takeDamage(damage, knockBackPower);
-            // UI メッセージ等は NpcChicken.takeDamage 内で行うか、ここで行っても良い
-            gameWindow.getUi().addMessage(damage + "ダメージ!");
             return;
         }
 
         // モンスター処理
         target.setLife(target.getLife() - damage);
-        gameWindow.getUi().addMessage(damage + "ダメージ!");
+
+        int tileSize = FrameApp.getTileSize();
+        int sx = target.getWorldX() - this.getWorldX() + this.getScreenX();
+        int sy = target.getWorldY() - this.getWorldY() + this.getScreenY();
+
+        sx += tileSize / 2;
+        sy -= tileSize / 2;
+
+        DamagePopup.PopupVariant variant = DamagePopup.PopupVariant.DAMAGE;
+
+        gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
+
         target.setInvincible(true);
         target.damageReaction();
         gameWindow.getUi().addMessage(target.getName() + "のHP:" + target.getLife());

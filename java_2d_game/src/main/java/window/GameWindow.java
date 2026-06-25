@@ -549,6 +549,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     obj[i].update();
                 }
             }
+            ui.getDamagePopupManager().updateAll();
         }
         if (gameState == GameState.PAUSE) {
 

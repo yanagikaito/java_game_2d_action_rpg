@@ -1,5 +1,6 @@
 package ui;
 
+import damage.DamagePopupManager;
 import entity.Entity;
 import entity.type.EntityType;
 import frame.FrameApp;
@@ -44,6 +45,7 @@ public class UI {
     private ArrayList<Integer> messageCounter = new ArrayList<>();
     private GreenHexPanel greenHexPanel = new GreenHexPanel();
     private SpriteManager spriteManager = new SpriteManager();
+    private DamagePopupManager damagePopupManager = new DamagePopupManager(64);
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -133,7 +135,7 @@ public class UI {
 
             gameWindow.setDialogueActive(false);
             drawPlayerLife(g2);
-            drawBattleLogMessage(g2);
+            damagePopupManager.drawAll(g2);
             drawManaBar(g2);
 
         } else if (gameState == GameState.PAUSE) {
@@ -861,35 +863,6 @@ public class UI {
         return String.format("%03d:%02d:%02d", h, m, s);
     }
 
-    private void drawBattleLogMessage(Graphics2D g2) {
-
-        int tileSize = FrameApp.getTileSize();
-        int messageX = tileSize;
-        int messageY = tileSize * 4;
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
-
-        for (int i = 0; i < message.size(); i++) {
-
-            if (message.get(i) != null) {
-
-                g2.setColor(Color.BLACK);
-                g2.drawString(message.get(i), messageX + 2, messageY + 2);
-
-                g2.setColor(Color.white);
-                g2.drawString(message.get(i), messageX, messageY);
-
-                int counter = messageCounter.get(i) + 1;
-                messageCounter.set(i, counter);
-                messageY += 50;
-
-                if (messageCounter.get(i) > 180) {
-                    message.remove(i);
-                    messageCounter.remove(i);
-                }
-            }
-        }
-    }
-
     public void drawInventory(Graphics2D g2, Entity entity, boolean cursor) {
 
         if (entity == null || entity.getInventory() == null) return;
@@ -1280,6 +1253,10 @@ public class UI {
 
     public Entity getCurrentChoiceNpc() {
         return currentChoiceNpc;
+    }
+
+    public DamagePopupManager getDamagePopupManager() {
+        return damagePopupManager;
     }
 
     public void moveChoiceLeft() {
