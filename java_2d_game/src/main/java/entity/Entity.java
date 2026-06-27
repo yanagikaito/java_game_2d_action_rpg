@@ -51,6 +51,7 @@ public abstract class Entity {
     private boolean stackable = false;
     private boolean thrown = false;
     private int amount = 1;
+    protected String trigger;
 
     public enum Direction {UP, DOWN, LEFT, RIGHT}
 
@@ -720,6 +721,29 @@ public abstract class Entity {
 
     public String[] getDialogue() {
         return dialogue;
+    }
+
+    public void setDialogueArray(String[] dialogueArray) {
+        this.dialogue = dialogueArray;
+    }
+
+    public void setDialogueAt(int index, String text) {
+        if (dialogue == null) {
+            dialogue = new String[Math.max(4, index + 1)];
+        } else if (index >= dialogue.length) {
+            String[] tmp = new String[index + 1];
+            System.arraycopy(dialogue, 0, tmp, 0, dialogue.length);
+            dialogue = tmp;
+        }
+        dialogue[index] = text;
+    }
+
+    public String getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
     }
 
     /**

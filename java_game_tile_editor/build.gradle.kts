@@ -19,6 +19,7 @@ repositories {
 dependencies {
     implementation(project(":db"))
     implementation("com.h2database:h2:2.2.224")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.8")
 }
 
 tasks.withType<JavaCompile> {
