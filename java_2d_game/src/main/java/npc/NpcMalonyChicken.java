@@ -19,7 +19,7 @@ public class NpcMalonyChicken extends Entity {
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private boolean following = false;
     private final CollisionChecker collisionChecker;
-    private final int questRewardCoins = 100;
+    private int questRewardCoins = 100;
     // 会話が終わって選択肢を出したか
     private boolean questOffered = false;
     // プレイヤーの選択待ち中か（UI と連携）
@@ -29,13 +29,18 @@ public class NpcMalonyChicken extends Entity {
     // クエストが完了して報酬を渡したか
     private boolean questCompleted = false;
 
-    public NpcMalonyChicken(GameWindow gameWindow) {
+    private String eventId;
+
+    public NpcMalonyChicken(GameWindow gameWindow, db.MapEvent ev) {
         super(gameWindow);
+        if (ev != null) {
+            this.eventId = String.valueOf(ev.getId());
+            applyMapEvent(ev);
+        }
         this.collisionChecker = new CollisionChecker(gameWindow);
         setDirection("left");
         setSpeed(0);
         loadNPCImages();
-        setDialogue();
     }
 
     public void loadNPCImages() {
@@ -56,12 +61,34 @@ public class NpcMalonyChicken extends Entity {
         }
     }
 
-    public void setDialogue() {
-        // 必要な長さの配列が Entity 側で確保されている前提
-        getDialogue()[0] = "こんにちは、私はマロニー。";
-        getDialogue()[1] = "お願いがあるの。";
-        getDialogue()[2] = "ニワトリを10羽捕まえて";
-        getDialogue()[3] = "お礼に100コインあげるわ";
+    public void applyMapEvent(db.MapEvent ev) {
+        if (ev == null) return;
+
+        // eventId 等の基本情報
+        if (ev.getId() != null) this.eventId = ev.getId();
+        this.setName(ev.getName());
+        this.setTrigger(ev.getTrigger());
+
+        // dialogues を配列にコピー
+        java.util.List<String> dlg = ev.getDialogues();
+        if (dlg == null || dlg.isEmpty()) {
+            // 空なら空配列をセットしておく（null 回避）
+            setDialogueArray(new String[0]);
+        } else {
+            String[] arr = new String[dlg.size()];
+            for (int i = 0; i < dlg.size(); i++) {
+                arr[i] = dlg.get(i);
+            }
+            setDialogueArray(arr);
+        }
+
+        // クエストや meta の反映
+        this.questOffered = ev.isQuestOffered();
+        this.questAccepted = ev.isQuestAccepted();
+        this.questCompleted = ev.isQuestCompleted();
+        if (ev.getMeta() != null && ev.getMeta().get("reward") instanceof Number) {
+            this.questRewardCoins = ((Number) ev.getMeta().get("reward")).intValue();
+        }
     }
 
     @Override
@@ -223,6 +250,10 @@ public class NpcMalonyChicken extends Entity {
         getGameWindow().getUi().setCurrentDialogueMessage("そう、またいつでも来てね。");
     }
 
+    private String generateEventId() {
+        return "ev_" + Long.toHexString(System.currentTimeMillis());
+    }
+
     /**
      * クエスト完了判定（外部から呼ぶ想定）または NPC 自身がチェックして呼ぶ
      * 例: マップのかご判定処理が 10 羽を検出したらこのメソッドを呼ぶ
@@ -251,5 +282,13 @@ public class NpcMalonyChicken extends Entity {
         g2.drawImage(original, 0, 0, width, height, null);
         g2.dispose();
         return result;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 }

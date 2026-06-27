@@ -91,6 +91,19 @@ public class DbManager {
                         FOREIGN KEY (save_id) REFERENCES saves(id)
                     )""");
 
+            // イベントテーブル（map_event）
+            stmt.execute("""
+                    CREATE TABLE IF NOT EXISTS map_event (
+                      id VARCHAR(64) PRIMARY KEY,
+                      map_id INT,
+                      x INT NOT NULL,
+                      y INT NOT NULL,
+                      name VARCHAR(255),
+                      trigger_type VARCHAR(32),
+                      json CLOB,
+                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )""");
+
             System.out.println("Database schema initialization completed successfully");
         } catch (SQLException e) {
             System.err.println("An error occurred during schema initialization");

@@ -25,6 +25,20 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.8")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.18.8")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.8")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("com.fasterxml.jackson.core:jackson-core:2.18.8")
+        force("com.fasterxml.jackson.core:jackson-databind:2.18.8")
+        force("com.fasterxml.jackson.core:jackson-annotations:2.18.8")
+    }
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }

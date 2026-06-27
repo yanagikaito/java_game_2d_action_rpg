@@ -29,14 +29,60 @@ public class AssetSetter {
         gameWindow.setNPC(npcArray);
     }
 
-    public void setNpcMalonyChicken() {
-        NpcMalonyChicken npcMalonyChicken = new NpcMalonyChicken(gameWindow);
-        npcMalonyChicken.setWorldX(FrameApp.getTileSize() * 37);
-        npcMalonyChicken.setWorldY(FrameApp.getTileSize() * 20);
+    public void setNpcMalonyChicken(String eventId, int tileX, int tileY) {
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setNpcMalonyChicken");
+            return;
+        }
+
+        model.loadEventsFromDb(1);
+
+        db.MapEvent ev = null;
+
+        if (eventId != null) {
+            ev = model.getEventById(eventId);
+        }
+
+        if (ev == null) {
+            ev = model.findEventAt(tileX, tileY);
+        }
+
+        // ダイアログが表示されなかった時
+//        if (ev == null) {
+//            ev = new db.MapEvent();
+//            ev.setId(eventId != null ? eventId : "ev_generated_" + tileX + "_" + tileY);
+//            ev.setMapId(1);
+//            ev.setX(tileX);
+//            ev.setY(tileY);
+//            ev.setName("マロニー");
+//            ev.setDialogues(java.util.Arrays.asList(
+//                    "こんにちは、私はマロニー。",
+//                    "お願いがあるの。",
+//                    "ニワトリを10羽捕まえて",
+//                    "お礼に100コインあげるわ"
+//            ));
+//        }
+
+        NpcMalonyChicken npc = new NpcMalonyChicken(gameWindow, ev);
+        npc.applyMapEvent(ev);
+
+        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+
         Entity[] npcArray = gameWindow.getNPC();
-        npcArray[1] = npcMalonyChicken;
+        if (npcArray == null || npcArray.length <= 1) {
+            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+        }
+        npcArray[1] = npc;
         gameWindow.setNPC(npcArray);
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
+
+        System.out.println("Placed NpcMalonyChicken id=" + ev.getId() + " at tile (" + ev.getX() + "," + ev.getY() + ")");
+        System.out.println("Dialogues: " + java.util.Arrays.toString(npc.getDialogue()));
     }
+
 
     public void setNpcMerChant() {
         NpcMerChant npcMerChant = new NpcMerChant(gameWindow);

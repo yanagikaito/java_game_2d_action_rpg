@@ -732,7 +732,8 @@ public class UI {
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
         x += tileSize;
         y += tileSize;
-        g2.drawString(currentDialogueMessage, x, y);
+        String msg = currentDialogueMessage == null ? "" : currentDialogueMessage;
+        g2.drawString(msg, x, y);
 
         if (isAwaitingChoice()) {
             drawChoice(g2);
