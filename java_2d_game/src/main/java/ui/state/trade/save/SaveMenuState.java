@@ -34,12 +34,29 @@ public class SaveMenuState implements SaveScreenState {
         skipNextEnter = true;
 
         // カーソル移動（上下のみ）
-        if (code == KeyEvent.VK_W && keyHandler.getCommandNum() > 0) {
-            keyHandler.setCommandNum(keyHandler.getCommandNum() - 1);
+        if (code == KeyEvent.VK_W) {
+            int cmd = keyHandler.getCommandNum() - 1;
+            if (cmd < 0) {
+                cmd = options.size() - 1;
+            }
+            keyHandler.setCommandNum(cmd);
+            saveScreenContext.gw().getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+
+            // 移動したらここでキー状態をクリアして処理を終了
+            keyHandler.clearAllKeys();
             return;
         }
-        if (code == KeyEvent.VK_S && keyHandler.getCommandNum() < options.size() - 1) {
-            keyHandler.setCommandNum(keyHandler.getCommandNum() + 1);
+
+        if (code == KeyEvent.VK_S) {
+            int cmd = keyHandler.getCommandNum() + 1;
+            if (cmd >= options.size()) {
+                cmd = 0;
+            }
+            keyHandler.setCommandNum(cmd);
+            saveScreenContext.gw().getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+
+            // 移動したらここでキー状態をクリアして処理を終了
+            keyHandler.clearAllKeys();
             return;
         }
 
@@ -76,9 +93,6 @@ public class SaveMenuState implements SaveScreenState {
                 return;
             }
         }
-        System.out.println("DBG: SaveMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
-        saveScreenContext.setState(new SaveConfirmState(saveScreenContext, keyHandler.getCommandNum()));
-        System.out.println("DBG: SaveMenuState setState -> SaveConfirmState done");
     }
 
     @Override

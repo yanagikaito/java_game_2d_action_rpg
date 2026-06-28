@@ -12,8 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.HashMap;
@@ -284,6 +283,7 @@ public class MainFrame extends JFrame {
     }
 
     private void saveMap(int mapId) {
+
         try (Connection conn = DbManager.getConnection()) {
             conn.setAutoCommit(false);
 
@@ -322,6 +322,7 @@ public class MainFrame extends JFrame {
 
                     String json = null;
                     try {
+                        // MapEvent を JSON 文字列に変換
                         json = om.writeValueAsString(ev);
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -331,6 +332,7 @@ public class MainFrame extends JFrame {
                     if (json == null) {
                         psEv.setNull(7, java.sql.Types.VARCHAR);
                     } else {
+                        // JSON をバイト列で DB に保存
                         psEv.setBytes(7, json.getBytes(StandardCharsets.UTF_8));
                     }
                     psEv.addBatch();
@@ -340,9 +342,6 @@ public class MainFrame extends JFrame {
 
             conn.commit();
 
-            // 任意: JSON エクスポートを呼ぶならここで呼ぶ
-            // exportEvents(mapId);
-
             SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Save completed (map + events)."));
         } catch (Exception e) {
             e.printStackTrace();
@@ -351,6 +350,14 @@ public class MainFrame extends JFrame {
     }
 
     private void loadMap(int mapId) {
+
+        try {
+            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, StandardCharsets.UTF_8));
+            System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err), true, StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try (Connection conn = DbManager.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT x,y,tile_id FROM map_tile WHERE map_id=?")) {
             ps.setInt(1, mapId);
@@ -382,7 +389,7 @@ public class MainFrame extends JFrame {
 
                         if (json != null && !json.isBlank()) {
                             try {
-                                // json から完全復元を試みる
+                                // JSON から MapEvent に復元
                                 ev = om.readValue(json, db.MapEvent.class);
                             } catch (Exception ex) {
                                 // パース失敗時はログを出してフォールバックで最低限の情報をセット

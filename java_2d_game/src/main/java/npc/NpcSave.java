@@ -17,14 +17,18 @@ public class NpcSave extends Entity {
     private static final int SPRITE_COUNT = 3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private int dialogueIndex = 0;
+    private String eventId;
 
-    public NpcSave(GameWindow gameWindow) {
+    public NpcSave(GameWindow gameWindow, db.MapEvent ev) {
         super(gameWindow);
+        if (ev != null) {
+            this.eventId = String.valueOf(ev.getId());
+            applyMapEvent(ev);
+        }
         this.gameWindow = gameWindow;
         setDirection("down");
         setSpeed(0);
         loadNPCImages();
-        setDialogue();
     }
 
     public void loadNPCImages() {
@@ -46,18 +50,35 @@ public class NpcSave extends Entity {
         }
     }
 
-    public void setDialogue() {
+    public void applyMapEvent(db.MapEvent ev) {
+        if (ev == null) return;
 
-        getDialogue()[0] = "セーブしますか？\"";
+        // eventId 等の基本情報
+        if (ev.getId() != null) this.eventId = ev.getId();
+        this.setName(ev.getName());
+        this.setTrigger(ev.getTrigger());
+
+        // dialogues を配列にコピー
+        java.util.List<String> dlg = ev.getDialogues();
+        if (dlg == null || dlg.isEmpty()) {
+            // 空なら空配列をセットしておく（null 回避）
+            setDialogueArray(new String[0]);
+        } else {
+            String[] arr = new String[dlg.size()];
+            for (int i = 0; i < dlg.size(); i++) {
+                arr[i] = dlg.get(i);
+            }
+            setDialogueArray(arr);
+        }
     }
 
     @Override
     public void speak() {
 
         GameWindow gameWindow = getGameWindow();
+        super.speak();
         gameWindow.setGameState(GameState.SAVE);
         System.out.println(gameWindow.getGameState());
-        super.speak();
         gameWindow.getUi().setNpc(this);
 
     }
@@ -81,5 +102,13 @@ public class NpcSave extends Entity {
         g2.drawImage(original, 0, 0, width, height, null);
         g2.dispose();
         return result;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 }

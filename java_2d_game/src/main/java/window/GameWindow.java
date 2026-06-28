@@ -104,7 +104,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void setUpGame() {
 
         lastUpdateTimeNano = System.nanoTime();
-        assetSetter.setNpcOldMan();
+        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 22, 22);
         assetSetter.setNpcMalonyChicken("ev_19f0316aa88_b8d1", 37, 20);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
@@ -197,7 +197,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 if (currentMap != null) {
                     currentMap.resetChickensState();
                     currentMap.removeAllChickens();
-                    assetSetter.setNpcOldMan();
+                    assetSetter.setNpcOldMan("ev_19f0316aa88_b8d1", 22, 22);
                     assetSetter.setMonster();
                     assetSetter.setInteractiveTile();
                 }
@@ -265,7 +265,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().restoreLifeAndMan();
         getPlayer().setItems();
         getPlayer().setCoin(500);
-        assetSetter.setNpcOldMan();
+        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 22, 22);
         assetSetter.setNpcMalonyChicken("ev_19f0316aa88_b8d1", 37, 20);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
@@ -603,8 +603,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 29);
             getPlayer().setWorldY(tileSize * 14);
-            assetSetter.setNpcMerChant();
-            assetSetter.setNpcSave();
+            assetSetter.setNpcMerChant("ev_19f0c26ecd8_a4d0", 29, 11);
+            assetSetter.setNpcSave("ev_19f0c26d9f2_a82a", 27, 11);
 
             repaint();
 
@@ -617,7 +617,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldX(tileSize * 23);
             getPlayer().setWorldY(tileSize * 10);
 
-            assetSetter.setNpcOldMan();
+            assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 22, 22);
             assetSetter.setNpcMalonyChicken("ev_19f0316aa88_b8d1", 37, 20);
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
@@ -1087,30 +1087,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
         System.out.println("registerMonster：空きスロットがありません");
-    }
-
-    public void unregisterMonster(Entity e) {
-        if (e == null) return;
-        synchronized (monster) {
-            int found = -1;
-            for (int i = 0; i < monster.length; i++) {
-                if (monster[i] == e) {
-                    found = i;
-                    break;
-                }
-            }
-            if (found == -1) {
-                System.out.println("[GameWindow] unregisterMonster not found: " + e);
-                return;
-            }
-
-            // null にして後ろを前に詰める
-            for (int i = found; i < monster.length - 1; i++) {
-                monster[i] = monster[i + 1];
-            }
-            monster[monster.length - 1] = null;
-            System.out.println("[GameWindow] unregisterMonster removed at index " + found + ": " + e);
-        }
     }
 
 

@@ -79,7 +79,7 @@ public class LoadConfirmState implements LoadScreenState {
             boolean ok = false;
             try {
                 // UI の slot は 0-based、DB/LoadManager は 1-based
-                int slotNumber = slot + 1;
+                int slotNumber = slot;
 
                 // 存在チェック（存在しなければロードしない）
                 if (!SaveManager.hasSave(slotNumber)) {
