@@ -14,6 +14,21 @@ import java.util.List;
 
 public class SaveManager {
 
+//    public static void main(String[] args) {
+//        int idToDelete = 0; // デフォルトで id=3 を削除
+//        if (args.length > 0) {
+//            try {
+//                idToDelete = Integer.parseInt(args[0]);
+//            } catch (NumberFormatException e) {
+//                System.err.println("Invalid id argument, using default 3");
+//            }
+//        }
+//
+//        System.out.println("Make sure you backed up ./data/mapdb.mv.db before proceeding.");
+//        boolean ok = deleteSaveById(idToDelete);
+//        System.out.println("deleteSaveById(" + idToDelete + ") returned: " + ok);
+//    }
+
     // DB 関連
     static final String DB_URL = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE";
 
@@ -239,7 +254,7 @@ public class SaveManager {
 
     public static boolean hasSave(int slotNumber) {
         try {
-            int idx = slotNumber - 1;
+            int idx = slotNumber;
             if (idx < 0 || idx >= SLOT_COUNT) return false;
 
             // metas が初期化済みならそれを優先
@@ -253,6 +268,40 @@ public class SaveManager {
             return diskMeta != null && diskMeta.exists();
         } catch (Exception e) {
             System.err.println("hasSave check failed for slot " + slotNumber + ": " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean deleteSaveById(int id) {
+        String delInv = "DELETE FROM inventory_items WHERE save_id = ?";
+        String delEquip = "DELETE FROM equipment WHERE save_id = ?";
+        String delSave = "DELETE FROM saves WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, "sa", "")) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement psInv = conn.prepareStatement(delInv);
+                 PreparedStatement psEquip = conn.prepareStatement(delEquip);
+                 PreparedStatement psSave = conn.prepareStatement(delSave)) {
+
+                psInv.setInt(1, id);
+                psInv.executeUpdate();
+
+                psEquip.setInt(1, id);
+                psEquip.executeUpdate();
+
+                psSave.setInt(1, id);
+                int affected = psSave.executeUpdate();
+
+                conn.commit();
+                System.out.println("DEBUG: deleteSaveById id=" + id + " deleted saves rows=" + affected);
+                return affected > 0;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

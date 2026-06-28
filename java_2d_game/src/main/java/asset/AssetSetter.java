@@ -20,13 +20,39 @@ public class AssetSetter {
         this.gameWindow = gameWindow;
     }
 
-    public void setNpcOldMan() {
-        NpcOldMan npcOldMan = new NpcOldMan(gameWindow);
-        npcOldMan.setWorldX(FrameApp.getTileSize() * 22);
-        npcOldMan.setWorldY(FrameApp.getTileSize() * 22);
+    public void setNpcOldMan(String eventId, int tileX, int tileY) {
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setNpcMalonyChicken");
+            return;
+        }
+
+        model.loadEventsFromDb(1);
+
+        db.MapEvent ev = null;
+
+        if (eventId != null) {
+            ev = model.getEventById(eventId);
+        }
+
+        if (ev == null) {
+            ev = model.findEventAt(tileX, tileY);
+        }
+
+        NpcOldMan npc = new NpcOldMan(gameWindow, ev);
+        npc.applyMapEvent(ev);
+
+        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+
         Entity[] npcArray = gameWindow.getNPC();
-        npcArray[0] = npcOldMan;
+        if (npcArray == null || npcArray.length <= 1) {
+            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+        }
+        npcArray[0] = npc;
         gameWindow.setNPC(npcArray);
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
     public void setNpcMalonyChicken(String eventId, int tileX, int tileY) {
@@ -48,22 +74,6 @@ public class AssetSetter {
             ev = model.findEventAt(tileX, tileY);
         }
 
-        // ダイアログが表示されなかった時
-//        if (ev == null) {
-//            ev = new db.MapEvent();
-//            ev.setId(eventId != null ? eventId : "ev_generated_" + tileX + "_" + tileY);
-//            ev.setMapId(1);
-//            ev.setX(tileX);
-//            ev.setY(tileY);
-//            ev.setName("マロニー");
-//            ev.setDialogues(java.util.Arrays.asList(
-//                    "こんにちは、私はマロニー。",
-//                    "お願いがあるの。",
-//                    "ニワトリを10羽捕まえて",
-//                    "お礼に100コインあげるわ"
-//            ));
-//        }
-
         NpcMalonyChicken npc = new NpcMalonyChicken(gameWindow, ev);
         npc.applyMapEvent(ev);
 
@@ -78,28 +88,77 @@ public class AssetSetter {
         gameWindow.setNPC(npcArray);
 
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
-
-        System.out.println("Placed NpcMalonyChicken id=" + ev.getId() + " at tile (" + ev.getX() + "," + ev.getY() + ")");
-        System.out.println("Dialogues: " + java.util.Arrays.toString(npc.getDialogue()));
     }
 
 
-    public void setNpcMerChant() {
-        NpcMerChant npcMerChant = new NpcMerChant(gameWindow);
-        npcMerChant.setWorldX(FrameApp.getTileSize() * 29);
-        npcMerChant.setWorldY(FrameApp.getTileSize() * 11);
+    public void setNpcMerChant(String eventId, int tileX, int tileY) {
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setNpcMalonyChicken");
+            return;
+        }
+
+        model.loadEventsFromDb(2);
+
+        db.MapEvent ev = null;
+
+        if (eventId != null) {
+            ev = model.getEventById(eventId);
+        }
+
+        if (ev == null) {
+            ev = model.findEventAt(tileX, tileY);
+        }
+
+        NpcMerChant npc = new NpcMerChant(gameWindow, ev);
+        npc.applyMapEvent(ev);
+
+        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+
         Entity[] npcArray = gameWindow.getNPC();
-        npcArray[0] = npcMerChant;
+        if (npcArray == null || npcArray.length <= 1) {
+            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+        }
+        npcArray[0] = npc;
         gameWindow.setNPC(npcArray);
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
-    public void setNpcSave() {
-        NpcSave npcSave = new NpcSave(gameWindow);
-        npcSave.setWorldX(FrameApp.getTileSize() * 27);
-        npcSave.setWorldY(FrameApp.getTileSize() * 11);
+    public void setNpcSave(String eventId, int tileX, int tileY) {
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setNpcMalonyChicken");
+            return;
+        }
+
+        model.loadEventsFromDb(2);
+
+        db.MapEvent ev = null;
+
+        if (eventId != null) {
+            ev = model.getEventById(eventId);
+        }
+
+        if (ev == null) {
+            ev = model.findEventAt(tileX, tileY);
+        }
+
+        NpcSave npc = new NpcSave(gameWindow, ev);
+        npc.applyMapEvent(ev);
+
+        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+
         Entity[] npcArray = gameWindow.getNPC();
-        npcArray[1] = npcSave;
+        if (npcArray == null || npcArray.length <= 1) {
+            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+        }
+        npcArray[1] = npc;
         gameWindow.setNPC(npcArray);
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
     public void setMonster() {

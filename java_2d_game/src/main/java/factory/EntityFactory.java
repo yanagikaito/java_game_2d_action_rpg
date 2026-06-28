@@ -1,5 +1,6 @@
 package factory;
 
+import db.MapEvent;
 import entity.*;
 import entity.type.EntityType;
 import monster.MonGreenSlime;
@@ -12,6 +13,7 @@ import window.GameWindow;
 public class EntityFactory {
 
     private GameWindow gameWindow;
+    private MapEvent ev = null;
 
     public EntityFactory(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -20,7 +22,7 @@ public class EntityFactory {
     public Entity create(EntityType type) {
         return switch (type.typeId()) {
             case 0 -> new Player(gameWindow, gameWindow.getKeyHandler());
-            case 1 -> new NpcOldMan(gameWindow);
+            case 1 -> new NpcOldMan(gameWindow, ev);
             case 2 -> new MonGreenSlime(gameWindow);
             case 3 -> new NpcChicken(gameWindow);
             case 4 -> new ObjSwordNormal(gameWindow);

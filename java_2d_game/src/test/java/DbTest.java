@@ -46,6 +46,45 @@ public class DbTest {
                 System.out.println("Could not read saves table: " + e.getMessage());
             }
 
+            // saves を読み取った後に追加
+            int[] saveIds = {0, 1, 2};
+            for (int sid : saveIds) {
+                System.out.println("\n--- dump for save_id=" + sid + " ---");
+                // inventory_items
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "SELECT slot, type_id, count FROM inventory_items WHERE save_id = ? ORDER BY slot")) {
+                    ps.setInt(1, sid);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        boolean any = false;
+                        while (rs.next()) {
+                            any = true;
+                            System.out.printf("inv save_id=%d slot=%d type_id=%d count=%d%n",
+                                    sid, rs.getInt("slot"), rs.getInt("type_id"), rs.getInt("count"));
+                        }
+                        if (!any) System.out.println(" (no inventory rows for save_id=" + sid + ")");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Could not read inventory for save_id=" + sid + ": " + e.getMessage());
+                }
+
+                // equipment
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "SELECT item_type, type_id FROM equipment WHERE save_id = ?")) {
+                    ps.setInt(1, sid);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        boolean any = false;
+                        while (rs.next()) {
+                            any = true;
+                            System.out.printf("equip save_id=%d item_type=%s type_id=%d%n",
+                                    sid, rs.getString("item_type"), rs.getInt("type_id"));
+                        }
+                        if (!any) System.out.println(" (no equipment rows for save_id=" + sid + ")");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Could not read equipment for save_id=" + sid + ": " + e.getMessage());
+                }
+            }
+
             // map_event テーブルのダンプ（json カラムを含める）
             System.out.println("\n=== map_event table ===");
             try (Statement st = conn.createStatement();

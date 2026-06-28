@@ -53,7 +53,7 @@ public class LoadManager {
             // 4. メタからプレイ時間を復元（SaveMeta は JSON ファイルに保存されている想定）
             try {
                 // SaveManager.loadMeta は 0-based を受ける
-                int metaIndex = slotNumber - 1;
+                int metaIndex = slotNumber;
                 SaveMeta meta = SaveManager.loadMeta(metaIndex);
                 if (meta != null && meta.exists()) {
                     player.setPlayTimeSeconds(meta.getPlayTimeSeconds());
@@ -154,13 +154,14 @@ public class LoadManager {
             case 0 -> new PlayerType();
             case 1 -> new NpcType();
             case 2 -> new MonsterType();
-            case 3 -> new SwordType();
-            case 4 -> new AxeType();
-            case 5 -> new ShieldType();
-            case 6 -> new RedPotionType();
-            case 7 -> new GreenPotionType();
-            case 8 -> new PickupOnlyType();
-            case 9 -> new BombType();
+            case 3 -> new ChickenType();
+            case 4 -> new SwordType();
+            case 5 -> new AxeType();
+            case 6 -> new ShieldType();
+            case 7 -> new RedPotionType();
+            case 8 -> new GreenPotionType();
+            case 9 -> new BluePotionType();
+            case 10 -> new BombType();
             default -> null;
         };
     }

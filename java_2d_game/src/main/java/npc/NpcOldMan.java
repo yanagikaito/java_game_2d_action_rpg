@@ -30,14 +30,18 @@ public class NpcOldMan extends Entity {
     private int routeIndex = 0;
     private boolean following = false;
     private final CollisionChecker collisionChecker;
+    private String eventId;
 
-    public NpcOldMan(GameWindow gameWindow) {
+    public NpcOldMan(GameWindow gameWindow, db.MapEvent ev) {
         super(gameWindow);
+        if (ev != null) {
+            this.eventId = String.valueOf(ev.getId());
+            applyMapEvent(ev);
+        }
         this.collisionChecker = new CollisionChecker(gameWindow);
         setDirection("down");
         setSpeed(1);
         loadNPCImages();
-        setDialogue();
     }
 
     public void loadNPCImages() {
@@ -59,14 +63,26 @@ public class NpcOldMan extends Entity {
         }
     }
 
-    public void setDialogue() {
+    public void applyMapEvent(db.MapEvent ev) {
+        if (ev == null) return;
 
-        getDialogue()[0] = "ここに何しに来た";
-        getDialogue()[1] = "お前は誰だ?";
-        getDialogue()[2] = "ここで何をしておる";
-        getDialogue()[3] = "モンスターでも倒してみろ";
-        getDialogue()[4] = "たぶん無理だがな";
+        // eventId 等の基本情報
+        if (ev.getId() != null) this.eventId = ev.getId();
+        this.setName(ev.getName());
+        this.setTrigger(ev.getTrigger());
 
+        // dialogues を配列にコピー
+        java.util.List<String> dlg = ev.getDialogues();
+        if (dlg == null || dlg.isEmpty()) {
+            // 空なら空配列をセットしておく（null 回避）
+            setDialogueArray(new String[0]);
+        } else {
+            String[] arr = new String[dlg.size()];
+            for (int i = 0; i < dlg.size(); i++) {
+                arr[i] = dlg.get(i);
+            }
+            setDialogueArray(arr);
+        }
     }
 
     @Override

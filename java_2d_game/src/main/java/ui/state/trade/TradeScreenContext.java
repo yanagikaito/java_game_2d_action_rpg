@@ -1,6 +1,5 @@
 package ui.state.trade;
 
-import entity.Entity;
 import key.KeyHandler;
 import ui.UI;
 import window.GameWindow;

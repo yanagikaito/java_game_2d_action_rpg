@@ -226,13 +226,9 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_ENTER -> {
                 int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
                 if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcMerChant) {
-                    startConversation(npcIdx);
+                    startMerConversation(npcIdx);
                     gameWindow.setGameState(GameState.TRADE);
-                } else if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcSave saveNpc) {
-                    // ← ここに押しっぱなし対策を入れる
-                    gameWindow.getKeyHandler().consumeEnterOnce();
-                    gameWindow.getKeyHandler().clearAllKeys();
-                    saveNpc.speak();
+                } else if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcSave) {
                     gameWindow.setGameState(GameState.SAVE);
                 } else if (gameWindow.getGameState() == GameState.TRADE) {
                     npcMerChantSpeak();
@@ -399,7 +395,7 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    private void startConversation(int npcIdx) {
+    private void startMerConversation(int npcIdx) {
 
         NpcMerChant mer = (NpcMerChant) gameWindow.getNPC()[npcIdx];
 
@@ -412,6 +408,21 @@ public class KeyHandler implements KeyListener {
 
         // 最初のセリフを出す
         npcMerChantSpeak();
+    }
+
+    private void startSaveConversation(int npcIdx) {
+
+        NpcSave save = (NpcSave) gameWindow.getNPC()[npcIdx];
+
+        // インデックスをリセット
+        save.resetDialogue();
+
+        // 会話状態へ移行
+        gameWindow.getPlayer().setTalkNpcIndex(npcIdx);
+        gameWindow.setGameState(GameState.DIALOGUE);
+
+        // 最初のセリフを出す
+        npcSaveSpeak();
     }
 
     @Override
@@ -472,8 +483,8 @@ public class KeyHandler implements KeyListener {
         int idx = gameWindow.getPlayer().getTalkNpcIndex();
         if (idx < 0) return;
 
-        NpcSave mer = (NpcSave) gameWindow.getNPC()[idx];
-        String text = mer.getNextDialogue();
+        NpcSave npcSave = (NpcSave) gameWindow.getNPC()[idx];
+        String text = npcSave.getNextDialogue();
 
         // セリフを UI にセット
         gameWindow.getUi().addDialogue(text);
@@ -484,7 +495,7 @@ public class KeyHandler implements KeyListener {
             gameWindow.getPlayer().setTalkNpcIndex(idx);
 
             // ついでにもう一度リセットしておく
-            mer.resetDialogue();
+            npcSave.resetDialogue();
         }
     }
 
