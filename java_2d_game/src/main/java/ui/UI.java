@@ -191,7 +191,7 @@ public class UI {
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
 
-        text = "slot1";
+        text = "slot0";
         x = getXForCenteredText(g2, text);
         y = tileSize * 2;
         g2.drawString(text, x, y);
@@ -226,7 +226,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot2";
+        text = "slot1";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
@@ -260,7 +260,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot3";
+        text = "slot2";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
@@ -383,27 +383,6 @@ public class UI {
         }
     }
 
-    public void confirmLoadSelectedSlot(int slotIndex) {
-        int slotNumber = slotIndex;
-        if (!SaveManager.hasSave(slotNumber)) {
-            // 空スロットのフィードバック
-            addMessage("空のスロットです");
-            return;
-        }
-
-        Entity loaded = LoadManager.loadPlayer(slotNumber, GameWindow.getInstance());
-        if (loaded != null) {
-            // ロード成功：最後にロードしたスロットを記憶
-            GameWindow.getInstance().setLastLoadedSlot(slotNumber);
-            GameWindow.getInstance().setPlayer((Player) loaded);
-            GameWindow.getInstance().setGameState(GameState.PLAY);
-        } else {
-            // ロード失敗時の処理
-            GameWindow.getInstance().setLastLoadedSlot(-1);
-            addMessage("ロードに失敗しました");
-        }
-    }
-
     public void drawDialogueLoadScreen(Graphics2D g2) {
 
         int tileSize = FrameApp.getTileSize();
@@ -421,7 +400,7 @@ public class UI {
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(28F));
 
-        text = "slot1";
+        text = "slot0";
         x = getXForCenteredText(g2, text);
         y = tileSize * 2;
         g2.drawString(text, x, y);
@@ -458,7 +437,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot2";
+        text = "slot1";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
@@ -496,7 +475,7 @@ public class UI {
         frameHeight = tileSize * 3;
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
 
-        text = "slot3";
+        text = "slot2";
         x = getXForCenteredText(g2, text);
         y += (int) (tileSize * 3.5);
         g2.drawString(text, x, y);
@@ -556,19 +535,17 @@ public class UI {
 
     // スプライトプレビュー描画ヘルパー（spriteManager を使う想定）
     private void drawSpritePreview(Graphics2D g2, SaveMeta meta, int x, int y, int w, int h) {
-        System.out.println("drawSpritePreview: meta=" + meta);
+//        System.out.println("drawSpritePreview: meta=" + meta);
         if (meta == null) {
-            System.out.println("meta is null");
+//            System.out.println("meta is null");
         } else {
-            System.out.println("key=" + meta.getSpriteKey() + ", facing=" + meta.getFacing() + ", savedAt=" + meta.getSavedAt());
+//            System.out.println("key=" + meta.getSpriteKey() + ", facing=" + meta.getFacing() + ", savedAt=" + meta.getSavedAt());
         }
-        System.out.println("spriteManager=" + spriteManager);
+//        System.out.println("spriteManager=" + spriteManager);
         BufferedImage sprite = null;
         try {
-            // spriteManager.getSprite(key, facing, frame) のような API を想定
             sprite = spriteManager.getSprite(meta.getSpriteKey(), meta.getFacing(), 0);
         } catch (Exception e) {
-            // 無ければ null のままフォールバック
         }
 
         if (sprite != null) {
