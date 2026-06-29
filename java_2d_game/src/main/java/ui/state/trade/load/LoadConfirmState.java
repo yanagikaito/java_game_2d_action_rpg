@@ -29,7 +29,7 @@ public class LoadConfirmState implements LoadScreenState {
 
     @Override
     public void handleKey(int code) {
-        // 確認ダイアログでキー操作を受け付ける場合はここに実装
+
     }
 
     @Override
@@ -78,7 +78,7 @@ public class LoadConfirmState implements LoadScreenState {
             Entity loaded = null;
             boolean ok = false;
             try {
-                // UI の slot は 0-based、DB/LoadManager は 1-based
+                // UI の slot は 0-based
                 int slotNumber = slot;
 
                 // 存在チェック（存在しなければロードしない）

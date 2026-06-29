@@ -69,7 +69,7 @@ public class SaveConfirmState implements SaveScreenState {
 
                 System.out.println("DEBUG: SaveManager.saveGame returned=" + ok);
 
-                // セーブ成功なら最新のメタを読み込んで UI に反映（ファイルに確実に書き込まれた値を取得）
+                // セーブ成功なら最新のメタを読み込んで UI に反映
                 if (ok) {
                     SaveMeta meta = SaveManager.loadMeta(slot);
                     System.out.println("DEBUG: loaded meta for slot=" + slot + " playTime=" + (meta != null ? meta.getPlayTimeSeconds() : "null"));
