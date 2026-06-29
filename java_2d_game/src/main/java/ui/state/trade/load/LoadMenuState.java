@@ -81,21 +81,18 @@ public class LoadMenuState implements LoadScreenState {
             if (slot == LOAD_SLOT0) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
-                loadScreenContext.ui().confirmLoadSelectedSlot(slot);
                 keyHandler.clearAllKeys();
                 return;
             }
             if (slot == LOAD_SLOT1) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
-                loadScreenContext.ui().confirmLoadSelectedSlot(slot);
                 keyHandler.clearAllKeys();
                 return;
             }
             if (slot == LOAD_SLOT2) {
                 System.out.println("DBG: LoadMenuState ENTER pressed, cmd=" + keyHandler.getCommandNum());
                 loadScreenContext.setState(new LoadConfirmState(loadScreenContext, slot));
-                loadScreenContext.ui().confirmLoadSelectedSlot(slot);
                 keyHandler.clearAllKeys();
                 return;
             }
