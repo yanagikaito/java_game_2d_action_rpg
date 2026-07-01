@@ -17,4 +17,9 @@ public record ChickenType() implements EntityType {
     public boolean isHostileToPlayer() {
         return false;
     }
+
+    @Override
+    public boolean canRespawn() {
+        return false;
+    }
 }

@@ -136,8 +136,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = (FrameApp.getTileSize() - 3);
-        getSolidArea().height = (FrameApp.getTileSize() - 3);
+        getSolidArea().width = (FrameApp.getTileSize() - 5);
+        getSolidArea().height = (FrameApp.getTileSize() - 5);
 
 
         setHitBoxX(getSolidArea().x);
@@ -2127,6 +2127,7 @@ public class Player extends Entity {
         // --- ニワトリならモンスター用の死亡処理を行わず、専用の takeDamage を呼ぶ ---
         if (target instanceof NpcChicken) {
             ((NpcChicken) target).takeDamage(damage, knockBackPower);
+            target.setRespawning(false);
             return;
         }
 
@@ -2173,16 +2174,17 @@ public class Player extends Entity {
             checkLevelUp();
             gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
 
+            // リスボーン
             int aliveCount = 0;
             for (Entity m : gameWindow.getMonster()) {
-                if (m != null && !m.getDying() && m.getLife() > 0) {
-                    aliveCount++;
-                }
+                if (m == null) continue;
+                NpcChicken npcChicken = (NpcChicken) monster;
+                if (!npcChicken.getType().canRespawn()) continue;
+                if (!m.getDying() && m.getLife() > 0) aliveCount++;
             }
 
             if (aliveCount == 0 && !monster.isRespawning()) {
                 monster.setRespawning(true);
-
                 Timer respawnTimer = getTimer(monster);
                 respawnTimer.start();
             }

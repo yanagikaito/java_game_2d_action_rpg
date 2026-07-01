@@ -15,4 +15,8 @@ public sealed interface EntityType permits PlayerType, NpcType, MonsterType, Chi
     default boolean isHostileToPlayer() {
         return true;
     }
+
+    default boolean canRespawn() {
+        return true;
+    }
 }
