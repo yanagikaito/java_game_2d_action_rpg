@@ -33,6 +33,10 @@ public class MapCanvas extends JPanel implements Scrollable {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                int x = e.getX() / tileSize;
+                int y = e.getY() / tileSize;
+                model.setTile(x, y, selectedTileId);
+                repaint();
                 handleMouseEvent(e);
             }
 

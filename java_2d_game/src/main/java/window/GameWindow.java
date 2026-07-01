@@ -1033,41 +1033,104 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return onTransition;
     }
 
+    /**
+     * プレイヤーを設定
+     *
+     * @param player 設定するプレイヤーオブジェクト
+     */
+
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+    /**
+     * イベントハンドラを取得
+     *
+     * @return 現在登録されている EventHandler インスタンス
+     */
 
     public EventHandler getEventHandler() {
         return eventHandler;
     }
 
+    /**
+     * 指定したマップ ID に対応する BGM のキーまたはパスを取得
+     *
+     * @param mapId BGM を取得したいマップの識別子
+     * @return マップに対応する BGM のキーまたはパス。存在しない場合は null を返す
+     */
+
     private String getBgmForMap(int mapId) {
         return mapBgmMap.get(mapId);
     }
+
+    /**
+     * 読み込まれたプレイ時間を秒単位で取得
+     *
+     * @return 読み込まれたプレイ時間（秒）
+     */
 
     public long getLoadedPlayTimeSeconds() {
         return loadedPlayTimeSeconds;
     }
 
+    /**
+     * 読み込まれたプレイ時間を秒単位で設定
+     *
+     * @param seconds 設定するプレイ時間（秒）
+     */
+
     public void setLoadedPlayTimeSeconds(long seconds) {
         this.loadedPlayTimeSeconds = seconds;
     }
+
+    /**
+     * 現在のマップを取得
+     *
+     * @return 現在表示または操作対象となっている GameMap インスタンス
+     */
 
     public map.GameMap getCurrentMap() {
         return currentMap;
     }
 
+    /**
+     * 現在のマップを設定
+     *
+     * @param currentMap 設定する GameMap インスタンス
+     */
+
     public void setCurrentMap(GameMap currentMap) {
         this.currentMap = currentMap;
     }
+
+    /**
+     * 最後にロードしたセーブスロット番号を取得
+     *
+     * @return 最後にロードしたスロット番号
+     */
 
     public int getLastLoadedSlot() {
         return lastLoadedSlot;
     }
 
+    /**
+     * 最後にロードしたセーブスロット番号を設定
+     *
+     * @param slot 設定するスロット番号
+     */
+
     public void setLastLoadedSlot(int slot) {
         this.lastLoadedSlot = slot;
     }
+
+    /**
+     * オブジェクト配列にエンティティを追加
+     * 空きスロットが見つかれば追加して true を返す
+     *
+     * @param e 追加するエンティティ
+     * @return 追加に成功した場合は true、空きがなければ false
+     */
 
     public boolean addObject(Entity e) {
         for (int i = 0; i < obj.length; i++) {
@@ -1079,6 +1142,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
         return false;
     }
 
+    /**
+     * モンスター配列にエンティティを登録
+     * 空きスロットがなければ登録せずにログを出力
+     *
+     * @param e 登録するモンスターエンティティ
+     */
+
     public void registerMonster(Entity e) {
         for (int i = 0; i < monster.length; i++) {
             if (monster[i] == null) {
@@ -1089,10 +1159,20 @@ public class GameWindow extends JPanel implements Window, Runnable {
         System.out.println("registerMonster：空きスロットがありません");
     }
 
+    /**
+     * マップ上の全モンスター参照をクリア
+     * 配列内の参照をすべて null に設定
+     */
 
     public void clearMonsters() {
         for (int i = 0; i < monster.length; i++) monster[i] = null;
     }
+
+    /**
+     * DB の MapModel インスタンスを取得
+     *
+     * @return DB から読み込まれた MapModel インスタンス。未設定の場合は null を返す
+     */
 
     public MapModel getModel() {
         return model;
