@@ -1,5 +1,7 @@
 package damage;
 
+import ui.PopupVariant;
+
 public class DamagePopup {
     public String text;
     public int screenX;
@@ -9,8 +11,6 @@ public class DamagePopup {
     public int maxLife;
     public float alpha;
     public PopupVariant variant;
-
-    public enum PopupVariant {DAMAGE}
 
     public void init(String text, int sx, int sy, PopupVariant variant, int lifeFrames) {
         this.text = text;

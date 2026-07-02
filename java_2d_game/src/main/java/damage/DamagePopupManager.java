@@ -1,8 +1,10 @@
-package damage;// DamagePopupManager.java (UI 側に置く)
+package damage;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
+import ui.PopupVariant;
 
 public class DamagePopupManager {
     private final Deque<DamagePopup> pool = new ArrayDeque<>();
@@ -14,7 +16,7 @@ public class DamagePopupManager {
         for (int i = 0; i < poolSize; i++) pool.push(new DamagePopup());
     }
 
-    public synchronized void pop(String text, int screenX, int screenY, DamagePopup.PopupVariant variant, int lifeFrames) {
+    public synchronized void pop(String text, int screenX, int screenY, PopupVariant variant, int lifeFrames) {
         DamagePopup p = pool.isEmpty() ? new DamagePopup() : pool.pop();
         p.init(text, screenX, screenY, variant, lifeFrames);
         active.add(p);
@@ -40,11 +42,14 @@ public class DamagePopupManager {
                 case DAMAGE:
                     color = new Color(180, 180, 255);
                     break;
+                case HEAL:
+                    color = new Color(100, 255, 150);
+                    break;
                 default:
                     color = new Color(255, 120, 120);
                     break;
             }
-            Font font = new Font("SansSerif", Font.BOLD, (p.variant == DamagePopup.PopupVariant.DAMAGE) ? 28 : 20);
+            Font font = new Font("SansSerif", Font.BOLD, (p.variant == PopupVariant.DAMAGE) ? 28 : 20);
             g.setFont(font);
             FontMetrics fm = g.getFontMetrics(font);
             int w = fm.stringWidth(p.text);
