@@ -1,6 +1,5 @@
 package entity;
 
-import damage.DamagePopup;
 import entity.particle.FireworkParticle;
 import entity.particle.Particle;
 import entity.type.*;
@@ -8,6 +7,7 @@ import frame.FrameApp;
 import game.GameState;
 import object.Projectile;
 import player.Player;
+import ui.PopupVariant;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -385,7 +385,7 @@ public abstract class Entity {
                 sx += tileSize / 2;
                 sy -= tileSize / 2;
 
-                DamagePopup.PopupVariant variant = DamagePopup.PopupVariant.DAMAGE;
+                PopupVariant variant = PopupVariant.DAMAGE;
                 gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
                 player.setInvincible(true);
                 setInvincibleCounter(0);

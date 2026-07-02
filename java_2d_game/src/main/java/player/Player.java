@@ -10,6 +10,7 @@ import npc.NpcChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
 import object.*;
+import ui.PopupVariant;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -414,7 +415,14 @@ public class Player extends Entity {
                 gameWindow.getUi().addMessage("オーラが発動した！");
                 System.out.println("DEBUG: RedPotion triggered aura.activate durationMs=" + auraDurationMs);
             }
-            gameWindow.getUi().addMessage("レッドポーションを使った。HPが" + heal + "回復！");
+            int tileSize = FrameApp.getTileSize();
+            int sx = this.getScreenX();
+            int sy = this.getScreenY();
+
+            sx += tileSize / 2;
+            sy -= tileSize / 2;
+            PopupVariant variant = PopupVariant.HEAL;
+            gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(heal), sx, sy, variant, 60);
             gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
             // スタック処理：1個だけ減らす。0ならスロット削除
             int current = potion.getAmount();
@@ -2073,7 +2081,7 @@ public class Player extends Entity {
             sx += tileSize / 2;
             sy -= tileSize / 2;
 
-            DamagePopup.PopupVariant variant = DamagePopup.PopupVariant.DAMAGE;
+            PopupVariant variant = PopupVariant.DAMAGE;
 
             gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
             setInvincible(true);
@@ -2141,7 +2149,7 @@ public class Player extends Entity {
         sx += tileSize / 2;
         sy -= tileSize / 2;
 
-        DamagePopup.PopupVariant variant = DamagePopup.PopupVariant.DAMAGE;
+        PopupVariant variant = PopupVariant.DAMAGE;
 
         gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
 
@@ -2830,11 +2838,21 @@ public class Player extends Entity {
      */
 
     public void healRedPotion(ObjRedPotion potion) {
-        int amount = potion.getHealAmount();
-        setLife(Math.min(getLife() + amount, getMaxLife()));
-        gameWindow.getUi().addMessage(
-                "レッドポーションを拾った。HPが" + amount + "回復！"
-        );
+
+        int heal = potion.getHealAmount();
+        setLife(Math.min(getLife() + heal, getMaxLife()));
+        if (aura != null && getLife() == getMaxLife()) {
+            long auraDurationMs = 30_000L;
+            aura.activate(auraDurationMs);
+        }
+        int tileSize = FrameApp.getTileSize();
+        int sx = this.getScreenX();
+        int sy = this.getScreenY();
+
+        sx += tileSize / 2;
+        sy -= tileSize / 2;
+        PopupVariant variant = PopupVariant.HEAL;
+        gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(heal), sx, sy, variant, 60);
     }
 
     /**
