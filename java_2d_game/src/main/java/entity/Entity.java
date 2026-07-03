@@ -7,7 +7,7 @@ import frame.FrameApp;
 import game.GameState;
 import object.Projectile;
 import player.Player;
-import ui.PopupVariant;
+import popup.PopupVariant;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -349,14 +349,12 @@ public abstract class Entity {
             if (guardActive) {
                 // ガード成功：ダメージを軽減
                 damage = Math.max(0, damage / 3);
-                gameWindow.getUi().addMessage(getName() + " damage (blocked) = " + damage);
                 gameWindow.getSoundmanager().defeatedWAV("sound/thrust-sound.wav");
 
                 // ガード成功時はノックバック・透明化・無敵化を与えない
                 if (damage > 0) {
                     // ガードでも微ダメージを通す設計ならここでライフを減らす
                     player.setLife(player.getLife() - damage);
-                    gameWindow.getUi().addMessage("Player life = " + player.getLife());
                 }
             } else {
                 // ガード失敗（通常の被ダメ処理）
@@ -364,7 +362,6 @@ public abstract class Entity {
                 if (damage < 1) damage = 1;
 
                 if (damage != 0) {
-                    gameWindow.getUi().addMessage(getName() + " damage = " + damage);
                     // 被ダメ時の視覚フィードバック（透明化）を付与
                     player.setTransparent(true);
                 }

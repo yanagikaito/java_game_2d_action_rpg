@@ -57,8 +57,6 @@ public class SaveConfirmState implements SaveScreenState {
             System.out.println("DEBUG: save already in progress, aborting startSave()");
             return;
         }
-
-        ctx.ui().addMessage("セーブ中...");
         ctx.ui().setSaveInProgress(true);
 
         new Thread(() -> {
@@ -98,9 +96,7 @@ public class SaveConfirmState implements SaveScreenState {
                 try {
                     ctx.ui().setSaveInProgress(false);
                     if (finalOk) {
-                        ctx.ui().addMessage("セーブしました（Slot " + slot + "）");
                     } else {
-                        ctx.ui().addMessage("セーブに失敗しました");
                     }
 
                     // 少し待ってからセーブメニューに戻す

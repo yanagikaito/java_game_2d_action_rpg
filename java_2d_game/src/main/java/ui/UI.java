@@ -1,6 +1,6 @@
 package ui;
 
-import damage.DamagePopupManager;
+import popup.PopupManager;
 import entity.Entity;
 import entity.type.EntityType;
 import frame.FrameApp;
@@ -10,7 +10,6 @@ import npc.NpcMerChant;
 import object.*;
 import player.Player;
 import player.SpriteManager;
-import save.LoadManager;
 import save.SaveManager;
 import save.SaveMeta;
 import hex.GreenHexRenderer;
@@ -45,7 +44,7 @@ public class UI {
     private ArrayList<Integer> messageCounter = new ArrayList<>();
     private GreenHexPanel greenHexPanel = new GreenHexPanel();
     private SpriteManager spriteManager = new SpriteManager();
-    private DamagePopupManager damagePopupManager = new DamagePopupManager(64);
+    private PopupManager popupManager = new PopupManager(64);
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -105,11 +104,6 @@ public class UI {
         coin = bronzeCoin.getImage();
     }
 
-    public void addMessage(String text) {
-        message.add(text);
-        messageCounter.add(0);
-    }
-
     public void addDialogue(String text) {
         if (text == null || text.isEmpty()) {
             dialogueOn = false;
@@ -137,7 +131,7 @@ public class UI {
 
             gameWindow.setDialogueActive(false);
             drawPlayerLife(g2);
-            damagePopupManager.drawAll(g2);
+            popupManager.drawAll(g2);
             drawManaBar(g2);
 
         } else if (gameState == GameState.PAUSE) {
@@ -1275,8 +1269,8 @@ public class UI {
         return currentChoiceNpc;
     }
 
-    public DamagePopupManager getDamagePopupManager() {
-        return damagePopupManager;
+    public PopupManager getDamagePopupManager() {
+        return popupManager;
     }
 
     public void moveChoiceLeft() {

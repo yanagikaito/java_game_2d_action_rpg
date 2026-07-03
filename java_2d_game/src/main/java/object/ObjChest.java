@@ -160,7 +160,6 @@ public class ObjChest extends Entity {
                     // デバッグ出力
                     if (result == null) {
                         System.out.println("DEBUG loot factory returned null for entry weight=" + e.weight());
-                        gameWindow.getUi().addMessage("DEBUG loot factory returned null for entry weight=" + e.weight());
                     } else {
                         System.out.println("DEBUG loot factory returned: " + result.getClass().getName());
                     }
@@ -176,7 +175,6 @@ public class ObjChest extends Entity {
 
     public void interact(Player player) {
         if (opened) {
-            gameWindow.getUi().addMessage("宝箱は空です");
             return;
         }
     }
@@ -217,23 +215,19 @@ public class ObjChest extends Entity {
 
                     // マップに追加
                     gameWindow.getCurrentMap().addObject(bomb);
-                    gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
                     return;
                 }
                 // 通常アイテムはインベントリに追加（成功判定を取る）
                 boolean added = player.canObtainItem(dropped);
                 if (added) {
-                    gameWindow.getUi().addMessage(dropped.getName() + " を手に入れた！");
                     gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
                 } else {
                     dropped.setWorldX(this.getWorldX());
                     dropped.setWorldY(this.getWorldY());
                     gameWindow.getCurrentMap().addObject(dropped);
-                    gameWindow.getUi().addMessage(dropped.getName() + " が落ちた！");
                 }
             }
         } else {
-            gameWindow.getUi().addMessage("何も出なかった...");
         }
     }
 

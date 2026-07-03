@@ -1,8 +1,6 @@
-package damage;
+package popup;
 
-import ui.PopupVariant;
-
-public class DamagePopup {
+public class Popup {
     public String text;
     public int screenX;
     public int screenY;
