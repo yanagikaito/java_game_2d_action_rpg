@@ -180,8 +180,6 @@ public class NpcChicken extends Entity {
 
                 boolean tileCollision = getGameWindow().getCollisionChecker().checkTile(this);
 
-                getGameWindow().getUi().addMessage(" tileCollision =" + tileCollision);
-
                 if (tileCollision) {
                     landed = true;
                     thrown = false;
@@ -270,7 +268,6 @@ public class NpcChicken extends Entity {
 
     private void callForHelp() {
 
-        getGameWindow().getUi().addMessage("callForHelp()が呼ばれた");
         GameMap map = getGameWindow().getCurrentMap();
         int current = map.countChickens();
         int allowed = Math.max(0, GameMap.GLOBAL_MAX_CHICKENS - current);
@@ -368,7 +365,6 @@ public class NpcChicken extends Entity {
         // 被攻撃回数カウント
         hitCount++;
         long now = System.currentTimeMillis();
-        getGameWindow().getUi().addMessage("hitCount =" + hitCount);
         if (!hasTriggeredHelp && hitCount >= HELP_TRIGGER_THRESHOLD && (now - lastTriggerTime) >= TRIGGER_COOLDOWN_MS) {
             hitCount = 0;
             hasTriggeredHelp = true;

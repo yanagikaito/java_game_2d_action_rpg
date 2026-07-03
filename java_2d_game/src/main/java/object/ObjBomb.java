@@ -117,8 +117,6 @@ public class ObjBomb extends Projectile {
         if (landed && !exploding) {
             long now = System.currentTimeMillis();
             long elapsed = now - landedAt;
-            // UI/デバッグ表示（任意）
-            gameWindow.getUi().addMessage("Fuse: " + (fuseDurationMs - elapsed) + "ms");
             if (elapsed >= fuseDurationMs) {
                 startExplosion();
                 return;
@@ -138,11 +136,6 @@ public class ObjBomb extends Projectile {
             // 垂直（高さ）方向の更新（上向き正のルール）
             z += vz;
             vz -= verticalGravity;
-
-            // デバッグ出力（物理とワールド座標の両方を出す）
-            getGameWindow().getUi().addMessage("z = " + z);
-            getGameWindow().getUi().addMessage("vz = " + vz);
-            getGameWindow().getUi().addMessage("worldY = " + getWorldY());
 
             // --- エンティティ当たり判定（低空のみ） ---
             double hitThreshold = FrameApp.getTileSize() * 0.5;

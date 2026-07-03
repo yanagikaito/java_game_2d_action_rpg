@@ -1,31 +1,29 @@
-package damage;
+package popup;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import ui.PopupVariant;
-
-public class DamagePopupManager {
-    private final Deque<DamagePopup> pool = new ArrayDeque<>();
-    private final List<DamagePopup> active = new ArrayList<>();
+public class PopupManager {
+    private final Deque<Popup> pool = new ArrayDeque<>();
+    private final List<Popup> active = new ArrayList<>();
     private final int poolSize;
 
-    public DamagePopupManager(int poolSize) {
+    public PopupManager(int poolSize) {
         this.poolSize = poolSize;
-        for (int i = 0; i < poolSize; i++) pool.push(new DamagePopup());
+        for (int i = 0; i < poolSize; i++) pool.push(new Popup());
     }
 
     public synchronized void pop(String text, int screenX, int screenY, PopupVariant variant, int lifeFrames) {
-        DamagePopup p = pool.isEmpty() ? new DamagePopup() : pool.pop();
+        Popup p = pool.isEmpty() ? new Popup() : pool.pop();
         p.init(text, screenX, screenY, variant, lifeFrames);
         active.add(p);
     }
 
     public synchronized void updateAll() {
-        Iterator<DamagePopup> it = active.iterator();
+        Iterator<Popup> it = active.iterator();
         while (it.hasNext()) {
-            DamagePopup p = it.next();
+            Popup p = it.next();
             p.update();
             if (!p.isAlive()) {
                 it.remove();
@@ -35,7 +33,7 @@ public class DamagePopupManager {
     }
 
     public synchronized void drawAll(Graphics2D g) {
-        for (DamagePopup p : active) {
+        for (Popup p : active) {
             float alpha = p.alpha;
             Color color;
             switch (p.variant) {
@@ -65,9 +63,5 @@ public class DamagePopupManager {
             g.drawString(p.text, p.screenX - w / 2, p.screenY - h / 2);
             g.setComposite(old);
         }
-    }
-
-    public synchronized int getLiveCount() {
-        return active.size();
     }
 }

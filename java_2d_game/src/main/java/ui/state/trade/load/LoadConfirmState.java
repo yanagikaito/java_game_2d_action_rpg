@@ -66,7 +66,6 @@ public class LoadConfirmState implements LoadScreenState {
         }
         loading = true;
         try {
-            ctx.ui().addMessage("ロード中...");
         } catch (Throwable ignored) {
         }
         try {
@@ -137,9 +136,6 @@ public class LoadConfirmState implements LoadScreenState {
                         ctx.gw().setPlayer((Player) finalLoaded);
                         ctx.gw().setGameState(GameState.PLAY);
 
-                        // メッセージ表示（ユーザー向けは 1-based 表示）
-                        ctx.ui().addMessage("ロードしました（Slot " + (slot + 1) + "）");
-
                         try {
                             ctx.gw().repaint();
                         } catch (Throwable ignored) {
@@ -148,7 +144,6 @@ public class LoadConfirmState implements LoadScreenState {
                     } else {
                         // 存在しないスロットやロード失敗時の挙動
                         if (!finalOk) {
-                            ctx.ui().addMessage("ロードに失敗しました");
                         }
                         ctx.setState(new LoadMenuState(ctx));
                     }

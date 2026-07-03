@@ -1,6 +1,5 @@
 package player;
 
-import damage.DamagePopup;
 import entity.*;
 import entity.type.*;
 import frame.FrameApp;
@@ -10,7 +9,7 @@ import npc.NpcChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
 import object.*;
-import ui.PopupVariant;
+import popup.PopupVariant;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -410,9 +409,8 @@ public class Player extends Entity {
             setLife(Math.min(getLife() + heal, getMaxLife()));
             // オーラ発動条件：HPが満タンになったら
             if (aura != null && getLife() == getMaxLife()) {
-                long auraDurationMs = 30_000L; // 例: 30秒。仕様に合わせて変更
+                long auraDurationMs = 30_000L;
                 aura.activate(auraDurationMs);
-                gameWindow.getUi().addMessage("オーラが発動した！");
                 System.out.println("DEBUG: RedPotion triggered aura.activate durationMs=" + auraDurationMs);
             }
             int tileSize = FrameApp.getTileSize();
@@ -428,11 +426,9 @@ public class Player extends Entity {
             int current = potion.getAmount();
             if (current > 1) {
                 potion.setAmount(current - 1);
-                gameWindow.getUi().addMessage("残り " + (current - 1) + " 個");
             } else {
                 // 1個だったのでスロットを削除
                 getInventory().remove(index);
-                gameWindow.getUi().addMessage("残り 0 個（スロットを空けました）");
             }
         }
     }
@@ -460,17 +456,23 @@ public class Player extends Entity {
             ObjGreenPotion potion = (ObjGreenPotion) e;
             int heal = potion.getHealAmount();
             setMana(Math.min(getMana() + heal, getMaxMana()));
-            gameWindow.getUi().addMessage("グリーンポーションを使った。魔力が" + heal + "回復！");
+
+            int tileSize = FrameApp.getTileSize();
+            int sx = this.getScreenX();
+            int sy = this.getScreenY();
+
+            sx += tileSize / 2;
+            sy -= tileSize / 2;
+            PopupVariant variant = PopupVariant.HEAL;
+            gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(heal), sx, sy, variant, 60);
             gameWindow.getSoundmanager().greenPotionWAV("sound/potion-sound.wav");
             // スタック処理：1個だけ減らす。0ならスロット削除
             int current = potion.getAmount();
             if (current > 1) {
                 potion.setAmount(current - 1);
-                gameWindow.getUi().addMessage("残り " + (current - 1) + " 個");
             } else {
                 // 1個だったのでスロットを削除
                 getInventory().remove(index);
-                gameWindow.getUi().addMessage("残り 0 個（スロットを空けました）");
             }
         }
     }
@@ -491,17 +493,14 @@ public class Player extends Entity {
             ObjBluePotion potion = (ObjBluePotion) e;
             int heal = potion.getHealAmount();
             setMana(Math.min(getMana() + heal, getMaxMana()));
-            gameWindow.getUi().addMessage("ブルーポーションを使った。MPが全回復！");
             gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
             // スタック処理：1個だけ減らす。0ならスロット削除
             int current = potion.getAmount();
             if (current > 1) {
                 potion.setAmount(current - 1);
-                gameWindow.getUi().addMessage("残り " + (current - 1) + " 個");
             } else {
                 // 1個だったのでスロットを削除
                 getInventory().remove(index);
-                gameWindow.getUi().addMessage("残り 0 個（スロットを空けました）");
             }
         }
     }
@@ -865,7 +864,6 @@ public class Player extends Entity {
         Entity obj = (objs != null && nearbyIndex >= 0 && nearbyIndex < objs.length) ? objs[nearbyIndex] : null;
 
         if (obj == null) {
-            gameWindow.getUi().addMessage("objの拾えるものがない");
             return;
         }
 
@@ -885,7 +883,6 @@ public class Player extends Entity {
             if (obj instanceof object.ObjBomb) {
                 object.ObjBomb bomb = (object.ObjBomb) obj;
                 if (!bomb.isPickable() || !bomb.getAlive()) {
-                    gameWindow.getUi().addMessage("拾えるものがない");
                     return;
                 }
 
@@ -905,9 +902,6 @@ public class Player extends Entity {
                 setSpriteNum(0);
                 setSpriteCounter(0);
                 setAttacking(false);
-
-                gameWindow.getUi().addMessage(bomb.getName() + " を持ち上げた");
-                getGameWindow().getUi().addMessage("DEBUG: pic bomb -> heldBomb=" + heldBomb);
                 return;
             }
 
@@ -915,7 +909,6 @@ public class Player extends Entity {
             if (obj instanceof object.ObjPot) {
                 object.ObjPot pot = (object.ObjPot) obj;
                 if (!pot.isPickable() || !pot.getAlive()) {
-                    gameWindow.getUi().addMessage("拾えるものがない");
                     pickupCooldown = PICKUP_COOLDOWN_FRAMES;
                     return;
                 }
@@ -936,13 +929,8 @@ public class Player extends Entity {
                 setSpriteNum(0);
                 setSpriteCounter(0);
                 setAttacking(false);
-
-                gameWindow.getUi().addMessage(pot.getName() + " を持ち上げた");
-                getGameWindow().getUi().addMessage("DEBUG: pic pot -> heldPot=" + heldPot);
             }
         }
-
-        gameWindow.getUi().addMessage("拾えるものがない");
     }
 
     private void startPickupMonster(int nearbyIndex) {
@@ -952,7 +940,6 @@ public class Player extends Entity {
         Entity monster = (chickens != null && nearbyIndex >= 0 && nearbyIndex < chickens.length) ? chickens[nearbyIndex] : null;
 
         if (monster == null) {
-            gameWindow.getUi().addMessage("monsterの拾えるものがない");
             return;
         }
 
@@ -960,7 +947,6 @@ public class Player extends Entity {
         if (monster != null && monster instanceof npc.NpcChicken) {
             npc.NpcChicken ch = (npc.NpcChicken) monster;
             if (!ch.isPickable() || !ch.getAlive()) {
-                gameWindow.getUi().addMessage("拾えるものがない");
                 pickupCooldown = PICKUP_COOLDOWN_FRAMES;
                 return;
             }
@@ -976,11 +962,8 @@ public class Player extends Entity {
             setSpriteNum(0);
             setSpriteCounter(0);
             setAttacking(false);
-            gameWindow.getUi().addMessage(ch.getName() + " を持ち上げた");
             return;
         }
-
-        gameWindow.getUi().addMessage("拾えるものがない");
     }
 
     private void throwHeldBom() {
@@ -1089,8 +1072,6 @@ public class Player extends Entity {
 
     private void throwHeldPot() {
 
-        gameWindow.getUi().addMessage("throwHeldPot()呼ばれた");
-
         if (!holding || heldPot == null) return;
 
         int tiles = 2;
@@ -1194,8 +1175,6 @@ public class Player extends Entity {
     }
 
     public void throwHeldChicken() {
-
-        gameWindow.getUi().addMessage("throwHeldChicken()呼ばれた");
 
         if (!holding || heldChicken == null) return;
 
@@ -1661,7 +1640,6 @@ public class Player extends Entity {
 
         // 発射時の演出
         gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
-        gameWindow.getUi().addMessage("剣を発射した！");
 
         // 発射直後にプロジェクタイル側でエフェクトを初期化させる
         sp.onFire(getDirection());
@@ -1776,7 +1754,6 @@ public class Player extends Entity {
         if (obj instanceof object.ObjBomb && keyHandler.isThrowKeyPressed()) {
             object.ObjBomb bomb = (object.ObjBomb) obj;
             if (!bomb.isPickable() || !bomb.getAlive()) {
-                gameWindow.getUi().addMessage("拾えるものがない");
                 return;
             }
             // ワールドから除去して所持に移す
@@ -1789,8 +1766,6 @@ public class Player extends Entity {
             this.heldBomb = bomb;
             this.holding = true;
             this.state = PlayerState.PICKUP;
-
-            gameWindow.getUi().addMessage(bomb.getName() + " を持ち上げた");
             return;
         }
 
@@ -1798,7 +1773,6 @@ public class Player extends Entity {
             object.ObjPot pot = (object.ObjPot) obj;
             // pickable / alive のチェック（必要に応じて）
             if (!pot.isPickable() || !pot.getAlive()) {
-                gameWindow.getUi().addMessage("拾えるものがない");
                 return;
             }
 
@@ -1812,8 +1786,6 @@ public class Player extends Entity {
             this.heldPot = pot;
             this.holding = true;
             this.state = PlayerState.PICKUP;
-
-            gameWindow.getUi().addMessage(pot.getName() + " を持ち上げた");
             return;
         }
 
@@ -1821,7 +1793,6 @@ public class Player extends Entity {
             NpcChicken chicken = (NpcChicken) obj;
             // pickable / alive のチェック（必要に応じて）
             if (!chicken.isPickable() || !chicken.getAlive()) {
-                gameWindow.getUi().addMessage("拾えるものがない");
                 return;
             }
 
@@ -1835,8 +1806,6 @@ public class Player extends Entity {
             this.heldChicken = chicken;
             this.holding = true;
             this.state = PlayerState.PICKUP;
-
-            gameWindow.getUi().addMessage(this.heldChicken.getName() + " を持ち上げた");
             return;
         }
 
@@ -1847,7 +1816,6 @@ public class Player extends Entity {
         } else {
             text = "手に入れていない!";
         }
-        gameWindow.getUi().addMessage(text);
     }
 
 
@@ -1983,7 +1951,6 @@ public class Player extends Entity {
         } else {
             text = "手に入れていない!";
         }
-        gameWindow.getUi().addMessage(text);
     }
 
 
@@ -2155,7 +2122,6 @@ public class Player extends Entity {
 
         target.setInvincible(true);
         target.damageReaction();
-        gameWindow.getUi().addMessage(target.getName() + "のHP:" + target.getLife());
 
         if (target.getLife() <= 0) {
             Entity monster = target;
@@ -2174,11 +2140,8 @@ public class Player extends Entity {
 
             gameWindow.dropItem(dropped, monster);
             System.out.println("drops = " + drops);
-
-            gameWindow.getUi().addMessage(target.getName() + "を倒した!");
             int gainedExp = target.getExp();
             setExp(getExp() + gainedExp);
-            gameWindow.getUi().addMessage("経験値" + gainedExp + " 入手!");
             checkLevelUp();
             gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
 
@@ -2825,9 +2788,6 @@ public class Player extends Entity {
     public void addCoin(ObjCoinBronze coin) {
         int value = coin.getValue();
         setCoin(getCoin() + value);
-        gameWindow.getUi().addMessage(
-                "コインを拾った。所持金が" + value + "獲得！"
-        );
     }
 
     /**
@@ -2863,11 +2823,16 @@ public class Player extends Entity {
      */
 
     public void healGreenPotion(ObjGreenPotion potion) {
-        int amount = potion.getHealAmount();
-        setMana(Math.min(getMana() + amount, getMaxMana()));
-        gameWindow.getUi().addMessage(
-                "グリーンポーションを拾った。MPが" + amount + "回復！"
-        );
+        int heal = potion.getHealAmount();
+        setLife(Math.min(getLife() + heal, getMaxLife()));
+        int tileSize = FrameApp.getTileSize();
+        int sx = this.getScreenX();
+        int sy = this.getScreenY();
+
+        sx += tileSize / 2;
+        sy -= tileSize / 2;
+        PopupVariant variant = PopupVariant.HEAL;
+        gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(heal), sx, sy, variant, 60);
     }
 
     /**
@@ -2907,7 +2872,6 @@ public class Player extends Entity {
 
     public void takeDamage(int dmg) {
         setLife(getLife() - dmg);
-        gameWindow.getUi().addMessage("何かにぶつかり" + dmg + "ダメージ!");
         if (getLife() <= 0) {
             gameWindow.setGameState(GameState.GAME_OVER);
         }
