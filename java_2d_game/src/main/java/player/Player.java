@@ -2824,7 +2824,7 @@ public class Player extends Entity {
 
     public void healGreenPotion(ObjGreenPotion potion) {
         int heal = potion.getHealAmount();
-        setLife(Math.min(getLife() + heal, getMaxLife()));
+        setMana(Math.min(getMana() + heal, getMaxMana()));
         int tileSize = FrameApp.getTileSize();
         int sx = this.getScreenX();
         int sy = this.getScreenY();
