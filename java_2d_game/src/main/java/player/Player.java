@@ -9,6 +9,7 @@ import npc.NpcChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
 import object.*;
+import popup.Popup;
 import popup.PopupVariant;
 import window.GameWindow;
 
@@ -2140,8 +2141,13 @@ public class Player extends Entity {
 
             gameWindow.dropItem(dropped, monster);
             System.out.println("drops = " + drops);
+
             int gainedExp = target.getExp();
-            setExp(getExp() + gainedExp);
+            this.setExp(getExp() + gainedExp);
+
+            variant = PopupVariant.XP;
+            gameWindow.getUi().getDamagePopupManager().pop(String.format("+%d XP", gainedExp), sx, sy, variant, 60);
+
             checkLevelUp();
             gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
 

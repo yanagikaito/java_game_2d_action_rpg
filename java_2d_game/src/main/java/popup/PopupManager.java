@@ -43,6 +43,9 @@ public class PopupManager {
                 case HEAL:
                     color = new Color(100, 255, 150);
                     break;
+                case XP:
+                    color = new Color(255, 215, 0);
+                    break;
                 default:
                     color = new Color(255, 120, 120);
                     break;
