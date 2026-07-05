@@ -8,6 +8,7 @@ import entity.loot.LootEntry;
 import factory.EntityFactory;
 import frame.FrameApp;
 import player.Player;
+import popup.PopupVariant;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -192,6 +193,16 @@ public class ObjChest extends Entity {
         if (opened) {
             Entity dropped = createRandomLoot();
             if (dropped != null) {
+                int tileSize = FrameApp.getTileSize();
+                int screenX = this.getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
+                int screenY = this.getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+                int sx = screenX;
+                int sy = screenY;
+
+                sx += tileSize / 2;
+                sy -= tileSize / 2;
+                PopupVariant variant = PopupVariant.DROP;
+                gameWindow.getUi().getDamagePopupManager().popItem(dropped, sx, sy, variant, 60);
                 if (dropped instanceof ObjCoinBronze) {
                     // コインはインベントリに入れず所持金に加算
                     ObjCoinBronze coin = (ObjCoinBronze) dropped;
@@ -237,8 +248,8 @@ public class ObjChest extends Entity {
 
     public void draw(Graphics2D g2) {
 
-        int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
-        int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+        int screenX = this.getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
+        int screenY = this.getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
         g2.drawImage(this.getImage(), screenX, screenY, null);
     }

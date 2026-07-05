@@ -1,5 +1,8 @@
 package popup;
 
+import entity.Entity;
+import frame.FrameApp;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -16,7 +19,17 @@ public class PopupManager {
 
     public synchronized void pop(String text, int screenX, int screenY, PopupVariant variant, int lifeFrames) {
         Popup p = pool.isEmpty() ? new Popup() : pool.pop();
-        p.init(text, screenX, screenY, variant, lifeFrames);
+        p.init(text, null, screenX, screenY, variant, lifeFrames);
+        active.add(p);
+    }
+
+    // アイテム表示用（Entity を直接渡す）
+    public synchronized void popItem(Entity item, int screenX, int screenY, PopupVariant variant, int lifeFrames) {
+        if (item == null) return;
+        String name = item.getName(); // 表示名
+        Image icon = item.getImage();  // アイテム画像（null でも可）
+        Popup p = pool.isEmpty() ? new Popup() : pool.pop();
+        p.init(name, icon, screenX, screenY, variant, lifeFrames);
         active.add(p);
     }
 
@@ -32,7 +45,7 @@ public class PopupManager {
         }
     }
 
-    public synchronized void drawAll(Graphics2D g) {
+    public synchronized void drawAll(Graphics2D g2) {
         for (Popup p : active) {
             float alpha = p.alpha;
             Color color;
@@ -46,25 +59,53 @@ public class PopupManager {
                 case XP:
                     color = new Color(255, 215, 0);
                     break;
+                case DROP:
+                    color = new Color(255, 240, 160);
+                    break;
                 default:
                     color = new Color(255, 120, 120);
                     break;
             }
-            Font font = new Font("SansSerif", Font.BOLD, (p.variant == PopupVariant.DAMAGE) ? 28 : 20);
-            g.setFont(font);
-            FontMetrics fm = g.getFontMetrics(font);
-            int w = fm.stringWidth(p.text);
-            int h = fm.getAscent();
 
-            Composite old = g.getComposite();
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            // shadow
-            g.setColor(new Color(0, 0, 0, (int) (200 * alpha)));
-            g.drawString(p.text, p.screenX - w / 2 + 2, p.screenY - h / 2 + 2);
-            // main
-            g.setColor(color);
-            g.drawString(p.text, p.screenX - w / 2, p.screenY - h / 2);
-            g.setComposite(old);
+            int fontSize = (p.variant == PopupVariant.DAMAGE) ? 28 : 20;
+            int tileSize = FrameApp.getTileSize();
+            Font font = new Font("SansSerif", Font.BOLD, fontSize);
+            g2.setFont(font);
+            FontMetrics fm = g2.getFontMetrics(font);
+
+            String display = p.text;
+
+            Composite old = g2.getComposite();
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+
+            if (p.icon != null && p.variant == PopupVariant.DROP) {
+                int iconW = tileSize - 16;
+                int iconH = tileSize - 16;
+                Image scaled = p.icon.getScaledInstance(iconW, iconH, Image.SCALE_SMOOTH);
+                int iconX = p.screenX - iconW / 2;
+                int iconY = p.screenY - iconH - 8;
+                g2.drawImage(scaled, iconX, iconY, null);
+
+                // デバッグ
+//                int textY = iconY + iconH + fm.getAscent();
+//                // shadow
+//                g.setColor(new Color(0, 0, 0, (int) (200 * alpha)));
+//                g.drawString(display, p.screenX - fm.stringWidth(display) / 2 + 2, textY + 2);
+//                // main
+//                g.setColor(color);
+//                g.drawString(display, p.screenX - fm.stringWidth(display) / 2, textY);
+            } else {
+                int w = fm.stringWidth(display);
+                int h = fm.getAscent();
+                // shadow
+                g2.setColor(new Color(0, 0, 0, (int) (200 * alpha)));
+                g2.drawString(display, p.screenX - w / 2 + 2, p.screenY - h / 2 + 2);
+                // main
+                g2.setColor(color);
+                g2.drawString(display, p.screenX - w / 2, p.screenY - h / 2);
+            }
+
+            g2.setComposite(old);
         }
     }
 }
