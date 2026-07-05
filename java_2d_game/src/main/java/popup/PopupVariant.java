@@ -1,3 +1,3 @@
 package popup;
 
-public enum PopupVariant {DAMAGE, HEAL, XP};
+public enum PopupVariant {DAMAGE, HEAL, XP, DROP};

@@ -1,7 +1,10 @@
 package popup;
 
+import java.awt.*;
+
 public class Popup {
     public String text;
+    public Image icon;      // アイテム画像（null ならテキストのみ）
     public int screenX;
     public int screenY;
     public float vy;        // 上方向速度（負の値）
@@ -10,8 +13,9 @@ public class Popup {
     public float alpha;
     public PopupVariant variant;
 
-    public void init(String text, int sx, int sy, PopupVariant variant, int lifeFrames) {
+    public void init(String text, Image icon, int sx, int sy, PopupVariant variant, int lifeFrames) {
         this.text = text;
+        this.icon = icon;
         this.screenX = sx;
         this.screenY = sy;
         this.variant = variant;
