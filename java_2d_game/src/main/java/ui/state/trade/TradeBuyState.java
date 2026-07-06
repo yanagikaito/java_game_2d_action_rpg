@@ -129,20 +129,36 @@ public final class TradeBuyState implements TradeScreenState {
             tradeScreenContext.setState(
                     new TradeDialogueState(tradeScreenContext,
                             "所持金が不足している!",
-                            this  // BuyState に戻る
+                            this
                     )
             );
         } else if (player.getInventory().size() >= player.getMaxInventorySize()) {
             tradeScreenContext.setState(
                     new TradeDialogueState(tradeScreenContext,
                             "これ以上購入できない!!",
-                            this // BuyState に戻る
+                            this
                     )
             );
+            // 既存の購入成功分岐の最後を置き換え
         } else {
+            // プレイヤーの所持金を減らす
             player.setCoin(player.getCoin() - price);
-            player.getInventory().add(item.copy());
+
+            // shop のアイテムはcopy() を作る
+            Entity toGive = item.copy();
+
+            // 個数を扱うなら toGive.setAmount(1) 等を設定
+            boolean obtained = player.canObtainItem(toGive);
+
+            if (obtained) {
+                tradeScreenContext.setState(new TradeDialogueState(tradeScreenContext, "購入しました", this));
+            } else {
+                // 取得失敗（インベントリ満杯など）→ 所持金を戻す or メッセージ
+                player.setCoin(player.getCoin() + price);
+                tradeScreenContext.setState(new TradeDialogueState(tradeScreenContext, "これ以上購入できない!!", this));
+            }
         }
+
     }
 
     private void drawMessageWindow(Graphics2D g2, int tileSize) {

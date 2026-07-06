@@ -68,7 +68,7 @@ public final class TradeSellState implements TradeScreenState {
         Player player = gameWindow.getPlayer();
         List<Entity> playerInv = player.getInventory();
 
-        // 1) 在庫がそもそも空なら「売却するアイテムがない！」
+        //  在庫がそもそも空なら「売却するアイテムがない！」
         if (playerInv.isEmpty()) {
             showNoItemDialogue();
             return;
@@ -84,21 +84,50 @@ public final class TradeSellState implements TradeScreenState {
             return;
         }
 
-        // 装備判定の追加
         Entity item = playerInv.get(idx);
+
+        // 装備判定
         if (player.isEquipped(item)) {
             showCannotSellEquippedDialogue();
             return;
         }
 
-        // 4) 正常売却処理
-        int price = item.getPrice();
-
+        // 売却処理
         keyHandler.clearAllKeys();
         keyHandler.setCommandNum(0);
-        player.setCoin(player.getCoin() + price);
-        playerInv.remove(idx);
+
+        // 1個あたりの価格
+        int unitPrice = item.getPrice();
+        if (unitPrice <= 0) {
+            unitPrice = item.getPrice();
+        }
+
+        if (item.isStackable() && item.getAmount() > 1) {
+            // 個数を1減らす
+            item.setAmount(item.getAmount() - 1);
+            player.setCoin(player.getCoin() + unitPrice);
+
+            // 売却ポップやダイアログを出す（任意）
+            tradeScreenContext.setState(
+                    new TradeDialogueState(tradeScreenContext,
+                            String.format("%s を1個売却した。", item.getName()),
+                            this
+                    )
+            );
+        } else {
+            // 個数が1、またはスタック不可 → スロットから削除して価格を加算
+            player.setCoin(player.getCoin() + unitPrice);
+            playerInv.remove(idx);
+
+            tradeScreenContext.setState(
+                    new TradeDialogueState(tradeScreenContext,
+                            String.format("%s を売却した。", item.getName()),
+                            this
+                    )
+            );
+        }
     }
+
 
     private void showNoItemDialogue() {
         tradeScreenContext.setState(
