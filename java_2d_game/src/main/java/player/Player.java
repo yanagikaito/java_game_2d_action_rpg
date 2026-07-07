@@ -2286,8 +2286,7 @@ public class Player extends Entity {
 
     public boolean isEquipped(Entity item) {
         if (item == null) return false;
-        return item.equals(getCurrentWeapon())
-                || item.equals(getCurrentShield());
+        return item == getCurrentWeapon() || item == getCurrentShield();
     }
 
     public int searchItemInInventory(String itemName) {
