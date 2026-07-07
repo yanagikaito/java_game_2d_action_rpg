@@ -893,14 +893,13 @@ public class UI {
             g2.drawRoundRect(cursorX, cursorY - 2, cursorWidth, cursorHeight, 10, 10);
         }
 
-        // --- 安全化された描画ループ（drawInventory 内の for ループをこれに置き換えてください） ---
         List<Entity> inv = entity.getInventory();
         for (int i = 0; i < inv.size(); i++) {
             Entity item = inv.get(i);
 
-            // NULL 安全: item が null ならスキップ
+            // item が null ならスキップ
             if (item == null) {
-                // デバッグログ（必要なら有効化）
+                // デバッグ
                 // System.out.println("DBG: inventory slot " + i + " is null");
                 slotX += slotSize;
                 if (i == 4 || i == 9 || i == 14) {
@@ -910,15 +909,14 @@ public class UI {
                 continue;
             }
 
-            // type が null ならハイライト比較や equals を呼ばない
             EntityType type = item.getType();
 
             // ハイライト（装備中の type と一致するか） - type が null の場合は false
-            if (!weaponHighlighted && wId != null && type != null && type.equals(wId)) {
+            if (!weaponHighlighted && wId != null && type != null && type == wId) {
                 g2.setColor(new Color(240, 190, 90));
                 g2.fillRoundRect(slotX, slotY, tileSize, tileSize, 10, 10);
                 weaponHighlighted = true;
-            } else if (!shieldHighlighted && sId != null && type != null && type.equals(sId)) {
+            } else if (!shieldHighlighted && sId != null && type != null && type == sId) {
                 g2.setColor(new Color(240, 190, 90));
                 g2.fillRoundRect(slotX, slotY, tileSize, tileSize, 10, 10);
                 shieldHighlighted = true;
@@ -928,7 +926,7 @@ public class UI {
             try {
                 BufferedImage img = item.getImage();
                 if (img == null) {
-                    // プレースホルダ（簡易）
+                    // プレースホルダ
                     BufferedImage ph = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D pg = ph.createGraphics();
                     pg.setColor(Color.MAGENTA);
@@ -947,14 +945,13 @@ public class UI {
                 g2.fillRect(slotX, slotY, tileSize, tileSize);
             }
 
-            // 個数表示（メソッド名が getAmount / getCount どちらかプロジェクトに合わせる）
+            // 個数表示
             int amount = 0;
             try {
-                // どちらのメソッドがあるかを安全に試す
                 try {
-                    amount = item.getAmount(); // 既存コードで使っているならこちら
+                    amount = item.getAmount();
                 } catch (NoSuchMethodError | AbstractMethodError e) {
-                    amount = item.getCount(); // 以前の実装で使っていた場合
+                    amount = item.getCount();
                 }
             } catch (Throwable t) {
                 amount = 0;

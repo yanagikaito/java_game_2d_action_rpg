@@ -8,6 +8,7 @@ import player.Player;
 import window.GameWindow;
 
 import java.sql.*;
+import java.util.List;
 
 public class LoadManager {
 
@@ -127,12 +128,29 @@ public class LoadManager {
             pstmt.setInt(1, saveId);
             ResultSet rs = pstmt.executeQuery();
 
+            List<Entity> inv = player.getInventory();
             EntityFactory factory = new EntityFactory(gameWindow);
 
             while (rs.next()) {
                 String itemType = rs.getString("item_type");
                 EntityType type = findEntityTypeById(rs.getInt("type_id"));
-                if (type != null) {
+                Entity found = null;
+                for (Entity e : inv) {
+                    if (e == null) continue;
+                    EntityType et = e.getType();
+                    if (et != null && et.typeId() == type.typeId()) {
+                        found = e;
+                        break;
+                    }
+                }
+                if (found != null) {
+                    if ("weapon".equals(itemType)) {
+                        player.setCurrentWeapon(found);
+                    } else if ("shield".equals(itemType)) {
+                        player.setCurrentShield(found);
+                    }
+                } else {
+                    // フォールバック: インベントリに見つからない場合は factory で作って装備にセットする
                     Entity equipped = factory.create(type);
                     if (equipped != null) {
                         if ("weapon".equals(itemType)) {
