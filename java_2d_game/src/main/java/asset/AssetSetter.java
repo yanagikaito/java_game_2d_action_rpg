@@ -230,12 +230,18 @@ public class AssetSetter {
         obj[i] = createObjPot(FrameApp.getTileSize() * 28, FrameApp.getTileSize() * 15);
         i++;
         obj[i] = createObjPot(FrameApp.getTileSize() * 29, FrameApp.getTileSize() * 15);
+        i++;
+        obj[i] = createObjPot(FrameApp.getTileSize() * 29, FrameApp.getTileSize() * 16);
+        i++;
+        obj[i] = createObjPot(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 16);
+        i++;
+        obj[i] = createObjPot(FrameApp.getTileSize() * 28, FrameApp.getTileSize() * 16);
     }
 
     public void setObjAxe() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 3;
+        int i = 6;
 
         obj[i] = createObjAxe(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
     }
@@ -243,7 +249,7 @@ public class AssetSetter {
     public void setObjChest() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 4;
+        int i = 7;
 
         obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 22);
         i++;
@@ -255,7 +261,7 @@ public class AssetSetter {
     public void setObjRedPotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 7;
+        int i = 10;
 
         obj[i] = createObjRedPotion(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 23);
         i++;
@@ -267,7 +273,7 @@ public class AssetSetter {
     public void setObjGreenPotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 10;
+        int i = 13;
 
         obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 36, FrameApp.getTileSize() * 26);
         i++;
@@ -279,7 +285,7 @@ public class AssetSetter {
     public void setObjBluePotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 13;
+        int i = 16;
 
         obj[i] = createObjBluePotion(FrameApp.getTileSize() * 39, FrameApp.getTileSize() * 29);
         i++;
