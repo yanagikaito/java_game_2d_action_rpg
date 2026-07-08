@@ -9,6 +9,7 @@ import entity.loot.LootEntry;
 import factory.EntityFactory;
 import frame.FrameApp;
 import player.Player;
+import popup.PopupVariant;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -338,7 +339,7 @@ public class ObjPot extends Projectile {
                 bomb.setLife(bomb.getMaxLife());
                 bomb.setVelocity(0, 0);
 
-                // チェスト位置に落とす（必要なら少しオフセット）
+                // チェスト位置に落とす
                 bomb.setWorldX(this.getWorldX());
                 bomb.setWorldY(this.getWorldY());
 
@@ -346,9 +347,19 @@ public class ObjPot extends Projectile {
                 gameWindow.getCurrentMap().addObject(bomb);
                 return;
             }
-            // 通常アイテムはインベントリに追加（成功判定を取る）
+            // 通常アイテムはインベントリに追加
             boolean added = player.canObtainItem(dropped);
             if (added) {
+                int tileSize = FrameApp.getTileSize();
+                int screenX = this.getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
+                int screenY = this.getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+                int sx = screenX;
+                int sy = screenY;
+
+                sx += tileSize / 2;
+                sy -= tileSize / 2;
+                PopupVariant variant = PopupVariant.DROP;
+                gameWindow.getUi().getDamagePopupManager().popItem(dropped, sx, sy, variant, 60);
                 gameWindow.getSoundmanager().redPotionWAV("sound/potion-sound.wav");
             } else {
                 dropped.setWorldX(this.getWorldX());
