@@ -50,8 +50,11 @@ public class PopupManager {
             float alpha = p.alpha;
             Color color;
             switch (p.variant) {
-                case DAMAGE:
+                case PLAYER_DAMAGE:
                     color = new Color(180, 180, 255);
+                    break;
+                case MONSTER_DAMAGE:
+                    color = new Color(255, 120, 120);
                     break;
                 case HEAL:
                     color = new Color(100, 255, 150);
@@ -63,11 +66,11 @@ public class PopupManager {
                     color = new Color(255, 240, 160);
                     break;
                 default:
-                    color = new Color(255, 120, 120);
+                    color = new Color(0, 0, 0);
                     break;
             }
 
-            int fontSize = (p.variant == PopupVariant.DAMAGE) ? 28 : 20;
+            int fontSize = (p.variant == PopupVariant.PLAYER_DAMAGE) ? 28 : 20;
             int tileSize = FrameApp.getTileSize();
             Font font = new Font("SansSerif", Font.BOLD, fontSize);
             g2.setFont(font);

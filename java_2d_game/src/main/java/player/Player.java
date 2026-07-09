@@ -2049,7 +2049,7 @@ public class Player extends Entity {
             sx += tileSize / 2;
             sy -= tileSize / 2;
 
-            PopupVariant variant = PopupVariant.DAMAGE;
+            PopupVariant variant = PopupVariant.MONSTER_DAMAGE;
 
             gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
             setInvincible(true);
@@ -2117,7 +2117,7 @@ public class Player extends Entity {
         sx += tileSize / 2;
         sy -= tileSize / 2;
 
-        PopupVariant variant = PopupVariant.DAMAGE;
+        PopupVariant variant = PopupVariant.PLAYER_DAMAGE;
 
         gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
 

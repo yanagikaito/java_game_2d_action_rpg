@@ -382,7 +382,7 @@ public abstract class Entity {
                 sx += tileSize / 2;
                 sy -= tileSize / 2;
 
-                PopupVariant variant = PopupVariant.DAMAGE;
+                PopupVariant variant = PopupVariant.MONSTER_DAMAGE;
                 gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
                 player.setInvincible(true);
                 setInvincibleCounter(0);
