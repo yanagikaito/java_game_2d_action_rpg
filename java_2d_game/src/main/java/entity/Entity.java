@@ -334,6 +334,10 @@ public abstract class Entity {
     public void damagePlayer(int attack, int knockBackPower) {
 
         Player player = gameWindow.getPlayer();
+        int tileSize = FrameApp.getTileSize();
+
+        int sx = gameWindow.getPlayer().getWorldX() - this.getWorldX() + gameWindow.getPlayer().getScreenX();
+        int sy = gameWindow.getPlayer().getWorldY() - this.getWorldY() + gameWindow.getPlayer().getScreenY();
 
         if (!player.getInvincible()) {
 
@@ -349,12 +353,15 @@ public abstract class Entity {
             if (guardActive) {
                 // ガード成功：ダメージを軽減
                 damage = Math.max(0, damage / 3);
+                PopupVariant variant = PopupVariant.GUARDED_DAMAGE;
+                gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
                 gameWindow.getSoundmanager().defeatedWAV("sound/thrust-sound.wav");
 
                 // ガード成功時はノックバック・透明化・無敵化を与えない
                 if (damage > 0) {
                     // ガードでも微ダメージを通す設計ならここでライフを減らす
                     player.setLife(player.getLife() - damage);
+                    gameWindow.getUi().getDamagePopupManager().pop(String.valueOf(damage), sx, sy, variant, 60);
                 }
             } else {
                 // ガード失敗（通常の被ダメ処理）
@@ -366,18 +373,13 @@ public abstract class Entity {
                     player.setTransparent(true);
                 }
 
-                // ノックバック（ガード成功時はノックバックは与えられない）
+                // ノックバック
                 if (knockBackPower > 0) {
                     setKnockBack(player, this, knockBackPower);
                 }
 
                 // ライフ減少・無敵化
                 player.setLife(player.getLife() - damage);
-
-                int tileSize = FrameApp.getTileSize();
-
-                int sx = gameWindow.getPlayer().getWorldX() - this.getWorldX() + gameWindow.getPlayer().getScreenX();
-                int sy = gameWindow.getPlayer().getWorldY() - this.getWorldY() + gameWindow.getPlayer().getScreenY();
 
                 sx += tileSize / 2;
                 sy -= tileSize / 2;

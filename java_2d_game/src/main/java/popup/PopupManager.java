@@ -56,6 +56,9 @@ public class PopupManager {
                 case MONSTER_DAMAGE:
                     color = new Color(255, 120, 120);
                     break;
+                case GUARDED_DAMAGE:
+                    color = new Color(77, 208, 225);
+                    break;
                 case HEAL:
                     color = new Color(100, 255, 150);
                     break;
