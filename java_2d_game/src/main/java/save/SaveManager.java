@@ -3,6 +3,7 @@ package save;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import entity.Entity;
+import player.Player;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SaveManager {
@@ -41,11 +43,11 @@ public class SaveManager {
     private static final String SUFFIX = ".json";
     private static final Gson gson = new Gson();
 
-    public static boolean saveGame(int slot, Entity entity) {
+    public static boolean saveGame(int slot, Player player) {
         System.out.println("DEBUG: SaveManager.saveGame called slot=" + slot + " thread=" + Thread.currentThread().getName());
         boolean result = false;
         LocalDateTime now = LocalDateTime.now();
-        SaveData data = EntityStateConverter.toSaveData(slot, entity, now);
+        SaveData data = EntityStateConverter.toSaveData(slot, player, now);
 
         Connection conn = null;
         try {
@@ -57,7 +59,7 @@ public class SaveManager {
 
             // 2. インベントリ削除 → 挿入
             clearInventory(conn, slot);
-            saveInventory(conn, slot, data.inventory());
+            saveInventory(conn, data.id(), player);
 
             // 3. 装備保存
             saveEquipment(conn, slot, data);
@@ -68,13 +70,13 @@ public class SaveManager {
 
             // 既存のメタ生成箇所（抜粋）
             SaveMeta meta = new SaveMeta(true, data.hp(), data.maxHp(),
-                    entity.getFacing(), entity.getSpriteKey(), System.currentTimeMillis());
+                    player.getFacing(), player.getSpriteKey(), System.currentTimeMillis());
 
             // ここでプレイ時間をセットする（Player 型チェック）
             try {
                 // Player クラスのパッケージに合わせて import してください
-                if (entity instanceof player.Player) {
-                    long playSeconds = ((player.Player) entity).getPlayTimeSeconds();
+                if (player instanceof player.Player) {
+                    long playSeconds = ((player.Player) player).getPlayTimeSeconds();
                     meta.setPlayTimeSeconds(playSeconds);
                     System.out.println("DEBUG: SaveManager - meta.playTimeSeconds = " + playSeconds + " for slot " + slot);
                 } else {
@@ -176,8 +178,9 @@ public class SaveManager {
         }
     }
 
-    private static void saveInventory(Connection conn, int saveId, List<ItemSaveData> items) throws SQLException {
+    private static void saveInventory(Connection conn, int saveId, Player player) throws SQLException {
 
+        List<ItemSaveData> items = buildItemSaveDataList(player);
         String sql = "INSERT INTO inventory_items (save_id, slot, type_id, count) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             for (ItemSaveData item : items) {
@@ -191,6 +194,7 @@ public class SaveManager {
             pstmt.executeBatch();
         }
     }
+
 
     private static void saveEquipment(Connection conn, int saveId, SaveData data) throws SQLException {
         // 武器と盾を別々に処理（PreparedStatementを安全に）
@@ -272,37 +276,43 @@ public class SaveManager {
         }
     }
 
-    public static boolean deleteSaveById(int id) {
-        String delInv = "DELETE FROM inventory_items WHERE save_id = ?";
-        String delEquip = "DELETE FROM equipment WHERE save_id = ?";
-        String delSave = "DELETE FROM saves WHERE id = ?";
+    private static List<ItemSaveData> buildItemSaveDataList(Player player) {
+        List<ItemSaveData> list = new ArrayList<>();
+        List<Entity> inv = player.getInventory(); // スロット順のリストを想定
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, "sa", "")) {
-            conn.setAutoCommit(false);
-            try (PreparedStatement psInv = conn.prepareStatement(delInv);
-                 PreparedStatement psEquip = conn.prepareStatement(delEquip);
-                 PreparedStatement psSave = conn.prepareStatement(delSave)) {
+        for (int slot = 0; slot < inv.size(); slot++) {
+            Entity e = inv.get(slot);
+            if (e == null) continue;
 
-                psInv.setInt(1, id);
-                psInv.executeUpdate();
-
-                psEquip.setInt(1, id);
-                psEquip.executeUpdate();
-
-                psSave.setInt(1, id);
-                int affected = psSave.executeUpdate();
-
-                conn.commit();
-                System.out.println("DEBUG: deleteSaveById id=" + id + " deleted saves rows=" + affected);
-                return affected > 0;
-            } catch (SQLException e) {
-                conn.rollback();
-                e.printStackTrace();
-                return false;
+            int typeId = e.getType().typeId();
+            int amount = 1;
+            try {
+                amount = Math.max(1, e.getAmount());
+            } catch (Exception ex) {
+                amount = 1;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+
+            int maxStack = 1;
+            try {
+                maxStack = Math.max(1, e.getMaxStack());
+            } catch (Exception ex) {
+                maxStack = 1;
+            }
+
+            // スタック上限を超えているなら分割して複数レコードにする
+            if (maxStack > 1 && amount > maxStack) {
+                int remaining = amount;
+                while (remaining > 0) {
+                    int saveCount = Math.min(remaining, maxStack);
+                    System.out.println("DEBUG save: slot=" + slot + " typeId=" + typeId + " amount=" + saveCount);
+                    list.add(new ItemSaveData(slot, typeId, saveCount));
+                    remaining -= saveCount;
+                }
+            } else {
+                System.out.println("DEBUG save: slot=" + slot + " typeId=" + typeId + " amount=" + amount);
+                list.add(new ItemSaveData(slot, typeId, amount));
+            }
         }
+        return list;
     }
 }
