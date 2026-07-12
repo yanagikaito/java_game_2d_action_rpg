@@ -22,6 +22,8 @@ public class ObjGreenPotion extends Entity {
         setName("グリーンポーション");
         setDescription("[" + getName() + "]\n 魔力を20回復する");
         setPrice(10);
+        setMaxStack(99);
+        setAmount(1);
         setStackable(true);
         try {
 

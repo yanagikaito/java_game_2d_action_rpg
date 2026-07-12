@@ -22,6 +22,8 @@ public class ObjRedPotion extends Entity {
         setName("レッドポーション");
         setDescription("[" + getName() + "]\n 体力を2回復する");
         setPrice(10);
+        setMaxStack(99);
+        setAmount(1);
         setStackable(true);
         try {
 

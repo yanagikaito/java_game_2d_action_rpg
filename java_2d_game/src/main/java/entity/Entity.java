@@ -50,6 +50,7 @@ public abstract class Entity {
     private boolean stackable = false;
     private boolean thrown = false;
     private int amount = 1;
+    private int maxStack = 1;
     protected String trigger;
 
     public enum Direction {UP, DOWN, LEFT, RIGHT}
@@ -2083,7 +2084,15 @@ public abstract class Entity {
     }
 
     public void setAmount(int amount) {
-        this.amount = amount;
+        this.amount = Math.max(1, Math.min(amount, Math.max(1, this.maxStack)));
+    }
+
+    public int getMaxStack() {
+        return maxStack;
+    }
+
+    public void setMaxStack(int maxStack) {
+        this.maxStack = Math.max(1, maxStack);
     }
 
     public Rectangle getCollisionBoxWorld() {

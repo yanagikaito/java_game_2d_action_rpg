@@ -96,24 +96,52 @@ public class LoadManager {
     }
 
     private static void loadInventory(Connection conn, int saveId, Entity player, GameWindow gameWindow) {
-
-        String sql = "SELECT * FROM inventory_items WHERE save_id = ?";
+        String sql = "SELECT slot, type_id, count FROM inventory_items WHERE save_id = ? ORDER BY slot";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, saveId);
-            ResultSet rs = pstmt.executeQuery();
+            try (ResultSet rs = pstmt.executeQuery()) {
+                EntityFactory factory = new EntityFactory(gameWindow);
+                List<Entity> inv = player.getInventory();
+                inv.clear();
 
-            EntityFactory factory = new EntityFactory(gameWindow);
+                while (rs.next()) {
+                    int slot = rs.getInt("slot");
+                    int typeId = rs.getInt("type_id");
 
-            while (rs.next()) {
-                int typeId = rs.getInt("type_id");
-                EntityType type = findEntityTypeById(typeId);
-                if (type != null) {
-                    Entity item = factory.create(type);
-                    if (item != null) {
-                        player.getInventory().add(item);
-                    } else {
-                        System.err.println("create failed: typeId=" + typeId);
+                    int count = rs.getInt("count");
+                    if (rs.wasNull() || count <= 0) count = 1; // NULL や 0 の扱い
+
+                    EntityType type = findEntityTypeById(typeId);
+                    if (type == null) {
+                        System.err.println("DEBUG: Unknown typeId=" + typeId);
+                        continue;
                     }
+
+                    Entity item = factory.create(type);
+                    if (item == null) {
+                        System.err.println("DEBUG: create failed: typeId=" + typeId);
+                        continue;
+                    }
+
+                    // デバッグ: 生成直後の状態
+                    System.out.println("DEBUG before setAmount: name=" + item.getName()
+                            + " stackable=" + item.isStackable()
+                            + " max=" + item.getMaxStack()
+                            + " amount=" + item.getAmount()
+                            + " dbCount=" + count);
+
+                    // スタック上限を先に設定してから setAmount
+                    if (item.isStackable()) {
+                        item.setMaxStack(determineMaxStackForType(typeId));
+                        item.setAmount(Math.max(1, Math.min(count, item.getMaxStack())));
+                    }
+
+                    // スロット復元（List のサイズを伸ばしてセット）
+                    while (inv.size() <= slot) inv.add(null);
+                    inv.set(slot, item);
+
+                    System.out.println("DEBUG after setAmount: name=" + item.getName()
+                            + " amount=" + item.getAmount() + " max=" + item.getMaxStack());
                 }
             }
         } catch (SQLException e) {
@@ -181,6 +209,13 @@ public class LoadManager {
             case 9 -> new BluePotionType();
             case 10 -> new BombType();
             default -> null;
+        };
+    }
+
+    private static int determineMaxStackForType(int typeId) {
+        return switch (typeId) {
+            case 7, 8, 9 -> 99;
+            default -> 1;
         };
     }
 }

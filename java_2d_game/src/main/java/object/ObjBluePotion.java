@@ -22,6 +22,8 @@ public class ObjBluePotion extends Entity {
         setName("ブルーポーション");
         setDescription("[" + getName() + "]\n 魔力を全回復する。");
         setPrice(100);
+        setMaxStack(99);
+        setAmount(1);
         setStackable(true);
         try {
 
