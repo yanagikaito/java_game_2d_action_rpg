@@ -9,8 +9,9 @@ import npc.NpcChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
 import object.*;
-import popup.Popup;
 import popup.PopupVariant;
+import tile.Tile;
+import tile.TileManager;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -62,6 +63,8 @@ public class Player extends Entity {
     private BufferedImage[][] currentGuardSprites;
     private int characterTypeId;
     private static final long FIRE_COOLDOWN_MS = 1000;
+    private long lastSnapTime = 0;
+    private static final long SNAP_COOLDOWN_MS = 100; // 100ms
     private long lastFireTime = 0;
     private int fireCooldown = 0;
     private int bombCooldown = 0;
@@ -137,8 +140,8 @@ public class Player extends Entity {
         setSolidAreaDefaultX(getSolidArea().x);
         setSolidAreaDefaultY(getSolidArea().y);
 
-        getSolidArea().width = (FrameApp.getTileSize() - 5);
-        getSolidArea().height = (FrameApp.getTileSize() - 5);
+        getSolidArea().width = (FrameApp.getTileSize() - 8);
+        getSolidArea().height = (FrameApp.getTileSize() - 8);
 
 
         setHitBoxX(getSolidArea().x);
@@ -1367,6 +1370,7 @@ public class Player extends Entity {
         }
     }
 
+
     /**
      * プレイヤーの向きの前方に、指定タイル数（range）以内の NPC がいるかを検索。
      * マップIDとワールド座標が一致する NPC を見つけたらその配列インデックスを返す。
@@ -2386,6 +2390,114 @@ public class Player extends Entity {
         }
 
         BufferedImage img = null;
+
+        boolean debugCollision = gameWindow.getKeyHandler().isShowDebugText();
+
+        if (debugCollision) {
+            // 元の composite / color を保存
+            Composite beforeComp = g2.getComposite();
+            Color beforeColor = g2.getColor();
+
+            // プレイヤーの solidArea（スクリーン座標）を取得
+            int playerWorldX = getWorldX();
+            int playerWorldY = getWorldY();
+            int playerScreenX = gameWindow.getPlayer().getScreenX();
+            int playerScreenY = gameWindow.getPlayer().getScreenY();
+
+            int saScreenX = playerWorldX - gameWindow.getPlayer().getWorldX() + playerScreenX + getSolidArea().x;
+            int saScreenY = playerWorldY - gameWindow.getPlayer().getWorldY() + playerScreenY + getSolidArea().y;
+
+            // プレイヤーの現在の solid を赤枠で描画
+            g2.setColor(new Color(255, 0, 0, 200));
+            g2.drawRect(saScreenX, saScreenY, getSolidArea().width, getSolidArea().height);
+
+            // 移動先（direction と speed を考慮した矩形）を半透明で塗りつぶし表示
+            int offsetX = 0, offsetY = 0;
+            switch (getDirection()) {
+                case "up" -> offsetY = -getSpeed();
+                case "down" -> offsetY = getSpeed();
+                case "left" -> offsetX = -getSpeed();
+                case "right" -> offsetX = getSpeed();
+            }
+            int movedX = saScreenX + offsetX;
+            int movedY = saScreenY + offsetY;
+            g2.setColor(new Color(255, 0, 0, 80));
+            g2.fillRect(movedX, movedY, getSolidArea().width, getSolidArea().height);
+            g2.setColor(new Color(255, 0, 0, 200));
+            g2.drawRect(movedX, movedY, getSolidArea().width, getSolidArea().height);
+
+            // 判定に使われるタイルを描画（プレイヤー周辺のタイルをチェック）
+            TileManager tm = gameWindow.getTileManager();
+            int[][] mapTileNum = tm.getMapTileNum();
+
+            // プレイヤーのワールド矩形（左上）を計算
+            int worldLeft = playerWorldX + getSolidArea().x;
+            int worldTop = playerWorldY + getSolidArea().y;
+            int worldRight = worldLeft + getSolidArea().width;
+            int worldBottom = worldTop + getSolidArea().height;
+
+            int leftCol = Math.floorDiv(worldLeft, tileSize);
+            int rightCol = Math.floorDiv(worldRight, tileSize);
+            int topRow = Math.floorDiv(worldTop, tileSize);
+            int bottomRow = Math.floorDiv(worldBottom, tileSize);
+
+            // 周辺タイル（余裕を持って1タイル分拡張）を描画
+            int minCol = Math.max(0, leftCol - 1);
+            int maxCol = Math.min(mapTileNum.length - 1, rightCol + 1);
+            int minRow = Math.max(0, topRow - 1);
+            int maxRow = Math.min(mapTileNum[0].length - 1, bottomRow + 1);
+
+            for (int c = minCol; c <= maxCol; c++) {
+                for (int r = minRow; r <= maxRow; r++) {
+                    int tileWorldX = c * tileSize;
+                    int tileWorldY = r * tileSize;
+                    int tileScreenX = tileWorldX - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
+                    int tileScreenY = tileWorldY - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+
+                    // タイル矩形を薄い赤で塗る（衝突タイルは濃くする）
+                    boolean isCollisionTile = false;
+                    try {
+                        int tileId = mapTileNum[c][r];
+                        Tile[] tiles = tm.getTiles();
+                        if (tileId >= 0 && tileId < tiles.length) {
+                            isCollisionTile = tiles[tileId].collision || tiles[tileId].bombCollision || tiles[tileId].potCollision;
+                        } else {
+                            isCollisionTile = true; // 安全側
+                        }
+                    } catch (Throwable ignored) {
+                    }
+
+                    if (isCollisionTile) {
+                        g2.setColor(new Color(255, 0, 0, 100));
+                        g2.fillRect(tileScreenX, tileScreenY, tileSize, tileSize);
+                        //            // 枠線の描画
+                        int margine = 2;
+                        int size = FrameApp.getTileSize() - (margine * 2);
+                        g2.drawRect(screenX + margine, screenY + margine, size, size);
+
+                        for (int i = 0; i < 10; i++) {
+                            // ランダムな位置とサイズを生成
+                            int particleX = screenX + margine + (int) (Math.random() * size);
+                            int particleY = screenY + margine + (int) (Math.random() * size);
+                            // 1～5のサイズ
+                            int particleSize = (int) (Math.random() * 5 + 1);
+
+                            // 半透明の白色またはランダムな色
+                            g2.setColor(new Color(255, 255, 255, (int) (Math.random() * 128 + 128)));
+                            g2.fillOval(particleX, particleY, particleSize, particleSize);
+                        }
+                        g2.drawRect(tileScreenX, tileScreenY, tileSize, tileSize);
+                    } else {
+                        g2.setColor(new Color(255, 0, 0, 40));
+                        g2.drawRect(tileScreenX, tileScreenY, tileSize, tileSize);
+                    }
+                }
+            }
+
+            // restore
+            g2.setComposite(beforeComp);
+            g2.setColor(beforeColor);
+        }
 
         // --- ガード（盾）描画を判定 ---
         boolean isShield = getCurrentShield() != null && getCurrentShield().getType() instanceof ShieldType;
