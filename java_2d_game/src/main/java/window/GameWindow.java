@@ -83,6 +83,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
     // 最後にロードしたスロット（未ロードなら -1）
     private int lastLoadedSlot = -1;
 
+    // デバッグ用フラグ（デフォルト false）
+    private boolean debugCollisionEnabled = false;
+
 
     /**
      * GameWindow のコンストラクタ。
@@ -1092,36 +1095,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public map.GameMap getCurrentMap() {
         return currentMap;
-    }
-
-    /**
-     * 現在のマップを設定
-     *
-     * @param currentMap 設定する GameMap インスタンス
-     */
-
-    public void setCurrentMap(GameMap currentMap) {
-        this.currentMap = currentMap;
-    }
-
-    /**
-     * 最後にロードしたセーブスロット番号を取得
-     *
-     * @return 最後にロードしたスロット番号
-     */
-
-    public int getLastLoadedSlot() {
-        return lastLoadedSlot;
-    }
-
-    /**
-     * 最後にロードしたセーブスロット番号を設定
-     *
-     * @param slot 設定するスロット番号
-     */
-
-    public void setLastLoadedSlot(int slot) {
-        this.lastLoadedSlot = slot;
     }
 
     /**
