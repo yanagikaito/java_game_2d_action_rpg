@@ -44,6 +44,24 @@ public class MainFrame extends JFrame {
         canvas = new MapCanvas(model, tileImages);
         if (eventIcon != null) canvas.setEventIcon(eventIcon);
 
+        JButton importTxt = new JButton("Import TXT");
+        importTxt.addActionListener(e -> {
+            JFileChooser fc = new JFileChooser();
+            int ret = fc.showOpenDialog(MainFrame.this);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File f = fc.getSelectedFile();
+                try {
+                    importWorldTxtToModel(f.toPath());
+                    canvas.repaint();
+                    JOptionPane.showMessageDialog(MainFrame.this, "Import completed: " + f.getName());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(MainFrame.this, "Import failed: " + ex.getMessage());
+                }
+            }
+        });
+
+
         JPanel control = new JPanel();
 
         JButton eventTool = new JButton("Event");
@@ -92,6 +110,7 @@ public class MainFrame extends JFrame {
         load.addActionListener(e -> loadMap(currentMapId));
         control.add(save);
         control.add(load);
+        control.add(importTxt);
 
         setLayout(new BorderLayout());
         add(control, BorderLayout.NORTH);
@@ -102,6 +121,59 @@ public class MainFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    private void importWorldTxtToModel(java.nio.file.Path txtPath) throws Exception {
+        java.util.List<String> lines = java.nio.file.Files.readAllLines(txtPath, java.nio.charset.StandardCharsets.UTF_8);
+        // 空行を除去
+        java.util.List<String> trimmed = new java.util.ArrayList<>();
+        for (String l : lines) {
+            String t = l.trim();
+            if (!t.isEmpty()) trimmed.add(t);
+        }
+        int rows = trimmed.size();
+        if (rows == 0) throw new IllegalStateException("入力ファイルが空です");
+        String[] firstParts = trimmed.get(0).split("\\s+");
+        int cols = firstParts.length;
+
+        // rowMajor[y][x]
+        int[][] rowMajor = new int[rows][cols];
+        for (int y = 0; y < rows; y++) {
+            String[] parts = trimmed.get(y).split("\\s+");
+            if (parts.length != cols) throw new IllegalStateException("行長が不揃いです y=" + y);
+            for (int x = 0; x < cols; x++) {
+                rowMajor[y][x] = Integer.parseInt(parts[x]);
+            }
+        }
+
+        // colMajor[x][y] に転置して model にセット（model は MapModel(50,50) を想定）
+        if (cols != model.getWidth() || rows != model.getHeight()) {
+            // サイズが違う場合は警告するが、可能なら縮小/拡張ロジックを入れても良い
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "入力サイズがモデルと一致しません (file: " + cols + "x" + rows + ", model: " + model.getWidth() + "x" + model.getHeight() + "). 続行しますか？",
+                    "Size mismatch", JOptionPane.YES_NO_OPTION);
+            if (confirm != JOptionPane.YES_OPTION) return;
+        }
+
+        for (int x = 0; x < Math.min(cols, model.getWidth()); x++) {
+            for (int y = 0; y < Math.min(rows, model.getHeight()); y++) {
+                int tileId = rowMajor[y][x]; // rowMajor[y][x] -> (x,y)
+                model.setTile(x, y, tileId); // model expects (x,y)
+            }
+        }
+
+        // 検証ログ（先頭3列の先頭5行を表示）
+        StringBuilder sb = new StringBuilder();
+        sb.append("Imported: cols=").append(cols).append(" rows=").append(rows).append("\n");
+        for (int sx = 0; sx < Math.min(3, cols); sx++) {
+            sb.append("col[").append(sx).append("][0..4] = ");
+            for (int sy = 0; sy < Math.min(5, rows); sy++) {
+                sb.append(model.getTile(sx, sy));
+                if (sy + 1 < Math.min(5, rows)) sb.append(",");
+            }
+            sb.append("\n");
+        }
+        System.out.println(sb.toString());
     }
 
     private void loadTiles() {

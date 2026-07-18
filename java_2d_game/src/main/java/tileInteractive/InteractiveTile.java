@@ -9,6 +9,8 @@ public class InteractiveTile extends Entity {
     private GameWindow gameWindow;
     private boolean destructible = false;
     private static final int SPRITE_ANIMATION_THRESHOLD = 20;
+    private boolean active = true;      // 有効かどうか
+    private boolean blocking = false;
 
     public InteractiveTile(GameWindow gw, int row, int col) {
         super(gw);
@@ -37,6 +39,12 @@ public class InteractiveTile extends Entity {
             }
         }
     }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
+
+    public boolean isBlocking() { return blocking; }
+    public void setBlocking(boolean blocking) { this.blocking = blocking; }
 
     public boolean isDestructible() {
         return destructible;

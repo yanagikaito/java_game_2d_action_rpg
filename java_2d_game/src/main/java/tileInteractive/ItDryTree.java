@@ -12,6 +12,7 @@ public class ItDryTree extends InteractiveTile {
     public ItDryTree(GameWindow gw, int row, int col) {
         super(gw, row, col);
         setDestructible(true);
+        setBlocking(true);
         setLife(6);
 
         try {

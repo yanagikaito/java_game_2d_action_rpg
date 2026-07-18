@@ -390,11 +390,11 @@ public class MonMintSoldier extends Entity {
     private void updateMonsterInvincibility() {
         if (getInvincible()) {
             setInvincibleCounter(getInvincibleCounter() + 1);
-            System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
+//            System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
             if (getInvincibleCounter() > 40) {
-                System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
+//                System.out.println("getInvincibleCounter() :" + getInvincibleCounter());
                 setInvincible(false);
-                System.out.println("getInvincible() :" + getInvincible());
+//                System.out.println("getInvincible() :" + getInvincible());
                 setInvincibleCounter(0);
             }
         }

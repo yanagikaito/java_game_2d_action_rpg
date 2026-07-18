@@ -64,7 +64,7 @@ public class Player extends Entity {
     private int characterTypeId;
     private static final long FIRE_COOLDOWN_MS = 1000;
     private long lastSnapTime = 0;
-    private static final long SNAP_COOLDOWN_MS = 100; // 100ms
+    private static final long SNAP_COOLDOWN_MS = 150; // 100ms
     private long lastFireTime = 0;
     private int fireCooldown = 0;
     private int bombCooldown = 0;
@@ -110,6 +110,22 @@ public class Player extends Entity {
     // ピックアップ対象を保持しておく（アニメ終了時に実際に取得する）
     private int pendingPickupIndex = -1;
 
+    public static final int SNAP_PENETRATION_THRESHOLD = 4;
+
+    public long lastSnapTimeMs = 0;
+    public int lastSafeWorldX = 0;
+    public int lastSafeWorldY = 0;
+    public int lastSafeFrame = 0;
+    private int lastSafeSaWidth = 0;
+    private int lastSafeSaHeight = 0;
+    private static final int STUCK_THRESHOLD_FRAMES = 6; // 挟まり判定までのフレーム
+    private static final int UNSTUCK_PUSH_MAX = 4; // 最大押し出しpx
+    private static final int UNSTUCK_BFS_RADIUS = 6; // BFS 探索半径（タイル単位）
+    // クラスフィールド
+    private int lastAttemptStepX = 0;
+    private int lastAttemptStepY = 0;
+    private boolean attemptedMoveThisFrame = false;
+
 
     /**
      * プレイヤーを初期化するコンストラクタ。
@@ -142,7 +158,6 @@ public class Player extends Entity {
 
         getSolidArea().width = (FrameApp.getTileSize() - 8);
         getSolidArea().height = (FrameApp.getTileSize() - 8);
-
 
         setHitBoxX(getSolidArea().x);
         setHitBoxY(getSolidArea().y);
@@ -1352,73 +1367,743 @@ public class Player extends Entity {
         }
     }
 
-    /**
-     * 衝突判定フラグをチェックし、当たり判定に引っかかっていなければ
-     * ワールド座標を currentSpeed 分だけ移動。
-     */
-
     private void updateMovement() {
+        attemptedMoveThisFrame = false;
+        lastAttemptStepX = 0;
+        lastAttemptStepY = 0;
 
-        if (!isCollision()) {
+        int dx = 0, dy = 0;
+        switch (getDirection()) {
+            case "up" -> dy = -getSpeed();
+            case "down" -> dy = getSpeed();
+            case "left" -> dx = -getSpeed();
+            case "right" -> dx = getSpeed();
+        }
 
-            switch (getDirection()) {
-                case "up" -> setWorldY(getWorldY() - getSpeed());
-                case "down" -> setWorldY(getWorldY() + getSpeed());
-                case "left" -> setWorldX(getWorldX() - getSpeed());
-                case "right" -> setWorldX(getWorldX() + getSpeed());
+        int maxSplit = Math.max(1, Math.min(Math.max(Math.abs(dx), Math.abs(dy)), 4));
+        int steps = maxSplit;
+        int remX = dx;
+        int remY = dy;
+
+        for (int i = 0; i < steps; i++) {
+            int stepX = Math.round((float) remX / (steps - i));
+            int stepY = Math.round((float) remY / (steps - i));
+            remX -= stepX;
+            remY -= stepY;
+
+            if (stepX != 0 || stepY != 0) {
+                attemptedMoveThisFrame = true;
+                lastAttemptStepX = stepX;
+                lastAttemptStepY = stepY;
+            }
+
+            // 1) タイル判定（オフセット版を必ず使う）
+            boolean tileCollision = gameWindow.getCollisionChecker().checkTile(this, stepX, stepY);
+            // 呼び出し側で状態を合わせる（checkTile は副作用なしの想定）
+            setCollision(tileCollision);
+            System.out.println("[DBG] step=(" + stepX + "," + stepY + ") tileCollision=" + tileCollision);
+
+            if (tileCollision) {
+                // 2) 押し出し
+                boolean pushed = resolveTileOverlapWithPush(stepX, stepY);
+                System.out.println("[DBG] resolvePush=" + pushed);
+                if (pushed) {
+                    setCollision(false);
+                    recordSafePosition();
+                    continue;
+                }
+
+                // 3) スナップ
+                boolean snapped = snapToTileEdge(getDirection(), stepX, stepY);
+                System.out.println("[DBG] snap=" + snapped);
+                if (snapped) {
+                    lastSnapTimeMs = System.currentTimeMillis();
+                    recordSafePosition();
+                    setCollision(false);
+                    break;
+                }
+
+                // 4) アンストック
+                boolean unstuck = attemptUnstuck();
+                System.out.println("[DBG] unstuck=" + unstuck);
+                if (unstuck) {
+                    recordSafePosition();
+                    lastSnapTimeMs = System.currentTimeMillis();
+                    setCollision(false);
+                    break;
+                }
+
+                // どれもダメなら衝突状態を保持してループを抜ける
+                setCollision(true);
+                System.out.println("[DBG] collision unresolved, stopping movement");
+                break;
+            }
+
+            // 5) itile 判定
+            int itIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), stepX, stepY);
+            if (itIndex != 999 && gameWindow.getItile()[itIndex].isBlocking()) {
+                System.out.println("[DBG] hit itile index=" + itIndex);
+                boolean snapped = snapToTileEdge(getDirection(), stepX, stepY);
+                if (snapped) {
+                    lastSnapTimeMs = System.currentTimeMillis();
+                    recordSafePosition();
+                    setCollision(false);
+                    break;
+                }
+                if (attemptUnstuck()) {
+                    recordSafePosition();
+                    lastSnapTimeMs = System.currentTimeMillis();
+                    setCollision(false);
+                    break;
+                }
+                setCollision(true);
+                break;
+            }
+
+            // 6) NPC 判定
+            int npcIndexAtDest = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC(), stepX, stepY);
+            if (npcIndexAtDest != 999) {
+                boolean tileCollisionAtDest = gameWindow.getCollisionChecker().checkTile(this, stepX, stepY);
+                if (!tileCollisionAtDest) {
+                    setCollision(true);
+                    talkNpcIndex = npcIndexAtDest;
+                    break;
+                }
+            }
+
+            // 7) 実移動
+            if (!isCollision()) {
+                setWorldX(getWorldX() + stepX);
+                setWorldY(getWorldY() + stepY);
+                setCollision(false);
+                recordSafePosition();
+            } else {
+                // 衝突フラグが立っているなら移動しない
+                System.out.println("[DBG] movement skipped due to collision flag");
+                break;
             }
         }
     }
 
+    private void recordSafePosition() {
+
+        if (!isCollision()) {
+            lastSafeWorldX = getWorldX();
+            lastSafeWorldY = getWorldY();
+            lastSafeFrame = gameWindow.getFrameCounter();
+            lastSafeSaWidth = getSolidArea().width;
+            lastSafeSaHeight = getSolidArea().height;
+        }
+    }
+
+    private boolean snapToTileEdge(String direction, int dx, int dy) {
+        int tileSize = FrameApp.getTileSize();
+        long now = System.currentTimeMillis();
+        if (now - lastSnapTimeMs <= SNAP_COOLDOWN_MS) return false;
+
+        Rectangle sa = getSolidArea();
+        int saWorldX = getWorldX() + sa.x;
+        int saWorldY = getWorldY() + sa.y;
+        int left = saWorldX;
+        int right = saWorldX + sa.width - 1;
+        int top = saWorldY;
+        int bottom = saWorldY + sa.height - 1;
+
+        // 優先軸と向きを移動ベクトルから決める（dx,dy が 0 の場合は direction を使う）
+        boolean preferHorizontal = Math.abs(dx) >= Math.abs(dy);
+        int signX = Integer.signum(dx);
+        int signY = Integer.signum(dy);
+        if (signX == 0 && signY == 0) {
+            signX = direction.equals("right") ? 1 : direction.equals("left") ? -1 : 0;
+            signY = direction.equals("down") ? 1 : direction.equals("up") ? -1 : 0;
+            preferHorizontal = Math.abs(signX) >= Math.abs(signY);
+        }
+
+        // penetration を方向ごとに正しく計算する（タイル境界への侵入量）
+        int penetration = 0;
+        int collidedCol = -1;
+        int collidedRow = -1;
+        switch (direction) {
+            case "right" -> {
+                int mod = Math.floorMod(right, tileSize);
+                penetration = (mod == 0) ? 0 : tileSize - mod;
+                collidedCol = Math.floorDiv(right, tileSize);
+            }
+            case "left" -> {
+                int mod = Math.floorMod(left, tileSize);
+                penetration = (mod == 0) ? 0 : mod;
+                collidedCol = Math.floorDiv(left, tileSize);
+            }
+            case "down" -> {
+                int mod = Math.floorMod(bottom, tileSize);
+                penetration = (mod == 0) ? 0 : tileSize - mod;
+                collidedRow = Math.floorDiv(bottom, tileSize);
+            }
+            case "up" -> {
+                int mod = Math.floorMod(top, tileSize);
+                penetration = (mod == 0) ? 0 : mod;
+                collidedRow = Math.floorDiv(top, tileSize);
+            }
+            default -> {
+                return false;
+            }
+        }
+
+        // 早期リターン緩和：penetration が小さくても既に衝突中ならスナップを試す
+        if (penetration <= SNAP_PENETRATION_THRESHOLD && !isCollision()) return false;
+
+        // --- 1) 単純補正（侵入量の逆方向へ戻す）を先に試す ---
+        int minAdjust = isCollision() ? 1 : 0;
+        int move = Math.max(minAdjust, penetration);
+        int adjustX = 0, adjustY = 0;
+        switch (direction) {
+            case "right" -> adjustX = -move;
+            case "left" -> adjustX = move;
+            case "down" -> adjustY = -move;
+            case "up" -> adjustY = move;
+        }
+
+        // NPC はスナップのブロック対象から外す（itile はブロック対象）
+        if (!gameWindow.getCollisionChecker().checkTile(this, adjustX, adjustY)
+                && gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), adjustX, adjustY) == 999) {
+            setWorldX(getWorldX() + adjustX);
+            setWorldY(getWorldY() + adjustY);
+            setCollision(false);
+            lastSnapTimeMs = now;
+            recordSafePosition();
+            return true;
+        }
+
+        // --- 2) フォールバック候補（preferHorizontal を反映） ---
+        int sx = Integer.signum(dx);
+        int sy = Integer.signum(dy);
+        int tileHalf = Math.max(1, tileSize / 2);
+        int magX = Math.max(1, Math.min(Math.abs(dx), tileHalf));
+        int magY = Math.max(1, Math.min(Math.abs(dy), tileHalf));
+        int halfX = Math.max(1, magX / 2);
+        int halfY = Math.max(1, magY / 2);
+        int micro = 1;
+
+        List<int[]> list = new ArrayList<>();
+
+        if (sx != 0 && sy != 0) {
+            // 斜め移動時：主軸優先（preferHorizontal）に応じて候補順を変える
+            if (preferHorizontal) {
+                list.add(new int[]{sx * magX, sy * halfY}); // 横寄り斜め（横成分強め）
+                list.add(new int[]{sx * halfX, sy * halfY}); // 小さめ斜め
+                list.add(new int[]{sx * magX, 0});          // 横フル
+                list.add(new int[]{0, sy * magY});  // 縦フル
+                list.add(new int[]{sx * micro, sy * micro}); // 小さな斜め（微調整）
+            } else {
+                list.add(new int[]{sx * halfX, sy * magY});  // 縦寄り斜め（縦成分強め）
+                list.add(new int[]{sx * halfX, sy * halfY}); // 小さめ斜め
+                list.add(new int[]{0, sy * magY});  // 縦フル
+                list.add(new int[]{sx * magX, 0});          // 横フル
+                list.add(new int[]{sx * micro, sy * micro}); // 小さな斜め（微調整）
+            }
+            // 共通の後退候補
+            list.add(new int[]{-sx * magX, 0});
+            list.add(new int[]{0, -sy * magY});
+        } else {
+            // 直進時は必ず4方向（前方・左右/上下微調整・後方）を試す
+            if (preferHorizontal) {
+                int useSx = sx == 0 ? (direction.equals("right") ? 1 : -1) : sx;
+                list.add(new int[]{useSx * magX, 0});      // 前方（横フル）
+                list.add(new int[]{useSx * halfX, -micro}); // 少し上に寄せる
+                list.add(new int[]{useSx * halfX, micro});  // 少し下に寄せる
+                list.add(new int[]{-useSx * magX, 0});     // 後方（横後退）
+            } else {
+                int useSy = sy == 0 ? (direction.equals("down") ? 1 : -1) : sy;
+                list.add(new int[]{0, useSy * magY});      // 前方（縦フル）
+                list.add(new int[]{-micro, useSy * halfY}); // 少し左に寄せる
+                list.add(new int[]{micro, useSy * halfY});  // 少し右に寄せる
+                list.add(new int[]{0, -useSy * magY});     // 後方（縦後退）
+            }
+        }
+
+        // --- 3) 候補を順にチェックして適用 ---
+        for (int[] t : list) {
+            int tryDx = t[0], tryDy = t[1];
+
+            // checkTile/checkEntity はピクセル単位のオフセットを期待する前提
+            boolean tileOk = !gameWindow.getCollisionChecker().checkTile(this, tryDx, tryDy);
+            boolean itileOk = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), tryDx, tryDy) == 999;
+            boolean npcOk = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC(), tryDx, tryDy) == 999;
+
+            if (tileOk && itileOk && npcOk) {
+                setWorldX(getWorldX() + tryDx);
+                setWorldY(getWorldY() + tryDy);
+                setCollision(false);
+                lastSnapTimeMs = now;
+                recordSafePosition();
+                return true;
+            }
+        }
+
+        // どれもダメならスナップ失敗
+        return false;
+    }
 
     /**
-     * プレイヤーの向きの前方に、指定タイル数（range）以内の NPC がいるかを検索。
-     * マップIDとワールド座標が一致する NPC を見つけたらその配列インデックスを返す。
+     * タイルとの重なりを解析して最小の移動で押し出す。
+     * true を返すと押し出しで衝突が解消された（位置を変更した）。
+     */
+
+    private boolean resolveTileOverlapWithPush(int offsetX, int offsetY) {
+        Rectangle sa = getSolidArea();
+        int myX = getWorldX() + getSolidAreaDefaultX() + offsetX;
+        int myY = getWorldY() + getSolidAreaDefaultY() + offsetY;
+        Rectangle myRect = new Rectangle(myX, myY, sa.width, sa.height);
+
+        int tileSize = FrameApp.getTileSize();
+
+        // 周囲走査範囲（X=Row, Y=Col の扱いに合わせる）
+        int minX = Math.floorDiv(myX, tileSize) - 1;
+        int maxX = Math.floorDiv(myX + sa.width, tileSize) + 1;
+        int minY = Math.floorDiv(myY, tileSize) - 1;
+        int maxY = Math.floorDiv(myY + sa.height, tileSize) + 1;
+
+        // clamp to map
+        minX = Math.max(minX, 0);
+        minY = Math.max(minY, 0);
+        maxX = Math.min(maxX, getMapCols() - 1);
+        maxY = Math.min(maxY, getMapRows() - 1);
+
+        int bestDx = 0;
+        int bestDy = 0;
+        int bestPenetration = Integer.MAX_VALUE;
+        boolean found = false;
+
+        for (int tx = minX; tx <= maxX; tx++) {
+            for (int ty = minY; ty <= maxY; ty++) {
+                Rectangle tileRect = getTileSolidRect(tx, ty); // getTileSolidRect(x,y) は blocking 判定済み
+                if (tileRect == null) continue;
+                if (!myRect.intersects(tileRect)) continue;
+
+                Rectangle inter = myRect.intersection(tileRect);
+                if (inter.isEmpty()) continue;
+
+                int penX = inter.width;
+                int penY = inter.height;
+
+                // 候補押し出し量（まず最小量＝重なり幅）
+                int dxLeft = -penX;
+                int dxRight = penX;
+                int dyUp = -penY;
+                int dyDown = penY;
+
+                // タイルの座標（端チェック用）
+                int tileX = tx;
+                int tileY = ty;
+
+                // 中心で方向を決めるが、端なら反転してマップ外へ押さない
+                int myCenterX = myRect.x + myRect.width / 2;
+                int tileCenterX = tileRect.x + tileRect.width / 2;
+                int candDx = (myCenterX < tileCenterX) ? dxLeft : dxRight;
+                if (tileX == 0 && candDx < 0) candDx = dxRight;
+                if (tileX == getMapCols() - 1 && candDx > 0) candDx = dxLeft;
+
+                int myCenterY = myRect.y + myRect.height / 2;
+                int tileCenterY = tileRect.y + tileRect.height / 2;
+                int candDy = (myCenterY < tileCenterY) ? dyUp : dyDown;
+                if (tileY == 0 && candDy < 0) candDy = dyDown;
+                if (tileY == getMapRows() - 1 && candDy > 0) candDy = dyUp;
+
+                // 1) X 単独で試す（優先）
+                if (Math.abs(penX) < bestPenetration) {
+                    // try minimal push, if blocked try +1 px
+                    if (canMoveBy(candDx, 0)) {
+                        bestPenetration = Math.abs(penX);
+                        bestDx = candDx;
+                        bestDy = 0;
+                        found = true;
+                    } else if (canMoveBy(candDx < 0 ? candDx - 1 : candDx + 1, 0)) {
+                        bestPenetration = Math.abs(penX) + 1;
+                        bestDx = (candDx < 0) ? candDx - 1 : candDx + 1;
+                        bestDy = 0;
+                        found = true;
+                    }
+                }
+
+                // 2) Y 単独で試す
+                if (Math.abs(penY) < bestPenetration) {
+                    if (canMoveBy(0, candDy)) {
+                        bestPenetration = Math.abs(penY);
+                        bestDx = 0;
+                        bestDy = candDy;
+                        found = true;
+                    } else if (canMoveBy(0, candDy < 0 ? candDy - 1 : candDy + 1)) {
+                        bestPenetration = Math.abs(penY) + 1;
+                        bestDx = 0;
+                        bestDy = (candDy < 0) ? candDy - 1 : candDy + 1;
+                        found = true;
+                    }
+                }
+
+                // 3) 斜め（両軸同時）を最後に試す
+                int diagDx = (myRect.x < tileRect.x) ? -penX : penX;
+                int diagDy = (myRect.y < tileRect.y) ? -penY : penY;
+                if (Math.abs(penX + penY) < bestPenetration) {
+                    if (canMoveBy(diagDx, diagDy)) {
+                        bestPenetration = Math.abs(penX + penY);
+                        bestDx = diagDx;
+                        bestDy = diagDy;
+                        found = true;
+                    } else if (canMoveBy(diagDx < 0 ? diagDx - 1 : diagDx + 1, diagDy < 0 ? diagDy - 1 : diagDy + 1)) {
+                        bestPenetration = Math.abs(penX + penY) + 1;
+                        bestDx = (diagDx < 0) ? diagDx - 1 : diagDx + 1;
+                        bestDy = (diagDy < 0) ? diagDy - 1 : diagDy + 1;
+                        found = true;
+                    }
+                }
+
+                // デバッグ（必要なら有効化）
+                // System.out.println("[DBG-PUSH] tileX=" + tileX + " tileY=" + tileY + " penX=" + penX + " penY=" + penY + " candDx=" + candDx + " candDy=" + candDy);
+            }
+        }
+
+        if (found) {
+            setWorldX(getWorldX() + bestDx);
+            setWorldY(getWorldY() + bestDy);
+            setCollision(false);
+            recordSafePosition();
+            System.out.println("[UNSTUCK-PUSH] moved by (" + bestDx + "," + bestDy + ")");
+            return true;
+        }
+
+        return false;
+    }
+
+    // シグネチャを明確にする（推奨）
+    private Rectangle getTileSolidRect(int col, int row) {
+        if (!isValidTile(row, col)) return null; // isValidTile の引数順に合わせるか修正
+        if (!isTileBlocking(row, col)) return null;
+
+        int tileSize = FrameApp.getTileSize();
+        int tx = col * tileSize;
+        int ty = row * tileSize;
+        return new Rectangle(tx, ty, tileSize, tileSize);
+    }
+
+    // タイル座標がマップ内かどうか
+    private boolean isValidTile(int row, int col) {
+        if (row < 0 || col < 0) return false;
+        if (row >= getMapRows() || col >= getMapCols()) return false;
+        return true;
+    }
+
+    /**
+     * タイル番号（int）を参照して blocking 判定を返す。
+     * gameWindow.getTileManager().getMapTileNum() が int[row][col] を返す想定。
+     */
+    // 推奨シグネチャ（可能なら変更）
+    private boolean isTileBlocking(int col, int row) {
+        // マップ外は blocking
+        if (!isValidTile(col, row)) return true;
+
+        int[][] mapTileNum = gameWindow.getTileManager().getMapTileNum(); // mapTileNum[col][row]
+        if (mapTileNum == null) return true;
+
+        int maxCol = mapTileNum.length - 1;
+        int maxRow = mapTileNum[0].length - 1;
+        if (col < 0 || col > maxCol) return true;
+        if (row < 0 || row > maxRow) return true;
+
+        int tileNum = mapTileNum[col][row];
+        Tile tile = gameWindow.getTileManager().getTiles()[tileNum];
+        if (tile == null) return true;
+        return tile.collision;
+    }
+
+    // 現在位置から dx,dy 移動しても衝突しないかチェックするユーティリティ
+    private boolean canMoveBy(int dx, int dy) {
+        // checkTile/checkEntity はオフセット版を想定
+        boolean tileBlock = gameWindow.getCollisionChecker().checkTile(this, dx, dy);
+        int itIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), dx, dy);
+        int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC(), dx, dy);
+        boolean itBlock = (itIndex != 999 && gameWindow.getItile()[itIndex].isBlocking());
+        boolean npcBlock = (npcIndex != 999);
+        return !(tileBlock || itBlock || npcBlock);
+    }
+
+    // マップの幅・高さ（タイル単位）を返すメソッドがある想定。
+// なければ GameWindow や Map クラスから取得する実装に置き換えてください。
+    public int getMapCols() {
+        return FrameApp.getMaxWorldCol(); // 例: マップ列数を返すメソッド
+    }
+
+    public int getMapRows() {
+        return FrameApp.getMaxWorldRow();  // 例: マップ行数を返すメソッド
+    }
+
+
+    /**
+     * 挟まり解除を試みる。
      *
-     * @param npc   NPC オブジェクトの配列
-     * @param range プレイヤーの向きに沿って何タイル先まで調べるか
-     * @return 見つかった NPC の配列インデックス、見つからない場合は -1
+     * @return true if freed (位置を変更して衝突を解除した)
+     */
+
+    private boolean attemptUnstuck() {
+
+        int[][] offsets = new int[][]{
+                {1, 0}, {-1, 0}, {0, 1}, {0, -1},
+                {2, 0}, {-2, 0}, {0, 2}, {0, -2},
+                {3, 0}, {-3, 0}, {0, 3}, {0, -3},
+                {4, 0}, {-4, 0}, {0, 4}, {0, -4}
+        };
+
+        // 1) 周囲への小移動を試す
+        for (int[] off : offsets) {
+            int ox = off[0];
+            int oy = off[1];
+
+            boolean tileBlock = gameWindow.getCollisionChecker().checkTile(this, ox, oy);
+            int itIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), ox, oy);
+            int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC(), ox, oy);
+            boolean itBlock = (itIndex != 999 && gameWindow.getItile()[itIndex].isBlocking());
+            boolean npcBlock = (npcIndex != 999);
+
+            if (!tileBlock && !itBlock && !npcBlock) {
+                setWorldX(getWorldX() + ox);
+                setWorldY(getWorldY() + oy);
+                setCollision(false);
+                recordSafePosition();
+                System.out.println("[UNSTUCK] pushed by (" + ox + "," + oy + ")");
+                return true;
+            }
+        }
+
+        // 2) 軸分離（Xのみ、Yのみ）
+        for (int px = -UNSTUCK_PUSH_MAX; px <= UNSTUCK_PUSH_MAX; px++) {
+            if (px == 0) continue;
+            boolean tileBlockX = gameWindow.getCollisionChecker().checkTile(this, px, 0);
+            int itIndexX = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), px, 0);
+            int npcIndexX = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC(), px, 0);
+            if (!tileBlockX && itIndexX == 999 && npcIndexX == 999) {
+                setWorldX(getWorldX() + px);
+                setCollision(false);
+                recordSafePosition();
+                System.out.println("[UNSTUCK] axis X push " + px);
+                return true;
+            }
+        }
+        for (int py = -UNSTUCK_PUSH_MAX; py <= UNSTUCK_PUSH_MAX; py++) {
+            if (py == 0) continue;
+            boolean tileBlockY = gameWindow.getCollisionChecker().checkTile(this, 0, py);
+            int itIndexY = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), 0, py);
+            int npcIndexY = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC(), 0, py);
+            if (!tileBlockY && itIndexY == 999 && npcIndexY == 999) {
+                setWorldY(getWorldY() + py);
+                setCollision(false);
+                recordSafePosition();
+                System.out.println("[UNSTUCK] axis Y push " + py);
+                return true;
+            }
+        }
+
+        // 3) snap を試す（オフセット付き snap を呼び、戻り値で判定）
+        boolean snapped = snapToTileEdge(getDirection(), 0, 0);
+        if (snapped) {
+            setCollision(false);
+            recordSafePosition();
+            System.out.println("[UNSTUCK] snapToTileEdge succeeded");
+            return true;
+        } else {
+            System.out.println("[UNSTUCK] snapToTileEdge failed or blocked");
+        }
+
+        // 4) BFS で近傍の空きタイルを探してテレポート（最終手段）
+        Point free = findNearestFreeTile(getWorldX(), getWorldY(), UNSTUCK_BFS_RADIUS);
+        if (free != null) {
+            setWorldX(free.x);
+            setWorldY(free.y);
+            setCollision(false);
+            recordSafePosition();
+            System.out.println("[UNSTUCK] teleported to nearest free tile (" + free.x + "," + free.y + ")");
+            return true;
+        }
+
+        // 5) 最後の安全位置へ復帰（最終フォールバック）
+        restoreToLastSafePosition();
+        System.out.println("[UNSTUCK] restored to last safe position");
+        return false;
+    }
+
+    private void restoreToLastSafePosition() {
+        setWorldX(lastSafeWorldX);
+        setWorldY(lastSafeWorldY);
+        setCollision(false);
+        System.out.println("[UNSTUCK] restoreToLastSafePosition -> (" + lastSafeWorldX + "," + lastSafeWorldY + ")");
+    }
+
+    // BFS ヘルパー（タイル中心にスナップして返す）
+    private Point findNearestFreeTile(int startWX, int startWY, int maxRadiusTiles) {
+        int tileSize = FrameApp.getTileSize();
+        int startCol = Math.floorDiv(startWX, tileSize);
+        int startRow = Math.floorDiv(startWY, tileSize);
+
+        int size = maxRadiusTiles * 2 + 1;
+        boolean[][] visited = new boolean[size][size];
+        Queue<Point> q = new LinkedList<>();
+        q.add(new Point(startCol, startRow));
+        visited[maxRadiusTiles][maxRadiusTiles] = true;
+
+        int[][] dirs = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+        while (!q.isEmpty()) {
+            Point p = q.poll();
+            int col = p.x;
+            int row = p.y;
+
+            int wx = col * tileSize + (tileSize - getSolidArea().width) / 2 - getSolidAreaDefaultX();
+            int wy = row * tileSize + (tileSize - getSolidArea().height) / 2 - getSolidAreaDefaultY();
+
+            // 空き判定（ワールドオフセット版の checkTile を使う）
+            boolean tileBlock = gameWindow.getCollisionChecker().checkTile(this, wx - getWorldX(), wy - getWorldY());
+            int itIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile(), wx - getWorldX(), wy - getWorldY());
+            int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC(), wx - getWorldX(), wy - getWorldY());
+
+            if (!tileBlock && itIndex == 999 && npcIndex == 999) {
+                return new Point(wx, wy);
+            }
+
+            for (int[] d : dirs) {
+                int nc = col + d[0];
+                int nr = row + d[1];
+                int vi = nc - (startCol - maxRadiusTiles);
+                int vj = nr - (startRow - maxRadiusTiles);
+                if (vi < 0 || vj < 0 || vi >= size || vj >= size) continue;
+                if (visited[vi][vj]) continue;
+                visited[vi][vj] = true;
+                q.add(new Point(nc, nr));
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * プレイヤー前方にいる NPC を range タイル以内で探す（少しのズレを許容）
+     * 正面度（向きベクトルへの投影）を優先し、同じなら距離で近い方を返す。
+     * 戻り値: 見つかった NPC の配列インデックス、見つからなければ -1
      */
 
     public int checkNpcInFront(Entity[] npc, int range) {
+        int tileSize = FrameApp.getTileSize();
 
-        int px = this.getWorldX();
-        int py = this.getWorldY();
-        int tx = 0, ty = 0;
+        // プレイヤーの当たり矩形（ワールド座標）
+        Rectangle playerRect = getCollisionBoxWorld();
+        if (playerRect == null) return -1;
 
-        // 向きに応じたベクトルを設定
+        // プレイヤー中心
+        double px = playerRect.x + playerRect.width / 2.0;
+        double py = playerRect.y + playerRect.height / 2.0;
+
+        // 向きベクトル（正規化）
+        double vx = 0, vy = 0;
         switch (this.getDirection()) {
-            case "up":
-                ty = -FrameApp.getTileSize();
-                break;
-            case "down":
-                ty = FrameApp.getTileSize();
-                break;
-            case "left":
-                tx = -FrameApp.getTileSize();
-                break;
-            case "right":
-                tx = FrameApp.getTileSize();
-                break;
-        }
-
-        // 1～range タイル先をチェック
-        for (int i = 1; i <= range; i++) {
-            int checkX = px + tx * i;
-            int checkY = py + ty * i;
-
-            for (int idx = 0; idx < npc.length; idx++) {
-                Entity e = npc[idx];
-                if (e != null
-                        && e.getMapId() == this.mapId
-                        && e.getWorldX() == checkX
-                        && e.getWorldY() == checkY) {
-                    return idx;
-                }
+            case "up" -> {
+                vx = 0;
+                vy = -1;
+            }
+            case "down" -> {
+                vx = 0;
+                vy = 1;
+            }
+            case "left" -> {
+                vx = -1;
+                vy = 0;
+            }
+            case "right" -> {
+                vx = 1;
+                vy = 0;
+            }
+            default -> {
+                return -1;
             }
         }
-        return -1;
+
+        // 検索矩形（許容ピクセルを含む）
+        int tolerancePx = Math.max(4, tileSize / 16);
+        int forwardPx = range * tileSize;
+        Rectangle searchRect;
+        int regionW = playerRect.width + tolerancePx * 2;
+        int regionH = playerRect.height + tolerancePx * 2;
+
+        switch (this.getDirection()) {
+            case "up" -> searchRect = new Rectangle(
+                    (int) (px - regionW / 2.0),
+                    (int) (py - forwardPx - regionH / 2.0),
+                    regionW,
+                    forwardPx + regionH
+            );
+            case "down" -> searchRect = new Rectangle(
+                    (int) (px - regionW / 2.0),
+                    (int) (py - regionH / 2.0),
+                    regionW,
+                    forwardPx + regionH
+            );
+            case "left" -> searchRect = new Rectangle(
+                    (int) (px - forwardPx - regionW / 2.0),
+                    (int) (py - regionH / 2.0),
+                    forwardPx + regionW,
+                    regionH
+            );
+            default -> searchRect = new Rectangle(
+                    (int) (px - regionW / 2.0),
+                    (int) (py - regionH / 2.0),
+                    forwardPx + regionW,
+                    regionH
+            );
+        }
+
+        // 候補を評価（正面度, 距離）して最良を選ぶ
+        int bestIdx = -1;
+        double bestScoreFront = Double.NEGATIVE_INFINITY;
+        double bestDistSq = Double.POSITIVE_INFINITY;
+
+        for (int i = 0; i < npc.length; i++) {
+            Entity e = npc[i];
+            if (e == null) continue;
+            if (!e.getAlive()) continue;
+            if (e.getMapId() != this.getMapId()) continue;
+
+            // NPC のワールド矩形を取得（必ず e.getCollisionBoxWorld() を使う）
+            Rectangle npcRect = e.getCollisionBoxWorld();
+            if (npcRect == null) continue;
+
+            // まず検索矩形と交差するか（早期除外）
+            if (!searchRect.intersects(npcRect)) continue;
+
+            // NPC 中心
+            double ex = npcRect.x + npcRect.width / 2.0;
+            double ey = npcRect.y + npcRect.height / 2.0;
+
+            // プレイヤーから NPC へのベクトル
+            double dx = ex - px;
+            double dy = ey - py;
+            double distSq = dx * dx + dy * dy;
+
+            // 正面度: 向きベクトルとの内積（投影長）
+            double front = dx * vx + dy * vy; // 正なら前方、負なら後方
+            // front が負なら後ろにいるので除外
+            if (front <= 0) continue;
+
+            // 正面度を距離で正規化してスコア化（近くて正面の方を高評価）
+            // front/dist を使う（front が大きく、距離が小さいほど良い）
+            double scoreFront = front / Math.sqrt(distSq + 1e-6);
+
+            // 優先ルール: scoreFront を第一キー、距離を第二キー（小さい方）
+            if (scoreFront > bestScoreFront || (Math.abs(scoreFront - bestScoreFront) < 1e-6 && distSq < bestDistSq)) {
+                bestScoreFront = scoreFront;
+                bestDistSq = distSq;
+                bestIdx = i;
+            }
+        }
+
+        return bestIdx;
     }
+
 
     /**
      * プレイヤーの衝突判定を更新。
@@ -1429,11 +2114,20 @@ public class Player extends Entity {
     private void updateCollision() {
 
         int tileSize = FrameApp.getTileSize();
-        int playerGridX = getWorldX() / tileSize;
-        int playerGridY = getWorldY() / tileSize;
 
-        setCollision(false);
-        gameWindow.getCollisionChecker().checkTile(this);
+        // solidArea のワールド矩形を基準にグリッド座標を取る（左上ではなく中心でも可）
+        Rectangle sa = getSolidArea();
+        int saWorldLeft = getWorldX() + sa.x;
+        int saWorldTop = getWorldY() + sa.y;
+        int saWorldRight = saWorldLeft + sa.width - 1;
+        int saWorldBottom = saWorldTop + sa.height - 1;
+
+        // タイル判定に使う代表点（中心）を使うのが安全
+        int playerGridX = (saWorldLeft + saWorldRight) / 2 / tileSize;
+        int playerGridY = (saWorldTop + saWorldBottom) / 2 / tileSize;
+
+        boolean tileCollision = gameWindow.getCollisionChecker().checkTile(this);
+        setCollision(tileCollision);
 
         int npcIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         interactNPC(npcIndex);
@@ -1459,6 +2153,12 @@ public class Player extends Entity {
         int monsterIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         if (monsterIndex != 999 && !getInvincible()) {
             Entity monster = gameWindow.getMonster()[monsterIndex];
+
+            // 追加安全チェック：念のため生存確認
+            if (!monster.getAlive()) {
+                // 既に死亡しているなら判定対象外
+                return;
+            }
 
             // タイプ側で hostile を判定
             if (monster.getType().isHostileToPlayer()) {
@@ -1499,7 +2199,7 @@ public class Player extends Entity {
 
     private void updateTileMovement() {
 
-        pixelCounter += getSpeed();
+        pixelCounter++;
 
         if (pixelCounter >= FrameApp.getTileSize()) {
             moving = false;
@@ -2133,6 +2833,9 @@ public class Player extends Entity {
 
             target.setAlive(false);
             target.setDying(true);
+            getSolidArea().width = 40;
+            getSolidArea().height = 40;
+            recordSafePosition();
 
             List<Supplier<Entity>> drops = Arrays.asList(
                     () -> new ObjCoinBronze(gameWindow),
@@ -2394,37 +3097,41 @@ public class Player extends Entity {
         boolean debugCollision = gameWindow.getKeyHandler().isShowDebugText();
 
         if (debugCollision) {
+
             // 元の composite / color を保存
             Composite beforeComp = g2.getComposite();
             Color beforeColor = g2.getColor();
 
-            // プレイヤーの solidArea（スクリーン座標）を取得
-            int playerWorldX = getWorldX();
-            int playerWorldY = getWorldY();
-            int playerScreenX = gameWindow.getPlayer().getScreenX();
-            int playerScreenY = gameWindow.getPlayer().getScreenY();
+            // カメラ（画面基準）を一度だけ取得
+            int playerWorldX = gameWindow.getPlayer().getWorldX();
+            int playerWorldY = gameWindow.getPlayer().getWorldY();
+            int camScreenX = gameWindow.getPlayer().getScreenX();
+            int camScreenY = gameWindow.getPlayer().getScreenY();
 
-            int saScreenX = playerWorldX - gameWindow.getPlayer().getWorldX() + playerScreenX + getSolidArea().x;
-            int saScreenY = playerWorldY - gameWindow.getPlayer().getWorldY() + playerScreenY + getSolidArea().y;
+// 判定で使う solidArea（world基準）
+            Rectangle sa = getSolidArea();
+            int saWorldX = getWorldX() + sa.x;
+            int saWorldY = getWorldY() + sa.y;
 
-            // プレイヤーの現在の solid を赤枠で描画
+// スクリーン座標に変換（描画は必ずこの式を使う）
+            int saScreenX = saWorldX - playerWorldX + camScreenX;
+            int saScreenY = saWorldY - playerWorldY + camScreenY;
+
+// 描画（現在位置）
             g2.setColor(new Color(255, 0, 0, 200));
-            g2.drawRect(saScreenX, saScreenY, getSolidArea().width, getSolidArea().height);
+            g2.drawRect(saScreenX, saScreenY, sa.width, sa.height);
 
-            // 移動先（direction と speed を考慮した矩形）を半透明で塗りつぶし表示
-            int offsetX = 0, offsetY = 0;
-            switch (getDirection()) {
-                case "up" -> offsetY = -getSpeed();
-                case "down" -> offsetY = getSpeed();
-                case "left" -> offsetX = -getSpeed();
-                case "right" -> offsetX = getSpeed();
-            }
-            int movedX = saScreenX + offsetX;
-            int movedY = saScreenY + offsetY;
+// 移動先（world基準で計算してからスクリーンに変換）
+            int moveWorldX = saWorldX + (getDirection().equals("left") ? -getSpeed() : getDirection().equals("right") ? getSpeed() : 0);
+            int moveWorldY = saWorldY + (getDirection().equals("up") ? -getSpeed() : getDirection().equals("down") ? getSpeed() : 0);
+            int moveScreenX = moveWorldX - playerWorldX + camScreenX;
+            int moveScreenY = moveWorldY - playerWorldY + camScreenY;
+
             g2.setColor(new Color(255, 0, 0, 80));
-            g2.fillRect(movedX, movedY, getSolidArea().width, getSolidArea().height);
+            g2.fillRect(moveScreenX, moveScreenY, sa.width, sa.height);
             g2.setColor(new Color(255, 0, 0, 200));
-            g2.drawRect(movedX, movedY, getSolidArea().width, getSolidArea().height);
+            g2.drawRect(moveScreenX, moveScreenY, sa.width, sa.height);
+
 
             // 判定に使われるタイルを描画（プレイヤー周辺のタイルをチェック）
             TileManager tm = gameWindow.getTileManager();
