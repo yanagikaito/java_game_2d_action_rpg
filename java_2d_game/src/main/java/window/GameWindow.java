@@ -21,6 +21,7 @@ import frame.GameFrame;
 import key.KeyHandler;
 import save.LoadManager;
 import sound.SoundManager;
+import tile.Tile;
 import tile.TileManager;
 import tileInteractive.InteractiveTile;
 import ui.UI;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static frame.FrameApp.*;
+import static player.Player.SNAP_PENETRATION_THRESHOLD;
 
 /**
  * ゲームのメイン描画パネルを表すクラス。
@@ -82,6 +84,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private long loadedPlayTimeSeconds = -1L;
     // 最後にロードしたスロット（未ロードなら -1）
     private int lastLoadedSlot = -1;
+    private int frameCounter = 0;
 
     // デバッグ用フラグ（デフォルト false）
     private boolean debugCollisionEnabled = false;
@@ -107,8 +110,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public void setUpGame() {
 
         lastUpdateTimeNano = System.nanoTime();
-        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 22, 22);
-        assetSetter.setNpcMalonyChicken("ev_19f0316aa88_b8d1", 37, 20);
+        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+        assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
@@ -200,7 +203,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 if (currentMap != null) {
                     currentMap.resetChickensState();
                     currentMap.removeAllChickens();
-                    assetSetter.setNpcOldMan("ev_19f0316aa88_b8d1", 22, 22);
+                    assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+                    assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
                     assetSetter.setMonster();
                     assetSetter.setInteractiveTile();
                 }
@@ -268,8 +272,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().restoreLifeAndMan();
         getPlayer().setItems();
         getPlayer().setCoin(500);
-        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 22, 22);
-        assetSetter.setNpcMalonyChicken("ev_19f0316aa88_b8d1", 37, 20);
+        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+        assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
@@ -350,6 +354,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 framesThisSecond = 0;
                 fpsTimer = 0;
             }
+
+            updateFrameCounter();
 
             // FPS 計測
             // 精密なスリープ（次フレームまで待つ）
@@ -620,8 +626,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldX(tileSize * 23);
             getPlayer().setWorldY(tileSize * 10);
 
-            assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 22, 22);
-            assetSetter.setNpcMalonyChicken("ev_19f0316aa88_b8d1", 37, 20);
+            assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+            assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
@@ -718,17 +724,57 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 g2.drawString("描画時間: " + passed / nanosecond + "秒", debugX, debugY);
                 debugY += lineHeight;
 
-                g2.drawString("WorldX: " + player.getWorldX(), debugX, debugY);
-                debugY += lineHeight;
-                g2.drawString("WorldY: " + player.getWorldY(), debugX, debugY);
+//                g2.drawString("WorldX: " + player.getWorldX(), debugX, debugY);
+//                debugY += lineHeight;
+//                g2.drawString("WorldY: " + player.getWorldY(), debugX, debugY);
+//                debugY += lineHeight;
+//
+//                int row = player.getWorldX() / tileSize;
+//                int col = player.getWorldY() / tileSize;
+
+                // 既存の Row/Col 表示の下に追加
+//                g2.drawString("LastSafe=(" + player.lastSafeWorldX + "," + player.lastSafeWorldY + ") frame=" + player.lastSafeFrame, debugX, debugY);
+//                debugY += lineHeight;
+
+                Rectangle sa = player.getSolidArea();
+                g2.drawString("SA off=(" + player.getSolidAreaDefaultX() + "," + player.getSolidAreaDefaultY() + ") size=(" + sa.width + "," + sa.height + ")", debugX, debugY);
                 debugY += lineHeight;
 
-                int row = player.getWorldX() / tileSize;
-                int col = player.getWorldY() / tileSize;
-
-                g2.drawString("Row  : " + row, debugX, debugY);
+                int tileX = (player.getWorldX() + player.getSolidAreaDefaultX()) / tileSize;
+                int tileY = (player.getWorldY() + player.getSolidAreaDefaultY()) / tileSize;
+                g2.drawString("TileX=" + tileX + " TileY=" + tileY + " tileSize=" + tileSize, debugX, debugY);
                 debugY += lineHeight;
-                g2.drawString("Col    : " + col, debugX, debugY);
+
+                // 追加表示（既存の debugY の下に挿入）
+                int probe = Math.max(1, player.getSpeed());
+                g2.drawString("Probe=" + probe + " isCollision=" + player.isCollision(), debugX, debugY);
+                debugY += lineHeight;
+                g2.drawString("saWorld=(" + (player.getWorldX() + sa.x) + "," + (player.getWorldY() + sa.y) + ") saDefault=("
+                        + player.getSolidAreaDefaultX() + "," + player.getSolidAreaDefaultY() + ")", debugX, debugY);
+                debugY += lineHeight;
+                g2.drawString("LastSnap=" + player.lastSnapTimeMs + " SnapThr=" + Player.SNAP_PENETRATION_THRESHOLD, debugX, debugY);
+                debugY += lineHeight;
+
+                // タイルID と当該タイルの collision フラグを表示
+                TileManager tm = getTileManager();
+                int[][] map = tm.getMapTileNum();
+                int mapCols = player.getMapCols();
+                int mapRows = player.getMapRows();
+                int col = tileX, row = tileY;
+                int tileId = -1;
+                try {
+                    tileId = map[col][row];
+                } catch (Throwable ignored) {
+                }
+                String tileInfo = "Tile(" + col + "," + row + ") id=" + tileId;
+                try {
+                    Tile t = tm.getTiles()[tileId];
+                    tileInfo += " coll=" + (t.collision || t.bombCollision || t.potCollision);
+                } catch (Throwable ignored) {
+                }
+                g2.drawString(tileInfo, debugX, debugY);
+                debugY += lineHeight;
+
             }
         }
     }
@@ -1149,5 +1195,15 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public MapModel getModel() {
         return model;
+    }
+
+    // メインループの1フレームごとに呼ぶ
+    public void updateFrameCounter() {
+        frameCounter++;
+        if (frameCounter == Integer.MAX_VALUE) frameCounter = 0; // オーバーフロー対策
+    }
+
+    public int getFrameCounter() {
+        return frameCounter;
     }
 }

@@ -229,6 +229,7 @@ public class KeyHandler implements KeyListener {
                     startMerConversation(npcIdx);
                     gameWindow.setGameState(GameState.TRADE);
                 } else if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcSave) {
+                    startSaveConversation(npcIdx);
                     gameWindow.setGameState(GameState.SAVE);
                 } else if (gameWindow.getGameState() == GameState.TRADE) {
                     npcMerChantSpeak();
