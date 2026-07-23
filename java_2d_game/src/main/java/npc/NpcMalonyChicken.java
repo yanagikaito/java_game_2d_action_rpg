@@ -38,7 +38,7 @@ public class NpcMalonyChicken extends Entity {
             applyMapEvent(ev);
         }
         this.collisionChecker = new CollisionChecker(gameWindow);
-        setDirection("left");
+        setDirection("right");
         setSpeed(0);
         loadNPCImages();
     }

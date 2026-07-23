@@ -126,6 +126,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         mapBgmMap.put(TileManager.MEADOW_TILE_ID, "sound/meadow_G110.wav");
         mapBgmMap.put(TileManager.FOREST_TILE_ID, "sound/meadow_G110.wav");
         mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/meadow_G110.wav");
+        mapBgmMap.put(TileManager.STAIRS_UP_TILE_ID, "sound/meadow_G110.wav");
         // 事前ロードしておく
         for (String path : mapBgmMap.values()) {
             getSoundmanager().preload(path);
@@ -656,6 +657,44 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             repaint();
 
+        } else if (currentMapIndex == TileManager.STAIRS_DOWN_TILE_ID) {
+
+            Arrays.fill(npc, null);
+            Arrays.fill(monster, null);
+            Arrays.fill(obj, null);
+            Arrays.fill(iTile, null);
+            itemList.clear();
+            projectileList.clear();
+            particleList.clear();
+
+            getKeyHandler().clearAllKeys();
+            tileManager.loadMap(4);
+            startMapTransition(4);
+            getPlayer().setWorldX(tileSize * 48);
+            getPlayer().setWorldY(tileSize * 2);
+            getPlayer().setDirection("down");
+
+            repaint();
+
+        } else if (currentMapIndex == TileManager.STAIRS_UP_TILE_ID) {
+
+            Arrays.fill(npc, null);
+            getKeyHandler().clearAllKeys();
+            tileManager.loadMap(1);
+            startMapTransition(2);
+            getPlayer().setWorldX(tileSize * 10);
+            getPlayer().setWorldY(tileSize * 9);
+            getPlayer().setDirection("down");
+
+            assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+            assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
+            assetSetter.setMonster();
+            assetSetter.setInteractiveTile();
+            assetSetter.setObjAxe();
+            assetSetter.setObjChest();
+            assetSetter.setObjPot();
+
+            repaint();
         }
     }
 
