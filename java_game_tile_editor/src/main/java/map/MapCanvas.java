@@ -207,10 +207,6 @@ public class MapCanvas extends JPanel implements Scrollable {
         return tileSize;
     }
 
-    public int getTileSize() {
-        return tileSize;
-    }
-
     @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
         return tileSize * 5;

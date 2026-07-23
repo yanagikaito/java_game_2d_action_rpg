@@ -24,10 +24,12 @@ public class TileManager {
     public static final int TREE_TILE_ID = 4;
     public static final int HUT_TILE_ID = 6;
     public static final int FOREST_TILE_ID = 9;
+    public static final int STAIRS_DOWN_TILE_ID = 12;
+    public static final int STAIRS_UP_TILE_ID = 13;
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[11];
+        tiles = new Tile[14];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -95,6 +97,15 @@ public class TileManager {
             tiles[10].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree‑stump.png"));
             tiles[10].collision = true;
             tiles[10].chickenCollision = true;
+
+            tiles[11] = new Tile();
+            tiles[11].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-floor.png"));
+
+            tiles[12] = new Tile();
+            tiles[12].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/stairs-down.png"));
+
+            tiles[13] = new Tile();
+            tiles[13].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/stairs-up.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
