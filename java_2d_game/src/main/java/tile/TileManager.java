@@ -29,7 +29,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[14];
+        tiles = new Tile[15];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -106,6 +106,11 @@ public class TileManager {
 
             tiles[13] = new Tile();
             tiles[13].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/stairs-up.png"));
+
+            tiles[14] = new Tile();
+            tiles[14].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/rock.png"));
+            tiles[14].collision = true;
+            tiles[14].rockCollision = true;
 
         } catch (IOException e) {
             e.printStackTrace();
