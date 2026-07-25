@@ -35,6 +35,7 @@ public class Player extends Entity {
     private boolean holding = false;
     private ObjBomb heldBomb = null;
     private ObjPot heldPot = null;
+    private ObjRock heldRock = null;
     private NpcChicken heldChicken = null;
     private Map<String, Point> holdOffset = new HashMap<>();
 
@@ -682,6 +683,9 @@ public class Player extends Entity {
                 } else if (heldChicken != null) {
                     // ニワトリを持っているならニワトリを投げる
                     throwHeldChicken();
+                } else if (heldRock != null) {
+                    // ニワトリを持っているならニワトリを投げる
+                    throwHeldRock();
                 }
             }
         }
@@ -739,6 +743,25 @@ public class Player extends Entity {
                 heldPot.setWorldY(headY);
             }
 
+            // 所持中は岩をプレイヤー頭上に固定表示
+            if (heldRock != null) {
+                // heldPot のワールド座標はプレイヤーの頭上に合わせる
+                int headX = getWorldX();
+                int headY = getWorldY() - FrameApp.getTileSize();
+                heldRock.setWorldX(headX);
+                heldRock.setWorldY(headY);
+                heldRock.setAlive(false);
+            }
+
+            // 歩行中は持ち物の表示位置を更新
+            if (holding && heldRock != null) {
+                // プレイヤーの頭上に追従させる
+                int headX = getWorldX();
+                int headY = getWorldY() - FrameApp.getTileSize();
+                heldRock.setWorldX(headX);
+                heldRock.setWorldY(headY);
+            }
+
             // 所持中はニワトリをプレイヤー頭上に固定表示
             if (heldChicken != null) {
                 // heldChicken のワールド座標はプレイヤーの頭上に合わせる
@@ -770,6 +793,8 @@ public class Player extends Entity {
                     throwHeldBom();
                 } else if (heldPot != null) {
                     throwHeldPot();
+                } else if (heldRock != null) {
+                    throwHeldRock();
                 } else if (heldChicken != null) {
                     throwHeldChicken();
                 }
@@ -831,6 +856,23 @@ public class Player extends Entity {
             return;
         }
 
+        ObjRock[] objRock = (ObjRock[]) gameWindow.getObj();
+        if (objRock == null || index < 0 || index >= objRock.length) {
+            // 対象が消えていた場合は所持遷移だけ
+            setState(PlayerState.HOLD_WALK);
+            setSpriteNum(1);
+            setSpriteCounter(0);
+            return;
+        }
+
+        ObjRock rock = objRock[index];
+        if (rock == null || !pot.isPickable() || !pot.getAlive()) {
+            setState(PlayerState.HOLD_WALK);
+            setSpriteNum(1);
+            setSpriteCounter(0);
+            return;
+        }
+
         NpcChicken[] npcChicken = (NpcChicken[]) gameWindow.getMonster();
         if (npcChicken == null || index < 0 || index >= npcChicken.length) {
             // 対象が消えていた場合は所持遷移だけ
@@ -851,17 +893,20 @@ public class Player extends Entity {
         // ワールドから除去
         objs[index] = null;
         objPot[index] = null;
+        objRock[index] = null;
         npcChicken[index] = null;
 
         // 所持状態にする
         this.heldBomb = bomb;
         this.heldPot = pot;
+        this.heldRock = rock;
         this.heldChicken = chicken;
         this.holding = true;
 
         // オブジェクト側の状態更新
         bomb.onPickedUp();
         pot.onPickedUp();
+        rock.onPickedUp();
         chicken.onPickedUp();
 
         // プレイヤー状態を所持歩行に変更
@@ -913,7 +958,8 @@ public class Player extends Entity {
 
                 // プレイヤー側の所持フィールドにセット（既存の heldBomb を使用）
                 this.heldBomb = bomb;
-                this.heldPot = null; // 片方だけ保持する
+                this.heldPot = null;
+                this.heldRock = null;
                 this.heldChicken = null;
                 this.holding = true;
                 this.pendingPickupIndex = nearbyIndex;
@@ -940,7 +986,35 @@ public class Player extends Entity {
 
                 // プレイヤー側の所持フィールドにセット
                 this.heldPot = pot;
-                this.heldBomb = null; // 片方だけ保持する
+                this.heldBomb = null;
+                this.heldRock = null;
+                this.heldChicken = null;
+                this.holding = true;
+                this.pendingPickupIndex = nearbyIndex;
+                this.state = PlayerState.PICKUP;
+                setSpriteNum(0);
+                setSpriteCounter(0);
+                setAttacking(false);
+            }
+
+            // --- 岩を拾う ---
+            if (obj instanceof object.ObjRock) {
+                object.ObjRock rock = (object.ObjRock) obj;
+                if (!rock.isPickable() || !rock.getAlive()) {
+                    pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+                    return;
+                }
+
+                // ワールドから除去して所持に移す
+                gameWindow.getObj()[nearbyIndex] = null;
+
+                // オブジェクト側の状態更新
+                rock.onPickedUp();
+
+                // プレイヤー側の所持フィールドにセット
+                this.heldPot = null;
+                this.heldBomb = null;
+                this.heldRock = rock;
                 this.heldChicken = null;
                 this.holding = true;
                 this.pendingPickupIndex = nearbyIndex;
@@ -975,6 +1049,7 @@ public class Player extends Entity {
             this.heldChicken = ch;
             this.heldBomb = null;
             this.heldPot = null;
+            this.heldRock = null;
             this.holding = true;
             this.pendingPickupIndex = nearbyIndex;
             this.state = PlayerState.PICKUP;
@@ -1185,6 +1260,110 @@ public class Player extends Entity {
 
         // 所持解除と状態更新
         heldPot = null;
+        holding = false;
+        state = PlayerState.THROW;
+
+        // 投げた直後の誤拾い防止（pickupCooldown と入力消費があるなら設定）
+        this.pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+        gameWindow.getKeyHandler().consumeThrowOnce();
+    }
+
+    private void throwHeldRock() {
+
+        if (!holding || heldRock == null) return;
+
+        int tiles = 2;
+        int tileSize = FrameApp.getTileSize();
+        double distance = tiles * tileSize;
+
+        // ObjPot の重力（正の値で扱う）
+        double gPot = Math.abs(heldRock.getGravity());
+
+        // プレイヤーの向き（"left","right","up","down" を返す）
+        String dir = getDirection();
+
+        double vx = 0.0;
+        double vy = 0.0;
+        double initialVz;
+
+        // 基本的な水平速度の目安（45度近似）
+        double baseSpeed = Math.sqrt(Math.max(1.0, distance * gPot / Math.sin(2 * Math.toRadians(45))));
+
+        switch (dir) {
+            case "left" -> {
+                vx = -baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25; // 少し上向きに見せる
+                initialVz = 8.0;
+            }
+            case "right" -> {
+                vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = 8.0;
+            }
+            case "up" -> {
+                // 上投げ：垂直成分を強めに、画面Y速度は小さめ（上方向は負）
+                vx = 0.0;
+                vy = -baseSpeed * 1.5;
+                initialVz = 12.0;
+            }
+            case "down" -> {
+                // 下投げ：画面Y方向に下向きの速度を与え、垂直成分は下向き（地面に叩きつける）
+                vx = 0.0;
+                vy = baseSpeed * 0.6;
+                initialVz = 6.0; // 下向きに押し出す（正は下）
+            }
+            default -> {
+                // フェールセーフ：左右どちらかに投げる
+                if ("left".equals(getDirection())) vx = -baseSpeed;
+                else vx = baseSpeed;
+                vy = -Math.abs(baseSpeed) * 0.25;
+                initialVz = -8.0;
+            }
+        }
+
+        System.out.println("THROW dir=" + dir + " initVz=" + initialVz + " setZ=" + heldRock.getZ() + " worldY=" + heldRock.getWorldY());
+
+        // 速度制限
+        double maxSpeed = 40.0;
+        if (Math.abs(vx) > maxSpeed) vx = Math.signum(vx) * maxSpeed;
+        if (Math.abs(vy) > maxSpeed) vy = Math.signum(vy) * maxSpeed;
+
+        // heldPot を投げる準備
+        heldRock.setWorldX(getWorldX());
+        heldRock.setWorldY(getWorldY() - tileSize / 4);
+        heldRock.setZ(tileSize);
+        heldRock.setHasShadow(true);
+//        heldRock.setUser(this);
+        heldRock.setThrown(true);
+        heldRock.setPickable(false);
+        heldRock.setAlive(true);
+        heldRock.setLife(heldRock.getMaxLife());
+
+        // 垂直成分（z/vz）と影を設定するためのメソッドを呼ぶ
+        heldRock.setHasShadow(true);
+        heldRock.setVerticalVelocity(tiles);
+        // 水平成分は既存の setVelocity を利用
+        heldRock.setVelocity(vx, vy);
+
+        // ワールドに戻す
+        boolean added = false;
+        try {
+            added = gameWindow.addObject(heldRock);
+        } catch (Throwable ignored) {
+        }
+        if (!added) {
+            Entity[] arr = gameWindow.getObj();
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] == null) {
+                    arr[i] = heldRock;
+                    added = true;
+                    break;
+                }
+            }
+        }
+
+        // 所持解除と状態更新
+        heldRock = null;
         holding = false;
         state = PlayerState.THROW;
 
@@ -1470,6 +1649,44 @@ public class Player extends Entity {
                     break;
                 }
             }
+
+            // 6.5) OBJ 判定（オブジェクト配列）
+            int objIndexAtDest = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj(), stepX, stepY);
+            if (objIndexAtDest != 999) {
+                Entity obj = gameWindow.getObj()[objIndexAtDest];
+
+                // 例: 岩オブジェクトに当たった場合は拾えるフラグを立てる
+                if (obj instanceof ObjRock) {
+                    ObjRock rock = (ObjRock) obj;
+                    // 投擲中や所持中の岩は無視する
+                    if (!rock.isPickable() && !rock.isThrown() && rock.getAlive()) {
+                        // プレイヤーが近接しているなら拾えるようにする
+                        rock.setPickable(true);
+                        // HUD 表示やサウンドを出すならここで
+                    }
+                    // 岩は基本的に通行不可にするので移動はブロック
+                    setCollision(true);
+                    talkNpcIndex = -1; // 会話フラグ等をクリア
+                    break;
+                } else {
+                    // 他のオブジェクト（壺や箱など）をブロックする場合
+                    if (obj.isBlocking()) {
+                        setCollision(true);
+                        break;
+                    }
+                    // もし押し出し可能なオブジェクトなら resolvePush を試す
+                    boolean pushedObj = resolveTileOverlapWithPush(stepX, stepY);
+                    if (pushedObj) {
+                        setCollision(false);
+                        recordSafePosition();
+                        continue;
+                    } else {
+                        setCollision(true);
+                        break;
+                    }
+                }
+            }
+
 
             // 7) 実移動
             if (!isCollision()) {
@@ -1824,16 +2041,6 @@ public class Player extends Entity {
         boolean itBlock = (itIndex != 999 && gameWindow.getItile()[itIndex].isBlocking());
         boolean npcBlock = (npcIndex != 999);
         return !(tileBlock || itBlock || npcBlock);
-    }
-
-    // マップの幅・高さ（タイル単位）を返すメソッドがある想定。
-// なければ GameWindow や Map クラスから取得する実装に置き換えてください。
-    public int getMapCols() {
-        return FrameApp.getMaxWorldCol(); // 例: マップ列数を返すメソッド
-    }
-
-    public int getMapRows() {
-        return FrameApp.getMaxWorldRow();  // 例: マップ行数を返すメソッド
     }
 
 
@@ -2494,7 +2701,28 @@ public class Player extends Entity {
             return;
         }
 
+        if (obj instanceof object.ObjRock && keyHandler.isThrowKeyPressed()) {
+            object.ObjRock rock = (object.ObjRock) obj;
+            // pickable / alive のチェック（必要に応じて）
+            if (!rock.isPickable() || !rock.getAlive()) {
+                return;
+            }
+
+            // ワールドから除去して所持に移す
+            gameWindow.getObj()[i] = null;
+            rock.setAlive(false);
+            rock.setPickable(false);
+            rock.setThrown(false);
+            rock.setVelocity(0, 0);
+
+            this.heldRock = rock;
+            this.holding = true;
+            this.state = PlayerState.PICKUP;
+            return;
+        }
+
         if (obj instanceof NpcChicken && keyHandler.isThrowKeyPressed()) {
+
             NpcChicken chicken = (NpcChicken) obj;
             // pickable / alive のチェック（必要に応じて）
             if (!chicken.isPickable() || !chicken.getAlive()) {
@@ -2538,6 +2766,10 @@ public class Player extends Entity {
             }
             if (o instanceof ObjPot) {
                 ObjPot p = (ObjPot) o;
+                if (!p.isPickable()) continue;
+            }
+            if (o instanceof ObjRock) {
+                ObjRock p = (ObjRock) o;
                 if (!p.isPickable()) continue;
             }
             if (o instanceof NpcChicken) {
@@ -2597,10 +2829,6 @@ public class Player extends Entity {
             // チェスト位置に落とす（必要なら少しオフセット）
             bomb.setWorldX(this.getWorldX());
             bomb.setWorldY(this.getWorldY());
-
-//            // マップに追加
-//            gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
-//            gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
             return;
         }
 
@@ -2617,10 +2845,22 @@ public class Player extends Entity {
             // チェスト位置に落とす（必要なら少しオフセット）
             pot.setWorldX(this.getWorldX());
             pot.setWorldY(this.getWorldY());
+            return;
+        }
 
-//            // マップに追加
-//            gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
-//            gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
+        if (obj instanceof object.ObjRock) {
+            object.ObjRock rock = (object.ObjRock) obj;
+
+            // 初期化：ワールドに置ける状態にする
+            rock.setPickable(true);
+            rock.setThrown(false);
+            rock.setAlive(true);
+            rock.setLife(rock.getMaxLife());
+            rock.setVelocity(0, 0);
+
+            // チェスト位置に落とす（必要なら少しオフセット）
+            rock.setWorldX(this.getWorldX());
+            rock.setWorldY(this.getWorldY());
             return;
         }
 
@@ -2637,10 +2877,6 @@ public class Player extends Entity {
             // チェスト位置に落とす（必要なら少しオフセット）
             npcChicken.setWorldX(this.getWorldX());
             npcChicken.setWorldY(this.getWorldY());
-
-//            // マップに追加
-//            gameWindow.getCurrentMap().addObject(bomb); // addObject 実装に合わせて
-//            gameWindow.getUi().addMessage(bomb.getName() + " が落ちた！");
             return;
         }
 
@@ -3345,6 +3581,38 @@ public class Player extends Entity {
             }
         }
 
+        // --- 所持中の岩を頭上に描画 ---
+        if (state == PlayerState.HOLD_WALK) {
+            if (this.holding && this.heldRock != null) {
+                BufferedImage heldImg = heldRock.getHeldSprite();
+                if (heldImg != null) {
+                    int ts = FrameApp.getTileSize();
+                    Rectangle sa = getSolidArea();
+                    int headScreenX = screenX + sa.x + sa.width / 2 - heldImg.getWidth() / 2;
+                    int headScreenY = screenY + sa.y - heldImg.getHeight();
+
+                    switch (getDirection()) {
+                        case "up" -> headScreenY -= ts / 8;
+                        case "down" -> headScreenY += ts / 16;
+                        case "left" -> headScreenX -= ts / 8;
+                        case "right" -> headScreenX += ts / 8;
+                    }
+
+                    Composite before = g2.getComposite();
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+                    g2.setColor(new Color(0, 0, 0, 80));
+                    int shadowW = heldImg.getWidth() * 9 / 10;
+                    int shadowH = Math.max(2, heldImg.getHeight() / 8);
+                    g2.fillOval(headScreenX + (heldImg.getWidth() - shadowW) / 2,
+                            headScreenY + heldImg.getHeight() - shadowH / 2,
+                            shadowW, shadowH);
+                    g2.setComposite(before);
+
+                    g2.drawImage(heldImg, headScreenX, headScreenY, null);
+                }
+            }
+        }
+
         // --- 所持中のニワトリを頭上に描画 ---
         if (state == PlayerState.HOLD_WALK) {
             if (this.holding && this.heldChicken != null) {
@@ -3419,6 +3687,24 @@ public class Player extends Entity {
                 int frame = Math.max(0, getSpriteNum() - 1);
                 // SPRITE_COUNT と実際の heldBomb throw sprite 配列長の整合性をチェック
                 BufferedImage throwImg = heldPot.getThrowSprite(dir, frame);
+                if (throwImg != null) {
+                    int tx = screenX;
+                    int ty = screenY;
+                    switch (dir) {
+                        case "up" -> ty -= tileSize;
+                        case "down" -> ty += tileSize / 2;
+                        case "left" -> tx -= tileSize;
+                        case "right" -> tx += tileSize;
+                    }
+                    int tw = tileSize;
+                    int th = tileSize;
+                    g2.drawImage(throwImg, tx, ty, tw, th, null);
+                }
+            } else if (heldRock != null) {
+                String dir = getDirection();
+                int frame = Math.max(0, getSpriteNum() - 1);
+                // SPRITE_COUNT と実際の heldBomb throw sprite 配列長の整合性をチェック
+                BufferedImage throwImg = heldRock.getThrowSprite(dir, frame);
                 if (throwImg != null) {
                     int tx = screenX;
                     int ty = screenY;
@@ -3719,6 +4005,14 @@ public class Player extends Entity {
 
     public PlayerState setState(PlayerState state) {
         return this.state = state;
+    }
+
+    public int getMapCols() {
+        return FrameApp.getMaxWorldCol();
+    }
+
+    public int getMapRows() {
+        return FrameApp.getMaxWorldRow();
     }
 
     /**

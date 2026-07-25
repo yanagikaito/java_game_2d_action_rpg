@@ -49,6 +49,7 @@ public abstract class Entity {
     protected String spriteKey = "entity_default";
     private boolean stackable = false;
     private boolean thrown = false;
+    private boolean blocking = false;
     private int amount = 1;
     private int maxStack = 1;
     protected String trigger;
@@ -2111,5 +2112,13 @@ public abstract class Entity {
 
     public void setThrown(boolean thrown) {
         this.thrown = thrown;
+    }
+
+    public boolean isBlocking() {
+        return blocking;
+    }
+
+    public void setBlocking(boolean blocking) {
+        this.blocking = blocking;
     }
 }

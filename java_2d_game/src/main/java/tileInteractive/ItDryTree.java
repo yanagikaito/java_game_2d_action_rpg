@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 
 public class ItDryTree extends InteractiveTile {
-    public ItDryTree(GameWindow gw, int row, int col) {
-        super(gw, row, col);
+    public ItDryTree(GameWindow gw, int col, int row) {
+        super(gw, col, row);
         setDestructible(true);
         setBlocking(true);
         setLife(6);

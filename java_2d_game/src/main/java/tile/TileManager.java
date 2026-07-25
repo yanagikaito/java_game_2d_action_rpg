@@ -29,7 +29,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[15];
+        tiles = new Tile[14];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -59,6 +59,7 @@ public class TileManager {
             tiles[0].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/earth.png"));
             tiles[0].bombCollision = true;
             tiles[0].potCollision = true;
+            tiles[0].rockCollision = true;
 
             tiles[1] = new Tile();
             tiles[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/meadow.png"));
@@ -70,10 +71,16 @@ public class TileManager {
 
             tiles[3] = new Tile();
             tiles[3].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/sand.png"));
+            tiles[3].bombCollision = true;
+            tiles[3].potCollision = true;
+            tiles[3].rockCollision = true;
 
             tiles[4] = new Tile();
             tiles[4].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree.png"));
             tiles[4].collision = true;
+            tiles[4].bombCollision = true;
+            tiles[4].potCollision = true;
+            tiles[4].rockCollision = true;
             tiles[4].chickenCollision = true;
 
             tiles[5] = new Tile();
@@ -96,6 +103,9 @@ public class TileManager {
             tiles[10] = new Tile();
             tiles[10].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/tree‑stump.png"));
             tiles[10].collision = true;
+            tiles[10].bombCollision = true;
+            tiles[10].potCollision = true;
+            tiles[10].rockCollision = true;
             tiles[10].chickenCollision = true;
 
             tiles[11] = new Tile();
@@ -106,11 +116,6 @@ public class TileManager {
 
             tiles[13] = new Tile();
             tiles[13].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/stairs-up.png"));
-
-            tiles[14] = new Tile();
-            tiles[14].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/rock.png"));
-            tiles[14].collision = true;
-            tiles[14].rockCollision = true;
 
         } catch (IOException e) {
             e.printStackTrace();
