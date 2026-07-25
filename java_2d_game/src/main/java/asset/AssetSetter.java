@@ -12,6 +12,8 @@ import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
 
+import java.awt.*;
+
 public class AssetSetter {
 
     private GameWindow gameWindow;
@@ -238,10 +240,18 @@ public class AssetSetter {
         obj[i] = createObjPot(FrameApp.getTileSize() * 28, FrameApp.getTileSize() * 16);
     }
 
-    public void setObjAxe() {
+    public void setObjRock() {
 
         Entity[] obj = gameWindow.getObj();
         int i = 6;
+
+        obj[i] = createObjRock(FrameApp.getTileSize() * 10, FrameApp.getTileSize() * 11);
+    }
+
+    public void setObjAxe() {
+
+        Entity[] obj = gameWindow.getObj();
+        int i = 7;
 
         obj[i] = createObjAxe(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
     }
@@ -249,7 +259,7 @@ public class AssetSetter {
     public void setObjChest() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 7;
+        int i = 8;
 
         obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 22);
         i++;
@@ -261,7 +271,7 @@ public class AssetSetter {
     public void setObjRedPotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 10;
+        int i = 11;
 
         obj[i] = createObjRedPotion(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 23);
         i++;
@@ -273,7 +283,7 @@ public class AssetSetter {
     public void setObjGreenPotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 13;
+        int i = 14;
 
         obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 36, FrameApp.getTileSize() * 26);
         i++;
@@ -285,7 +295,7 @@ public class AssetSetter {
     public void setObjBluePotion() {
 
         Entity[] obj = gameWindow.getObj();
-        int i = 16;
+        int i = 17;
 
         obj[i] = createObjBluePotion(FrameApp.getTileSize() * 39, FrameApp.getTileSize() * 29);
         i++;
@@ -364,6 +374,25 @@ public class AssetSetter {
         return objPot;
     }
 
+    private ObjRock createObjRock(int worldX, int worldY) {
+        ObjRock objRock = new ObjRock(gameWindow);
+        objRock.getSolidArea().x = 1;
+        objRock.getSolidArea().y = 1;
+
+        objRock.setSolidAreaDefaultX(objRock.getSolidArea().x);
+        objRock.setSolidAreaDefaultY(objRock.getSolidArea().y);
+
+        objRock.getSolidArea().width = (FrameApp.getTileSize() - 8);
+        objRock.getSolidArea().height = (FrameApp.getTileSize() - 8);
+        objRock.setWorldX(worldX);
+        objRock.setWorldY(worldY);
+        objRock.setPickable(true);
+//        objRock.setUser(gameWindow.getPlayer());
+        objRock.setThrown(false);
+        objRock.setAlive(true);
+        return objRock;
+    }
+
     public NpcChicken createNpcChicken(int worldX, int worldY) {
         NpcChicken npcChicken = new NpcChicken(gameWindow);
         npcChicken.setWorldX(worldX);
@@ -377,8 +406,8 @@ public class AssetSetter {
 
     public void setInteractiveTile() {
         var tiles = new InteractiveTile[100];
-        for (int col = 25, i = 0; col <= 33; col++, i++) {
-            tiles[i] = new ItDryTree(gameWindow, 11, col);
+        for (int row = 25, i = 0; row <= 33; row++, i++) {
+            tiles[i] = new ItDryTree(gameWindow, 11, row);
         }
         gameWindow.setItile(tiles);
     }

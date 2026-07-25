@@ -61,15 +61,6 @@ public class ObjChest extends Entity {
 
         // クラスパスから読み込む
         loadLootTableFromJson("items/loot_table.json");
-
-        setCollision(true);
-
-        getSolidArea().x = 4;
-        getSolidArea().y = 16;
-        getSolidArea().width = 40;
-        getSolidArea().height = 32;
-        setSolidAreaDefaultX(getSolidArea().x);
-        setSolidAreaDefaultY(getSolidArea().y);
     }
 
     @Override

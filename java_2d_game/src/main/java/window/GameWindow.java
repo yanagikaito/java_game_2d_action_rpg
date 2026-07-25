@@ -117,6 +117,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setObjAxe();
         assetSetter.setObjChest();
         assetSetter.setObjPot();
+        assetSetter.setObjRock();
         gameState = GameState.TITLE;
         initMapBgm();
         getSoundmanager().stopBGM();
@@ -283,6 +284,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setObjGreenPotion();
         assetSetter.setObjBluePotion();
         assetSetter.setObjPot();
+        assetSetter.setObjRock();
     }
 
     /**
@@ -634,6 +636,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjAxe();
             assetSetter.setObjChest();
             assetSetter.setObjPot();
+            assetSetter.setObjRock();
 
             repaint();
 
@@ -693,6 +696,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjAxe();
             assetSetter.setObjChest();
             assetSetter.setObjPot();
+            assetSetter.setObjRock();
 
             repaint();
         }

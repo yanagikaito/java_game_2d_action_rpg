@@ -91,10 +91,10 @@ public class CollisionChecker {
             if (isTileIndexValid(tileNum1, tiles) && isTileIndexValid(tileNum2, tiles)
                     && isTileIndexValid(tileNum3, tiles) && isTileIndexValid(tileNum4, tiles)) {
 
-                if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision || tiles[tileNum1].potCollision
-                        || tiles[tileNum2].collision || tiles[tileNum2].bombCollision || tiles[tileNum2].potCollision
-                        || tiles[tileNum3].collision || tiles[tileNum3].bombCollision || tiles[tileNum3].potCollision
-                        || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision) {
+                if (tiles[tileNum1].collision || tiles[tileNum1].bombCollision || tiles[tileNum1].potCollision || tiles[tileNum1].rockCollision
+                        || tiles[tileNum2].collision || tiles[tileNum2].bombCollision || tiles[tileNum2].potCollision || tiles[tileNum2].rockCollision
+                        || tiles[tileNum3].collision || tiles[tileNum3].bombCollision || tiles[tileNum3].potCollision || tiles[tileNum3].rockCollision
+                        || tiles[tileNum4].collision || tiles[tileNum4].bombCollision || tiles[tileNum4].potCollision || tiles[tileNum4].rockCollision) {
                     collision = true;
                 }
             } else {
