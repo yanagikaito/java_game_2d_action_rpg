@@ -449,18 +449,18 @@ public class ObjPot extends Projectile {
         BufferedImage img = useSprites[dirIndex][spriteIndex];
         if (img == null) return;
 
-        // スプライトサイズを img から取得
         int spriteW = img.getWidth();
         int spriteH = img.getHeight();
 
-        // 描画位置（スプライト基準を中心にしている想定）
         int drawX = screenX;
-        int drawY = (screenY - spriteH / 2) - (int) Math.round(z);
+        int drawY = screenY - (int) Math.round(z);
+
         System.out.println("DRAW screenY=" + screenY + " drawY=" + drawY + " z=" + z + " vz=" + vz + " vy=" + vy);
 
-        g2.drawImage(img, drawX, drawY, null);
 
-        // 影は先に描くと自然（地面→本体の順）
+        // 地面投影位置（左上基準の地面座標）は screenX, screenY + spriteH - 地面オフセット
+        int groundX = screenX;
+        int groundY = screenY + spriteH;
         if (hasShadow && !shattering) {
             int baseTile = FrameApp.getTileSize();
             float alpha = Math.max(0.15f, 1.0f - (float) (z / (baseTile * 2.0)));
@@ -469,9 +469,9 @@ public class ObjPot extends Projectile {
             int shadowW = (int) (spriteW * scale);
             int shadowH = Math.max(2, shadowW / 4);
 
-            // 影の位置は本体の地面投影（z を考慮しない screenY）を基準にする
-            int shadowX = screenX - shadowW / 2;
-            int shadowY = screenY - shadowH / 2 + baseTile / 3;
+            // 影は地面投影の中心に合わせる
+            int shadowX = groundX + (spriteW / 2) - (shadowW / 2);
+            int shadowY = groundY - (shadowH / 2) + baseTile / 6;
 
             Composite oldComp = g2.getComposite();
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
@@ -480,8 +480,8 @@ public class ObjPot extends Projectile {
             g2.setComposite(oldComp);
         }
 
-        // 本体を描画
         g2.drawImage(img, drawX, drawY, null);
+
     }
 
     public boolean isPickable() {
