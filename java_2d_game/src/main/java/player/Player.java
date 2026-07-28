@@ -1655,7 +1655,7 @@ public class Player extends Entity {
             if (objIndexAtDest != 999) {
                 Entity obj = gameWindow.getObj()[objIndexAtDest];
 
-                // 例: 岩オブジェクトに当たった場合は拾えるフラグを立てる
+                // 岩オブジェクトに当たった場合は拾えるフラグを立てる
                 if (obj instanceof ObjRock) {
                     ObjRock rock = (ObjRock) obj;
                     // 投擲中や所持中の岩は無視する
@@ -1666,7 +1666,19 @@ public class Player extends Entity {
                     }
                     // 岩は基本的に通行不可にするので移動はブロック
                     setCollision(true);
-                    talkNpcIndex = -1; // 会話フラグ等をクリア
+                    talkNpcIndex = -1;
+                    break;
+                } else if (obj instanceof ObjPot) {
+                    ObjPot pot = (ObjPot) obj;
+                    // 投擲中や所持中の岩は無視する
+                    if (!pot.isPickable() && !pot.isThrown() && pot.getAlive()) {
+                        // プレイヤーが近接しているなら拾えるようにする
+                        pot.setPickable(true);
+                        // HUD 表示やサウンドを出すならここで
+                    }
+                    // 岩は基本的に通行不可にするので移動はブロック
+                    setCollision(true);
+                    talkNpcIndex = -1;
                     break;
                 } else {
                     // 他のオブジェクト（壺や箱など）をブロックする場合

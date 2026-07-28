@@ -75,6 +75,7 @@ public class ObjPot extends Projectile {
         setKnockBackPower(0);
         setUseCost(5);
         setAlive(false);
+        setBlocking(true);
         loadSprites();
 
         // クラスパスから読み込む
