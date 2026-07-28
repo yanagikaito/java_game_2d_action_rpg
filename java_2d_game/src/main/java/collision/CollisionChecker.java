@@ -266,13 +266,6 @@ public class CollisionChecker {
                     continue;
                 }
             }
-            if (targets[i] instanceof ObjPot) {
-                ObjPot tp = (ObjPot) targets[i];
-                if (!tp.isThrown() && tp.isPickable()) {
-                    continue;
-                }
-            }
-
 
             Rectangle rEntity = worldSolid(entity);
             Rectangle rTarget = worldSolid(targets[i]);
@@ -317,10 +310,6 @@ public class CollisionChecker {
             if (targets[i] instanceof ObjBomb) {
                 ObjBomb tb = (ObjBomb) targets[i];
                 if (!tb.isThrown() && tb.isPickable()) continue;
-            }
-            if (targets[i] instanceof ObjPot) {
-                ObjPot tp = (ObjPot) targets[i];
-                if (!tp.isThrown() && tp.isPickable()) continue;
             }
 
             Rectangle rEntity = worldSolid(entity);

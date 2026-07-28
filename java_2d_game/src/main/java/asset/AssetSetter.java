@@ -365,6 +365,14 @@ public class AssetSetter {
     private ObjPot createObjPot(int worldX, int worldY) {
         EntityFactory factory = new EntityFactory(gameWindow);
         ObjPot objPot = new ObjPot(gameWindow, factory);
+        objPot.getSolidArea().x = 1;
+        objPot.getSolidArea().y = 1;
+
+        objPot.setSolidAreaDefaultX(objPot.getSolidArea().x);
+        objPot.setSolidAreaDefaultY(objPot.getSolidArea().y);
+
+        objPot.getSolidArea().width = (FrameApp.getTileSize() - 8);
+        objPot.getSolidArea().height = (FrameApp.getTileSize() - 8);
         objPot.setWorldX(worldX);
         objPot.setWorldY(worldY);
         objPot.setPickable(true);
@@ -387,7 +395,7 @@ public class AssetSetter {
         objRock.setWorldX(worldX);
         objRock.setWorldY(worldY);
         objRock.setPickable(true);
-//        objRock.setUser(gameWindow.getPlayer());
+        objRock.setUser(gameWindow.getPlayer());
         objRock.setThrown(false);
         objRock.setAlive(true);
         return objRock;
