@@ -261,11 +261,11 @@ public class AssetSetter {
         Entity[] obj = gameWindow.getObj();
         int i = 8;
 
-        obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 22);
+        obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 19);
         i++;
-        obj[i] = createObjChest(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 21);
+        obj[i] = createObjChest(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 19);
         i++;
-        obj[i] = createObjChest(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 22);
+        obj[i] = createObjChest(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 19);
     }
 
     public void setObjRedPotion() {

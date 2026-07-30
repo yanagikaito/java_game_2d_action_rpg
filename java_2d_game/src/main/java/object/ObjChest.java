@@ -45,6 +45,7 @@ public class ObjChest extends Entity {
         this.entityFactory = entityFactory;
         this.loot = loot;
         setName("宝箱");
+        setBlocking(true);
 
         try {
             // 画像ファイルを個別に読み込む
@@ -81,13 +82,29 @@ public class ObjChest extends Entity {
 
         // プレイヤー近接判定
         Player player = gameWindow.getPlayer();
+        int tileSize = FrameApp.getTileSize();
+
+        int targetX = player.getWorldX();
+        int targetY = player.getWorldY();
+
+        String dir = player.getDirection();
+        if (dir.equals("up")) {
+            targetY = player.getWorldY() - tileSize;
+        }
+
+        int allow = tileSize / 2;
+
+        // 宝箱がプレイヤー正面のタイルにあるか判定
+        boolean isDirectlyInFront = Math.abs(getWorldX() - targetX) <= allow
+                && Math.abs(getWorldY() - targetY) <= allow;
+
+        // 近接フラグ
         int dx = Math.abs(player.getWorldX() - getWorldX());
         int dy = Math.abs(player.getWorldY() - getWorldY());
-        int threshold = FrameApp.getTileSize();
-        playerNearby = dx < threshold && dy < threshold;
+        playerNearby = dx < tileSize && dy < tileSize;
 
-        // 近くにいて Enter 押下なら開く
-        if (playerNearby && !opened && gameWindow.getKeyHandler().isPlayerEnter()) {
+        // 開ける条件：正面にあり、未開放、Enter 押下
+        if (isDirectlyInFront && !opened && gameWindow.getKeyHandler().isPlayerEnter()) {
             open(player);
         }
     }
