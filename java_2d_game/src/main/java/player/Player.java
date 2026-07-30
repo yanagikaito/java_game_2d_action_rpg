@@ -596,7 +596,7 @@ public class Player extends Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
-        gameWindow.getEventHandler().checkEvent();
+//        gameWindow.getEventHandler().checkEvent();
         int nearbyIndex = findNearbyObjectIndex();
         int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
         gameWindow.changeMap(collidedTileId);
