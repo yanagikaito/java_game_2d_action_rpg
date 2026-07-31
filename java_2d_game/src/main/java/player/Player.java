@@ -2635,9 +2635,50 @@ public class Player extends Entity {
             if (now - lastFireTime >= FIRE_COOLDOWN_MS) {
                 lastFireTime = now;
 
+                Player player = gameWindow.getPlayer();
+                int tileSize = FrameApp.getTileSize();
+
+                // プレイヤーの向きに応じた配置座標
+                int placeX = player.getWorldX();
+                int placeY = player.getWorldY();
+                String dir = player.getDirection();
+
+                switch (dir) {
+                    case "up":
+                        placeY = player.getWorldY() - tileSize;
+                        break;
+                    case "down":
+                        placeY = player.getWorldY() + tileSize;
+                        break;
+                    case "left":
+                        placeX = player.getWorldX() - tileSize;
+                        break;
+                    case "right":
+                        placeX = player.getWorldX() + tileSize;
+                        break;
+                    default:
+                        placeX = player.getWorldX();
+                        placeY = player.getWorldY();
+                }
+
+                // タイル座標とタイル左上を計算
+                int tileX = placeX / tileSize;
+                int tileY = placeY / tileSize;
+                int tileLeftX = tileX * tileSize;
+                int tileTopY = tileY * tileSize;
+
+                // 爆弾オブジェクトを作って world 座標を solidArea に合わせて設定する
                 ObjBomb b = new ObjBomb(gameWindow);
-                b.setWorldX(getWorldX());
-                b.setWorldY(getWorldY());
+                // b.getSolidArea().x/y はローカル（オブジェクト内のオフセット）を想定
+                b.setWorldX(tileLeftX - b.getSolidArea().x);
+                b.setWorldY(tileTopY - b.getSolidArea().y);
+
+                // 判定：爆弾自身の solidArea を基準にチェック（offset 0,0）
+                if (gameWindow.getCollisionChecker().checkTile(b, 0, 0)) {
+                    return;
+                }
+
+                // 置けるなら追加
                 b.setUser(this);
                 b.setPickable(true);
                 b.setThrown(false);

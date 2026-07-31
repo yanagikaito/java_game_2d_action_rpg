@@ -243,7 +243,6 @@ public class CollisionChecker {
 
     /**
      * エンティティ同士の衝突判定（targets 配列）
-     * ObjBomb の「設置状態」は衝突判定から除外するガードを入れている
      */
 
     public int checkEntity(Entity entity, Entity[] targets) {
@@ -259,13 +258,6 @@ public class CollisionChecker {
 
             if (targets[i] == null) continue;
             if (!targets[i].getAlive()) continue;
-
-            if (targets[i] instanceof ObjBomb) {
-                ObjBomb tb = (ObjBomb) targets[i];
-                if (!tb.isThrown() && tb.isPickable()) {
-                    continue;
-                }
-            }
 
             Rectangle rEntity = worldSolid(entity);
             Rectangle rTarget = worldSolid(targets[i]);
@@ -306,11 +298,6 @@ public class CollisionChecker {
 
             if (targets[i] == null) continue;
             if (!targets[i].getAlive()) continue;
-
-            if (targets[i] instanceof ObjBomb) {
-                ObjBomb tb = (ObjBomb) targets[i];
-                if (!tb.isThrown() && tb.isPickable()) continue;
-            }
 
             Rectangle rEntity = worldSolid(entity);
             Rectangle rTarget = worldSolid(targets[i]);
