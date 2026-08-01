@@ -1039,10 +1039,19 @@ public class Player extends Entity {
         // --- ニワトリを拾う ---
         if (monster != null && monster instanceof npc.NpcChicken) {
             npc.NpcChicken ch = (npc.NpcChicken) monster;
-            if (!ch.isPickable() || !ch.getAlive()) {
+
+            // 対象が投げられている、既に誰かに持たれている、または拾えない状態ならキャンセル
+            if (ch.isThrown() || !ch.isPickable() || !ch.getAlive()) {
                 pickupCooldown = PICKUP_COOLDOWN_FRAMES;
                 return;
             }
+
+            // Gキー入力チェックが必要ならここで行う（呼び出し元でやっているなら不要）
+            if (!gameWindow.getKeyHandler().isThrowKeyPressed()) {
+                pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+                return;
+            }
+
             // ワールドから除去して所持に移す
             gameWindow.getMonster()[nearbyIndex] = null;
             ch.onPickedUp();
@@ -1699,6 +1708,63 @@ public class Player extends Entity {
                 }
             }
 
+            // --- 6.6) Monster (ニワトリ) 判定（追加） ---
+            int monsterIndexAtDest = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster(), stepX, stepY);
+            if (monsterIndexAtDest != 999) {
+                Entity e = gameWindow.getMonster()[monsterIndexAtDest];
+
+                // 型チェック：要素ごとに instanceof で扱う（配列全体のキャストはしない）
+                if (e instanceof NpcChicken) {
+                    NpcChicken ch = (NpcChicken) e;
+
+                    // プレイヤーが既にニワトリを持っているなら拾わない
+                    if (holding) {
+                        // 近接表示やクールダウンを入れるならここで
+                        pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+                        // 衝突はブロックして移動を止める（会話や接触イベント扱い）
+                        setCollision(true);
+                        talkNpcIndex = -1;
+                        break;
+                    }
+
+                    // 対象が投げられている、既に持たれている、または拾えない状態なら無視
+                    if (ch.isThrown() || !ch.isPickable() || !ch.getAlive()) {
+                        // 通常は通行ブロック扱いにするか、通れるなら continue
+                        // ここでは通行不可にして移動を止める例
+                        setCollision(true);
+                        talkNpcIndex = -1;
+                        break;
+                    }
+
+                    // Gキーで拾う仕様ならキーを確認（呼び出し元で確認済みなら不要）
+                    if (!gameWindow.getKeyHandler().isThrowKeyPressed()) {
+                        // キーが押されていなければ接触イベントのみ（会話等）
+                        setCollision(true);
+                        talkNpcIndex = monsterIndexAtDest;
+                        break;
+                    }
+
+                    // --- 拾う処理 ---
+                    // 1) ワールド配列から除去（他処理が参照する前に null にする）
+                    gameWindow.getMonster()[monsterIndexAtDest] = null;
+
+                    // 2) ニワトリ側の状態更新（beingHeld=true 等）
+                    ch.onPickedUp(); // onPickedUp(Player) 内で beingHeld=true, holder=this, pickable=false, setCollision(false) 等を行う
+
+                    // 3) プレイヤー側の所持更新
+                    this.heldChicken = ch;
+                    this.holding = true;
+                    this.state = PlayerState.PICKUP;
+                    this.pendingPickupIndex = monsterIndexAtDest; // finishPickup フローと整合させるなら設定
+
+                    // 4) 移動は中断（所持アニメーションへ遷移）
+                    setCollision(false);
+                    talkNpcIndex = -1;
+                    break;
+                } else {
+                    // monster 配列に別型が混入している場合は安全に無視
+                }
+            }
 
             // 7) 実移動
             if (!isCollision()) {
@@ -2693,114 +2759,125 @@ public class Player extends Entity {
 
         if (i == 999) return;
 
+        // 入力チェック：宝箱やオブジェクト取得は Enter、投げる系は ThrowKey、
+        // ニワトリの拾いは G キーで扱う想定
         if (!gameWindow.getKeyHandler().isPlayerEnterJustPressed() &&
                 !gameWindow.getKeyHandler().isThrowKeyPressed()) {
             return;
         }
 
+        // オブジェクト配列チェック（既存オブジェクト）
         Entity[] objs = gameWindow.getObj();
-        if (objs == null) return;
-        if (i < 0 || i >= objs.length) return;
+        if (objs != null && i >= 0 && i < objs.length) {
+            Entity obj = objs[i];
+            if (obj != null) {
+                // 宝箱は既存処理
+                if (obj instanceof object.ObjChest) {
+                    object.ObjChest chest = (object.ObjChest) obj;
+                    chest.interact(this);
+                    if (chest.isOpened()) {
+                        gameWindow.getObj()[i] = null;
+                    }
+                    return;
+                }
 
-        Entity obj = objs[i];
-        if (obj == null) return;
+                // 爆弾 / 壺 / 岩 の拾い（投げキーで拾う）
+                if (gameWindow.getKeyHandler().isThrowKeyPressed()) {
+                    if (obj instanceof object.ObjBomb) {
+                        object.ObjBomb bomb = (object.ObjBomb) obj;
+                        if (!bomb.isPickable() || !bomb.getAlive()) return;
 
-        // 宝箱は開ける処理（既存）
-        if (obj instanceof object.ObjChest) {
-            object.ObjChest chest = (object.ObjChest) obj;
-            chest.interact(this);
-            if (chest.isOpened()) {
-                gameWindow.getObj()[i] = null;
+                        gameWindow.getObj()[i] = null;
+                        bomb.setAlive(false);
+                        bomb.setPickable(false);
+                        bomb.setThrown(false);
+                        bomb.setVelocity(0, 0);
+
+                        this.heldBomb = bomb;
+                        this.holding = true;
+                        this.state = PlayerState.PICKUP;
+                        return;
+                    }
+
+                    if (obj instanceof object.ObjPot) {
+                        object.ObjPot pot = (object.ObjPot) obj;
+                        if (!pot.isPickable() || !pot.getAlive()) return;
+
+                        gameWindow.getObj()[i] = null;
+                        pot.setAlive(false);
+                        pot.setPickable(false);
+                        pot.setThrown(false);
+                        pot.setVelocity(0, 0);
+
+                        this.heldPot = pot;
+                        this.holding = true;
+                        this.state = PlayerState.PICKUP;
+                        return;
+                    }
+
+                    if (obj instanceof object.ObjRock) {
+                        object.ObjRock rock = (object.ObjRock) obj;
+                        if (!rock.isPickable() || !rock.getAlive()) return;
+
+                        gameWindow.getObj()[i] = null;
+                        rock.setAlive(false);
+                        rock.setPickable(false);
+                        rock.setThrown(false);
+                        rock.setVelocity(0, 0);
+
+                        this.heldRock = rock;
+                        this.holding = true;
+                        this.state = PlayerState.PICKUP;
+                        return;
+                    }
+                }
             }
-            return;
         }
 
-        // --- 爆弾は「持ち上げた」扱いにする ---
-        if (obj instanceof object.ObjBomb && keyHandler.isThrowKeyPressed()) {
-            object.ObjBomb bomb = (object.ObjBomb) obj;
-            if (!bomb.isPickable() || !bomb.getAlive()) {
+        // --- ニワトリは monster 配列を要素単位で扱う---
+        Entity[] monsters = gameWindow.getMonster();
+        if (monsters != null && i >= 0 && i < monsters.length) {
+            Entity e = monsters[i];
+            if (e instanceof NpcChicken) {
+                NpcChicken chicken = (NpcChicken) e;
+
+                // 対象が既に持たれている、投げられている、または拾えない状態なら拾わない
+                if (chicken.isThrown() || !chicken.isPickable() || !chicken.getAlive()) {
+                    pickupCooldown = PICKUP_COOLDOWN_FRAMES;
+                    return;
+                }
+
+                // ワールドから除去して所持に移す
+                gameWindow.getMonster()[i] = null;
+                chicken.onPickedUp();
+                this.heldChicken = chicken;
+                this.holding = true;
+                this.state = PlayerState.PICKUP;
                 return;
             }
-            // ワールドから除去して所持に移す
-            gameWindow.getObj()[i] = null;
-            bomb.setAlive(false);
-            bomb.setPickable(false);
-            bomb.setThrown(false);
-            bomb.setVelocity(0, 0);
-
-            this.heldBomb = bomb;
-            this.holding = true;
-            this.state = PlayerState.PICKUP;
-            return;
         }
 
-        if (obj instanceof object.ObjPot && keyHandler.isThrowKeyPressed()) {
-            object.ObjPot pot = (object.ObjPot) obj;
-            // pickable / alive のチェック（必要に応じて）
-            if (!pot.isPickable() || !pot.getAlive()) {
-                return;
+        // アイテム取得（既存ロジック） の直前に追加するガード
+        // objs 配列の要素が NpcChicken ならアイテム扱いしない
+        if (objs != null && i >= 0 && i < objs.length) {
+            Entity obj = objs[i];
+            if (obj != null) {
+                // 追加ガード: ニワトリは obj 配列のアイテム扱いから除外
+                if (obj instanceof npc.NpcChicken) {
+                    // ログを残して無視（デバッグ用）
+                    System.out.println("[WARN] pickUpObject: obj[" + i + "] is NpcChicken - ignoring item pickup");
+                    return;
+                }
+
+                String text;
+                if (canObtainItem(obj)) {
+                    text = obj.getName() + " を手に入れた!";
+                    gameWindow.getObj()[i] = null;
+                } else {
+                    text = "手に入れていない!";
+                }
+                // UI 表示等があればここで行う
             }
-
-            // ワールドから除去して所持に移す
-            gameWindow.getObj()[i] = null;
-            pot.setAlive(false);
-            pot.setPickable(false);
-            pot.setThrown(false);
-            pot.setVelocity(0, 0);
-
-            this.heldPot = pot;
-            this.holding = true;
-            this.state = PlayerState.PICKUP;
-            return;
-        }
-
-        if (obj instanceof object.ObjRock && keyHandler.isThrowKeyPressed()) {
-            object.ObjRock rock = (object.ObjRock) obj;
-            // pickable / alive のチェック（必要に応じて）
-            if (!rock.isPickable() || !rock.getAlive()) {
-                return;
-            }
-
-            // ワールドから除去して所持に移す
-            gameWindow.getObj()[i] = null;
-            rock.setAlive(false);
-            rock.setPickable(false);
-            rock.setThrown(false);
-            rock.setVelocity(0, 0);
-
-            this.heldRock = rock;
-            this.holding = true;
-            this.state = PlayerState.PICKUP;
-            return;
-        }
-
-        if (obj instanceof NpcChicken && keyHandler.isThrowKeyPressed()) {
-
-            NpcChicken chicken = (NpcChicken) obj;
-            // pickable / alive のチェック（必要に応じて）
-            if (!chicken.isPickable() || !chicken.getAlive()) {
-                return;
-            }
-
-            // ワールドから除去して所持に移す
-            gameWindow.getObj()[i] = null;
-            chicken.setAlive(false);
-            chicken.setPickable(false);
-            chicken.setThrown(false);
-            chicken.setVelocity(0, 0);
-
-            this.heldChicken = chicken;
-            this.holding = true;
-            this.state = PlayerState.PICKUP;
-            return;
-        }
-
-        String text;
-        if (canObtainItem(obj) == true) {
-            text = obj.getName() + " を手に入れた!";
-            gameWindow.getObj()[i] = null;
-        } else {
-            text = "手に入れていない!";
         }
     }
 
@@ -3397,20 +3474,20 @@ public class Player extends Entity {
             int camScreenX = gameWindow.getPlayer().getScreenX();
             int camScreenY = gameWindow.getPlayer().getScreenY();
 
-// 判定で使う solidArea（world基準）
+            // 判定で使う solidArea（world基準）
             Rectangle sa = getSolidArea();
             int saWorldX = getWorldX() + sa.x;
             int saWorldY = getWorldY() + sa.y;
 
-// スクリーン座標に変換（描画は必ずこの式を使う）
+            // スクリーン座標に変換（描画は必ずこの式を使う）
             int saScreenX = saWorldX - playerWorldX + camScreenX;
             int saScreenY = saWorldY - playerWorldY + camScreenY;
 
-// 描画（現在位置）
+            // 描画（現在位置）
             g2.setColor(new Color(255, 0, 0, 200));
             g2.drawRect(saScreenX, saScreenY, sa.width, sa.height);
 
-// 移動先（world基準で計算してからスクリーンに変換）
+            // 移動先（world基準で計算してからスクリーンに変換）
             int moveWorldX = saWorldX + (getDirection().equals("left") ? -getSpeed() : getDirection().equals("right") ? getSpeed() : 0);
             int moveWorldY = saWorldY + (getDirection().equals("up") ? -getSpeed() : getDirection().equals("down") ? getSpeed() : 0);
             int moveScreenX = moveWorldX - playerWorldX + camScreenX;

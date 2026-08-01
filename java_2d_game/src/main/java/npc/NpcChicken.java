@@ -88,12 +88,6 @@ public class NpcChicken extends Entity {
         setLife(getMaxLife());
         setSpeed(1);
         setCollision(true);
-        getSolidArea().x = 1;
-        getSolidArea().y = 1;
-        getSolidArea().width = FrameApp.getTileSize() * 2;
-        getSolidArea().height = FrameApp.getTileSize() * 2;
-        setSolidAreaDefaultX(getSolidArea().x);
-        setSolidAreaDefaultY(getSolidArea().y);
 
         try {
             this.gameMap = gameWindow.getCurrentMap();
@@ -138,10 +132,10 @@ public class NpcChicken extends Entity {
                 landed = false;
                 this.setCollision(true);
                 if (this.getSolidArea() != null) {
-                    this.getSolidArea().x = 1;
-                    this.getSolidArea().y = 1;
-                    this.getSolidArea().width = 48;
-                    this.getSolidArea().height = 48;
+                    this.getSolidArea().x = 16;
+                    this.getSolidArea().y = 16;
+                    this.getSolidArea().width = FrameApp.getTileSize() + 12;
+                    this.getSolidArea().height = FrameApp.getTileSize() + 12;
                 }
                 System.out.println("[CHICKEN] pickable now true at world=(" + getWorldX() + "," + getWorldY() + ")");
             }
@@ -187,10 +181,12 @@ public class NpcChicken extends Entity {
                     hasShadow = false;
 
                     // 判定が済んだら当たり判定を縮める
-                    this.setCollision(false);
+                    this.setCollision(true);
                     if (this.getSolidArea() != null) {
-                        this.getSolidArea().width = 0;
-                        this.getSolidArea().height = 0;
+                        this.getSolidArea().x = 16;
+                        this.getSolidArea().y = 16;
+                        this.getSolidArea().width = FrameApp.getTileSize() + 12;
+                        this.getSolidArea().height = FrameApp.getTileSize() + 12;
                     }
                 } else {
                     thrown = false;
@@ -430,7 +426,6 @@ public class NpcChicken extends Entity {
 
     public void onPickedUp() {
         setPickable(false);
-        setAlive(false);
         setThrown(false);
         setLife(getMaxLife());
     }
