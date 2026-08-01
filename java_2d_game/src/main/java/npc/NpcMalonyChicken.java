@@ -18,7 +18,6 @@ public class NpcMalonyChicken extends Entity {
     private static final int SPRITE_COUNT = 3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private boolean following = false;
-    private final CollisionChecker collisionChecker;
     private int questRewardCoins = 100;
     // 会話が終わって選択肢を出したか
     private boolean questOffered = false;
@@ -37,7 +36,6 @@ public class NpcMalonyChicken extends Entity {
             this.eventId = String.valueOf(ev.getId());
             applyMapEvent(ev);
         }
-        this.collisionChecker = new CollisionChecker(gameWindow);
         setDirection("right");
         setSpeed(0);
         loadNPCImages();
@@ -93,24 +91,9 @@ public class NpcMalonyChicken extends Entity {
 
     @Override
     public void setAction() {
-        if (following) {
-            checkPlayerCollision();
-        } else {
-        }
 
         if (questAccepted && !questCompleted) {
             checkCoopObjective();
-        }
-    }
-
-    /**
-     * 移動後に必ず呼ぶ衝突判定
-     */
-
-    private void checkPlayerCollision() {
-        boolean hit = collisionChecker.checkPlayer(this);
-        if (hit) {
-            onHitPlayer();
         }
     }
 
@@ -127,11 +110,6 @@ public class NpcMalonyChicken extends Entity {
         if (current <= 0) {
             onQuestObjectiveCompleted();
         }
-    }
-
-    private void onHitPlayer() {
-        this.following = false;
-        getGameWindow().setGameState(GameState.GAME_OVER);
     }
 
     @Override

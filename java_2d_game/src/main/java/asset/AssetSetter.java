@@ -403,12 +403,21 @@ public class AssetSetter {
 
     public NpcChicken createNpcChicken(int worldX, int worldY) {
         NpcChicken npcChicken = new NpcChicken(gameWindow);
+        npcChicken.getSolidArea().x = 16;
+        npcChicken.getSolidArea().y = 16;
+
+        npcChicken.setSolidAreaDefaultX(npcChicken.getSolidArea().x);
+        npcChicken.setSolidAreaDefaultY(npcChicken.getSolidArea().y);
+
+        npcChicken.getSolidArea().width = (FrameApp.getTileSize() + 12);
+        npcChicken.getSolidArea().height = (FrameApp.getTileSize() + 12);
         npcChicken.setWorldX(worldX);
         npcChicken.setWorldY(worldY);
         npcChicken.setPickable(true);
         npcChicken.setUser(gameWindow.getPlayer());
         npcChicken.setThrown(false);
         npcChicken.setAlive(true);
+        npcChicken.setCollision(true);
         return npcChicken;
     }
 

@@ -1,6 +1,7 @@
 package collision;
 
 import entity.Entity;
+import npc.NpcChicken;
 import object.ObjBomb;
 import frame.FrameApp;
 import object.ObjPot;
@@ -365,6 +366,14 @@ public class CollisionChecker {
      */
 
     public boolean checkPlayer(Entity entity) {
+
+        // 投げられているオブジェクトはプレイヤー接触で拾わない
+        if (entity instanceof NpcChicken) {
+            NpcChicken chicken = (NpcChicken) entity;
+            if (!chicken.isThrown() || !chicken.isPickable()) {
+                return false;
+            }
+        }
 
         // 設置中の爆弾はプレイヤー接触で即爆発させない（拾う処理で扱う）
         if (entity instanceof ObjBomb) {
