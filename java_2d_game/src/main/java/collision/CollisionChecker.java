@@ -362,7 +362,7 @@ public class CollisionChecker {
 
 
     /**
-     * プレイヤーとの接触判定（地面設置の爆弾は除外）
+     * プレイヤーとの接触判定
      */
 
     public boolean checkPlayer(Entity entity) {
@@ -370,7 +370,7 @@ public class CollisionChecker {
         // 投げられているオブジェクトはプレイヤー接触で拾わない
         if (entity instanceof NpcChicken) {
             NpcChicken chicken = (NpcChicken) entity;
-            if (!chicken.isThrown() || !chicken.isPickable()) {
+            if (chicken.isThrown() && chicken.isBeingHeld()) {
                 return false;
             }
         }

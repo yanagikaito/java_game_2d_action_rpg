@@ -5,6 +5,7 @@ import entity.Entity;
 import entity.type.ChickenType;
 import frame.FrameApp;
 import map.GameMap;
+import player.Player;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -32,17 +33,20 @@ public class NpcChicken extends Entity {
     private long landedAt = 0L;
 
     private int hitCount = 0;
-    private static final int HELP_TRIGGER_THRESHOLD = 30;
+    private static final int HELP_TRIGGER_THRESHOLD = 3;
     private int life = 30;
     private boolean hasTriggeredHelp = false;
     private static final long TRIGGER_COOLDOWN_MS = 30_000L;
     private long lastTriggerTime = 0L;
     private boolean following = false;
     private boolean playerFollowing = false;
+    private boolean beingHeld = false;
+    private Player holder = null;
 
     private boolean inCoop = false;
     private int prevTileX = -1;
     private int prevTileY = -1;
+    private int lastGroundTileY = -1; // 最後に地上にいた tileY を保持
     private GameMap gameMap;
 
     // 1体あたりのダメージ
@@ -88,6 +92,16 @@ public class NpcChicken extends Entity {
         setLife(getMaxLife());
         setSpeed(1);
         setCollision(true);
+        setBlocking(true);
+
+        this.getSolidArea().x = 16;
+        this.getSolidArea().y = 16;
+
+        this.setSolidAreaDefaultX(this.getSolidArea().x);
+        this.setSolidAreaDefaultY(this.getSolidArea().y);
+
+        this.getSolidArea().width = (FrameApp.getTileSize() + 12);
+        this.getSolidArea().height = (FrameApp.getTileSize() + 12);
 
         try {
             this.gameMap = gameWindow.getCurrentMap();
@@ -121,10 +135,17 @@ public class NpcChicken extends Entity {
     @Override
     public void setAction() {
 
+        // 現在のタイル（フレーム開始時の位置）
         prevTileX = worldToTile(getWorldX());
         prevTileY = worldToTile(getWorldY());
 
-        // --- 着地後の復元処理 ---
+        // --- 地上にいるときだけ lastGroundTileY を更新 ---
+        // thrown や landed フラグが立っている間は地上ではないので更新しない
+        if (!thrown && !landed) {
+            lastGroundTileY = prevTileY;
+        }
+
+        // --- 着地後の復元処理（pickable 復帰） ---
         if (landed && !pickable) {
             long now = System.currentTimeMillis();
             if (now - landedAt >= PICKABLE_DELAY_MS) {
@@ -141,6 +162,7 @@ public class NpcChicken extends Entity {
             }
         }
 
+        // 無敵カウンタ処理
         if (getInvincible()) {
             invincibleCounter--;
             if (invincibleCounter <= 0) setInvincible(false);
@@ -164,47 +186,53 @@ public class NpcChicken extends Entity {
             z += vz;
             vz -= verticalGravity;
 
-//            getGameWindow().getUi().addMessage("z = " + z);
-//            getGameWindow().getUi().addMessage("vz = " + vz);
-//            getGameWindow().getUi().addMessage("worldY = " + getWorldY());
+            // デバッグログ（投げ中）
+            // System.out.println("[DBG] thrown pos=(" + getWorldX() + "," + getWorldY() + ") z=" + z + " vx=" + vx + " vy=" + vy);
 
+            // --- 着地処理内の修正（z <= 0 の分岐） ---
             if (z <= 0) {
+                // 着地確定直後
                 z = 0;
                 vz = 0;
+                thrown = false;
 
+                int tileSize = FrameApp.getTileSize();
+
+                // 当たり判定を復元
+                this.setCollision(true);
+                if (this.getSolidArea() != null) {
+                    this.getSolidArea().x = 16;
+                    this.getSolidArea().y = 16;
+                    this.getSolidArea().width = tileSize + 12;
+                    this.getSolidArea().height = tileSize + 12;
+                }
+
+                // タイル判定など既存の処理
                 boolean tileCollision = getGameWindow().getCollisionChecker().checkTile(this);
-
                 if (tileCollision) {
                     landed = true;
-                    thrown = false;
                     pickable = false;
                     hasShadow = false;
-
-                    // 判定が済んだら当たり判定を縮める
-                    this.setCollision(true);
-                    if (this.getSolidArea() != null) {
-                        this.getSolidArea().x = 16;
-                        this.getSolidArea().y = 16;
-                        this.getSolidArea().width = FrameApp.getTileSize() + 12;
-                        this.getSolidArea().height = FrameApp.getTileSize() + 12;
-                    }
+                    landedAt = System.currentTimeMillis();
                 } else {
-                    thrown = false;
                     pickable = true;
                     hasShadow = false;
                 }
             }
+
+            // 投げ中はここで終了（空中処理のみ）
             return;
-        } else {
-            // 地面に置かれている状態
-            if (!pickable && !landed) {
-                randomWalkStep();
-                return;
-            }
+        }
+
+        if (!pickable && !landed) {
+            randomWalkStep();
+            getGameWindow().getCollisionChecker().checkPlayer(this);
+            return;
         }
 
         // それ以外は従来のランダム歩行
         randomWalkStep();
+        getGameWindow().getCollisionChecker().checkPlayer(this);
     }
 
     private void randomWalkStep() {
@@ -424,10 +452,17 @@ public class NpcChicken extends Entity {
         return spritesChicken[dirIndex][frameIndex];
     }
 
-    public void onPickedUp() {
-        setPickable(false);
-        setThrown(false);
-        setLife(getMaxLife());
+    public void onPickedUp(Player player) {
+        if (beingHeld) return;
+        beingHeld = true;
+        holder = player;
+        pickable = false;
+        thrown = false;
+        setVelocity(0, 0);
+        setWorldX(player.getWorldX());
+        setWorldY(player.getWorldY());
+        setZ(0);
+        setCollision(false);
     }
 
     public void setVelocity(double vx, double vy) {
@@ -528,51 +563,11 @@ public class NpcChicken extends Entity {
         this.pickable = pickable;
     }
 
-    public boolean isLanded() {
-        return landed;
+    public boolean isBeingHeld() {
+        return beingHeld;
     }
 
-    public void setLanded(boolean landed) {
-        this.landed = landed;
-    }
-
-    public boolean isShattering() {
-        return shattering;
-    }
-
-    public void setShattering(boolean shattering) {
-        this.shattering = shattering;
-    }
-
-    public int getShatterFrame() {
-        return shatterFrame;
-    }
-
-    public void setShatterFrame(int shatterFrame) {
-        this.shatterFrame = shatterFrame;
-    }
-
-    public boolean isDamageGiven() {
-        return damageGiven;
-    }
-
-    public void setDamageGiven(boolean damageGiven) {
-        this.damageGiven = damageGiven;
-    }
-
-    public boolean isInCoop() {
-        return inCoop;
-    }
-
-    public void setInCoop(boolean v) {
-        inCoop = v;
-    }
-
-    public int getPrevTileX() {
-        return prevTileX;
-    }
-
-    public int getPrevTileY() {
-        return prevTileY;
+    public Player getHolder() {
+        return holder;
     }
 }

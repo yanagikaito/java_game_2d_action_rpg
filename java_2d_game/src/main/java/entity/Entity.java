@@ -5,6 +5,7 @@ import entity.particle.Particle;
 import entity.type.*;
 import frame.FrameApp;
 import game.GameState;
+import npc.NpcChicken;
 import object.Projectile;
 import player.Player;
 import popup.PopupVariant;
@@ -248,8 +249,6 @@ public abstract class Entity {
         setAction();
         checkCollision();
         if (thrown) {
-            // thrown の場合、setAction() 内で空中の座標更新や着地判定を行っているはず
-            // ただし、着地直後にマップ通知が必要なら setAction() 側で行うこと
             return;
         }
 
