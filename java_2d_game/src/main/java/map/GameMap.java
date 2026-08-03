@@ -149,7 +149,8 @@ public class GameMap {
         if (monsters == null) return true;
         for (Entity e : monsters) {
             if (e == null) continue;
-            Rectangle er = new Rectangle(e.getWorldX(), e.getWorldY(), e.getWidth(), e.getHeight());
+            Rectangle er = new Rectangle(e.getWorldX(), e.getWorldY(),
+                    e.getWidth(), e.getHeight());
             if (r.intersects(er)) return false;
         }
         return true;

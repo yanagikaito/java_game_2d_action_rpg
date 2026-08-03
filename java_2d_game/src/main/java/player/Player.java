@@ -189,8 +189,8 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
 
-        setWorldX(FrameApp.getTileSize() * 23);
-        setWorldY(FrameApp.getTileSize() * 21);
+        setWorldX(FrameApp.getTileSize() * 27);
+        setWorldY(FrameApp.getTileSize() * 13);
         setSpeed(4);
         setKnockBackPower(2);
         setDirection("down");
@@ -219,8 +219,8 @@ public class Player extends Entity {
      */
 
     public void setDefaultPositions() {
-        setWorldX(FrameApp.getTileSize() * 23);
-        setWorldY(FrameApp.getTileSize() * 21);
+        setWorldX(FrameApp.getTileSize() * 27);
+        setWorldY(FrameApp.getTileSize() * 13);
         setDefaultSpeed(4);
         setSpeed(getDefaultSpeed());
         setDirection("down");
@@ -907,7 +907,7 @@ public class Player extends Entity {
         bomb.onPickedUp();
         pot.onPickedUp();
         rock.onPickedUp();
-        chicken.onPickedUp();
+        chicken.onPickedUp(this);
 
         // プレイヤー状態を所持歩行に変更
         setState(PlayerState.HOLD_WALK);
@@ -1054,7 +1054,7 @@ public class Player extends Entity {
 
             // ワールドから除去して所持に移す
             gameWindow.getMonster()[nearbyIndex] = null;
-            ch.onPickedUp();
+            ch.onPickedUp(this);
             this.heldChicken = ch;
             this.heldBomb = null;
             this.heldPot = null;
@@ -1749,8 +1749,7 @@ public class Player extends Entity {
                     gameWindow.getMonster()[monsterIndexAtDest] = null;
 
                     // 2) ニワトリ側の状態更新（beingHeld=true 等）
-                    ch.onPickedUp(); // onPickedUp(Player) 内で beingHeld=true, holder=this, pickable=false, setCollision(false) 等を行う
-
+                    ch.onPickedUp(this);
                     // 3) プレイヤー側の所持更新
                     this.heldChicken = ch;
                     this.holding = true;
@@ -2849,7 +2848,7 @@ public class Player extends Entity {
 
                 // ワールドから除去して所持に移す
                 gameWindow.getMonster()[i] = null;
-                chicken.onPickedUp();
+                chicken.onPickedUp(this);
                 this.heldChicken = chicken;
                 this.holding = true;
                 this.state = PlayerState.PICKUP;
