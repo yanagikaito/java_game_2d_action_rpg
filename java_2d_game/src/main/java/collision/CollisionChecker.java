@@ -370,7 +370,7 @@ public class CollisionChecker {
         // 投げられているオブジェクトはプレイヤー接触で拾わない
         if (entity instanceof NpcChicken) {
             NpcChicken chicken = (NpcChicken) entity;
-            if (chicken.isThrown() && chicken.isBeingHeld()) {
+            if (!chicken.isThrown() && chicken.isBeingHeld()) {
                 return false;
             }
         }

@@ -139,8 +139,6 @@ public class NpcChicken extends Entity {
         prevTileX = worldToTile(getWorldX());
         prevTileY = worldToTile(getWorldY());
 
-        // --- 地上にいるときだけ lastGroundTileY を更新 ---
-        // thrown や landed フラグが立っている間は地上ではないので更新しない
         if (!thrown && !landed) {
             lastGroundTileY = prevTileY;
         }
@@ -161,6 +159,7 @@ public class NpcChicken extends Entity {
                 System.out.println("[CHICKEN] pickable now true at world=(" + getWorldX() + "," + getWorldY() + ")");
             }
         }
+
 
         // 無敵カウンタ処理
         if (getInvincible()) {
@@ -196,6 +195,9 @@ public class NpcChicken extends Entity {
                 vz = 0;
                 thrown = false;
 
+                vx = 0.0;
+                vy = 0.0;
+
                 int tileSize = FrameApp.getTileSize();
 
                 // 当たり判定を復元
@@ -209,6 +211,7 @@ public class NpcChicken extends Entity {
 
                 // タイル判定など既存の処理
                 boolean tileCollision = getGameWindow().getCollisionChecker().checkTile(this);
+                setAlive(true);
                 if (tileCollision) {
                     landed = true;
                     pickable = false;
@@ -234,6 +237,57 @@ public class NpcChicken extends Entity {
         randomWalkStep();
         getGameWindow().getCollisionChecker().checkPlayer(this);
     }
+
+    private void ensureRegisteredToWorld() {
+        try {
+            GameWindow gw = getGameWindow();
+            // 既に配列にあるか確認
+            int idx = -1;
+            try {
+                idx = gw.indexOfMonster(this);
+            } catch (NoSuchMethodError ignored) {
+                Entity[] arr = gw.getMonster();
+                if (arr != null) {
+                    for (int i = 0; i < arr.length; i++) {
+                        if (arr[i] == this) {
+                            idx = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (idx >= 0) return; // 既に登録済み
+
+            // addMonster があれば呼ぶ
+            try {
+                boolean added = gameMap.addMonster(this);
+                System.out.println("[DBG] ensureRegisteredToWorld addMonster result=" + added + " id=" + System.identityHashCode(this));
+                if (added) return;
+            } catch (NoSuchMethodError ignored) {
+            }
+
+            // 最終手段：直接配列に挿入
+            try {
+                Entity[] arr = gw.getMonster();
+                if (arr != null) {
+                    for (int i = 0; i < arr.length; i++) {
+                        if (arr[i] == null) {
+                            arr[i] = this;
+                            System.out.println("[DBG] ensureRegisteredToWorld direct insert idx=" + i + " id=" + System.identityHashCode(this));
+                            return;
+                        }
+                    }
+                    System.out.println("[WARN] ensureRegisteredToWorld: monster array full, cannot re-register id=" + System.identityHashCode(this));
+                }
+            } catch (Exception ex) {
+                System.out.println("[WARN] ensureRegisteredToWorld failed to re-register id=" + System.identityHashCode(this) + " err=" + ex);
+            }
+        } catch (Exception ex) {
+            System.out.println("[WARN] ensureRegisteredToWorld unexpected error id=" + System.identityHashCode(this) + " err=" + ex);
+        }
+    }
+
 
     private void randomWalkStep() {
         actionLockCounter++;
@@ -453,6 +507,7 @@ public class NpcChicken extends Entity {
     }
 
     public void onPickedUp(Player player) {
+        System.out.println("[DBG] onPickedUp id=" + System.identityHashCode(this));
         if (beingHeld) return;
         beingHeld = true;
         holder = player;
@@ -462,6 +517,7 @@ public class NpcChicken extends Entity {
         setWorldX(player.getWorldX());
         setWorldY(player.getWorldY());
         setZ(0);
+        setAlive(false);
         setCollision(false);
     }
 

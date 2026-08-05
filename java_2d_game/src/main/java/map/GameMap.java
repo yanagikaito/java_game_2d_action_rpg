@@ -6,6 +6,7 @@ import window.GameWindow;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -73,23 +74,6 @@ public class GameMap {
     }
 
     /**
-     * マップ上にモンスター（NPC）を追加する。
-     *
-     * <p>このメソッドは内部リストへの追加は行わず、{@code GameWindow.registerMonster}
-     * を呼んで {@code GameWindow} 側の配列に登録するためのラッパです。必要に応じて
-     * {@code objects.add(e)} を併用して内部リストにも登録。</p>
-     *
-     * @param e 追加するモンスター（null の場合は無視）
-     */
-
-    public void addMonster(Entity e) {
-        if (e == null) return;
-        if (gameWindow != null) {
-            gameWindow.registerMonster(e);
-        }
-    }
-
-    /**
      * 内部リストを Y 座標順にソートする（描画順制御用）。
      *
      * <p>private メソッドのため外部から呼び出す必要は通常ない。</p>
@@ -109,7 +93,8 @@ public class GameMap {
      * @return 指定クラスに一致するエンティティの個数
      */
 
-    public int countEntitiesOfType(Class<?> cls) {
+    public int countEntitiesOfType(Class<? extends Entity> cls) {
+        if (cls == null) return 0;
         int count = 0;
         Entity[] monsters = gameWindow.getMonster();
         if (monsters == null) return 0;
@@ -119,6 +104,20 @@ public class GameMap {
         }
         return count;
     }
+
+    public boolean addMonster(Entity e) {
+        if (e == null) return false;
+        Entity[] monsters = gameWindow.getMonster();
+        if (monsters == null) return false;
+        for (int i = 0; i < monsters.length; i++) {
+            if (monsters[i] == null) {
+                monsters[i] = e;
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * マップ上のニワトリ（NpcChicken）の数を返す。
