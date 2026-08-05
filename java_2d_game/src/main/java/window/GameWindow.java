@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static frame.FrameApp.*;
-import static player.Player.SNAP_PENETRATION_THRESHOLD;
 
 /**
  * ゲームのメイン描画パネルを表すクラス。
@@ -504,15 +503,20 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 }
             }
             for (int i = 0; i < monster.length; i++) {
-                if (monster[i] != null) {
-                    if (monster[i].getAlive() && !monster[i].getDying()) {
-                        monster[i].update();
-                    }
-                    if (!monster[i].getAlive()) {
-                        monster[i] = null;
-                    }
+                Entity e = monster[i];
+                if (e == null) continue;
+
+                // 更新は「生存かつ死亡アニメ中でない」かつ「所持されていない」場合のみ
+                if (e.getAlive() && !e.getDying()) {
+                    e.update();
+                }
+
+                // ワールド上に存在すべきでないなら配列から除去
+                if (!e.getAlive()) {
+                    monster[i] = null;
                 }
             }
+
             for (int i = 0; i < itemList.size(); i++) {
                 Entity item = itemList.get(i);
                 if (item == null) continue;
@@ -981,6 +985,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.monster = monster;
     }
 
+    public List<Entity> getMonstersList() {
+        if (this.monster == null) return Collections.emptyList();
+        List<Entity> list = new ArrayList<>();
+        for (Entity m : this.monster) if (m != null) list.add(m);
+        return Collections.unmodifiableList(list);
+    }
+
     /**
      * UI 管理オブジェクトを返す。
      *
@@ -1228,6 +1239,36 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void clearMonsters() {
         for (int i = 0; i < monster.length; i++) monster[i] = null;
+    }
+
+    public int indexOfObj(Entity e) {
+        Entity[] objs = getObj();
+        if (objs == null) return -1;
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] == e) return i;
+        }
+        return -1;
+    }
+
+    public int indexOfMonster(Entity e) {
+        Entity[] monsters = getMonster();
+        if (monsters == null) return -1;
+        for (int i = 0; i < monsters.length; i++) {
+            if (monsters[i] == e) return i;
+        }
+        return -1;
+    }
+
+    public boolean removeMonster(Entity target) {
+        if (target == null || this.monster == null) return false;
+        for (int i = 0; i < this.monster.length; i++) {
+            if (this.monster[i] == target) {
+                this.monster[i] = null;
+                System.out.println("[DBG] removeMonster removed idx=" + i + " id=" + System.identityHashCode(target));
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
