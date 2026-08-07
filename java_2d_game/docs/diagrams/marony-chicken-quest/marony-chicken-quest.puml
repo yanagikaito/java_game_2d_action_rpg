@@ -1,0 +1,46 @@
+@startuml
+' Bilingual sample (UTF-8)
+skinparam defaultFontName "Noto Sans JP"
+skinparam defaultFontSize 12
+
+start
+:プレイヤーがマロニーに話しかける\n(Talk to Marony);
+if (クエスト未取得?) then (はい\n(Yes))
+  :マロニーがクエストを提示\n(Marony offers quest);
+  if (プレイヤーが受諾する?) then (はい\n(Yes))
+    :questAccepted = true;
+    :ニワトリを10羽集める目標を表示\n(Show goal: collect 10 chickens);
+  else (いいえ\n(No))
+    :クエストを断る\n(Decline quest);
+    stop
+  endif
+else (いいえ\n(No))
+  :既にクエスト中または完了済みを表示\n(Show already in-progress/completed);
+endif
+
+if (questAccepted?) then (はい\n(Yes))
+  :プレイヤーがニワトリをかごに入れる処理\n(Player puts chickens in cage);
+  if (かご内のニワトリ数 >= 10) then (はい\n(Yes))
+    :かごに10羽確認\n(Confirm 10 chickens in cage);
+    :questCompletedFlag = true;
+  else (いいえ\n(No))
+    :まだ集めている旨を表示\n(Show still collecting);
+  endif
+endif
+
+if (questCompletedFlag?) then (はい\n(Yes))
+  :プレイヤーが再度マロニーに話しかける\n(Player talks to Marony again);
+  if (プレイヤーが報告する?) then (はい\n(Yes))
+    :ニワトリ10羽を確認し回収\n(Verify and take 10 chickens);
+    :報酬100コインを支払う\n(Give 100 coins reward);
+    :questAccepted = false;
+    stop
+  else (いいえ\n(No))
+    :報告しない場合は待機\n(Wait if not reporting);
+    stop
+  endif
+else (いいえ\n(No))
+  :通常の会話や他の処理へ\n(Normal conversation / other processing);
+  stop
+endif
+@enduml
