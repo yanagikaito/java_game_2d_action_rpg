@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8"/>
+    <title>Marony Chicken Quest </title>
+    <style>
+        body { font-family: "Noto Sans JP", sans-serif; padding:20px; }
+        #svg-container { max-width:1200px; overflow:auto; border:1px solid #eee; background:#fff; padding:8px; }
+        #info { margin-top:12px; padding:8px; border:1px solid #ddd; background:#fafafa; color:#666; }
+        .highlight { stroke: none !important; filter: none !important; }
+    </style>
+</head>
+<body>
+<h3>Marony Chicken Quest </h3>
+
+<div id="svg-container"></div>
+
+<script>
+    const svgFile = 'marony-cage-interactive.svg';
+
+    // SVG を読み込んでそのまま表示する
+    fetch(svgFile)
+      .then(r => r.text())
+      .then(svgText => {
+        document.getElementById('svg-container').innerHTML = svgText;
+        disableInlineEventHandlers();
+      })
+      .catch(err => {
+        document.getElementById('info').textContent = 'SVG 読み込み失敗: ' + err;
+        console.error(err);
+      });
+
+    // SVG 内の inline イベントハンドラ（onclick 等）を削除して完全に静的にする
+    function disableInlineEventHandlers() {
+      const svg = document.querySelector('#svg-container svg');
+      if (!svg) return;
+      // 属性ベースのイベントハンドラを削除
+      const all = svg.querySelectorAll('*');
+      all.forEach(el => {
+        // list of common inline event attributes to remove
+        ['onclick','onmouseenter','onmouseleave','onmouseover','onmouseout','onmousedown','onmouseup','onfocus','onblur'].forEach(attr => {
+          if (el.hasAttribute && el.hasAttribute(attr)) el.removeAttribute(attr);
+        });
+        // remove pointer cursor if present
+        if (el.style && el.style.cursor) el.style.cursor = 'default';
+      });
+      // remove title elements that show tooltips on hover (ラベル表示を抑制)
+      svg.querySelectorAll('title').forEach(t => t.remove());
+    }
+</script>
+</body>
+</html>

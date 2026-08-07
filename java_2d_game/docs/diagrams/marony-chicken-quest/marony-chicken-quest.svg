@@ -1,0 +1,384 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="ACTIVITY" height="1390px" preserveAspectRatio="none"
+     style="width:622px;height:1390px;background:#FFFFFF;" version="1.1" viewBox="0 0 622 1390" width="622px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g>
+        <ellipse cx="339.8279" cy="20" fill="#222222" rx="10" ry="10" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="212.0015" x="233.8272" y="50"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="192.0015"
+              x="243.8272" y="73.9201">&#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#12510;&#12525;&#12491;&#12540;&#12395;&#35441;&#12375;&#12363;&#12369;&#12427;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="85.1886"
+              x="243.8272" y="91.2962">(Talk to Marony)
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="295.2176,139.4605,384.4382,139.4605,396.4382,151.4605,384.4382,163.4605,295.2176,163.4605,283.2176,151.4605,295.2176,139.4605"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="89.2207"
+              x="295.2176" y="156.6925">&#12463;&#12456;&#12473;&#12488;&#26410;&#21462;&#24471;?
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.0002"
+              x="258.6414" y="130.6284">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.5762"
+              x="258.6414" y="148.0045">(Yes)
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="36.0003"
+              x="396.4382" y="130.6284">&#12356;&#12356;&#12360;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="22.5602"
+              x="396.4382" y="148.0045">(No)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="164.0011" x="117.7636" y="173.4605"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="144.0011"
+              x="127.7636" y="197.3806">&#12510;&#12525;&#12491;&#12540;&#12364;&#12463;&#12456;&#12473;&#12488;&#12434;&#25552;&#31034;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="110.9048"
+              x="127.7636" y="214.7567">(Marony offers quest)
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="137.1536,262.921,262.3746,262.921,274.3746,274.921,262.3746,286.921,137.1536,286.921,125.1536,274.921,137.1536,262.921"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="125.2209"
+              x="137.1536" y="280.1531">&#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#21463;&#35582;&#12377;&#12427;?
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.0002"
+              x="100.5774" y="254.0889">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.5762"
+              x="100.5774" y="271.465">(Yes)
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="36.0003"
+              x="274.3746" y="254.0889">&#12356;&#12356;&#12360;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="22.5602"
+              x="274.3746" y="271.465">(No)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="139.3528" x="43.9612" y="296.921"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="112.1768"
+              x="53.9612" y="320.8411">questAccepted = true
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="119.3528"
+              x="53.9612" y="338.2172">(questAccepted = true)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="200.5054" x="13.3849" y="371.6733"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="180.5054"
+              x="23.3849" y="395.5934">&#12491;&#12527;&#12488;&#12522;&#12434;10&#32701;&#38598;&#12417;&#12427;&#30446;&#27161;&#12434;&#34920;&#31034;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="167.0292"
+              x="23.3849" y="412.9695">(Show goal: collect 10 chickens)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="104.0006" x="233.8903" y="296.921"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="84.0006"
+              x="243.8903" y="320.8411">&#12463;&#12456;&#12473;&#12488;&#12434;&#26029;&#12427;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="78.9366"
+              x="243.8903" y="338.2172">(Decline quest)
+        </text>
+        <ellipse cx="285.8906" cy="382.6733" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="285.8906" cy="382.6733" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="224.0016" x="367.8909" y="173.4605"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="204.0016"
+              x="377.8909" y="197.3806">&#26082;&#12395;&#12463;&#12456;&#12473;&#12488;&#20013;&#12414;&#12383;&#12399;&#23436;&#20102;&#28168;&#12415;&#12434;&#34920;&#31034;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="202.8854"
+              x="377.8909" y="214.7567">(Show already in-progress/completed)
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="339.8279,436.4255,351.8279,448.4255,339.8279,460.4255,327.8279,448.4255,339.8279,436.4255"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="248.0017" x="215.827" y="539.8016"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="228.0017"
+              x="225.827" y="563.7217">&#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#12491;&#12527;&#12488;&#12522;&#12434;&#12363;&#12372;&#12395;&#20837;&#12428;&#12427;&#20966;&#29702;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="154.8971"
+              x="225.827" y="581.0978">(Player puts chickens in cage)
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="270.6834,629.2621,408.9724,629.2621,420.9724,641.2621,408.9724,653.2621,270.6834,653.2621,258.6834,641.2621,270.6834,629.2621"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="138.289"
+              x="270.6834" y="646.4942">&#12363;&#12372;&#20869;&#12398;&#12491;&#12527;&#12488;&#12522;&#25968; &gt;=
+            10
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.0002"
+              x="234.1072" y="620.43">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.5762"
+              x="234.1072" y="637.8061">(Yes)
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="36.0003"
+              x="420.9724" y="620.43">&#12356;&#12356;&#12360;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="22.5602"
+              x="420.9724" y="637.8061">(No)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="173.8171" x="161.4648" y="663.2621"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="84.5046"
+              x="171.4648" y="687.1822">&#12363;&#12372;&#12395;10&#32701;&#30906;&#35469;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="153.8171"
+              x="171.4648" y="704.5584">(Confirm 10 chickens in cage)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="170.8891" x="162.9289" y="738.0144"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="143.713"
+              x="172.9289" y="761.9345">questCompletedFlag = true
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="150.8891"
+              x="172.9289" y="779.3106">(questCompletedFlag = true)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="152.001" x="355.2819" y="663.2621"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="132.001"
+              x="365.2819" y="687.1822">&#12414;&#12384;&#38598;&#12417;&#12390;&#12356;&#12427;&#26088;&#12434;&#34920;&#31034;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="111.9848"
+              x="365.2819" y="704.5584">(Show still collecting)
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="339.8279,798.7666,351.8279,810.7666,339.8279,822.7666,327.8279,810.7666,339.8279,798.7666"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <polygon fill="#F1F1F1"
+                 points="297.5576,480.4255,382.0982,480.4255,394.0982,492.4255,382.0982,504.4255,297.5576,504.4255,285.5576,492.4255,297.5576,480.4255"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.0002"
+              x="343.8279" y="518.3456">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.5762"
+              x="343.8279" y="535.7217">(Yes)
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="84.5406"
+              x="297.5576" y="497.6575">questAccepted?
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="339.8279,842.7666,351.8279,854.7666,339.8279,866.7666,327.8279,854.7666,339.8279,842.7666"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <polygon fill="#F1F1F1"
+                 points="281.7895,901.4749,397.8663,901.4749,409.8663,913.4749,397.8663,925.4749,281.7895,925.4749,269.7895,913.4749,281.7895,901.4749"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="116.0768"
+              x="281.7895" y="918.7069">questCompletedFlag?
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.0002"
+              x="245.2133" y="892.6427">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.5762"
+              x="245.2133" y="910.0189">(Yes)
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="36.0003"
+              x="409.8663" y="892.6427">&#12356;&#12356;&#12360;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="22.5602"
+              x="409.8663" y="910.0189">(No)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="236.0016" x="68.5062" y="935.4749"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="216.0016"
+              x="78.5062" y="959.395">&#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#20877;&#24230;&#12510;&#12525;&#12491;&#12540;&#12395;&#35441;&#12375;&#12363;&#12369;&#12427;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="154.6811"
+              x="78.5062" y="976.7711">(Player talks to Marony again)
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="123.8966,1024.9354,249.1175,1024.9354,261.1175,1036.9354,249.1175,1048.9354,123.8966,1048.9354,111.8966,1036.9354,123.8966,1024.9354"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="125.2209"
+              x="123.8966" y="1042.1674">&#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#22577;&#21578;&#12377;&#12427;?
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.0002"
+              x="87.3204" y="1016.1033">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="24.5762"
+              x="87.3204" y="1033.4794">(Yes)
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="36.0003"
+              x="261.1175" y="1016.1033">&#12356;&#12356;&#12360;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="22.5602"
+              x="261.1175" y="1033.4794">(No)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="168.4171" x="13.796" y="1058.9354"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="144.5051"
+              x="23.796" y="1082.8555">&#12491;&#12527;&#12488;&#12522;10&#32701;&#12434;&#30906;&#35469;&#12375;&#22238;&#21454;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="148.4171"
+              x="23.796" y="1100.2316">(Verify and take 10 chickens)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="146.757" x="24.6261" y="1133.6876"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="126.757"
+              x="34.6261" y="1157.6077">&#22577;&#37228;100&#12467;&#12452;&#12531;&#12434;&#25903;&#25173;&#12358;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="121.7048"
+              x="34.6261" y="1174.9839">(Give 100 coins reward)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="142.4729" x="26.7681" y="1208.4399"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="115.2968"
+              x="36.7681" y="1232.36">questAccepted = false
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="122.4729"
+              x="36.7681" y="1249.7361">(questAccepted = false)
+        </text>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="174.0091" x="11" y="1283.1921"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="146.833"
+              x="21" y="1307.1122">questCompletedFlag = false
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="154.0091"
+              x="21" y="1324.4883">(questCompletedFlag = false)
+        </text>
+        <ellipse cx="98.0045" cy="1368.9444" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="98.0045" cy="1368.9444" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="140.0009" x="205.0091" y="1058.9354"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="120.0009"
+              x="215.0091" y="1082.8555">&#22577;&#21578;&#12375;&#12394;&#12356;&#22580;&#21512;&#12399;&#24453;&#27231;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="111.7688"
+              x="215.0091" y="1100.2316">(Wait if not reporting)
+        </text>
+        <ellipse cx="275.0096" cy="1144.6876" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="275.0096" cy="1144.6876" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="54.7522" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="236.2775" x="375.01" y="935.4749"/>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="132.001"
+              x="385.01" y="959.395">&#36890;&#24120;&#12398;&#20250;&#35441;&#12420;&#20182;&#12398;&#20966;&#29702;&#12408;
+        </text>
+        <text fill="#000000" font-family="'Noto Sans JP'" font-size="12" lengthAdjust="spacing" textLength="216.2775"
+              x="385.01" y="976.7711">(Normal conversation / other processing)
+        </text>
+        <ellipse cx="493.1488" cy="1025.1832" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="493.1488" cy="1025.1832" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="339.8279" x2="339.8279" y1="30" y2="50"/>
+        <polygon fill="#181818" points="335.8279,40,339.8279,50,343.8279,40,339.8279,44"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="113.6376" x2="113.6376" y1="351.6733" y2="371.6733"/>
+        <polygon fill="#181818" points="109.6376,361.6733,113.6376,371.6733,117.6376,361.6733,113.6376,365.6733"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="285.8906" x2="285.8906" y1="351.6733" y2="371.6733"/>
+        <polygon fill="#181818" points="281.8906,361.6733,285.8906,371.6733,289.8906,361.6733,285.8906,365.6733"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="125.1536" x2="113.6376" y1="274.921" y2="274.921"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="113.6376" x2="113.6376" y1="274.921" y2="296.921"/>
+        <polygon fill="#181818" points="109.6376,286.921,113.6376,296.921,117.6376,286.921,113.6376,290.921"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="274.3746" x2="285.8906" y1="274.921" y2="274.921"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="285.8906" x2="285.8906" y1="274.921" y2="296.921"/>
+        <polygon fill="#181818" points="281.8906,286.921,285.8906,296.921,289.8906,286.921,285.8906,290.921"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="113.6376" x2="113.6376" y1="426.4255" y2="448.4255"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="113.6376" x2="327.8279" y1="448.4255" y2="448.4255"/>
+        <polygon fill="#181818" points="317.8279,444.4255,327.8279,448.4255,317.8279,452.4255,321.8279,448.4255"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="199.7641" x2="199.7641" y1="228.2128" y2="262.921"/>
+        <polygon fill="#181818" points="195.7641,252.921,199.7641,262.921,203.7641,252.921,199.7641,256.921"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="283.2176" x2="199.7641" y1="151.4605" y2="151.4605"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="199.7641" x2="199.7641" y1="151.4605" y2="173.4605"/>
+        <polygon fill="#181818" points="195.7641,163.4605,199.7641,173.4605,203.7641,163.4605,199.7641,167.4605"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="396.4382" x2="479.8917" y1="151.4605" y2="151.4605"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="479.8917" x2="479.8917" y1="151.4605" y2="173.4605"/>
+        <polygon fill="#181818" points="475.8917,163.4605,479.8917,173.4605,483.8917,163.4605,479.8917,167.4605"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="479.8917" x2="479.8917" y1="228.2128" y2="448.4255"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="479.8917" x2="351.8279" y1="448.4255" y2="448.4255"/>
+        <polygon fill="#181818" points="361.8279,444.4255,351.8279,448.4255,361.8279,452.4255,357.8279,448.4255"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="339.8279" x2="339.8279" y1="104.7522" y2="139.4605"/>
+        <polygon fill="#181818" points="335.8279,129.4605,339.8279,139.4605,343.8279,129.4605,339.8279,133.4605"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="248.3734" x2="248.3734" y1="718.0144" y2="738.0144"/>
+        <polygon fill="#181818" points="244.3734,728.0144,248.3734,738.0144,252.3734,728.0144,248.3734,732.0144"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="258.6834" x2="248.3734" y1="641.2621" y2="641.2621"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="248.3734" x2="248.3734" y1="641.2621" y2="663.2621"/>
+        <polygon fill="#181818" points="244.3734,653.2621,248.3734,663.2621,252.3734,653.2621,248.3734,657.2621"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="420.9724" x2="431.2824" y1="641.2621" y2="641.2621"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="431.2824" x2="431.2824" y1="641.2621" y2="663.2621"/>
+        <polygon fill="#181818" points="427.2824,653.2621,431.2824,663.2621,435.2824,653.2621,431.2824,657.2621"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="248.3734" x2="248.3734" y1="792.7666" y2="810.7666"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="248.3734" x2="327.8279" y1="810.7666" y2="810.7666"/>
+        <polygon fill="#181818" points="317.8279,806.7666,327.8279,810.7666,317.8279,814.7666,321.8279,810.7666"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="431.2824" x2="431.2824" y1="718.0144" y2="810.7666"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="431.2824" x2="351.8279" y1="810.7666" y2="810.7666"/>
+        <polygon fill="#181818" points="361.8279,806.7666,351.8279,810.7666,361.8279,814.7666,357.8279,810.7666"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="339.8279" x2="339.8279" y1="594.5539" y2="629.2621"/>
+        <polygon fill="#181818" points="335.8279,619.2621,339.8279,629.2621,343.8279,619.2621,339.8279,623.2621"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="339.8279" x2="339.8279" y1="504.4255" y2="539.8016"/>
+        <polygon fill="#181818" points="335.8279,529.8016,339.8279,539.8016,343.8279,529.8016,339.8279,533.8016"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="394.0982" x2="527.2829" y1="492.4255" y2="492.4255"/>
+        <polygon fill="#181818" points="523.2829,673.2621,527.2829,683.2621,531.2829,673.2621,527.2829,677.2621"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="527.2829" x2="527.2829" y1="492.4255" y2="854.7666"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="527.2829" x2="351.8279" y1="854.7666" y2="854.7666"/>
+        <polygon fill="#181818" points="361.8279,850.7666,351.8279,854.7666,361.8279,858.7666,357.8279,854.7666"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="339.8279" x2="339.8279" y1="822.7666" y2="842.7666"/>
+        <polygon fill="#181818" points="335.8279,832.7666,339.8279,842.7666,343.8279,832.7666,339.8279,836.7666"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="339.8279" x2="339.8279" y1="460.4255" y2="480.4255"/>
+        <polygon fill="#181818" points="335.8279,470.4255,339.8279,480.4255,343.8279,470.4255,339.8279,474.4255"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="98.0045" x2="98.0045" y1="1113.6876" y2="1133.6876"/>
+        <polygon fill="#181818" points="94.0045,1123.6876,98.0045,1133.6876,102.0045,1123.6876,98.0045,1127.6876"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="98.0045" x2="98.0045" y1="1188.4399" y2="1208.4399"/>
+        <polygon fill="#181818" points="94.0045,1198.4399,98.0045,1208.4399,102.0045,1198.4399,98.0045,1202.4399"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="98.0045" x2="98.0045" y1="1263.1921" y2="1283.1921"/>
+        <polygon fill="#181818" points="94.0045,1273.1921,98.0045,1283.1921,102.0045,1273.1921,98.0045,1277.1921"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="98.0045" x2="98.0045" y1="1337.9444" y2="1357.9444"/>
+        <polygon fill="#181818" points="94.0045,1347.9444,98.0045,1357.9444,102.0045,1347.9444,98.0045,1351.9444"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="275.0096" x2="275.0096" y1="1113.6876" y2="1133.6876"/>
+        <polygon fill="#181818" points="271.0096,1123.6876,275.0096,1133.6876,279.0096,1123.6876,275.0096,1127.6876"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="111.8966" x2="98.0045" y1="1036.9354" y2="1036.9354"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="98.0045" x2="98.0045" y1="1036.9354" y2="1058.9354"/>
+        <polygon fill="#181818" points="94.0045,1048.9354,98.0045,1058.9354,102.0045,1048.9354,98.0045,1052.9354"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="261.1175" x2="275.0096" y1="1036.9354" y2="1036.9354"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="275.0096" x2="275.0096" y1="1036.9354" y2="1058.9354"/>
+        <polygon fill="#181818" points="271.0096,1048.9354,275.0096,1058.9354,279.0096,1048.9354,275.0096,1052.9354"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="186.507" x2="186.507" y1="990.2271" y2="1024.9354"/>
+        <polygon fill="#181818" points="182.507,1014.9354,186.507,1024.9354,190.507,1014.9354,186.507,1018.9354"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="493.1488" x2="493.1488" y1="990.2271" y2="1014.1832"/>
+        <polygon fill="#181818" points="489.1488,1004.1832,493.1488,1014.1832,497.1488,1004.1832,493.1488,1008.1832"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="269.7895" x2="186.507" y1="913.4749" y2="913.4749"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="186.507" x2="186.507" y1="913.4749" y2="935.4749"/>
+        <polygon fill="#181818" points="182.507,925.4749,186.507,935.4749,190.507,925.4749,186.507,929.4749"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="409.8663" x2="493.1488" y1="913.4749" y2="913.4749"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="493.1488" x2="493.1488" y1="913.4749" y2="935.4749"/>
+        <polygon fill="#181818" points="489.1488,925.4749,493.1488,935.4749,497.1488,925.4749,493.1488,929.4749"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="339.8279" x2="339.8279" y1="866.7666" y2="901.4749"/>
+        <polygon fill="#181818" points="335.8279,891.4749,339.8279,901.4749,343.8279,891.4749,339.8279,895.4749"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <?plantuml-src bLHTJnD157tlhvZm8dqWj3wP6ZIAmSH4GW9gJ7oPR6VBfjkTkZk5u9ExfRLQi420HZ2014af7vNWGwrOVynqj-LVU7UMGajBmMHVTcVkFMVFEVVUGOyLLT4Y2QmY0yVYAa7zBoP61kxvVKPKqU9Onp4K9Z9Eg6o4QcmKnmZg6wMCed6i6UZPM5_tY-FAEuA2Ttq-Ws6T-K8ycUV90sxjy2GyfzoSuyaDdZpaoQnutM_i7NCppyqiDnUvbNsZzKzWDOe0w3dMgJRZl-zJPDJFhHAt2jpwnPCPvslHpgtQrVn3FsAJH8DJiyJDMQXzJGo_tuTGg1rbhhMSMqjERg6-Ku7x7WQYianq0xrD48C18482ieEwdSitzglS_094hyS6TD7eaIIHE2DXD8IOdY1mezjd0IS80zMIIozP18R1GBtwvsmzpIqJmEhhHqu1K9SQtmeUyV59EeqY5AiX955L9H93mG2I9XKfIZH3D2MgGLnwi-B9GD4eRHAygiVgeQVz4o91B4YB4WWPZCRTTbfOaNtNDWqv-MsmixLnhNp8JP1h4oIoZ-PgbRHJpd3pRyT_O5KdE3o356qWhjE8JWnZKA9kAa4dOE51YnoqITZJ_yxSjGai4hSCZEtKTsv1GBBsXztwGXgQZAbuXkWedc36XQB03KauGYxJ8UhjT8gRHwsjdPKVwC4GcD4h7nVWmkRwTgLHd8SRmrIJ5JtMwcGRRZDPmqrjHbGSkHAlRcStny6rQUiyRkQkUyFAElb2XrC6KrIrcJZO7rvdBnbNJ6eZybzEsUbvkx9xuvuujud1kZ0kzmN24QnelOPuwzXU_7IB8MvrLVW4QdXM0H5xVSFEVOQ2bqHNP43Lmi0aIZgc41e1ubdg81W8SEj4C3bnHswvv7nSuQORkAVAb5i8bLG1otKoZVLmc-CjIqF6O6INPIA-zun9MsNNmoiJtoCnJHN1aI8Ssri_xOMCE-VLbBEt2LTVOOMv3cYKmG_5gNuHbrjlbBFtQtQv3FDLErrpxRTcQxzNuTKRL6wMnLqzXjr4QbEmmJ5Jg8O64GLNOO1rAi4gQU8AL87v3m00?>
+    </g>
+</svg>
