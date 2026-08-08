@@ -1,0 +1,51 @@
+@startuml game_window_core
+
+enum GameState {
+  TITLE
+  LOAD
+  PLAY
+  PAUSE
+}
+
+package javax.swing {
+  class JPanel
+}
+
+interface Window {
+  + frame(): void
+}
+
+class GameWindow <<singleton>> {
+  - gameState: GameState
+  - running: boolean
+  + getInstance(): GameWindow
+  + startGame(): void
+  + stopGame(): void
+  + run(): void
+  + update(): void
+  + paintComponent(g): void
+  + frame(): void
+}
+
+GameWindow --|> JPanel
+GameWindow ..|> Window
+GameWindow ..> GameState : uses
+
+note right of GameWindow
+  - コア: ゲームループ、状態、ライフサイクルを担当
+  - Core: responsible for game loop, state, and lifecycle
+
+  - getInstance()/startGame()/stopGame() でライフサイクル制御
+  - Lifecycle control via getInstance()/startGame()/stopGame()
+
+  - run() は固定フレームレートのループを実行
+  - run() executes the fixed-framerate game loop
+
+  - update() は毎フレームの状態更新を行う
+  - update() performs per-frame state updates
+
+  - paintComponent() は描画のエントリポイント（UI/ワールド/デバッグ）
+  - paintComponent() is the rendering entry (UI/world/debug)
+end note
+
+@enduml

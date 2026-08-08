@@ -1,0 +1,32 @@
+@startuml rendering
+
+class GameWindow {
+  + paintComponent(g): void
+  + renderEntitiesAndObjects(g2): void
+}
+
+class TileManager
+class UI
+class Entity
+class InteractiveTile
+
+GameWindow --> TileManager
+GameWindow --> UI
+GameWindow --> Entity
+GameWindow --> InteractiveTile
+
+note right of GameWindow
+  - paintComponent(): オーバーレイ、遷移、デバッグ表示を行う
+  - paintComponent(): renders overlays, transitions, and debug information
+
+  - renderEntitiesAndObjects(): 描画対象を Y ソートして描画する
+  - renderEntitiesAndObjects(): sorts render targets by Y and draws them
+
+  - 描画順は深度（Y座標）で決定され、パーティクル・発射物・エンティティを含む
+  - Rendering order is determined by depth (Y coordinate) and includes particles, projectiles, and entities
+
+  - デバッグ表示はタイル情報やプレイヤーのソリッド領域などを出力する
+  - Debug overlays show tile info, player solid area, and other diagnostics
+end note
+
+@enduml
