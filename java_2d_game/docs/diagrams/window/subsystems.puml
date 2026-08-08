@@ -1,0 +1,41 @@
+@startuml subsystems
+
+class SoundManager
+class AssetSetter
+class LoadManager
+class FrameFactory
+class GameFrame
+class MapModel
+
+SoundManager ..> GameWindow : used by
+AssetSetter ..> GameWindow : populates entities
+LoadManager ..> GameWindow : load/save
+FrameFactory ..> GameWindow : creates GameFrame
+
+note right of SoundManager
+  - BGM の事前ロード、再生、フェードアウトを担当
+  - Handles BGM preload, playback, and fade-out
+
+  - マップ遷移時の BGM 切替を管理
+  - Manages BGM switching during map transitions
+
+  - 非同期再生やプリロードをサポートしてパフォーマンスを改善
+  - Supports async playback and preloading to improve performance
+end note
+
+note right of AssetSetter
+  - エンティティやオブジェクトの初期配置を行う
+  - Places and initializes entities and world objects
+end note
+
+note right of LoadManager
+  - セーブ/ロード処理を提供し、プレイヤー状態を復元する
+  - Provides save/load operations and restores player state
+end note
+
+note right of FrameFactory
+  - GameFrame を生成し、Swing フレームの初期化を支援する
+  - Creates GameFrame and assists Swing frame initialization
+end note
+
+@enduml

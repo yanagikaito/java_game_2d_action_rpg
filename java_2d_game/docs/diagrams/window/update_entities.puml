@@ -1,0 +1,37 @@
+@startuml update_entities
+
+class GameWindow {
+  + update(): void
+  + startMapTransition(newMapId: int): void
+  + changeMap(newMap: int): void
+}
+
+class Player
+class NPC
+class Monster
+class Item
+class Projectile
+class CollisionChecker
+
+GameWindow --> Player
+GameWindow --> NPC
+GameWindow --> Monster
+GameWindow --> Item
+GameWindow --> Projectile
+GameWindow --> CollisionChecker
+
+note right of GameWindow
+  - update(): 経過時間を計算し、player.update() を呼び出す。配列ループで NPC/モンスター/アイテム/発射物/パーティクルを更新する
+  - update(): Computes delta time, calls player.update(), and iterates arrays to update NPCs, monsters, items, projectiles, and particles
+
+  - アイテム回収は CollisionChecker を使って判定し、種類別に処理（コインや回復薬など）
+  - Item pickup uses CollisionChecker for detection and handles items by type (coins, potions, etc.)
+
+  - モンスターは生存かつ死亡アニメ中でない場合のみ更新し、死亡したら配列から除去する
+  - Monsters are updated only when alive and not in dying animation; dead monsters are removed from the array
+
+  - startMapTransition()/changeMap() はマップ切替の準備（エンティティクリア、タイルロード、プレイヤー位置設定、BGM切替）を行う
+  - startMapTransition()/changeMap() prepare map switching (clear entities, load tiles, set player position, switch BGM)
+end note
+
+@enduml
