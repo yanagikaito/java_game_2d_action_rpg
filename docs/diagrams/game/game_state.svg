@@ -1,0 +1,72 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="300px" preserveAspectRatio="none"
+     style="width:547px;height:300px;background:#FFFFFF;" version="1.1" viewBox="0 0 547 300" width="547px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster game-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L46.0723,6.0137 A3.75,3.75 0 0 1 48.5723,8.5137 L55.5723,30.6348 L139.5,30.6348 A2.5,2.5 0 0 1 142,33.1348 L142,290.5137 A2.5,2.5 0 0 1 139.5,293.0137 L8.5,293.0137 A2.5,2.5 0 0 1 6,290.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="55.5723" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.5723" x="10" y="23.1211">game
+            </text>
+        </g><!--class GameState-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="234.2109" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="102.8135" x="22.5" y="43.0137"/>
+            <ellipse cx="37.5" cy="59.0137" fill="#EB937F" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M36.3594,59.8105 L36.3594,62.3105 L40.6875,62.3105 L40.6875,61.3887 Q40.6875,60.7793 40.9219,60.5137 Q41.1719,60.248 41.5469,60.248 Q41.9219,60.248 42.1563,60.5137 Q42.3906,60.7793 42.3906,61.3887 L42.3906,64.0137 L34.3906,64.0137 Q33.7656,64.0137 33.5,63.7793 Q33.25,63.5449 33.25,63.1543 Q33.25,62.7793 33.5156,62.5449 Q33.7813,62.3105 34.3906,62.3105 L34.6563,62.3105 L34.6563,55.6543 L34.3906,55.6543 Q33.7656,55.6543 33.5,55.4199 Q33.25,55.1855 33.25,54.7949 Q33.25,54.4199 33.5,54.1855 Q33.7656,53.9512 34.3906,53.9512 L42.0156,53.9512 L42.0156,56.5449 Q42.0156,57.1543 41.7813,57.4199 Q41.5625,57.6699 41.1719,57.6699 Q40.7969,57.6699 40.5625,57.4199 Q40.3281,57.1543 40.3281,56.5449 L40.3281,55.6543 L36.3594,55.6543 L36.3594,58.1074 L37.8438,58.1074 Q37.8438,57.4512 37.9688,57.2637 Q38.2344,56.8574 38.7031,56.8574 Q39.0781,56.8574 39.3125,57.123 Q39.5469,57.373 39.5469,57.9824 L39.5469,59.9512 Q39.5469,60.498 39.4219,60.6855 Q39.1563,61.0762 38.7031,61.0762 Q38.2344,61.0762 37.9688,60.6699 Q37.8438,60.4824 37.8438,59.8105 L36.3594,59.8105 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70.8135"
+                  x="51.5" y="64.8105">GameState
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="124.3135" y1="75.0137" y2="75.0137"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="38.1172"
+                  x="28.5" y="94.1211">TITLE
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="38.124"
+                  x="28.5" y="112.7422">LOAD
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35.7998"
+                  x="28.5" y="131.3633">PLAY
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="47.4619"
+                  x="28.5" y="149.9844">PAUSE
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72.3516"
+                  x="28.5" y="168.6055">DIALOGUE
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87.1172"
+                  x="28.5" y="187.2266">CHARACTER
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="49.7861"
+                  x="28.5" y="205.8477">DEBUG
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88.6895"
+                  x="28.5" y="224.4688">GAME_OVER
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="47.4482"
+                  x="28.5" y="243.0898">TRADE
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="37.3516"
+                  x="28.5" y="261.7109">SAVE
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="124.3135" y1="269.2246" y2="269.2246"/>
+        </g>
+        <g class="entity" id="ent0005">
+            <path d="M161,137.5137 L161,156.0137 L125.67,160.0137 L161,164.0137 L161,182.0957 A0,0 0 0 0 161,182.0957 L540.9409,182.0957 A0,0 0 0 0 540.9409,182.0957 L540.9409,147.5137 L530.9409,137.5137 L161,137.5137 A0,0 0 0 0 161,137.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M530.9409,137.5137 L530.9409,147.5137 L540.9409,147.5137 L530.9409,137.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="358.9409"
+                  x="167" y="156.542">- &#12466;&#12540;&#12512;&#12398;&#29366;&#24907;&#12434;&#34920;&#12377;&#21015;&#25369;&#22411;&#65288;&#12479;&#12452;&#12488;&#12523;&#12289;&#12525;&#12540;&#12489;&#12289;&#12503;&#12524;&#12452;&#31561;&#65289;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="315.7578"
+                  x="167" y="173.833">- Enum representing game states (title, load, play, etc.)
+            </text>
+        </g>
+        <?plantuml-src AqXCpavCJrL8JynDLQZcKb18pIlDLN07ye9B4aiWGWeA8PuXFgvWbe-_emkO4U3Z60bXE8O6G-HSF1rz_Dr38Hnd3ySWH-SGro28bAjJg3kOvUxewnhl7mOL3mboT86e3tOC0p5gkMgvkFBoWJONPQPdb2Zafo4S0vJMLNZSjEbnyvx7pGiUDwvxthNjMMltuwP9BnQkUDmuysd7z6SzCv_Ewtw_f-Dnq_x7JKiUDtSyRbxzkA7nSVDQiAvEC7lwu-OrGDddQplVx-a4c-eAydLHQa5HQd5gNabcNZeaG8f1rXOhQ9HabkIawYZav2Ucw2WKv2HMwYYabYJhQNAbvgKeW5pB1G00?>
+    </g>
+</svg>
