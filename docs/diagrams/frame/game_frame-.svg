@@ -1,0 +1,89 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="366px" preserveAspectRatio="none"
+     style="width:549px;height:366px;background:#FFFFFF;" version="1.1" viewBox="0 0 549 366" width="549px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster frame-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L47.6309,6.0137 A3.75,3.75 0 0 1 50.1309,8.5137 L57.1309,30.6348 L179.5,30.6348 A2.5,2.5 0 0 1 182,33.1348 L182,135.5137 A2.5,2.5 0 0 1 179.5,138.0137 L8.5,138.0137 A2.5,2.5 0 0 1 6,135.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="57.1309" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="38.1309" x="10" y="23.1211">frame
+            </text>
+        </g><!--cluster javax-->
+        <g class="cluster" id="ent0006">
+            <path d="M16.5,189.0137 L52.5342,189.0137 A3.75,3.75 0 0 1 55.0342,191.5137 L62.0342,213.6348 L171.5,213.6348 A2.5,2.5 0 0 1 174,216.1348 L174,356.5137 A2.5,2.5 0 0 1 171.5,359.0137 L16.5,359.0137 A2.5,2.5 0 0 1 14,356.5137 L14,191.5137 A2.5,2.5 0 0 1 16.5,189.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="14" x2="62.0342" y1="213.6348" y2="213.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="35.0342" x="18" y="206.1211">javax
+            </text>
+        </g><!--cluster swing-->
+        <g class="cluster" id="ent0004">
+            <path d="M40.5,234.0137 L81.1689,234.0137 A3.75,3.75 0 0 1 83.6689,236.5137 L90.6689,258.6348 L147.5,258.6348 A2.5,2.5 0 0 1 150,261.1348 L150,332.5137 A2.5,2.5 0 0 1 147.5,335.0137 L40.5,335.0137 A2.5,2.5 0 0 1 38,332.5137 L38,236.5137 A2.5,2.5 0 0 1 40.5,234.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="38" x2="90.6689" y1="258.6348" y2="258.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="39.6689" x="42" y="251.1211">swing
+            </text>
+        </g><!--class GameFrame-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="79.2031" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="142.7383" x="22.5" y="43.0137"/>
+            <ellipse cx="37.5" cy="65.3047" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M38.4531,61.9453 L38.4531,68.6016 L40.1719,68.6016 Q40.7813,68.6016 41.0469,68.8359 Q41.3125,69.0703 41.3125,69.4609 Q41.3125,69.8359 41.0469,70.0703 Q40.7813,70.3047 40.1719,70.3047 L35.0313,70.3047 Q34.4219,70.3047 34.1563,70.0703 Q33.8906,69.8359 33.8906,69.4453 Q33.8906,69.0703 34.1563,68.8359 Q34.4219,68.6016 35.0313,68.6016 L36.75,68.6016 L36.75,61.9453 L35.0313,61.9453 Q34.4219,61.9453 34.1563,61.7109 Q33.8906,61.4766 33.8906,61.0859 Q33.8906,60.7109 34.1563,60.4766 Q34.4219,60.2422 35.0313,60.2422 L40.1719,60.2422 Q40.7813,60.2422 41.0469,60.4766 Q41.3125,60.7109 41.3125,61.0859 Q41.3125,61.4766 41.0469,61.7109 Q40.7813,61.9453 40.1719,61.9453 L38.4531,61.9453 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="114.7383" x="49.5" y="60.9629">&#171;functional-interface&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="78.5723" x="67.583" y="79.082">GameFrame
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="164.2383" y1="87.5957" y2="87.5957"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="164.2383" y1="95.5957" y2="95.5957"/>
+            <g>
+                <ellipse cx="33.5" cy="110.4063" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="103.4619"
+                  x="42.5" y="114.7031">create(): JFrame
+            </text>
+        </g><!--class JFrame-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="79.4482"
+                  x="54.5" y="271.0137"/>
+            <ellipse cx="69.5" cy="287.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M72.2656,282.8887 Q72.4219,282.6699 72.6094,282.5605 Q72.7969,282.4512 73.0156,282.4512 Q73.3906,282.4512 73.625,282.7168 Q73.8594,282.9668 73.8594,283.5762 L73.8594,285.0293 Q73.8594,285.6387 73.625,285.9043 Q73.3906,286.1699 73.0156,286.1699 Q72.6719,286.1699 72.4688,285.9668 Q72.2656,285.7793 72.1563,285.2637 Q72.1094,284.9043 71.9219,284.7168 Q71.5938,284.3418 70.9844,284.123 Q70.375,283.9043 69.75,283.9043 Q68.9844,283.9043 68.3438,284.2324 Q67.7188,284.5605 67.2188,285.3105 Q66.7344,286.0605 66.7344,287.0918 L66.7344,288.1855 Q66.7344,289.4199 67.625,290.248 Q68.5156,291.0605 70.1094,291.0605 Q71.0469,291.0605 71.7031,290.8105 Q72.0938,290.6543 72.5156,290.2168 Q72.7813,289.9512 72.9219,289.873 Q73.0781,289.7949 73.2813,289.7949 Q73.6094,289.7949 73.8594,290.0605 Q74.125,290.3105 74.125,290.6543 Q74.125,290.998 73.7813,291.4043 Q73.2813,291.9824 72.4844,292.3105 Q71.4063,292.7637 70.1094,292.7637 Q68.5938,292.7637 67.3906,292.1387 Q66.4063,291.6387 65.7188,290.5762 Q65.0313,289.498 65.0313,288.2168 L65.0313,287.0605 Q65.0313,285.7324 65.6406,284.5918 Q66.2656,283.4355 67.3594,282.8262 Q68.4531,282.2012 69.6875,282.2012 Q70.4219,282.2012 71.0625,282.373 Q71.7188,282.5293 72.2656,282.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="47.4482"
+                  x="83.5" y="292.8105">JFrame
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="55.5" x2="132.9482" y1="303.0137" y2="303.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="55.5" x2="132.9482" y1="311.0137" y2="311.0137"/>
+        </g>
+        <g class="entity" id="ent0009">
+            <path d="M201,60.0137 L201,78.5137 L165.67,82.5137 L201,86.5137 L201,104.5957 A0,0 0 0 0 201,104.5957 L542.8169,104.5957 A0,0 0 0 0 542.8169,104.5957 L542.8169,70.0137 L532.8169,60.0137 L201,60.0137 A0,0 0 0 0 201,60.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M532.8169,60.0137 L532.8169,70.0137 L542.8169,70.0137 L532.8169,60.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="280.9409"
+                  x="207" y="79.042">- &#12501;&#12524;&#12540;&#12512;&#12434;&#20316;&#25104;&#12375;&#12390;&#36820;&#12377;&#38306;&#25968;&#22411;&#12452;&#12531;&#12479;&#12501;&#12455;&#12540;&#12473;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="320.8169"
+                  x="207" y="96.333">- Functional interface that creates and returns a JFrame
+            </text>
+        </g><!--link GameFrame to JFrame-->
+        <g class="link"
+           id="lnk7">
+            <path d="M94,122.1237 C94,165.6837 94,229.1137 94,264.9437" fill="none"
+                  id="GameFrame-to-JFrame" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818" points="94,270.9437,98,261.9437,94,265.9437,90,261.9437,94,270.9437"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="40.46"
+                  x="95" y="169.042">returns
+            </text>
+        </g>
+        <?plantuml-src JOz1IWD144NtVOfQAf8vG0YpZE0jYaxDP3JsXEwE4IIBwTu8RYGaYY0Y8hfn8RWIb1ocDEWjx6bc4hUF_txz6gCymfmWqtXCS2O02cL9PoW9zWFgHzxhPHCbRL4g77KsWJID0i0UI4reQMUt2mVH27WcPaACc_f3FC7Jn4mBbKT7Zj2ODXjosrD9aZOSkg39JhGoGgZI4kWY7reei-smqDG1zalsB-m_sD-pctzztgxFBxcwvkhfPxNWwkRtwc6zVFs-ks3toFwDtQfMt7EjkFVOqT-yz-z_EqJRV6O0rQ2T0zWkfm3hQU8F?>
+    </g>
+</svg>

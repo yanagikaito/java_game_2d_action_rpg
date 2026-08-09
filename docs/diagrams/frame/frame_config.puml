@@ -1,0 +1,41 @@
+@startuml frame_config
+
+package frame {
+  class FrameApp <<utility>> {
+    - maxScreenRow: int = 16 {static}
+    - maxScreenCol: int = 12 {static}
+    - tileSize: int = createSize() {static}
+    - screenWidth: int = tileSize * maxScreenRow {static}
+    - screenHeight: int = tileSize * maxScreenCol {static}
+    - maxWorldRow: int = 50 {static}
+    - maxWorldCol: int = 50 {static}
+
+    + baseDisplay(): FrameSize {static}
+    + createSize(): int {static}
+    + getScreenWidth(): int {static}
+    + getScreenHeight(): int {static}
+    + getMaxScreenCol(): int {static}
+    + getMaxScreenRow(): int {static}
+    + getMaxWorldCol(): int {static}
+    + getMaxWorldRow(): int {static}
+    + getTileSize(): int {static}
+  }
+
+  class FrameSize {
+    + width: int
+    + height: int
+    + FrameSize(w: int, h: int)
+  }
+
+  FrameApp --> FrameSize : creates
+}
+
+note right of FrameApp
+  - 画面・タイル関連の定数とユーティリティメソッドを提供するクラス
+  - Provides constants and utility methods for screen and tile sizing
+
+  - 全て static なファクトリ/アクセサを持つユーティリティクラス
+  - Utility class exposing only static factory/accessor methods
+end note
+
+@enduml

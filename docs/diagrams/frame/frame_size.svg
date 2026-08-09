@@ -1,0 +1,55 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="151px" preserveAspectRatio="none"
+     style="width:563px;height:151px;background:#FFFFFF;" version="1.1" viewBox="0 0 563 151" width="563px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster frame-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L47.6309,6.0137 A3.75,3.75 0 0 1 50.1309,8.5137 L57.1309,30.6348 L135.5,30.6348 A2.5,2.5 0 0 1 138,33.1348 L138,141.5137 A2.5,2.5 0 0 1 135.5,144.0137 L8.5,144.0137 A2.5,2.5 0 0 1 6,141.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="57.1309" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="38.1309" x="10" y="23.1211">frame
+            </text>
+        </g><!--class FrameSize-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="85.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="99.6826" x="22" y="43.0137"/>
+            <ellipse cx="37" cy="59.0137" fill="#FF8F00" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M35.8438,60.1699 L35.8438,62.3105 L36.4531,62.3105 Q37.0781,62.3105 37.3281,62.5449 Q37.5938,62.7793 37.5938,63.1699 Q37.5938,63.5449 37.3281,63.7793 Q37.0781,64.0137 36.4531,64.0137 L33.875,64.0137 Q33.2656,64.0137 33,63.7793 Q32.7344,63.5449 32.7344,63.1543 Q32.7344,62.7793 33,62.5449 Q33.2656,62.3105 33.875,62.3105 L34.1406,62.3105 L34.1406,55.6543 L33.875,55.6543 Q33.2656,55.6543 33,55.4199 Q32.7344,55.1855 32.7344,54.7949 Q32.7344,54.4199 33,54.1855 Q33.2656,53.9512 33.875,53.9512 L37.7344,53.9512 Q39.5313,53.9512 40.5156,54.8418 Q41.5156,55.7324 41.5156,57.0137 Q41.5156,57.8105 41.0469,58.4668 Q40.5781,59.123 39.6406,59.623 Q40.1875,60.0918 40.7969,60.8418 Q41.1875,61.3105 41.8281,62.3105 Q42.4844,62.3105 42.6875,62.4512 Q43.0625,62.7012 43.0625,63.1699 Q43.0625,63.5449 42.7969,63.7793 Q42.5469,64.0137 41.9375,64.0137 L40.9531,64.0137 Q38.8906,60.8105 37.5313,60.1699 L35.8438,60.1699 Z M35.8438,58.4668 L37.1719,58.4668 Q37.9063,58.4668 38.5,58.248 Q39.2813,57.9512 39.5469,57.623 Q39.8125,57.2793 39.8125,56.9512 Q39.8125,56.4824 39.2969,56.0762 Q38.7813,55.6543 37.7969,55.6543 L35.8438,55.6543 L35.8438,58.4668 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.6826"
+                  x="51" y="64.8105">FrameSize
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="120.6826" y1="75.0137" y2="75.0137"/>
+            <g>
+                <ellipse cx="33" cy="89.8242" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248"
+                  x="42" y="94.1211">width: int
+            </text>
+            <g>
+                <ellipse cx="33" cy="108.4453" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.71"
+                  x="42" y="112.7422">height: int
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="120.6826" y1="120.2559" y2="120.2559"/>
+        </g>
+        <g class="entity" id="ent0005">
+            <path d="M157,63.0137 L157,81.5137 L122.1,85.5137 L157,89.5137 L157,107.5957 A0,0 0 0 0 157,107.5957 L556.6567,107.5957 A0,0 0 0 0 556.6567,107.5957 L556.6567,73.0137 L546.6567,63.0137 L157,63.0137 A0,0 0 0 0 157,63.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M546.6567,63.0137 L546.6567,73.0137 L556.6567,73.0137 L546.6567,63.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="335.8608"
+                  x="163" y="82.042">- &#24133;&#12392;&#39640;&#12373;&#12434;&#20445;&#25345;&#12377;&#12427;&#19981;&#22793;&#12487;&#12540;&#12479;&#12467;&#12531;&#12486;&#12490;&#65288;Java
+                record&#65289;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="378.6567"
+                  x="163" y="99.333">- Immutable data container holding width and height (Java record)
+            </text>
+        </g>
+        <?plantuml-src AqXCpavCJrL8AqhCJLMevb9GK5VmIYnBL2XAJSulIb5ut3JfnS8Lp_lt0MMWGcuWfS6PLH3b2WhQ2kMPAIKPLWgPUILGWOpKpFIC4fX8BLSj5rTUVacgGX58M24_3M46K5fNuUdEriUDArwkdl6uSIhGmYVxvpxhQNpSEFDnK_UJ7RrFbtG-Rcv_tBpdSTF-nqsR7pS3KTlZvgxtUpgGNFf-JoVOBC_StDAInAISL8MKn994XUJyl9B4pBpK8eMC_9oKpBnqY6CL4lDIeAvKq40oHPCh5IW1SYiN0000?>
+    </g>
+</svg>
