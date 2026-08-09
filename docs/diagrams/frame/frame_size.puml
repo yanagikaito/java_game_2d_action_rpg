@@ -1,0 +1,16 @@
+@startuml frame_size
+
+package frame {
+  ' Java record を表現
+  record FrameSize {
+    + width: int
+    + height: int
+  }
+}
+
+note right of FrameSize
+  - 幅と高さを保持する不変データコンテナ（Java record）
+  - Immutable data container holding width and height (Java record)
+end note
+
+@enduml

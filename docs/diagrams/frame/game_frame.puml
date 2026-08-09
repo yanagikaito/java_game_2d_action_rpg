@@ -1,0 +1,20 @@
+@startuml game_frame
+
+package frame {
+  interface GameFrame <<functional-interface>> {
+    + create(): JFrame
+  }
+}
+
+package javax.swing {
+  class JFrame
+}
+
+GameFrame ..> JFrame : returns
+
+note right of GameFrame
+  - フレームを作成して返す関数型インタフェース
+  - Functional interface that creates and returns a JFrame
+end note
+
+@enduml
