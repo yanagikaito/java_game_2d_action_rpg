@@ -1,0 +1,37 @@
+@startuml game_main
+
+package game {
+  class Main {
+    + main(args: String[]): void {static}
+  }
+}
+
+package db {
+  class DbManager {
+    + initSchema(): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getInstance(): GameWindow {static}
+    + frame(): void
+  }
+}
+
+package javax.swing {
+  class SwingUtilities
+  class JFrame
+}
+
+Main ..> DbManager : calls initSchema()
+Main ..> SwingUtilities : calls invokeLater(Runnable)
+Main ..> GameWindow : uses getInstance()
+GameWindow ..> JFrame : manages / shows
+
+note right of Main
+  - **役割**: アプリ起動処理を行うエントリポイント
+  - **Responsibilities**: initialize DB schema and start UI on EDT
+end note
+
+@enduml

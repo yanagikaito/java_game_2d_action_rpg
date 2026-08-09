@@ -1,0 +1,23 @@
+@startuml game_state
+
+package game {
+  enum GameState {
+    TITLE
+    LOAD
+    PLAY
+    PAUSE
+    DIALOGUE
+    CHARACTER
+    DEBUG
+    GAME_OVER
+    TRADE
+    SAVE
+  }
+}
+
+note right of GameState
+  - ゲームの状態を表す列挙型（タイトル、ロード、プレイ等）
+  - Enum representing game states (title, load, play, etc.)
+end note
+
+@enduml
