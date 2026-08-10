@@ -1,0 +1,59 @@
+@startuml
+package tile {
+  class Tile {
+    + BufferedImage image
+    + boolean collision = false
+    + boolean bombCollision = false
+    + boolean potCollision = false
+    + boolean chickenCollision = false
+    + boolean rockCollision = false
+  }
+
+  class TileManager {
+    - GameWindow gameWindow
+    - Tile[] tiles
+    - int[][] mapTileNum
+    + {static} int MEADOW_TILE_ID = 1
+    + {static} int TREE_TILE_ID = 4
+    + {static} int HUT_TILE_ID = 6
+    + {static} int FOREST_TILE_ID = 9
+    + {static} int STAIRS_DOWN_TILE_ID = 12
+    + {static} int STAIRS_UP_TILE_ID = 13
+
+    + TileManager(gameWindow : GameWindow)
+    + boolean isObstacle(x : int, y : int)
+    - void loadTileImages()
+    + void loadMap(mapId : int)
+    + void draw(g2 : Graphics2D)
+    + int getTileIdAt(col : int, row : int)
+    + Tile[] getTiles()
+    + int[][] getMapTileNum()
+  }
+}
+
+' 外部依存（同一図に簡易的に表現）
+class GameWindow {
+  + Player getPlayer()
+}
+class FrameApp {
+  + {static} int getMaxWorldCol()
+  + {static} int getMaxWorldRow()
+  + {static} int getTileSize()
+}
+class DbManager {
+  + {static} Connection getConnection()
+}
+class Player {
+  + int getWorldX()
+  + int getWorldY()
+  + int getScreenX()
+  + int getScreenY()
+}
+
+' 関係
+TileManager --> Tile : contains [tiles]
+TileManager --> GameWindow : uses
+TileManager ..> FrameApp : reads static config
+TileManager ..> DbManager : uses for DB connection
+GameWindow --> Player : has
+@enduml
