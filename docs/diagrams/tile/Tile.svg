@@ -1,0 +1,66 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="226px" preserveAspectRatio="none"
+     style="width:271px;height:226px;background:#FFFFFF;" version="1.1" viewBox="0 0 271 226" width="271px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster tile-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L29.7275,6.0137 A3.75,3.75 0 0 1 32.2275,8.5137 L39.2275,30.6348 L261.5,30.6348 A2.5,2.5 0 0 1 264,33.1348 L264,216.5137 A2.5,2.5 0 0 1 261.5,219.0137 L8.5,219.0137 A2.5,2.5 0 0 1 6,216.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="39.2275" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="20.2275" x="10" y="23.1211">tile
+            </text>
+        </g><!--class Tile-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="159.7266" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="225.623" x="22" y="43.0137"/>
+            <ellipse cx="119.2822" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M122.0479,54.8887 Q122.2041,54.6699 122.3916,54.5605 Q122.5791,54.4512 122.7979,54.4512 Q123.1729,54.4512 123.4072,54.7168 Q123.6416,54.9668 123.6416,55.5762 L123.6416,57.0293 Q123.6416,57.6387 123.4072,57.9043 Q123.1729,58.1699 122.7979,58.1699 Q122.4541,58.1699 122.251,57.9668 Q122.0479,57.7793 121.9385,57.2637 Q121.8916,56.9043 121.7041,56.7168 Q121.376,56.3418 120.7666,56.123 Q120.1572,55.9043 119.5322,55.9043 Q118.7666,55.9043 118.126,56.2324 Q117.501,56.5605 117.001,57.3105 Q116.5166,58.0605 116.5166,59.0918 L116.5166,60.1855 Q116.5166,61.4199 117.4072,62.248 Q118.2979,63.0605 119.8916,63.0605 Q120.8291,63.0605 121.4854,62.8105 Q121.876,62.6543 122.2979,62.2168 Q122.5635,61.9512 122.7041,61.873 Q122.8604,61.7949 123.0635,61.7949 Q123.3916,61.7949 123.6416,62.0605 Q123.9072,62.3105 123.9072,62.6543 Q123.9072,62.998 123.5635,63.4043 Q123.0635,63.9824 122.2666,64.3105 Q121.1885,64.7637 119.8916,64.7637 Q118.376,64.7637 117.1729,64.1387 Q116.1885,63.6387 115.501,62.5762 Q114.8135,61.498 114.8135,60.2168 L114.8135,59.0605 Q114.8135,57.7324 115.4229,56.5918 Q116.0479,55.4355 117.1416,54.8262 Q118.2354,54.2012 119.4697,54.2012 Q120.2041,54.2012 120.8447,54.373 Q121.501,54.5293 122.0479,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="22.5586"
+                  x="139.7822" y="64.8105">Tile
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="246.623" y1="75.0137" y2="75.0137"/>
+            <g>
+                <ellipse cx="33" cy="89.8242" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="133.8545"
+                  x="42" y="94.1211">BufferedImage image
+            </text>
+            <g>
+                <ellipse cx="33" cy="108.4453" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="149.0439"
+                  x="42" y="112.7422">boolean collision = false
+            </text>
+            <g>
+                <ellipse cx="33" cy="127.0664" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="187.1748"
+                  x="42" y="131.3633">boolean bombCollision = false
+            </text>
+            <g>
+                <ellipse cx="33" cy="145.6875" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="171.6162"
+                  x="42" y="149.9844">boolean potCollision = false
+            </text>
+            <g>
+                <ellipse cx="33" cy="164.3086" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="199.623"
+                  x="42" y="168.6055">boolean chickenCollision = false
+            </text>
+            <g>
+                <ellipse cx="33" cy="182.9297" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="178.6025"
+                  x="42" y="187.2266">boolean rockCollision = false
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="246.623" y1="194.7402" y2="194.7402"/>
+        </g>
+        <?plantuml-src XSen3eCm38NXdLEylMVe0bFtNi0nJh7Yn8Z0L77t2WcM2YdBavx-RoPEz16iQe9l1x1HhNXV5tYWtsAKHSPNFgGUUvRWRa85x6PQrGkUY6JrlmVFOMYOsTSMuKavIMcnnJdTcRtRVm00?>
+    </g>
+</svg>

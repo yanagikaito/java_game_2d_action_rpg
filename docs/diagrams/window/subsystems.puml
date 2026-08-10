@@ -1,41 +1,70 @@
-@startuml subsystems
+@startuml
 
-class SoundManager
-class AssetSetter
-class LoadManager
-class FrameFactory
-class GameFrame
-class MapModel
+top to bottom direction
 
-SoundManager ..> GameWindow : used by
-AssetSetter ..> GameWindow : populates entities
-LoadManager ..> GameWindow : load/save
-FrameFactory ..> GameWindow : creates GameFrame
+package "Audio" {
+  class SoundManager
+  note right of SoundManager
+    - BGM の事前ロード、再生、フェードアウトを担当
+    - マップ遷移時の BGM 切替を管理
+    - Supports BGM preload, playback, and fade-out
+    - Manages BGM switching during map transitions
+  end note
+}
 
-note right of SoundManager
-  - BGM の事前ロード、再生、フェードアウトを担当
-  - Handles BGM preload, playback, and fade-out
+package "Assets" {
+  class AssetSetter
+  note right of AssetSetter
+    - エンティティやオブジェクトの初期配置を行う
+    - ワールド生成時にオブジェクトを配置する
+    - Places and initializes entities and world objects
+    - Populates objects during world/map setup
+  end note
+}
 
-  - マップ遷移時の BGM 切替を管理
-  - Manages BGM switching during map transitions
+package "IO" {
+  class LoadManager
+  note right of LoadManager
+    - セーブ/ロード処理を提供し、プレイヤー状態を復元する
+    - データの永続化と復元を担当
+    - Provides save/load operations and restores player state
+    - Handles persistence and data restoration
+  end note
+}
 
-  - 非同期再生やプリロードをサポートしてパフォーマンスを改善
-  - Supports async playback and preloading to improve performance
-end note
+package "UI" {
+  class FrameFactory
+  class GameFrame
 
-note right of AssetSetter
-  - エンティティやオブジェクトの初期配置を行う
-  - Places and initializes entities and world objects
-end note
+  note right of FrameFactory
+    - GameFrame を生成し、Swing フレームの初期化を支援する
+    - フレームの共通設定やレイアウトを適用する
+    - Creates GameFrame and assists Swing frame initialization
+    - Applies common frame settings and layouts
+  end note
 
-note right of LoadManager
-  - セーブ/ロード処理を提供し、プレイヤー状態を復元する
-  - Provides save/load operations and restores player state
-end note
+  note right of GameFrame
+    - ゲームのメインウィンドウ。レンダリングと入力の受け口を持つ
+    - 表示コンポーネントを保持し、ゲームループと連携する
+    - Main game window; handles rendering and input entry points
+    - Holds display components and integrates with the game loop
+  end note
+}
 
-note right of FrameFactory
-  - GameFrame を生成し、Swing フレームの初期化を支援する
-  - Creates GameFrame and assists Swing frame initialization
-end note
+package "Model" {
+  class MapModel
+  note right of MapModel
+    - マップデータとタイル/エンティティの状態を保持する
+    - マップ遷移や状態更新のロジックを提供する
+    - Stores map data and tile/entity states
+    - Provides logic for map transitions and state updates
+  end note
+}
+
+' 関係
+SoundManager ..> GameFrame : used by
+AssetSetter ..> MapModel : populates entities
+LoadManager ..> MapModel : load/save
+FrameFactory ..> GameFrame : creates
 
 @enduml

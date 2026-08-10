@@ -1,0 +1,12 @@
+@startuml
+package tile {
+  class Tile {
+    + BufferedImage image
+    + boolean collision = false
+    + boolean bombCollision = false
+    + boolean potCollision = false
+    + boolean chickenCollision = false
+    + boolean rockCollision = false
+  }
+}
+@enduml
