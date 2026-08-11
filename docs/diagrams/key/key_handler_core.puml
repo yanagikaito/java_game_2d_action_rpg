@@ -1,0 +1,38 @@
+@startuml key_handler_core
+
+package key {
+  class KeyHandler <<controller>> {
+    - gameWindow: GameWindow
+    - playerUp: boolean
+    - playerDown: boolean
+    - playerLeft: boolean
+    - playerRight: boolean
+    - playerEnter: boolean
+    - playerSpace: boolean
+    - showDebugText: boolean
+    - shotKeyPressed: boolean
+    - bombKeyPressed: boolean
+    - throwKeyPressed: boolean
+    - commandNum: int
+    - enterJustPressed: boolean
+    - MAX_COL: int = 3 {static, final}
+    - MAX_ROW: int = 4 {static, final}
+
+    + KeyHandler(gameWindow: GameWindow)
+    + keyTyped(e: KeyEvent): void
+    + keyPressed(e: KeyEvent): void
+    + keyReleased(e: KeyEvent): void
+    + clearAllKeys(): void
+    + togglePause(): void
+    + debugText(): void
+    + consumeThrowOnce(): void
+    + consumeEnterOnce(): void
+    + getCommandNum(): int
+    + setCommandNum(n:int): void
+  }
+}
+
+KeyHandler ..|> java.awt.event.KeyListener
+KeyHandler --> window.GameWindow : uses
+
+@enduml

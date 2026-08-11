@@ -1,0 +1,84 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="282px" preserveAspectRatio="none"
+     style="width:389px;height:282px;background:#FFFFFF;" version="1.1" viewBox="0 0 389 282" width="389px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster player-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L50.748,6.0137 A3.75,3.75 0 0 1 53.248,8.5137 L60.248,30.6348 L379.5,30.6348 A2.5,2.5 0 0 1 382,33.1348 L382,272.5137 A2.5,2.5 0 0 1 379.5,275.0137 L8.5,275.0137 A2.5,2.5 0 0 1 6,272.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="60.248" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.248" x="10" y="23.1211">player
+            </text>
+        </g><!--class Player-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="215.5898" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="343.4678" x="22.5" y="43.0137"/>
+            <ellipse cx="170.1426" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M172.9082,54.8887 Q173.0645,54.6699 173.252,54.5605 Q173.4395,54.4512 173.6582,54.4512 Q174.0332,54.4512 174.2676,54.7168 Q174.502,54.9668 174.502,55.5762 L174.502,57.0293 Q174.502,57.6387 174.2676,57.9043 Q174.0332,58.1699 173.6582,58.1699 Q173.3145,58.1699 173.1113,57.9668 Q172.9082,57.7793 172.7988,57.2637 Q172.752,56.9043 172.5645,56.7168 Q172.2363,56.3418 171.627,56.123 Q171.0176,55.9043 170.3926,55.9043 Q169.627,55.9043 168.9863,56.2324 Q168.3613,56.5605 167.8613,57.3105 Q167.377,58.0605 167.377,59.0918 L167.377,60.1855 Q167.377,61.4199 168.2676,62.248 Q169.1582,63.0605 170.752,63.0605 Q171.6895,63.0605 172.3457,62.8105 Q172.7363,62.6543 173.1582,62.2168 Q173.4238,61.9512 173.5645,61.873 Q173.7207,61.7949 173.9238,61.7949 Q174.252,61.7949 174.502,62.0605 Q174.7676,62.3105 174.7676,62.6543 Q174.7676,62.998 174.4238,63.4043 Q173.9238,63.9824 173.127,64.3105 Q172.0488,64.7637 170.752,64.7637 Q169.2363,64.7637 168.0332,64.1387 Q167.0488,63.6387 166.3613,62.5762 Q165.6738,61.498 165.6738,60.2168 L165.6738,59.0605 Q165.6738,57.7324 166.2832,56.5918 Q166.9082,55.4355 168.002,54.8262 Q169.0957,54.2012 170.3301,54.2012 Q171.0645,54.2012 171.7051,54.373 Q172.3613,54.5293 172.9082,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="39.6826"
+                  x="190.6426" y="64.8105">Player
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="364.9678" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="364.9678" y1="83.0137" y2="83.0137"/>
+            <g>
+                <ellipse cx="33.5" cy="97.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="167.2959"
+                  x="42.5" y="102.1211">getInventory(): java.util.List
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="116.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="158.7305"
+                  x="42.5" y="120.7422">selectItem(index:int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="135.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="317.4678"
+                  x="42.5" y="139.3633">checkNpcInFront(npcs: entity.Entity[], range:int): int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="153.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="168.8408"
+                  x="42.5" y="157.9844">setTalkNpcIndex(i:int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="172.3086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.9443"
+                  x="42.5" y="176.6055">getTalkNpcIndex(): int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="190.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151.7715"
+                  x="42.5" y="195.2266">hasLeftShield(): boolean
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="209.5508" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="146.2822"
+                  x="42.5" y="213.8477">startBlockingLeft(): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="228.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="145.5166"
+                  x="42.5" y="232.4688">stopBlockingLeft(): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="246.793" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="181.3301"
+                  x="42.5" y="251.0898">setInvincible(b:boolean): void
+            </text>
+        </g>
+        <?plantuml-src VP31IiH038RlVOeSHvG-G8yB2eL51Bt97j8qJcDdCyDCB1RPTxUxLfTLy990_k__3ab88tg6573c31yL00Ki1HxE1u1hy6ojJgmMy-ok6dZ52Uitar1lfTWA5GvCrXhldMZFxuseBUmKfLy96fZ6-qIjtkMevZHHQM3HYitrxMazxsuWetfUsylyqTiJXg_wOdVor-z_8HVz0SkMN-nn40xzCUfY38pwhJVCjWcHHb5_1DsbkrXC_yMd3ucIT85TrwpoCtIe3jKd?>
+    </g>
+</svg>

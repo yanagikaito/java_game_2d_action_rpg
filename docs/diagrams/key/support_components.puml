@@ -1,0 +1,53 @@
+@startuml support_components
+
+package window {
+  class GameWindow {
+    + getGameState(): game.GameState
+    + setGameState(s: game.GameState): void
+    + getUi(): ui.UI
+    + getPlayer(): player.Player
+    + getNPC(): entity.Entity[]
+    + getSoundmanager(): sound.SoundManager
+    + isOnTransition(): boolean
+    + toggleHitBoxDebug(): void
+    + restart(): void
+    + retry(): void
+    + startNpcRoute(a:int,b:int,c:int): void
+  }
+}
+
+package sound {
+  class SoundManager {
+    + cursorWAV(path:String): void
+    + play(path:String): void
+  }
+}
+
+package entity {
+  class Entity {
+    + getClass(): Class
+  }
+}
+
+package game {
+  enum GameState {
+    TITLE
+    LOAD
+    PLAY
+    PAUSE
+    DIALOGUE
+    CHARACTER
+    DEBUG
+    GAME_OVER
+    TRADE
+    SAVE
+  }
+}
+
+GameWindow --> ui.UI
+GameWindow --> player.Player
+GameWindow --> sound.SoundManager
+GameWindow --> entity.Entity
+GameWindow ..> game.GameState
+
+@enduml

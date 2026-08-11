@@ -1,0 +1,17 @@
+@startuml NPCs
+
+package npc {
+  class NpcMerChant {
+    + resetDialogue(): void
+    + getNextDialogue(): String
+  }
+  class NpcSave {
+    + resetDialogue(): void
+    + getNextDialogue(): String
+  }
+  class NpcMalonyChicken {
+    + onPlayerChoice(choice:int): void
+  }
+}
+
+@enduml

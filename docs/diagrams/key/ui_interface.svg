@@ -1,0 +1,156 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="505px" preserveAspectRatio="none"
+     style="width:295px;height:505px;background:#FFFFFF;" version="1.1" viewBox="0 0 295 505" width="295px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster ui-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L21.9414,6.0137 A3.75,3.75 0 0 1 24.4414,8.5137 L31.4414,30.6348 L285.5,30.6348 A2.5,2.5 0 0 1 288,33.1348 L288,495.5137 A2.5,2.5 0 0 1 285.5,498.0137 L8.5,498.0137 A2.5,2.5 0 0 1 6,495.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="31.4414" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="12.4414" x="10" y="23.1211">ui
+            </text>
+        </g><!--class UI-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="439.043" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="250.0889" x="22" y="43.0137"/>
+            <ellipse cx="135.7944" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M138.5601,54.8887 Q138.7163,54.6699 138.9038,54.5605 Q139.0913,54.4512 139.3101,54.4512 Q139.6851,54.4512 139.9194,54.7168 Q140.1538,54.9668 140.1538,55.5762 L140.1538,57.0293 Q140.1538,57.6387 139.9194,57.9043 Q139.6851,58.1699 139.3101,58.1699 Q138.9663,58.1699 138.7632,57.9668 Q138.5601,57.7793 138.4507,57.2637 Q138.4038,56.9043 138.2163,56.7168 Q137.8882,56.3418 137.2788,56.123 Q136.6694,55.9043 136.0444,55.9043 Q135.2788,55.9043 134.6382,56.2324 Q134.0132,56.5605 133.5132,57.3105 Q133.0288,58.0605 133.0288,59.0918 L133.0288,60.1855 Q133.0288,61.4199 133.9194,62.248 Q134.8101,63.0605 136.4038,63.0605 Q137.3413,63.0605 137.9976,62.8105 Q138.3882,62.6543 138.8101,62.2168 Q139.0757,61.9512 139.2163,61.873 Q139.3726,61.7949 139.5757,61.7949 Q139.9038,61.7949 140.1538,62.0605 Q140.4194,62.3105 140.4194,62.6543 Q140.4194,62.998 140.0757,63.4043 Q139.5757,63.9824 138.7788,64.3105 Q137.7007,64.7637 136.4038,64.7637 Q134.8882,64.7637 133.6851,64.1387 Q132.7007,63.6387 132.0132,62.5762 Q131.3257,61.498 131.3257,60.2168 L131.3257,59.0605 Q131.3257,57.7324 131.9351,56.5918 Q132.5601,55.4355 133.6538,54.8262 Q134.7476,54.2012 135.9819,54.2012 Q136.7163,54.2012 137.3569,54.373 Q138.0132,54.5293 138.5601,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="14"
+                  x="156.2944" y="64.8105">UI
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="271.0889" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="271.0889" y1="83.0137" y2="83.0137"/>
+            <g>
+                <ellipse cx="33" cy="97.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.5371"
+                  x="42" y="102.1211">isAwaitingChoice(): boolean
+            </text>
+            <g>
+                <ellipse cx="33" cy="116.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143.9512"
+                  x="42" y="120.7422">moveChoiceLeft(): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="135.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="153.2822"
+                  x="42" y="139.3633">moveChoiceRight(): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="153.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="224.0889"
+                  x="42" y="157.9844">getCurrentChoiceNpc(): entity.Entity
+            </text>
+            <g>
+                <ellipse cx="33" cy="172.3086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.082"
+                  x="42" y="176.6055">getSelectedOption(): int
+            </text>
+            <g>
+                <ellipse cx="33" cy="190.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="116.71"
+                  x="42" y="195.2266">clearChoice(): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="209.5508" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143.165"
+                  x="42" y="213.8477">getPlayerSlotRow(): int
+            </text>
+            <g>
+                <ellipse cx="33" cy="228.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.165"
+                  x="42" y="232.4688">getPlayerSlotCol(): int
+            </text>
+            <g>
+                <ellipse cx="33" cy="246.793" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="176.6133"
+                  x="42" y="251.0898">setPlayerSlotRow(r:int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="265.4141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="171.9512"
+                  x="42" y="269.7109">setPlayerSlotCol(c:int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="284.0352" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.1855"
+                  x="42" y="288.332">initLoadScreen(): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="302.6563" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="165.7852"
+                  x="42" y="306.9531">updateLoad(code:int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="321.2773" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="171.2129"
+                  x="42" y="325.5742">updateTrade(code:int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="339.8984" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="166.5508"
+                  x="42" y="344.1953">updateSave(code:int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="358.5195" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="223.2686"
+                  x="42" y="362.8164">returnToTitleFromGameOver(): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="377.1406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="184.4336"
+                  x="42" y="381.4375">addDialogue(text:String): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="395.7617" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="140.8477"
+                  x="42" y="400.0586">setSubState(i:int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="414.3828" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128.3789"
+                  x="42" y="418.6797">getNpcSlotRow(): int
+            </text>
+            <g>
+                <ellipse cx="33" cy="433.0039" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="121.3789"
+                  x="42" y="437.3008">getNpcSlotCol(): int
+            </text>
+            <g>
+                <ellipse cx="33" cy="451.625" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="161.8271"
+                  x="42" y="455.9219">setNpcSlotRow(r:int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="470.2461" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157.165"
+                  x="42" y="474.543">setNpcSlotCol(c:int): void
+            </text>
+        </g>
+        <?plantuml-src VP5DReCm44RtdC9Bgaez0BkA_gXIr5GnFS34df9HZGUPWJIgSlUQW9G0ILV8Uk_p39zhCDzGecf9_IPA6GTDepxVJWUbxXKrZtiW8L_cEoQ3wLscjimEmOz6nHqER8LVqlEEoIxWXihTd9OeUHi2UXcSzzhqHZoJ71wUJv-pgj6X4RJhMeXzBvAN4PkuK3XlE9tnuU20GJkM3U-dkGdDsKrfCy-6BCBf_Sty1hDqo9Ei6Ams0T7F5cnh2u8zJWrRNAO7eGXWyLz3GtTB22Xjy0KN90vV0bUlKE6wmp3R1Qnz8d1SjfWA_aYc9SIdN_onRhTQuiYKbhDYfV4TRxKzecjLNwIkztoHdPLyJ8x97m00?>
+    </g>
+</svg>
