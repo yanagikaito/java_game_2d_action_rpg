@@ -1,0 +1,29 @@
+@startuml ui_interface
+
+package ui {
+  class UI {
+    + isAwaitingChoice(): boolean
+    + moveChoiceLeft(): void
+    + moveChoiceRight(): void
+    + getCurrentChoiceNpc(): entity.Entity
+    + getSelectedOption(): int
+    + clearChoice(): void
+    + getPlayerSlotRow(): int
+    + getPlayerSlotCol(): int
+    + setPlayerSlotRow(r:int): void
+    + setPlayerSlotCol(c:int): void
+    + initLoadScreen(): void
+    + updateLoad(code:int): void
+    + updateTrade(code:int): void
+    + updateSave(code:int): void
+    + returnToTitleFromGameOver(): void
+    + addDialogue(text:String): void
+    + setSubState(i:int): void
+    + getNpcSlotRow(): int
+    + getNpcSlotCol(): int
+    + setNpcSlotRow(r:int): void
+    + setNpcSlotCol(c:int): void
+  }
+}
+
+@enduml

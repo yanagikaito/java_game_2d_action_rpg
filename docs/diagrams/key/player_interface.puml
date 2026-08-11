@@ -1,0 +1,17 @@
+@startuml player_interface
+
+package player {
+  class Player {
+    + getInventory(): java.util.List
+    + selectItem(index:int): void
+    + checkNpcInFront(npcs: entity.Entity[], range:int): int
+    + setTalkNpcIndex(i:int): void
+    + getTalkNpcIndex(): int
+    + hasLeftShield(): boolean
+    + startBlockingLeft(): void
+    + stopBlockingLeft(): void
+    + setInvincible(b:boolean): void
+  }
+}
+
+@enduml
