@@ -1,0 +1,32 @@
+@startuml entity_hp_knockback
+
+package entity {
+  abstract class Entity <<abstract>> {
+    - invincible: boolean
+    - dying: boolean
+    - alive: boolean
+    - hpBarOn: boolean
+    - hpBarCounter: int
+    - dyingCounter: int
+
+    - maxLife: int
+    - life: int
+
+    - knockBack: boolean
+    - knockBackDirection: String
+    - knockBackCounter: int
+    - knockBackPower: int
+    - attacker: Entity
+
+    + drawHpBarIfNeeded(g2:Graphics2D, screenX:int, screenY:int): void
+    + dyingAnimation(g2:Graphics2D): void
+    + setKnockBack(target:Entity, attacker:Entity, knockBackPower:int): void
+  }
+}
+
+package entity.type {
+  class MonsterType
+  class BossMonsterType
+}
+
+@enduml

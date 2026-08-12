@@ -1,0 +1,88 @@
+@startuml entity_collision
+
+package entity {
+  abstract class Entity <<abstract>> {
+    - gameWindow: GameWindow
+    - mapId: int
+    - worldX: int
+    - worldY: int
+    - width: int
+    - height: int
+
+    - collision: boolean
+    - knockBack: boolean
+    - knockBackDirection: String
+    - knockBackCounter: int
+    - knockBackPower: int
+
+    - attack: int
+    - type: EntityType
+
+    + checkCollision(): void
+    + damagePlayer(attack:int, knockBackPower:int): void
+    + setCollision(b:boolean): void
+    + getType(): EntityType
+    + getInvincible(): boolean
+  }
+
+  class CollisionChecker {
+    + checkTile(e:Entity): void
+    + checkEntity(e:Entity, targets:Entity[]): void
+    + checkPlayer(e:Entity): boolean
+  }
+
+  class GameWindow {
+    + getCollisionChecker(): CollisionChecker
+    + getNPC(): Entity[]
+    + getMonster(): Entity[]
+    + getItile(): Entity[]
+    + getPlayer(): player.Player
+  }
+}
+
+package entity.type {
+  class EntityType
+  class MonsterType extends EntityType
+}
+
+package player {
+  class Player {
+    - invincible: boolean
+    - life: int
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + getLife(): int
+    + setLife(n:int): void
+  }
+}
+
+' 関係
+Entity --> GameWindow : uses(利用する)
+Entity --> CollisionChecker : delegates to(委譲する)
+GameWindow --> CollisionChecker : provides(提供する)
+Entity ..> entity.type.EntityType : typed by(型付けされる)
+Entity ..> entity.type.MonsterType : instance check(インスタンス判定に使用)
+Entity --> player.Player : may affect(影響を与える可能性がある)
+
+note right of CollisionChecker
+  **役割**
+  **Role**
+  - タイル衝突、エンティティ間衝突、プレイヤー接触を判定する責務を持つ。
+  - Responsible for detecting tile collisions, entity-to-entity collisions, and player contact.
+  - Entity.checkCollision は CollisionChecker の複数メソッドを順に呼び出す。
+  - Entity.checkCollision calls multiple CollisionChecker methods in sequence.
+end note
+
+note right of Entity
+  **checkCollision の振る舞い**
+  **Behavior of checkCollision**
+  - setCollision(false)
+  - checkTile(this)
+  - call checkTile(this)
+  - checkEntity(this, NPC/Monster/Itile)
+  - contactPlayer = checkPlayer(this)
+  - 自身が MonsterType かつ contactPlayer かつ プレイヤーが無敵でない場合、かつ自身が無敵でない場合に damagePlayer を呼ぶ
+  - If this is a MonsterType and contactPlayer is true and the player is not invincible, and this entity is not invincible, call damagePlayer
+end note
+
+@enduml

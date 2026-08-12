@@ -1,0 +1,22 @@
+@startuml entity_particles
+
+package entity {
+  abstract class Entity <<abstract>> {
+    - PARTICLE_OFFSETS: int[][] {static, final}
+    - shotAvailableCounter: int
+
+    + generateParticle(generator:Entity, target:Entity): void
+    + spawnFireworkParticles(target:Entity): void
+  }
+}
+
+package entity.particle {
+  class Particle {
+    + Particle(gameWindow:GameWindow, target:Entity, color:Color, size:int, speed:int, maxLife:int, dx:int, dy:int)
+  }
+  class FireworkParticle {
+    + FireworkParticle(gameWindow:GameWindow, owner:Entity, x:int, y:int, color:Color, size:int, maxLife:int, angle:double, speed:double, gravity:double)
+  }
+}
+
+@enduml

@@ -1,0 +1,85 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="220px" preserveAspectRatio="none"
+     style="width:1022px;height:220px;background:#FFFFFF;" version="1.1" viewBox="0 0 1022 220" width="1022px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L46.8379,6.0137 A3.75,3.75 0 0 1 49.3379,8.5137 L56.3379,30.6348 L1012.5,30.6348 A2.5,2.5 0 0 1 1015,33.1348 L1015,210.5137 A2.5,2.5 0 0 1 1012.5,213.0137 L8.5,213.0137 A2.5,2.5 0 0 1 6,210.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="23.1211">entity
+            </text>
+        </g><!--class ImageResizer-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="79.2031" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="422.0742" x="577" y="80.5137"/>
+            <ellipse cx="740.6045" cy="102.8047" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M741.5576,99.4453 L741.5576,106.1016 L743.2764,106.1016 Q743.8857,106.1016 744.1514,106.3359 Q744.417,106.5703 744.417,106.9609 Q744.417,107.3359 744.1514,107.5703 Q743.8857,107.8047 743.2764,107.8047 L738.1357,107.8047 Q737.5264,107.8047 737.2607,107.5703 Q736.9951,107.3359 736.9951,106.9453 Q736.9951,106.5703 737.2607,106.3359 Q737.5264,106.1016 738.1357,106.1016 L739.8545,106.1016 L739.8545,99.4453 L738.1357,99.4453 Q737.5264,99.4453 737.2607,99.2109 Q736.9951,98.9766 736.9951,98.5859 Q736.9951,98.2109 737.2607,97.9766 Q737.5264,97.7422 738.1357,97.7422 L743.2764,97.7422 Q743.8857,97.7422 744.1514,97.9766 Q744.417,98.2109 744.417,98.5859 Q744.417,98.9766 744.1514,99.2109 Q743.8857,99.4453 743.2764,99.4453 L741.5576,99.4453 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="64.7168" x="771.9287" y="98.4629">&#171;functional&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="86.3652" x="761.1045" y="116.582">ImageResizer
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="578" x2="998.0742" y1="125.0957" y2="125.0957"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="578" x2="998.0742" y1="133.0957" y2="133.0957"/>
+            <g>
+                <ellipse cx="588" cy="147.9063" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="396.0742"
+                  x="597" y="152.2031">resize(src: BufferedImage, width: int, height: int): BufferedImage
+            </text>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0004">
+            <rect fill="#F1F1F1" height="153.6875" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="518.5908" x="22.5" y="43.0137"/>
+            <ellipse cx="251.5288" cy="65.3047" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M253.7163,67.0703 L249.5757,67.0703 L249.1538,68.1016 L249.5757,68.1016 Q250.1851,68.1016 250.4507,68.3359 Q250.7163,68.5703 250.7163,68.9609 Q250.7163,69.3359 250.4507,69.5703 Q250.1851,69.8047 249.5757,69.8047 L247.2788,69.8047 Q246.6694,69.8047 246.4194,69.5703 Q246.1538,69.3359 246.1538,68.9453 Q246.1538,68.5703 246.4351,68.3359 Q246.7007,68.0859 247.3257,68.1016 L249.9976,61.4453 L248.8882,61.4453 Q248.2788,61.4453 248.0132,61.2109 Q247.7476,60.9766 247.7476,60.5859 Q247.7476,60.2109 248.0132,59.9766 Q248.2788,59.7422 248.8882,59.7422 L252.5601,59.7422 L255.9507,68.1016 Q256.5444,68.1016 256.7319,68.2422 Q257.1226,68.5078 257.1226,68.9609 Q257.1226,69.3359 256.8569,69.5703 Q256.6069,69.8047 255.9976,69.8047 L253.7007,69.8047 Q253.0913,69.8047 252.8257,69.5703 Q252.5601,69.3359 252.5601,68.9453 Q252.5601,68.5703 252.8257,68.3359 Q253.0913,68.1016 253.7007,68.1016 L254.1226,68.1016 L253.7163,67.0703 Z M252.9976,65.3672 L251.6382,61.9922 L250.2632,65.3672 L252.9976,65.3672 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="56.0332" x="270.0288" y="60.9629">&#171;abstract&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="35.0137" x="280.5386" y="79.082">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="540.0908" y1="87.5957" y2="87.5957"/>
+            <g>
+                <ellipse cx="33.5" cy="102.4063" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="305.7715"
+                  x="42.5" y="106.7031">DEFAULT_RESIZER: ImageResizer {static, final}
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="540.0908" y1="114.2168" y2="114.2168"/>
+            <g>
+                <ellipse cx="33.5" cy="129.0273" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="492.5908"
+                  x="42.5" y="133.3242">loadAnimationFrames(path1:String, path2:String, path3:String, tileSize:int):
+                void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="147.6484" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="290.2402"
+                  x="42.5" y="151.9453">setImage(raw:BufferedImage, tileSize:int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="166.2695" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="166.5098"
+                  x="42.5" y="170.5664">draw(g2:Graphics2D): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="184.8906" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="290.2881"
+                  x="42.5" y="189.1875">changeAlpha(g2:Graphics2D, alpha:float): void
+            </text>
+        </g>
+        <?plantuml-src TL31IiD04BtdA-OOCHVZRGc5IbCfU4hquaN6pIGxDDc4tQb5I_xTJQhI5Bmil7blthot0-ezDWHaXUKJJX40Mo5NeoROTO4goFCNESYo-c2rS6-nNQrc9S0jk9cElTCA7WvrJOwgUI-18rTYrEINW25kZCpWvaeOZCOeFFZknQ4Mq2rw3_avKPRzpY-ERlBj-kNf-Qt8ozrhNgXbqfCN5DO9r1oopjxJKjjZjRRSuTHXwx0Z7myevawLujWs2KmeNQ3xFoJSKXdirRd1Hy_LZwydcS_73e_gwWl-twg2EcvIzUXmCAnzkbdosg1jQDqE1fUo170QgZhqkV0Sep7w1W00?>
+    </g>
+</svg>

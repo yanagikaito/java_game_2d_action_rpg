@@ -5,7 +5,6 @@ import entity.particle.Particle;
 import entity.type.*;
 import frame.FrameApp;
 import game.GameState;
-import npc.NpcChicken;
 import object.Projectile;
 import player.Player;
 import popup.PopupVariant;

@@ -1,0 +1,35 @@
+@startuml image_resizer
+
+package entity {
+  interface ImageResizer <<functional>> {
+    + resize(src: BufferedImage, width: int, height: int): BufferedImage
+  }
+
+  abstract class Entity <<abstract>> {
+    + DEFAULT_RESIZER: ImageResizer {static, final}
+    + loadAnimationFrames(path1: String, path2: String, path3: String, tileSize: int): void
+    + setImage(raw: BufferedImage, tileSize: int): void
+    + draw(g2: Graphics2D): void
+    -- other members omitted --
+  }
+}
+
+package java.awt {
+  class BufferedImage
+  class Graphics2D
+}
+
+Entity --> ImageResizer : uses (DEFAULT_RESIZER)
+ImageResizer ..> java.awt.BufferedImage : operates on
+Entity ..> java.awt.Graphics2D : draws with
+
+note right of ImageResizer
+  **ポイント**
+  Highlights:
+  - ImageResizer は @FunctionalInterface として設計され、ラムダ式で実装される想定。
+  - ImageResizer is designed as a @FunctionalInterface and is intended to be implemented with a lambda.
+  - Entity は static final の DEFAULT_RESIZER を持ち、画像のリサイズ処理を委譲する。
+  - Entity holds a static final DEFAULT_RESIZER and delegates image resizing to it.
+end note
+
+@enduml

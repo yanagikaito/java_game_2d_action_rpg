@@ -1,0 +1,51 @@
+@startuml entity_deps
+
+package java.awt {
+  class Graphics2D
+  class AlphaComposite
+  class Color
+  class Rectangle
+  class BufferedImage
+  class Composite
+  class Rectangle2D
+}
+
+package javax.imageio {
+  class ImageIO
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): player.Player
+    + getWidth(): int
+    + getHeight(): int
+    + getParticleList(): java.util.List
+    + getCollisionChecker(): CollisionChecker
+    + getUi(): ui.UI
+    + getSoundmanager(): sound.SoundManager
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+Entity ..> java.awt.Graphics2D : draws with(描画に使用)
+Entity ..> java.awt.AlphaComposite :  uses for transparency(透明度制御に使用)
+Entity ..> javax.imageio.ImageIO : reads resources(リソース読み込みに使用)
+Entity --> window.GameWindow :  uses(利用)
+Entity --> frame.FrameApp : uses tile size(タイルサイズ取得に使用)
+Entity --> player.Player : queries screen/world pos(画面/world 座標を参照)
+
+@enduml
