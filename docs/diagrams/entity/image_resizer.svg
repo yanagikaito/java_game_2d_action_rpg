@@ -1,0 +1,187 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="633px" preserveAspectRatio="none"
+     style="width:1270px;height:633px;background:#FFFFFF;" version="1.1" viewBox="0 0 1270 633" width="1270px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L46.8379,6.0137 A3.75,3.75 0 0 1 49.3379,8.5137 L56.3379,30.6348 L569.5,30.6348 A2.5,2.5 0 0 1 572,33.1348 L572,387.0137 A2.5,2.5 0 0 1 569.5,389.5137 L8.5,389.5137 A2.5,2.5 0 0 1 6,387.0137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="23.1211">entity
+            </text>
+        </g><!--cluster java-->
+        <g class="cluster" id="ent0007">
+            <path d="M261.5,456.0137 L289.748,456.0137 A3.75,3.75 0 0 1 292.248,458.5137 L299.248,480.6348 L601.5,480.6348 A2.5,2.5 0 0 1 604,483.1348 L604,623.5137 A2.5,2.5 0 0 1 601.5,626.0137 L261.5,626.0137 A2.5,2.5 0 0 1 259,623.5137 L259,458.5137 A2.5,2.5 0 0 1 261.5,456.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="259" x2="299.248" y1="480.6348" y2="480.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="27.248" x="263" y="473.1211">java
+            </text>
+        </g><!--cluster awt-->
+        <g class="cluster" id="ent0005">
+            <path d="M285.5,501.0137 L309.8379,501.0137 A3.75,3.75 0 0 1 312.3379,503.5137 L319.3379,525.6348 L577.5,525.6348 A2.5,2.5 0 0 1 580,528.1348 L580,599.5137 A2.5,2.5 0 0 1 577.5,602.0137 L285.5,602.0137 A2.5,2.5 0 0 1 283,599.5137 L283,503.5137 A2.5,2.5 0 0 1 285.5,501.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="283" x2="319.3379" y1="525.6348" y2="525.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="23.3379" x="287" y="518.1211">awt
+            </text>
+        </g><!--class ImageResizer-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="79.2031" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="422.0742" x="50" y="294.5137"/>
+            <ellipse cx="213.6045" cy="316.8047" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M214.5576,313.4453 L214.5576,320.1016 L216.2764,320.1016 Q216.8857,320.1016 217.1514,320.3359 Q217.417,320.5703 217.417,320.9609 Q217.417,321.3359 217.1514,321.5703 Q216.8857,321.8047 216.2764,321.8047 L211.1357,321.8047 Q210.5264,321.8047 210.2607,321.5703 Q209.9951,321.3359 209.9951,320.9453 Q209.9951,320.5703 210.2607,320.3359 Q210.5264,320.1016 211.1357,320.1016 L212.8545,320.1016 L212.8545,313.4453 L211.1357,313.4453 Q210.5264,313.4453 210.2607,313.2109 Q209.9951,312.9766 209.9951,312.5859 Q209.9951,312.2109 210.2607,311.9766 Q210.5264,311.7422 211.1357,311.7422 L216.2764,311.7422 Q216.8857,311.7422 217.1514,311.9766 Q217.417,312.2109 217.417,312.5859 Q217.417,312.9766 217.1514,313.2109 Q216.8857,313.4453 216.2764,313.4453 L214.5576,313.4453 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="64.7168" x="244.9287" y="312.4629">&#171;functional&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="86.3652" x="234.1045" y="330.582">ImageResizer
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="51" x2="471.0742" y1="339.0957" y2="339.0957"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="51" x2="471.0742" y1="347.0957" y2="347.0957"/>
+            <g>
+                <ellipse cx="61" cy="361.9063" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="396.0742"
+                  x="70" y="366.2031">resize(src: BufferedImage, width: int, height: int): BufferedImage
+            </text>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0004">
+            <rect fill="#F1F1F1" height="154.998" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="534.1494" x="22" y="43.0137"/>
+            <ellipse cx="258.8081" cy="65.3047" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M260.9956,67.0703 L256.855,67.0703 L256.4331,68.1016 L256.855,68.1016 Q257.4644,68.1016 257.73,68.3359 Q257.9956,68.5703 257.9956,68.9609 Q257.9956,69.3359 257.73,69.5703 Q257.4644,69.8047 256.855,69.8047 L254.5581,69.8047 Q253.9487,69.8047 253.6987,69.5703 Q253.4331,69.3359 253.4331,68.9453 Q253.4331,68.5703 253.7144,68.3359 Q253.98,68.0859 254.605,68.1016 L257.2769,61.4453 L256.1675,61.4453 Q255.5581,61.4453 255.2925,61.2109 Q255.0269,60.9766 255.0269,60.5859 Q255.0269,60.2109 255.2925,59.9766 Q255.5581,59.7422 256.1675,59.7422 L259.8394,59.7422 L263.23,68.1016 Q263.8237,68.1016 264.0112,68.2422 Q264.4019,68.5078 264.4019,68.9609 Q264.4019,69.3359 264.1362,69.5703 Q263.8862,69.8047 263.2769,69.8047 L260.98,69.8047 Q260.3706,69.8047 260.105,69.5703 Q259.8394,69.3359 259.8394,68.9453 Q259.8394,68.5703 260.105,68.3359 Q260.3706,68.1016 260.98,68.1016 L261.4019,68.1016 L260.9956,67.0703 Z M260.2769,65.3672 L258.9175,61.9922 L257.5425,65.3672 L260.2769,65.3672 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="56.0332" x="277.3081" y="60.9629">&#171;abstract&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="35.0137" x="287.8179" y="79.082">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="555.1494" y1="87.5957" y2="87.5957"/>
+            <g>
+                <ellipse cx="33" cy="102.4063" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="305.7715"
+                  x="42" y="106.7031">DEFAULT_RESIZER: ImageResizer {static, final}
+            </text>
+            <g>
+                <ellipse cx="33" cy="121.0273" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="508.1494"
+                  x="42" y="125.3242">loadAnimationFrames(path1: String, path2: String, path3: String, tileSize: int):
+                void
+            </text>
+            <g>
+                <ellipse cx="33" cy="139.6484" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="298.0195"
+                  x="42" y="143.9453">setImage(raw: BufferedImage, tileSize: int): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="158.2695" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="170.3994"
+                  x="42" y="162.5664">draw(g2: Graphics2D): void
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23" x2="217.1025" y1="179.3906" y2="179.3906"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143.9443"
+                  x="217.1025" y="184.6875">other members omitted
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="361.0469" x2="555.1494" y1="179.3906" y2="179.3906"/>
+        </g><!--class BufferedImage-->
+        <g class="entity" id="ent0006">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="123.834"
+                  x="299" y="538.0137"/>
+            <ellipse cx="314" cy="554.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M316.7656,549.8887 Q316.9219,549.6699 317.1094,549.5605 Q317.2969,549.4512 317.5156,549.4512 Q317.8906,549.4512 318.125,549.7168 Q318.3594,549.9668 318.3594,550.5762 L318.3594,552.0293 Q318.3594,552.6387 318.125,552.9043 Q317.8906,553.1699 317.5156,553.1699 Q317.1719,553.1699 316.9688,552.9668 Q316.7656,552.7793 316.6563,552.2637 Q316.6094,551.9043 316.4219,551.7168 Q316.0938,551.3418 315.4844,551.123 Q314.875,550.9043 314.25,550.9043 Q313.4844,550.9043 312.8438,551.2324 Q312.2188,551.5605 311.7188,552.3105 Q311.2344,553.0605 311.2344,554.0918 L311.2344,555.1855 Q311.2344,556.4199 312.125,557.248 Q313.0156,558.0605 314.6094,558.0605 Q315.5469,558.0605 316.2031,557.8105 Q316.5938,557.6543 317.0156,557.2168 Q317.2813,556.9512 317.4219,556.873 Q317.5781,556.7949 317.7813,556.7949 Q318.1094,556.7949 318.3594,557.0605 Q318.625,557.3105 318.625,557.6543 Q318.625,557.998 318.2813,558.4043 Q317.7813,558.9824 316.9844,559.3105 Q315.9063,559.7637 314.6094,559.7637 Q313.0938,559.7637 311.8906,559.1387 Q310.9063,558.6387 310.2188,557.5762 Q309.5313,556.498 309.5313,555.2168 L309.5313,554.0605 Q309.5313,552.7324 310.1406,551.5918 Q310.7656,550.4355 311.8594,549.8262 Q312.9531,549.2012 314.1875,549.2012 Q314.9219,549.2012 315.5625,549.373 Q316.2188,549.5293 316.7656,549.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.834"
+                  x="328" y="559.8105">BufferedImage
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="300" x2="421.834" y1="570.0137" y2="570.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="300" x2="421.834" y1="578.0137" y2="578.0137"/>
+        </g><!--class Graphics2D-->
+        <g class="entity" id="ent0008">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="105.917"
+                  x="458" y="538.0137"/>
+            <ellipse cx="473" cy="554.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M475.7656,549.8887 Q475.9219,549.6699 476.1094,549.5605 Q476.2969,549.4512 476.5156,549.4512 Q476.8906,549.4512 477.125,549.7168 Q477.3594,549.9668 477.3594,550.5762 L477.3594,552.0293 Q477.3594,552.6387 477.125,552.9043 Q476.8906,553.1699 476.5156,553.1699 Q476.1719,553.1699 475.9688,552.9668 Q475.7656,552.7793 475.6563,552.2637 Q475.6094,551.9043 475.4219,551.7168 Q475.0938,551.3418 474.4844,551.123 Q473.875,550.9043 473.25,550.9043 Q472.4844,550.9043 471.8438,551.2324 Q471.2188,551.5605 470.7188,552.3105 Q470.2344,553.0605 470.2344,554.0918 L470.2344,555.1855 Q470.2344,556.4199 471.125,557.248 Q472.0156,558.0605 473.6094,558.0605 Q474.5469,558.0605 475.2031,557.8105 Q475.5938,557.6543 476.0156,557.2168 Q476.2813,556.9512 476.4219,556.873 Q476.5781,556.7949 476.7813,556.7949 Q477.1094,556.7949 477.3594,557.0605 Q477.625,557.3105 477.625,557.6543 Q477.625,557.998 477.2813,558.4043 Q476.7813,558.9824 475.9844,559.3105 Q474.9063,559.7637 473.6094,559.7637 Q472.0938,559.7637 470.8906,559.1387 Q469.9063,558.6387 469.2188,557.5762 Q468.5313,556.498 468.5313,555.2168 L468.5313,554.0605 Q468.5313,552.7324 469.1406,551.5918 Q469.7656,550.4355 470.8594,549.8262 Q471.9531,549.2012 473.1875,549.2012 Q473.9219,549.2012 474.5625,549.373 Q475.2188,549.5293 475.7656,549.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="73.917"
+                  x="487" y="559.8105">Graphics2D
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="459" x2="562.917" y1="570.0137" y2="570.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="459" x2="562.917" y1="578.0137" y2="578.0137"/>
+        </g>
+        <g class="entity" id="ent0013">
+            <path d="M640,277.0137 L640,390.7598 L1263.8623,390.7598 L1263.8623,287.0137 L1253.8623,277.0137 L640,277.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1253.8623,277.0137 L1253.8623,287.0137 L1263.8623,287.0137 L1253.8623,277.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="53.625" x="646" y="296.042">&#12509;&#12452;&#12531;&#12488;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="60.6963"
+                  x="646" y="313.333">Highlights:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="508.7329"
+                  x="646" y="330.624">- ImageResizer &#12399; @FunctionalInterface &#12392;&#12375;&#12390;&#35373;&#35336;&#12373;&#12428;&#12289;&#12521;&#12512;&#12480;&#24335;&#12391;&#23455;&#35013;&#12373;&#12428;&#12427;&#24819;&#23450;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="602.8623"
+                  x="646" y="347.915">- ImageResizer is designed as a @FunctionalInterface and is intended to be
+                implemented with a lambda.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="512.1162"
+                  x="646" y="365.2061">- Entity &#12399; static final &#12398; DEFAULT_RESIZER &#12434;&#25345;&#12385;&#12289;&#30011;&#20687;&#12398;&#12522;&#12469;&#12452;&#12474;&#20966;&#29702;&#12434;&#22996;&#35698;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="474.7095"
+                  x="646" y="382.4971">- Entity holds a static final DEFAULT_RESIZER and delegates image resizing to it.
+            </text>
+        </g><!--link Entity to ImageResizer-->
+        <g class="link"
+           id="lnk9">
+            <path d="M278.85,198.1737 C274.53,230.7937 270.4667,261.4855 266.9167,288.3255" fill="none"
+                  id="Entity-to-ImageResizer" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="266.13,294.2737,271.2756,285.8759,266.7856,289.3168,263.3446,284.8269,266.13,294.2737"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="162.5317"
+                  x="276" y="243.042">uses (DEFAULT_RESIZER)
+            </text>
+        </g><!--link ImageResizer to BufferedImage-->
+        <g class="link"
+           id="lnk10">
+            <path d="M278.08,373.6037 C298.94,420.7537 331.1422,493.5368 348.2922,532.2968" fill="none"
+                  id="ImageResizer-to-BufferedImage" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="350.72,537.7837,350.7363,527.9348,348.6969,533.2113,343.4204,531.1718,350.72,537.7837"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="68.6626"
+                  x="306" y="436.042">operates on
+            </text>
+        </g><!--link Entity to Graphics2D-->
+        <g class="link"
+           id="lnk11">
+            <path
+                    d="M428.14,198.1737 C454.05,219.8237 477.03,246.0937 490,277.0137 C527.85,367.2937 520.3818,481.8514 514.7518,531.8214"
+                    fill="none" id="Entity-to-Graphics2D" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="514.08,537.7837,519.0625,529.2881,514.6398,532.8151,511.1128,528.3924,514.08,537.7837"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="61.4072"
+                  x="517" y="339.542">draws with
+            </text>
+        </g><!--link ImageResizer to GMN12-->
+        <g class="link"
+           id="lnk14">
+            <path d="M342.83,294.4437 C391.92,272.9137 456.33,248.4937 516.5,237.5137 C619.16,218.7737 734.4,246.4937 820.54,276.9637"
+                  fill="none" id="ImageResizer-GMN12" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+        </g>
+        <?plantuml-src VLHTQnD157tVNt7VJ6CIiBw54AmqqO1FYRxu8fFToUxeVZ4pQT1IwEvYBLXGf28AegAqKMW4Yo_glncspS_mpcQJT5Fn9MJkd7lFFUVUsP2OZuXDWVgIoSUmRG0mNr8-82Q5ZeTNNIhO4ygXqHWCVLEom2TkivaX0Qu2pwvBWfjrk3aS32YdLfPNWH6pf5FNzIhWK6OxCZkihG2nq8w1FwGl92Uc1DCbGa1hrb6ZCOzV8DrijJVktRdxeDlgTUwtklLYfzj24idC2WmOzhgJvxW1iJPyvX4jeSs9HqKf9DAvLeUUvCotAw2FwyNZzULHCfVsa60kOYjWLbvRK9brKE9aTCc6_-HPY2_PI7cBaz1XfbZVl0YeLY6G3YhogDUdN43WCIcfXHUPQMXRcC_l8TaYDJAIcKKp0rTDdaMNJ3hz2ixFpHmH3Wk5aPjUhJQBbjPXAAY0qehnQqO1LQir5utK2lHO80Wf9nAB1FwSfe1VDePWROp01PAEOVY1fC3r-a0mABI5eifbbRnNyHULdAfalrp6q6s4kXekwdYg5eMew3lSQ2yMkRFOTHMDLVH6HKVJySbqlA-Yroe-KBkHIhwgvADATjC_BrHqd4u-J3y_pM_ZvsV9QJfvftRZoqnCW8L_RH_dHGIGVzCItz98_UPy2v4oW3u5veKkzV1DOaIRWDakyVeMgMKykNrQospLPvkEWSdgqm0LlpexY5Jq2RMS7_vE4rGnKSat5V_KjiM_qcT7vo_t49OU7qvFVgZeBUgQAygPdC2rj8G2sogJbc9HbzhPb5aszkphWAz7wsAoPg18qFCq_W80?>
+    </g>
+</svg>

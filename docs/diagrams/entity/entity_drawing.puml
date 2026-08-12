@@ -1,0 +1,18 @@
+@startuml entity_drawing
+
+package entity {
+  interface ImageResizer <<functional>> {
+    + resize(src: BufferedImage, width: int, height: int): BufferedImage
+  }
+
+  abstract class Entity <<abstract>> {
+    + DEFAULT_RESIZER: ImageResizer {static, final}
+
+    + loadAnimationFrames(path1:String, path2:String, path3:String, tileSize:int): void
+    + setImage(raw:BufferedImage, tileSize:int): void
+    + draw(g2:Graphics2D): void
+    + changeAlpha(g2:Graphics2D, alpha:float): void
+  }
+}
+
+@enduml

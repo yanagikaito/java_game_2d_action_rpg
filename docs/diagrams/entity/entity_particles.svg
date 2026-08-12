@@ -1,0 +1,104 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="212px" preserveAspectRatio="none"
+     style="width:2123px;height:212px;background:#FFFFFF;" version="1.1" viewBox="0 0 2123 212" width="2123px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L46.8379,6.0137 A3.75,3.75 0 0 1 49.3379,8.5137 L56.3379,30.6348 L2113.5,30.6348 A2.5,2.5 0 0 1 2116,33.1348 L2116,202.5137 A2.5,2.5 0 0 1 2113.5,205.0137 L8.5,205.0137 A2.5,2.5 0 0 1 6,202.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="23.1211">entity
+            </text>
+        </g><!--cluster particle-->
+        <g class="cluster" id="ent0004">
+            <path d="M395.5,51.0137 L446.2998,51.0137 A3.75,3.75 0 0 1 448.7998,53.5137 L455.7998,75.6348 L2089.5,75.6348 A2.5,2.5 0 0 1 2092,78.1348 L2092,168.5137 A2.5,2.5 0 0 1 2089.5,171.0137 L395.5,171.0137 A2.5,2.5 0 0 1 393,168.5137 L393,53.5137 A2.5,2.5 0 0 1 395.5,51.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="393" x2="455.7998" y1="75.6348" y2="75.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="49.7998" x="397" y="68.1211">particle
+            </text>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="135.0664" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="352.0537" x="22" y="54.0137"/>
+            <ellipse cx="167.7603" cy="76.3047" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M169.9478,78.0703 L165.8071,78.0703 L165.3853,79.1016 L165.8071,79.1016 Q166.4165,79.1016 166.6821,79.3359 Q166.9478,79.5703 166.9478,79.9609 Q166.9478,80.3359 166.6821,80.5703 Q166.4165,80.8047 165.8071,80.8047 L163.5103,80.8047 Q162.9009,80.8047 162.6509,80.5703 Q162.3853,80.3359 162.3853,79.9453 Q162.3853,79.5703 162.6665,79.3359 Q162.9321,79.0859 163.5571,79.1016 L166.229,72.4453 L165.1196,72.4453 Q164.5103,72.4453 164.2446,72.2109 Q163.979,71.9766 163.979,71.5859 Q163.979,71.2109 164.2446,70.9766 Q164.5103,70.7422 165.1196,70.7422 L168.7915,70.7422 L172.1821,79.1016 Q172.7759,79.1016 172.9634,79.2422 Q173.354,79.5078 173.354,79.9609 Q173.354,80.3359 173.0884,80.5703 Q172.8384,80.8047 172.229,80.8047 L169.9321,80.8047 Q169.3228,80.8047 169.0571,80.5703 Q168.7915,80.3359 168.7915,79.9453 Q168.7915,79.5703 169.0571,79.3359 Q169.3228,79.1016 169.9321,79.1016 L170.354,79.1016 L169.9478,78.0703 Z M169.229,76.3672 L167.8696,72.9922 L166.4946,76.3672 L169.229,76.3672 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="56.0332" x="186.2603" y="71.9629">&#171;abstract&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="35.0137" x="196.77" y="90.082">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="373.0537" y1="98.5957" y2="98.5957"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30" y="110.4063"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="258.3096"
+                  x="42" y="117.7031">PARTICLE_OFFSETS: int[][] {static, final}
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30" y="129.0273"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="155.6475"
+                  x="42" y="136.3242">shotAvailableCounter: int
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="373.0537" y1="143.8379" y2="143.8379"/>
+            <g>
+                <ellipse cx="33" cy="158.6484" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="326.0537"
+                  x="42" y="162.9453">generateParticle(generator:Entity, target:Entity): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="177.2695" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="265.3096"
+                  x="42" y="181.5664">spawnFireworkParticles(target:Entity): void
+            </text>
+        </g><!--class Particle-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="66.6211" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="690.4873" x="1386" y="88.0137"/>
+            <ellipse cx="1703.6523" cy="104.0137" fill="#ADD1B2" rx="11" ry="11"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <path d="M1706.418,99.8887 Q1706.5742,99.6699 1706.7617,99.5605 Q1706.9492,99.4512 1707.168,99.4512 Q1707.543,99.4512 1707.7773,99.7168 Q1708.0117,99.9668 1708.0117,100.5762 L1708.0117,102.0293 Q1708.0117,102.6387 1707.7773,102.9043 Q1707.543,103.1699 1707.168,103.1699 Q1706.8242,103.1699 1706.6211,102.9668 Q1706.418,102.7793 1706.3086,102.2637 Q1706.2617,101.9043 1706.0742,101.7168 Q1705.7461,101.3418 1705.1367,101.123 Q1704.5273,100.9043 1703.9023,100.9043 Q1703.1367,100.9043 1702.4961,101.2324 Q1701.8711,101.5605 1701.3711,102.3105 Q1700.8867,103.0605 1700.8867,104.0918 L1700.8867,105.1855 Q1700.8867,106.4199 1701.7773,107.248 Q1702.668,108.0605 1704.2617,108.0605 Q1705.1992,108.0605 1705.8555,107.8105 Q1706.2461,107.6543 1706.668,107.2168 Q1706.9336,106.9512 1707.0742,106.873 Q1707.2305,106.7949 1707.4336,106.7949 Q1707.7617,106.7949 1708.0117,107.0605 Q1708.2773,107.3105 1708.2773,107.6543 Q1708.2773,107.998 1707.9336,108.4043 Q1707.4336,108.9824 1706.6367,109.3105 Q1705.5586,109.7637 1704.2617,109.7637 Q1702.7461,109.7637 1701.543,109.1387 Q1700.5586,108.6387 1699.8711,107.5762 Q1699.1836,106.498 1699.1836,105.2168 L1699.1836,104.0605 Q1699.1836,102.7324 1699.793,101.5918 Q1700.418,100.4355 1701.5117,99.8262 Q1702.6055,99.2012 1703.8398,99.2012 Q1704.5742,99.2012 1705.2148,99.373 Q1705.8711,99.5293 1706.418,99.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="46.6826"
+                  x="1724.1523" y="109.8105">Particle
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="1387" x2="2075.4873" y1="120.0137" y2="120.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="1387" x2="2075.4873" y1="128.0137" y2="128.0137"/>
+            <g>
+                <ellipse cx="1397" cy="142.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="664.4873"
+                  x="1406" y="147.1211">Particle(gameWindow:GameWindow, target:Entity, color:Color, size:int, speed:int,
+                maxLife:int, dx:int, dy:int)
+            </text>
+        </g><!--class FireworkParticle-->
+        <g class="entity" id="ent0006">
+            <rect fill="#F1F1F1" height="66.6211" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="941.0791" x="409.5" y="88.0137"/>
+            <ellipse cx="825.6138" cy="104.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M828.3794,99.8887 Q828.5356,99.6699 828.7231,99.5605 Q828.9106,99.4512 829.1294,99.4512 Q829.5044,99.4512 829.7388,99.7168 Q829.9731,99.9668 829.9731,100.5762 L829.9731,102.0293 Q829.9731,102.6387 829.7388,102.9043 Q829.5044,103.1699 829.1294,103.1699 Q828.7856,103.1699 828.5825,102.9668 Q828.3794,102.7793 828.27,102.2637 Q828.2231,101.9043 828.0356,101.7168 Q827.7075,101.3418 827.0981,101.123 Q826.4888,100.9043 825.8638,100.9043 Q825.0981,100.9043 824.4575,101.2324 Q823.8325,101.5605 823.3325,102.3105 Q822.8481,103.0605 822.8481,104.0918 L822.8481,105.1855 Q822.8481,106.4199 823.7388,107.248 Q824.6294,108.0605 826.2231,108.0605 Q827.1606,108.0605 827.8169,107.8105 Q828.2075,107.6543 828.6294,107.2168 Q828.895,106.9512 829.0356,106.873 Q829.1919,106.7949 829.395,106.7949 Q829.7231,106.7949 829.9731,107.0605 Q830.2388,107.3105 830.2388,107.6543 Q830.2388,107.998 829.895,108.4043 Q829.395,108.9824 828.5981,109.3105 Q827.52,109.7637 826.2231,109.7637 Q824.7075,109.7637 823.5044,109.1387 Q822.52,108.6387 821.8325,107.5762 Q821.145,106.498 821.145,105.2168 L821.145,104.0605 Q821.145,102.7324 821.7544,101.5918 Q822.3794,100.4355 823.4731,99.8262 Q824.5669,99.2012 825.8013,99.2012 Q826.5356,99.2012 827.1763,99.373 Q827.8325,99.5293 828.3794,99.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100.3516"
+                  x="846.1138" y="109.8105">FireworkParticle
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="410.5" x2="1349.5791" y1="120.0137" y2="120.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="410.5" x2="1349.5791" y1="128.0137" y2="128.0137"/>
+            <g>
+                <ellipse cx="420.5" cy="142.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="915.0791"
+                  x="429.5" y="147.1211">FireworkParticle(gameWindow:GameWindow, owner:Entity, x:int, y:int,
+                color:Color, size:int, maxLife:int, angle:double, speed:double, gravity:double)
+            </text>
+        </g>
+        <?plantuml-src TP7VQeCm5CRlVOfpMPdR0qWf5B5ZK9YiXLsKCaxrr8McYIIfrXNVVL6ZMuNUvFp9-PBVbnIOdZ0d866OgU7c0U116uMfWPIZrX3tE_Fvq5yikZ60PqYM7zktQ1r_lQzMctYx2O49izllzd3J1WrB0pWoWRnny_fRccM9ZEE1KoGlmf3gD5uty0Gv2L9eA45brPnchY5Ls7C4O53bP5pfXr1AbZcrBh0IAwQeakeq7A5d3nIDrtXUSUV_fN2Ypc7lF_dVQc_vOyCpVJAHoIfy7TC9O02fv9O-QjS0DFkXqFgrMK6KzUaPhsjsTFtiwcBTHh_Z752craQawSOZD5dPrnp9t4rr7nvmti6Xo3c5cRpOxnii35MkiBJ7kjft3_mB?>
+    </g>
+</svg>

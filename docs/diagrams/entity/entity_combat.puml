@@ -1,0 +1,128 @@
+@startuml entity_combat
+
+package entity {
+  abstract class Entity <<abstract>> {
+    - worldX: int
+    - worldY: int
+    - attackArea: Rectangle
+    - spriteCounter: int
+    - spriteNum: int
+    - attackCooldown: int
+    - attack: int
+    - knockBackPower: int
+    - direction: String
+
+    + getOppositeDirection(direction:String): String
+    + attacking(): void
+    + damagePlayer(attack:int, knockBackPower:int): void
+    + setKnockBack(target:player.Player, attacker:Entity, power:int): void
+    + setSpriteCounter(n:int): void
+    + getSpriteCounter(): int
+    + setSpriteNum(n:int): void
+    + getSpriteNum(): int
+    + getGameWindow(): window.GameWindow
+    + getAttack(): int
+    + setInvincibleCounter(n:int): void
+    + setInvincible(b:boolean): void
+  }
+
+  class PopupVariant <<enumeration>> {
+    MONSTER_DAMAGE
+    GUARDED_DAMAGE
+  }
+}
+
+package player {
+  class Player {
+    - invincible: boolean
+    - life: int
+
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + getLife(): int
+    + setLife(n:int): void
+    + calculateTotalDefense(): int
+    + getCurrentShield(): entity.Entity
+    + isBlockingLeft(): boolean
+    + isGuarding(): boolean
+    + getDirection(): String
+    + setTransparent(b:boolean): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): player.Player
+    + getUi(): ui.UI
+    + getSoundmanager(): sound.SoundManager
+    + setGameState(s:game.GameState): void
+  }
+}
+
+package ui {
+  class UI {
+    + getDamagePopupManager(): ui.DamagePopupManager
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package sound {
+  class SoundManager {
+    + damageWAV(path:String): void
+    + defeatedWAV(path:String): void
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity.type {
+  class ShieldType
+}
+
+package game {
+  enum GameState
+}
+
+Entity --> window.GameWindow : uses(利用する)
+Entity --> player.Player : queries / affects(クエリ／影響を与える)
+Entity --> ui.UI : uses(利用する)
+Entity --> ui.DamagePopupManager : creates popups(ポップアップを生成する)
+Entity --> sound.SoundManager : plays sounds(サウンドを再生する)
+Entity ..> frame.FrameApp : reads tile size(タイルサイズを参照する)
+Player ..> entity.type.ShieldType : shield type check(盾タイプの判定に使用)
+
+note right of Entity
+  getOppositeDirection:
+  - 文字列 "up/down/left/right" の反対を返す。
+  - Returns the opposite of "up"/"down"/"left"/"right".
+
+  attacking():
+  - スプライトカウンタを進め、閾値を超えたらフレームを切替える。
+  - Advances sprite counter and cycles animation frames when threshold exceeded.
+  - 攻撃判定ボックス（attackArea）とプレイヤーの当たり判定が交差したら damagePlayer を呼ぶ。
+  - Builds an attack bounding box and, if it intersects the player's box and the player is not invincible, calls damagePlayer.
+  - attackCooldown をリセットする。
+  - Resets attackCooldown.
+
+  damagePlayer():
+  - プレイヤーが無敵でなければダメージ計算を行う（防御差分を考慮）。
+  - If player is not invincible, compute damage considering player's defense.
+  - プレイヤーがガード中かつ盾を装備している場合はダメージ軽減とガード処理（ポップアップ・効果音）。
+  - If player is guarding with a shield and facing the correct direction, reduce damage and show guarded popup/sound.
+  - ガード失敗時は透明化・ノックバック・無敵化・ダメージポップアップ・効果音を行う。
+  - On failed guard: play damage sound, set player transparent, apply knockback, reduce life, show damage popup, set player invincible and reset invincible counter.
+  - プレイヤーのライフが 0 以下なら GameState を GAME_OVER に遷移させる。
+  - If player's life <= 0, set GameState to GAME_OVER.
+end note
+
+@enduml

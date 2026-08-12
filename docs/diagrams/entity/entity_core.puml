@@ -1,0 +1,61 @@
+@startuml entity_core
+
+package entity {
+  abstract class Entity <<abstract>> {
+    - gameWindow: GameWindow
+    - mapId: int
+    - worldX: int
+    - worldY: int
+    - width: int
+    - height: int
+
+    - speed: int
+    - defaultSpeed: int
+    - direction: String
+    - attackDirection: String
+    - guardDirection: String
+
+    - sprites: BufferedImage[][]
+    - attackSprites: BufferedImage[][]
+    - image: BufferedImage
+    - image2: BufferedImage
+    - image3: BufferedImage
+    - animationFrames: BufferedImage[]
+
+    - spriteCounter: int
+    - spriteNum: int
+    - spriteKey: String
+
+    - solidArea: Rectangle
+    - attackArea: Rectangle
+    - solidAreaDefaultX: int
+    - solidAreaDefaultY: int
+
+    + DEFAULT_RESIZER: ImageResizer {static, final}
+    + Entity(gameWindow: GameWindow)
+
+    --Image loading and resizing --
+    --(画像読み込みとリサイズ)--
+    + loadAnimationFrames(path1:String, path2:String, path3:String, tileSize:int): void
+    + setImage(raw:BufferedImage, tileSize:int): void
+    + setImage(imagePath:String): void
+
+    -- Drawing and helper methods --
+    -- (描画と補助メソッド) --
+    + draw(g2:Graphics2D): void
+    + changeAlpha(g2:Graphics2D, alpha:float): void
+    + dyingAnimation(g2:Graphics2D): void
+    + drawHpBarIfNeeded(g2:Graphics2D, screenX:int, screenY:int): void
+
+    -- Other behavior--
+    -- その他の振る舞い --
+    + update(): void
+    + attacking(): void
+    + setAction(): void
+    + move(): void
+    + chooseNewDirection(): void
+    + checkCollision(): void
+  }
+}
+
+@enduml

@@ -1,0 +1,321 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="1145px" preserveAspectRatio="none"
+     style="width:565px;height:1145px;background:#FFFFFF;" version="1.1" viewBox="0 0 565 1145" width="565px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L46.8379,6.0137 A3.75,3.75 0 0 1 49.3379,8.5137 L56.3379,30.6348 L555.5,30.6348 A2.5,2.5 0 0 1 558,33.1348 L558,1135.5137 A2.5,2.5 0 0 1 555.5,1138.0137 L8.5,1138.0137 A2.5,2.5 0 0 1 6,1135.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="23.1211">entity
+            </text>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="1079.4316" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="518.5908" x="22.5" y="43.0137"/>
+            <ellipse cx="251.5288" cy="65.3047" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M253.7163,67.0703 L249.5757,67.0703 L249.1538,68.1016 L249.5757,68.1016 Q250.1851,68.1016 250.4507,68.3359 Q250.7163,68.5703 250.7163,68.9609 Q250.7163,69.3359 250.4507,69.5703 Q250.1851,69.8047 249.5757,69.8047 L247.2788,69.8047 Q246.6694,69.8047 246.4194,69.5703 Q246.1538,69.3359 246.1538,68.9453 Q246.1538,68.5703 246.4351,68.3359 Q246.7007,68.0859 247.3257,68.1016 L249.9976,61.4453 L248.8882,61.4453 Q248.2788,61.4453 248.0132,61.2109 Q247.7476,60.9766 247.7476,60.5859 Q247.7476,60.2109 248.0132,59.9766 Q248.2788,59.7422 248.8882,59.7422 L252.5601,59.7422 L255.9507,68.1016 Q256.5444,68.1016 256.7319,68.2422 Q257.1226,68.5078 257.1226,68.9609 Q257.1226,69.3359 256.8569,69.5703 Q256.6069,69.8047 255.9976,69.8047 L253.7007,69.8047 Q253.0913,69.8047 252.8257,69.5703 Q252.5601,69.3359 252.5601,68.9453 Q252.5601,68.5703 252.8257,68.3359 Q253.0913,68.1016 253.7007,68.1016 L254.1226,68.1016 L253.7163,67.0703 Z M252.9976,65.3672 L251.6382,61.9922 L250.2632,65.3672 L252.9976,65.3672 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="56.0332" x="270.0288" y="60.9629">&#171;abstract&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="35.0137" x="280.5386" y="79.082">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="540.0908" y1="87.5957" y2="87.5957"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="99.4063"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="180.5098"
+                  x="42.5" y="106.7031">gameWindow: GameWindow
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="118.0273"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61.4756"
+                  x="42.5" y="125.3242">mapId: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="136.6484"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.3584"
+                  x="42.5" y="143.9453">worldX: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="155.2695"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.3584"
+                  x="42.5" y="162.5664">worldY: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="173.8906"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248"
+                  x="42.5" y="181.1875">width: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="192.5117"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.71"
+                  x="42.5" y="199.8086">height: int
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="218.4297">&#160;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="229.7539"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.71"
+                  x="42.5" y="237.0508">speed: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="248.375"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105.082"
+                  x="42.5" y="255.6719">defaultSpeed: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="266.9961"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="97.2686"
+                  x="42.5" y="274.293">direction: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="285.6172"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.9443"
+                  x="42.5" y="292.9141">attackDirection: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="304.2383"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="135.3994"
+                  x="42.5" y="311.5352">guardDirection: String
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="330.1563">&#160;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="341.4805"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="156.4063"
+                  x="42.5" y="348.7773">sprites: BufferedImage[][]
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="360.1016"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="196.0957"
+                  x="42.5" y="367.3984">attackSprites: BufferedImage[][]
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="378.7227"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="137.7441"
+                  x="42.5" y="386.0195">image: BufferedImage
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="397.3438"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="145.5303"
+                  x="42.5" y="404.6406">image2: BufferedImage
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="415.9648"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="145.5303"
+                  x="42.5" y="423.2617">image3: BufferedImage
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="434.5859"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="215.5439"
+                  x="42.5" y="441.8828">animationFrames: BufferedImage[]
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="460.5039">&#160;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="471.8281"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="106.6064"
+                  x="42.5" y="479.125">spriteCounter: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="490.4492"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86.3584"
+                  x="42.5" y="497.7461">spriteNum: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="509.0703"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="102.71"
+                  x="42.5" y="516.3672">spriteKey: String
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="534.9883">&#160;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="546.3125"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129.1855"
+                  x="42.5" y="553.6094">solidArea: Rectangle
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="564.9336"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="137.7441"
+                  x="42.5" y="572.2305">attackArea: Rectangle
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="583.5547"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134.627"
+                  x="42.5" y="590.8516">solidAreaDefaultX: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="602.1758"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134.627"
+                  x="42.5" y="609.4727">solidAreaDefaultY: int
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="628.0938">&#160;
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="642.418" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="305.7715"
+                  x="42.5" y="646.7148">DEFAULT_RESIZER: ImageResizer {static, final}
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="661.0391" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="224.8477"
+                  x="42.5" y="665.3359">Entity(gameWindow: GameWindow)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="683.957">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="198.1304" y1="700.7813" y2="700.7813"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="167.3301"
+                  x="198.1304" y="706.0781">Image loading and resizing
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="365.4604" x2="540.0908" y1="700.7813" y2="700.7813"/>
+            <g>
+                <ellipse cx="33.5" cy="748.834" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="492.5908"
+                  x="42.5" y="753.1309">loadAnimationFrames(path1:String, path2:String, path3:String, tileSize:int):
+                void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="767.4551" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="290.2402"
+                  x="42.5" y="771.752">setImage(raw:BufferedImage, tileSize:int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="786.0762" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="207.7646"
+                  x="42.5" y="790.373">setImage(imagePath:String): void
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="808.9941">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="200.1333" y1="728.7129" y2="728.7129"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="163.3242"
+                  x="200.1333" y="734.0098">(&#30011;&#20687;&#35501;&#12415;&#36796;&#12415;&#12392;&#12522;&#12469;&#12452;&#12474;)
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="363.4575" x2="540.0908" y1="728.7129" y2="728.7129"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="192.2993" y1="825.8184" y2="825.8184"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="178.9922"
+                  x="192.2993" y="831.1152">Drawing and helper methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="371.2915" x2="540.0908" y1="825.8184" y2="825.8184"/>
+            <g>
+                <ellipse cx="33.5" cy="873.8711" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="166.5098"
+                  x="42.5" y="878.168">draw(g2:Graphics2D): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="892.4922" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="290.2881"
+                  x="42.5" y="896.7891">changeAlpha(g2:Graphics2D, alpha:float): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="911.1133" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="231.8887"
+                  x="42.5" y="915.4102">dyingAnimation(g2:Graphics2D): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="929.7344" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="418.6396"
+                  x="42.5" y="934.0313">drawHpBarIfNeeded(g2:Graphics2D, screenX:int, screenY:int): void
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="952.6523">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="214.1333" y1="853.75" y2="853.75"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="135.3242"
+                  x="214.1333" y="859.0469">(&#25551;&#30011;&#12392;&#35036;&#21161;&#12513;&#12477;&#12483;&#12489;)
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="349.4575" x2="540.0908" y1="853.75" y2="853.75"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="235.4922" y1="969.4766" y2="969.4766"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="92.6064"
+                  x="235.4922" y="974.7734">Other behavior
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="328.0986" x2="540.0908" y1="969.4766" y2="969.4766"/>
+            <g>
+                <ellipse cx="33.5" cy="1017.5293" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85.6064"
+                  x="42.5" y="1021.8262">update(): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1036.1504" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98.8203"
+                  x="42.5" y="1040.4473">attacking(): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1054.7715" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100.3721"
+                  x="42.5" y="1059.0684">setAction(): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1073.3926" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="77.0205"
+                  x="42.5" y="1077.6895">move(): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1092.0137" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="171.1787"
+                  x="42.5" y="1096.3105">chooseNewDirection(): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1110.6348" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="132.2686"
+                  x="42.5" y="1114.9316">checkCollision(): void
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="225.7954" y1="997.4082" y2="997.4082"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112"
+                  x="225.7954" y="1002.7051">&#12381;&#12398;&#20182;&#12398;&#25391;&#12427;&#33310;&#12356;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="337.7954" x2="540.0908" y1="997.4082" y2="997.4082"/>
+        </g>
+        <?plantuml-src ZLHDRzD04BttLypHKPi3wSsgAgLDMY9GGGce3LM5jjw9lQfZMxkRHgNg8Ga7lgHU42T0Gd20Ii292-NZnomj-HciF-9curAuM9dtPcVclTbiH9mzuY9W89ayWCCv0B8h92UE1CSdGa0zPPQM9lZoSf86K0QNT76J1JJisx2U_yx8BeaQr0OMo0peXzodMmMaRI2CIcyQy92vdaoH318Heb6OOeVqVDagu8oZ8raOsD2Id0LkXXCfjUpQNrYtHpWjadbppYGA6rPwdGvof8skzczxPtl7ADxwLngBunbwcgfSmIrUpf50i_7CQrplejZRbB0QzWA9VDglbDZeTOlW3JmeE17wZ5Ov4XkQsYiIk3uQ7bpEvSTgwTQC2p5BjgSMFm-r-bhrxiqxzvlrLkDUlMb38go9WZr03eT2QlNE0dHOGFoZx4nwVQtBRsefqr9E2e4V4ge5QYCfyBXg79JBMOxr-_dfsUXuVF9H3NwEVtpJNpLuhqOdQlX53T-fuTTIbZkVLAgQwx0Y8hrhTkhX0iHHnOWMyqWo7rjQawsrbspO3ndDwWgKoQWM9ttRMEz_dKfkpstTAsirISiKGasNdHZWeHzfLxielP2A2nl0EZy-rbPexUEtBy-UV52ZDshuNOr6QlIu1Ba5LDUot8gzpadaCKTKQkPGZgTl1LRzo2DcsWAG6BGxsiGP8VH0JvVxUbNrkFlrQ8NmHcT3lmf8Pti8XoC6Mx5Paw0zxTn4xItfQHTsqIFxBEGNBgZ1ApNuzElqXVwUF_kiXa_7ZrwhmSCB0teH9H8jSwxqdw5LM8KLLPFtPWRlXlkp9Hml30LkO3z_eme9wEojXhxFX4aUpHtD_G40?>
+    </g>
+</svg>

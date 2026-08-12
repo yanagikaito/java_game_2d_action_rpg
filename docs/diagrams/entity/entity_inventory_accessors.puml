@@ -1,0 +1,66 @@
+@startuml entity_inventory_accessors
+
+package entity {
+  abstract class Entity <<abstract>> {
+    - maxMana: int
+    - mana: int
+
+    - level: int
+    - strength: int
+    - dexterity: int
+    - attack: int
+    - defense: int
+    - attackValue: int
+    - defenseValue: int
+
+    - exp: int
+    - nextLevelExp: int
+    - coin: int
+
+    - currentWeapon: Entity
+    - currentShield: Entity
+    - projectile: Projectile
+    - respawning: boolean
+
+    - inventory: ArrayList<Entity>
+    - maxInventorySize: int
+    - count: int
+    - amount: int
+    - maxStack: int
+    - stackable: boolean
+    - thrown: boolean
+    - blocking: boolean
+
+    - description: String
+    - useCost: int
+    - shotAvailableCounter: int
+    - value: int
+    - price: int
+
+    + getInventory(): ArrayList<Entity>
+    + setInventory(inv:ArrayList<Entity>): void
+    + getShopItems(): ArrayList<Entity>
+    + copy(): Entity
+
+    + getMana(): int
+    + setMana(n:int): void
+    + getMaxMana(): int
+    + setMaxMana(n:int): void
+
+    + getPrice(): int
+    + setPrice(n:int): void
+
+    + isStackable(): boolean
+    + setStackable(b:boolean): void
+    + getAmount(): int
+    + setAmount(n:int): void
+    + getMaxStack(): int
+    + setMaxStack(n:int): void
+  }
+}
+
+package object {
+  class Projectile
+}
+
+@enduml

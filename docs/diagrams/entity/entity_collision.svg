@@ -1,0 +1,452 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="951px" preserveAspectRatio="none"
+     style="width:1761px;height:951px;background:#FFFFFF;" version="1.1" viewBox="0 0 1761 951" width="1761px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L46.8379,6.0137 A3.75,3.75 0 0 1 49.3379,8.5137 L56.3379,30.6348 L954.5,30.6348 A2.5,2.5 0 0 1 957,33.1348 L957,941.5137 A2.5,2.5 0 0 1 954.5,944.0137 L8.5,944.0137 A2.5,2.5 0 0 1 6,941.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="23.1211">entity
+            </text>
+        </g><!--cluster type-->
+        <g class="cluster" id="ent0006">
+            <path d="M520.5,597.0137 L550.2861,597.0137 A3.75,3.75 0 0 1 552.7861,599.5137 L559.7861,621.6348 L661.5,621.6348 A2.5,2.5 0 0 1 664,624.1348 L664,913.5137 A2.5,2.5 0 0 1 661.5,916.0137 L520.5,916.0137 A2.5,2.5 0 0 1 518,913.5137 L518,599.5137 A2.5,2.5 0 0 1 520.5,597.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="518" x2="559.7861" y1="621.6348" y2="621.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="28.7861" x="522" y="614.1211">type
+            </text>
+        </g><!--cluster player-->
+        <g class="cluster" id="ent0010">
+            <path d="M983.5,541.0137 L1025.748,541.0137 A3.75,3.75 0 0 1 1028.248,543.5137 L1035.248,565.6348 L1218.5,565.6348 A2.5,2.5 0 0 1 1221,568.1348 L1221,751.5137 A2.5,2.5 0 0 1 1218.5,754.0137 L983.5,754.0137 A2.5,2.5 0 0 1 981,751.5137 L981,543.5137 A2.5,2.5 0 0 1 983.5,541.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="981" x2="1035.248" y1="565.6348" y2="565.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.248" x="985" y="558.1211">player
+            </text>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="433.0039" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="348.9229" x="455.5" y="43.0137"/>
+            <ellipse cx="599.6948" cy="65.3047" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M601.8823,67.0703 L597.7417,67.0703 L597.3198,68.1016 L597.7417,68.1016 Q598.3511,68.1016 598.6167,68.3359 Q598.8823,68.5703 598.8823,68.9609 Q598.8823,69.3359 598.6167,69.5703 Q598.3511,69.8047 597.7417,69.8047 L595.4448,69.8047 Q594.8354,69.8047 594.5854,69.5703 Q594.3198,69.3359 594.3198,68.9453 Q594.3198,68.5703 594.6011,68.3359 Q594.8667,68.0859 595.4917,68.1016 L598.1636,61.4453 L597.0542,61.4453 Q596.4448,61.4453 596.1792,61.2109 Q595.9136,60.9766 595.9136,60.5859 Q595.9136,60.2109 596.1792,59.9766 Q596.4448,59.7422 597.0542,59.7422 L600.7261,59.7422 L604.1167,68.1016 Q604.7104,68.1016 604.8979,68.2422 Q605.2886,68.5078 605.2886,68.9609 Q605.2886,69.3359 605.0229,69.5703 Q604.7729,69.8047 604.1636,69.8047 L601.8667,69.8047 Q601.2573,69.8047 600.9917,69.5703 Q600.7261,69.3359 600.7261,68.9453 Q600.7261,68.5703 600.9917,68.3359 Q601.2573,68.1016 601.8667,68.1016 L602.2886,68.1016 L601.8823,67.0703 Z M601.1636,65.3672 L599.8042,61.9922 L598.4292,65.3672 L601.1636,65.3672 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="56.0332" x="618.1948" y="60.9629">&#171;abstract&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="35.0137" x="628.7046" y="79.082">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="456.5" x2="803.4229" y1="87.5957" y2="87.5957"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="99.4063"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="180.5098"
+                  x="475.5" y="106.7031">gameWindow: GameWindow
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="118.0273"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61.4756"
+                  x="475.5" y="125.3242">mapId: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="136.6484"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.3584"
+                  x="475.5" y="143.9453">worldX: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="155.2695"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.3584"
+                  x="475.5" y="162.5664">worldY: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="173.8906"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248"
+                  x="475.5" y="181.1875">width: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="192.5117"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.71"
+                  x="475.5" y="199.8086">height: int
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="475.5" y="218.4297">&#160;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="229.7539"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="107.4063"
+                  x="475.5" y="237.0508">collision: boolean
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="248.375"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="125.3027"
+                  x="475.5" y="255.6719">knockBack: boolean
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="266.9961"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="167.2891"
+                  x="475.5" y="274.293">knockBackDirection: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="285.6172"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="140.0684"
+                  x="475.5" y="292.9141">knockBackCounter: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="304.2383"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129.9443"
+                  x="475.5" y="311.5352">knockBackPower: int
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="475.5" y="330.1563">&#160;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="341.4805"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59.917"
+                  x="475.5" y="348.7773">attack: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="463.5" y="360.1016"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100.3789"
+                  x="475.5" y="367.3984">type: EntityType
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="456.5" x2="803.4229" y1="374.9121" y2="374.9121"/>
+            <g>
+                <ellipse cx="466.5" cy="389.7227" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="132.2686"
+                  x="475.5" y="394.0195">checkCollision(): void
+            </text>
+            <g>
+                <ellipse cx="466.5" cy="408.3438" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="322.9229"
+                  x="475.5" y="412.6406">damagePlayer(attack:int, knockBackPower:int): void
+            </text>
+            <g>
+                <ellipse cx="466.5" cy="426.9648" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="175.875"
+                  x="475.5" y="431.2617">setCollision(b:boolean): void
+            </text>
+            <g>
+                <ellipse cx="466.5" cy="445.5859" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="133.8271"
+                  x="475.5" y="449.8828">getType(): EntityType
+            </text>
+            <g>
+                <ellipse cx="466.5" cy="464.207" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="144.7578"
+                  x="475.5" y="468.5039">getInvincible(): boolean
+            </text>
+        </g><!--class CollisionChecker-->
+        <g class="entity" id="ent0004">
+            <rect fill="#F1F1F1" height="103.8633" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="284.3232" x="215" y="824.0137"/>
+            <ellipse cx="300.3911" cy="840.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M303.1567,835.8887 Q303.313,835.6699 303.5005,835.5605 Q303.688,835.4512 303.9067,835.4512 Q304.2817,835.4512 304.5161,835.7168 Q304.7505,835.9668 304.7505,836.5762 L304.7505,838.0293 Q304.7505,838.6387 304.5161,838.9043 Q304.2817,839.1699 303.9067,839.1699 Q303.563,839.1699 303.3599,838.9668 Q303.1567,838.7793 303.0474,838.2637 Q303.0005,837.9043 302.813,837.7168 Q302.4849,837.3418 301.8755,837.123 Q301.2661,836.9043 300.6411,836.9043 Q299.8755,836.9043 299.2349,837.2324 Q298.6099,837.5605 298.1099,838.3105 Q297.6255,839.0605 297.6255,840.0918 L297.6255,841.1855 Q297.6255,842.4199 298.5161,843.248 Q299.4067,844.0605 301.0005,844.0605 Q301.938,844.0605 302.5942,843.8105 Q302.9849,843.6543 303.4067,843.2168 Q303.6724,842.9512 303.813,842.873 Q303.9692,842.7949 304.1724,842.7949 Q304.5005,842.7949 304.7505,843.0605 Q305.0161,843.3105 305.0161,843.6543 Q305.0161,843.998 304.6724,844.4043 Q304.1724,844.9824 303.3755,845.3105 Q302.2974,845.7637 301.0005,845.7637 Q299.4849,845.7637 298.2817,845.1387 Q297.2974,844.6387 296.6099,843.5762 Q295.9224,842.498 295.9224,841.2168 L295.9224,840.0605 Q295.9224,838.7324 296.5317,837.5918 Q297.1567,836.4355 298.2505,835.8262 Q299.3442,835.2012 300.5786,835.2012 Q301.313,835.2012 301.9536,835.373 Q302.6099,835.5293 303.1567,835.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105.041"
+                  x="320.8911" y="845.8105">CollisionChecker
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="216" x2="498.3232" y1="856.0137" y2="856.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="216" x2="498.3232" y1="864.0137" y2="864.0137"/>
+            <g>
+                <ellipse cx="226" cy="878.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="148.6064"
+                  x="235" y="883.1211">checkTile(e:Entity): void
+            </text>
+            <g>
+                <ellipse cx="226" cy="897.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="258.3232"
+                  x="235" y="901.7422">checkEntity(e:Entity, targets:Entity[]): void
+            </text>
+            <g>
+                <ellipse cx="226" cy="916.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="189.875"
+                  x="235" y="920.3633">checkPlayer(e:Entity): boolean
+            </text>
+        </g><!--class GameWindow-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="141.1055" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="272.6475" x="225.5" y="587.5137"/>
+            <ellipse cx="313.6152" cy="603.5137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M316.3809,599.3887 Q316.5371,599.1699 316.7246,599.0605 Q316.9121,598.9512 317.1309,598.9512 Q317.5059,598.9512 317.7402,599.2168 Q317.9746,599.4668 317.9746,600.0762 L317.9746,601.5293 Q317.9746,602.1387 317.7402,602.4043 Q317.5059,602.6699 317.1309,602.6699 Q316.7871,602.6699 316.584,602.4668 Q316.3809,602.2793 316.2715,601.7637 Q316.2246,601.4043 316.0371,601.2168 Q315.709,600.8418 315.0996,600.623 Q314.4902,600.4043 313.8652,600.4043 Q313.0996,600.4043 312.459,600.7324 Q311.834,601.0605 311.334,601.8105 Q310.8496,602.5605 310.8496,603.5918 L310.8496,604.6855 Q310.8496,605.9199 311.7402,606.748 Q312.6309,607.5605 314.2246,607.5605 Q315.1621,607.5605 315.8184,607.3105 Q316.209,607.1543 316.6309,606.7168 Q316.8965,606.4512 317.0371,606.373 Q317.1934,606.2949 317.3965,606.2949 Q317.7246,606.2949 317.9746,606.5605 Q318.2402,606.8105 318.2402,607.1543 Q318.2402,607.498 317.8965,607.9043 Q317.3965,608.4824 316.5996,608.8105 Q315.5215,609.2637 314.2246,609.2637 Q312.709,609.2637 311.5059,608.6387 Q310.5215,608.1387 309.834,607.0762 Q309.1465,605.998 309.1465,604.7168 L309.1465,603.5605 Q309.1465,602.2324 309.7559,601.0918 Q310.3809,599.9355 311.4746,599.3262 Q312.5684,598.7012 313.8027,598.7012 Q314.5371,598.7012 315.1777,598.873 Q315.834,599.0293 316.3809,599.3887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87.917"
+                  x="334.1152" y="609.3105">GameWindow
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="226.5" x2="497.1475" y1="619.5137" y2="619.5137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="226.5" x2="497.1475" y1="627.5137" y2="627.5137"/>
+            <g>
+                <ellipse cx="236.5" cy="642.3242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="246.6475"
+                  x="245.5" y="646.6211">getCollisionChecker(): CollisionChecker
+            </text>
+            <g>
+                <ellipse cx="236.5" cy="660.9453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108.917"
+                  x="245.5" y="665.2422">getNPC(): Entity[]
+            </text>
+            <g>
+                <ellipse cx="236.5" cy="679.5664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129.9307"
+                  x="245.5" y="683.8633">getMonster(): Entity[]
+            </text>
+            <g>
+                <ellipse cx="236.5" cy="698.1875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="101.1445"
+                  x="245.5" y="702.4844">getItile(): Entity[]
+            </text>
+            <g>
+                <ellipse cx="236.5" cy="716.8086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157.9512"
+                  x="245.5" y="721.1055">getPlayer(): player.Player
+            </text>
+        </g><!--class EntityType-->
+        <g class="entity" id="ent0007">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="98.1377"
+                  x="534" y="634.0137"/>
+            <ellipse cx="549" cy="650.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M551.7656,645.8887 Q551.9219,645.6699 552.1094,645.5605 Q552.2969,645.4512 552.5156,645.4512 Q552.8906,645.4512 553.125,645.7168 Q553.3594,645.9668 553.3594,646.5762 L553.3594,648.0293 Q553.3594,648.6387 553.125,648.9043 Q552.8906,649.1699 552.5156,649.1699 Q552.1719,649.1699 551.9688,648.9668 Q551.7656,648.7793 551.6563,648.2637 Q551.6094,647.9043 551.4219,647.7168 Q551.0938,647.3418 550.4844,647.123 Q549.875,646.9043 549.25,646.9043 Q548.4844,646.9043 547.8438,647.2324 Q547.2188,647.5605 546.7188,648.3105 Q546.2344,649.0605 546.2344,650.0918 L546.2344,651.1855 Q546.2344,652.4199 547.125,653.248 Q548.0156,654.0605 549.6094,654.0605 Q550.5469,654.0605 551.2031,653.8105 Q551.5938,653.6543 552.0156,653.2168 Q552.2813,652.9512 552.4219,652.873 Q552.5781,652.7949 552.7813,652.7949 Q553.1094,652.7949 553.3594,653.0605 Q553.625,653.3105 553.625,653.6543 Q553.625,653.998 553.2813,654.4043 Q552.7813,654.9824 551.9844,655.3105 Q550.9063,655.7637 549.6094,655.7637 Q548.0938,655.7637 546.8906,655.1387 Q545.9063,654.6387 545.2188,653.5762 Q544.5313,652.498 544.5313,651.2168 L544.5313,650.0605 Q544.5313,648.7324 545.1406,647.5918 Q545.7656,646.4355 546.8594,645.8262 Q547.9531,645.2012 549.1875,645.2012 Q549.9219,645.2012 550.5625,645.373 Q551.2188,645.5293 551.7656,645.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="66.1377"
+                  x="563" y="655.8105">EntityType
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="535" x2="631.1377" y1="666.0137" y2="666.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="535" x2="631.1377" y1="674.0137" y2="674.0137"/>
+        </g><!--class MonsterType-->
+        <g class="entity" id="ent0008">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="113.6963"
+                  x="534" y="852.0137"/>
+            <ellipse cx="549" cy="868.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M551.7656,863.8887 Q551.9219,863.6699 552.1094,863.5605 Q552.2969,863.4512 552.5156,863.4512 Q552.8906,863.4512 553.125,863.7168 Q553.3594,863.9668 553.3594,864.5762 L553.3594,866.0293 Q553.3594,866.6387 553.125,866.9043 Q552.8906,867.1699 552.5156,867.1699 Q552.1719,867.1699 551.9688,866.9668 Q551.7656,866.7793 551.6563,866.2637 Q551.6094,865.9043 551.4219,865.7168 Q551.0938,865.3418 550.4844,865.123 Q549.875,864.9043 549.25,864.9043 Q548.4844,864.9043 547.8438,865.2324 Q547.2188,865.5605 546.7188,866.3105 Q546.2344,867.0605 546.2344,868.0918 L546.2344,869.1855 Q546.2344,870.4199 547.125,871.248 Q548.0156,872.0605 549.6094,872.0605 Q550.5469,872.0605 551.2031,871.8105 Q551.5938,871.6543 552.0156,871.2168 Q552.2813,870.9512 552.4219,870.873 Q552.5781,870.7949 552.7813,870.7949 Q553.1094,870.7949 553.3594,871.0605 Q553.625,871.3105 553.625,871.6543 Q553.625,871.998 553.2813,872.4043 Q552.7813,872.9824 551.9844,873.3105 Q550.9063,873.7637 549.6094,873.7637 Q548.0938,873.7637 546.8906,873.1387 Q545.9063,872.6387 545.2188,871.5762 Q544.5313,870.498 544.5313,869.2168 L544.5313,868.0605 Q544.5313,866.7324 545.1406,865.5918 Q545.7656,864.4355 546.8594,863.8262 Q547.9531,863.2012 549.1875,863.2012 Q549.9219,863.2012 550.5625,863.373 Q551.2188,863.5293 551.7656,863.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81.6963"
+                  x="563" y="873.8105">MonsterType
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="535" x2="646.6963" y1="884.0137" y2="884.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="535" x2="646.6963" y1="892.0137" y2="892.0137"/>
+        </g><!--class Player-->
+        <g class="entity" id="ent0011">
+            <rect fill="#F1F1F1" height="159.7266" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="207.3301" x="997.5" y="578.0137"/>
+            <ellipse cx="1077.0737" cy="594.0137" fill="#ADD1B2" rx="11" ry="11"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <path d="M1079.8394,589.8887 Q1079.9956,589.6699 1080.1831,589.5605 Q1080.3706,589.4512 1080.5894,589.4512 Q1080.9644,589.4512 1081.1987,589.7168 Q1081.4331,589.9668 1081.4331,590.5762 L1081.4331,592.0293 Q1081.4331,592.6387 1081.1987,592.9043 Q1080.9644,593.1699 1080.5894,593.1699 Q1080.2456,593.1699 1080.0425,592.9668 Q1079.8394,592.7793 1079.73,592.2637 Q1079.6831,591.9043 1079.4956,591.7168 Q1079.1675,591.3418 1078.5581,591.123 Q1077.9487,590.9043 1077.3237,590.9043 Q1076.5581,590.9043 1075.9175,591.2324 Q1075.2925,591.5605 1074.7925,592.3105 Q1074.3081,593.0605 1074.3081,594.0918 L1074.3081,595.1855 Q1074.3081,596.4199 1075.1987,597.248 Q1076.0894,598.0605 1077.6831,598.0605 Q1078.6206,598.0605 1079.2769,597.8105 Q1079.6675,597.6543 1080.0894,597.2168 Q1080.355,596.9512 1080.4956,596.873 Q1080.6519,596.7949 1080.855,596.7949 Q1081.1831,596.7949 1081.4331,597.0605 Q1081.6987,597.3105 1081.6987,597.6543 Q1081.6987,597.998 1081.355,598.4043 Q1080.855,598.9824 1080.0581,599.3105 Q1078.98,599.7637 1077.6831,599.7637 Q1076.1675,599.7637 1074.9644,599.1387 Q1073.98,598.6387 1073.2925,597.5762 Q1072.605,596.498 1072.605,595.2168 L1072.605,594.0605 Q1072.605,592.7324 1073.2144,591.5918 Q1073.8394,590.4355 1074.9331,589.8262 Q1076.0269,589.2012 1077.2612,589.2012 Q1077.9956,589.2012 1078.6362,589.373 Q1079.2925,589.5293 1079.8394,589.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="39.6826"
+                  x="1097.5737" y="599.8105">Player
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="998.5" x2="1203.8301" y1="610.0137" y2="610.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="1005.5" y="621.8242"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="115.1924"
+                  x="1017.5" y="629.1211">invincible: boolean
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="1005.5" y="640.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="40.4619"
+                  x="1017.5" y="647.7422">life: int
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="998.5" x2="1203.8301" y1="655.2559" y2="655.2559"/>
+            <g>
+                <ellipse cx="1008.5" cy="670.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="144.7578"
+                  x="1017.5" y="674.3633">getInvincible(): boolean
+            </text>
+            <g>
+                <ellipse cx="1008.5" cy="688.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="181.3301"
+                  x="1017.5" y="692.9844">setInvincible(b:boolean): void
+            </text>
+            <g>
+                <ellipse cx="1008.5" cy="707.3086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="73.9238"
+                  x="1017.5" y="711.6055">getLife(): int
+            </text>
+            <g>
+                <ellipse cx="1008.5" cy="725.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110.4961"
+                  x="1017.5" y="730.2266">setLife(n:int): void
+            </text>
+        </g>
+        <g class="entity" id="ent0019">
+            <path d="M973.5,819.0137 L973.5,932.7598 L1488.0176,932.7598 L1488.0176,829.0137 L1478.0176,819.0137 L973.5,819.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1478.0176,819.0137 L1478.0176,829.0137 L1488.0176,829.0137 L1478.0176,819.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="26.8125" x="979.5" y="838.042">&#24441;&#21106;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="28.1709" x="979.5" y="855.333">Role
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="449.9409"
+                  x="979.5" y="872.624">- &#12479;&#12452;&#12523;&#34909;&#31361;&#12289;&#12456;&#12531;&#12486;&#12451;&#12486;&#12451;&#38291;&#34909;&#31361;&#12289;&#12503;&#12524;&#12452;&#12516;&#12540;&#25509;&#35302;&#12434;&#21028;&#23450;&#12377;&#12427;&#36012;&#21209;&#12434;&#25345;&#12388;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="493.5176"
+                  x="979.5" y="889.915">- Responsible for detecting tile collisions, entity-to-entity collisions, and
+                player contact.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="443.5298"
+                  x="979.5" y="907.2061">- Entity.checkCollision &#12399; CollisionChecker &#12398;&#35079;&#25968;&#12513;&#12477;&#12483;&#12489;&#12434;&#38918;&#12395;&#21628;&#12403;&#20986;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="437.1377"
+                  x="979.5" y="924.4971">- Entity.checkCollision calls multiple CollisionChecker methods in sequence.
+            </text>
+        </g>
+        <g class="entity" id="ent0022">
+            <path d="M973.5,176.5137 L973.5,255.5137 L804.54,259.5137 L973.5,263.5137 L973.5,342.1328 A0,0 0 0 0 973.5,342.1328 L1754.6572,342.1328 A0,0 0 0 0 1754.6572,342.1328 L1754.6572,186.5137 L1744.6572,176.5137 L973.5,176.5137 A0,0 0 0 0 973.5,176.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1744.6572,176.5137 L1744.6572,186.5137 L1754.6572,186.5137 L1744.6572,176.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="162.3921" x="979.5" y="195.542">checkCollision &#12398;&#25391;&#12427;&#33310;&#12356;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="166.8735" x="979.5" y="212.833">Behavior of checkCollision
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="110.5317"
+                  x="979.5" y="230.124">- setCollision(false)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91.7363"
+                  x="979.5" y="247.415">- checkTile(this)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="114.8545"
+                  x="979.5" y="264.7061">- call checkTile(this)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="212.3862"
+                  x="979.5" y="281.9971">- checkEntity(this, NPC/Monster/Itile)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="201.2144"
+                  x="979.5" y="299.2881">- contactPlayer = checkPlayer(this)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="752.6733"
+                  x="979.5" y="316.5791">- &#33258;&#36523;&#12364; MonsterType &#12363;&#12388; contactPlayer &#12363;&#12388;
+                &#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#28961;&#25973;&#12391;&#12394;&#12356;&#22580;&#21512;&#12289;&#12363;&#12388;&#33258;&#36523;&#12364;&#28961;&#25973;&#12391;&#12394;&#12356;&#22580;&#21512;&#12395;
+                damagePlayer &#12434;&#21628;&#12406;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="760.1572"
+                  x="979.5" y="333.8701">- If this is a MonsterType and contactPlayer is true and the player is not
+                invincible, and this entity is not invincible, call damagePlayer
+            </text>
+        </g><!--reverse link EntityType to MonsterType-->
+        <g class="link"
+           id="lnk9">
+            <path d="M584.5238,700.1214 C586.0538,741.5814 588.6,810.1537 590.14,851.7337" fill="none"
+                  id="EntityType-backto-MonsterType" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="none" points="583.86,682.1337,578.5279,700.3427,590.5197,699.9002,583.86,682.1337"
+                     style="stroke:#181818;stroke-width:1;"/>
+        </g><!--link Entity to GameWindow-->
+        <g class="link"
+           id="lnk12">
+            <path
+                    d="M476.04,476.2237 C469.21,486.2637 462.51,496.2237 456,506.0137 C438.56,532.2437 423.2529,556.4388 407.3429,582.1988"
+                    fill="none" id="Entity-to-GameWindow" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="404.19,587.3037,412.3225,581.7483,406.8174,583.0496,405.5161,577.5445,404.19,587.3037"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="88.1182"
+                  x="457" y="521.042">uses(&#21033;&#29992;&#12377;&#12427;)
+            </text>
+        </g><!--link Entity to CollisionChecker-->
+        <g class="link"
+           id="lnk13">
+            <path
+                    d="M455.22,294.9037 C325.58,330.5537 157.59,400.4537 75,533.0137 C21.18,619.3937 17.97,677.7137 75,762.0137 C106.85,809.0837 156.0968,834.8073 209.1168,850.8373"
+                    fill="none" id="Entity-to-CollisionChecker" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="214.86,852.5737,207.4027,846.1402,210.074,851.1267,205.0875,853.7979,214.86,852.5737"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131.4917"
+                  x="76" y="663.542">delegates to(&#22996;&#35698;&#12377;&#12427;)
+            </text>
+        </g><!--link GameWindow to CollisionChecker-->
+        <g class="link"
+           id="lnk14">
+            <path d="M360.39,728.5437 C359.67,759.5037 358.9891,789.3053 358.3291,817.7653" fill="none"
+                  id="GameWindow-to-CollisionChecker" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="358.19,823.7637,362.3976,814.8588,358.3059,818.765,354.3997,814.6734,358.19,823.7637"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="109.7954"
+                  x="361" y="785.042">provides(&#25552;&#20379;&#12377;&#12427;)
+            </text>
+        </g><!--link Entity to EntityType-->
+        <g class="link"
+           id="lnk15">
+            <path
+                    d="M555.85,476.2337 C554.47,492.6137 554.38,509.0037 556,525.0137 C559.91,563.6437 568.6145,601.8705 575.3045,628.0505"
+                    fill="none" id="Entity-to-EntityType" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="576.79,633.8637,578.4372,624.1535,575.5521,629.0193,570.6863,626.1342,576.79,633.8637"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="135.8018"
+                  x="557" y="521.042">typed by(&#22411;&#20184;&#12369;&#12373;&#12428;&#12427;)
+            </text>
+        </g><!--link Entity to MonsterType-->
+        <g class="link"
+           id="lnk16">
+            <path
+                    d="M692.24,476.0637 C694.07,486.1437 695.68,496.1637 697,506.0137 C708.8,594.0737 735.76,518.4137 650,762.0137 C638.54,794.5837 622.2255,824.2738 608.8255,846.5238"
+                    fill="none" id="Entity-to-MonsterType" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="605.73,851.6637,613.7998,846.0175,608.3096,847.3805,606.9466,841.8902,605.73,851.6637"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="237.6499"
+                  x="711" y="663.542">instance check(&#12452;&#12531;&#12473;&#12479;&#12531;&#12473;&#21028;&#23450;&#12395;&#20351;&#29992;)
+            </text>
+        </g><!--link Entity to Player-->
+        <g class="link"
+           id="lnk17">
+            <path
+                    d="M804.81,405.3037 C854.16,446.4137 907.8,491.3337 957,533.0137 C973.99,547.4037 987.4783,558.9244 1004.8383,573.8344"
+                    fill="none" id="Entity-to-Player" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="1009.39,577.7437,1005.1687,568.8453,1005.597,574.4859,999.9563,574.9142,1009.39,577.7437"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="224.6245"
+                  x="940" y="521.042">may affect(&#24433;&#38911;&#12434;&#19982;&#12360;&#12427;&#21487;&#33021;&#24615;&#12364;&#12354;&#12427;)
+            </text>
+        </g><!--link CollisionChecker to GMN18-->
+        <g class="link"
+           id="lnk20">
+            <path d="M445.87,823.8737 C473.64,810.2437 505.01,797.4437 535.5,790.5137 C706.33,751.7137 905.04,783.6137 1046.21,818.9537"
+                  fill="none" id="CollisionChecker-GMN18" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+        </g>
+        <?plantuml-src VLLRRnj557xFhvWtd62xxwkIXmQ48W6AIYL0LH_6ksDxbFMCsHqdM0WfkrirhXBrHbDkeZGGI4bA0YaWMchoOyRhEF-2CxFZlTXE9SkQFTVldFFDcJQsLt638C845Ltq-Hn2kEOB3zi2sIxsVVHEehbyUInVNDHc25LG0xV8HvGvVDr2xwPdespXzh9Z8Sg44QnpptK-df9yKf1GHpJpWYQXZQP894PaSzUbFkNCGZNENOAPKQmoRgzUWOekLBnDFM8BxVgXy2XhJ1eiyGuJnCiZI7KhV7siCIeiXCwM6OjkcrYcPzVWd5Y-YUmcKS4DyDAyXTOuTOpImIsOmOgBkyGhcPWGiZoP6cH5Hv-8B6RDCaKNRHf4A20gPGvMgbjcQvJPjEPgYwnjNoZa2GFI54kg2EAPyPkYhb5m9LOIkvXQwnD5Qb560dkGrpVVrs_Cy36jo4MT2IoZN0gfaUk8WQlgcfHbrX-iB6MjkNuZKxpFcIyIxsdbig0kcQqos47NrgTg8j380NkxSE6gYYyQVFwocGab8eD3oH3vJ13c5Cno8PDykMWhcK1nawQZdhmVBgsJZCMlvOMXNKvzCU_UWx3AEmli6o4hSbbtvWrq_kZ7mMauPpPEfRAOdx25EZxnIt7lrxE7JsNmZGotvlEcKoora4DSqi22-4ZmKhp_SFJRoTWn5_W2vxR7rwW36OTtxmt--suYOxMwc1zXDPi8k2g9WshTKlnuQ_3lrpAuBuCT6Mw_Ba1-pAfZli3C9ibrACbmJqRFPVX2XgV98UxjnKVVok1mq3-5VXGwKU0T16lXBiBrEYo-Kjp_u_o7Kna-6FnpHmOz01JVFHv5_U76lWosPH1gY7EC2u8yjNWHhy-wF0iBSVz5VFjaOK5_N8NvwsC5AOGAxU5ez_kpWq1k139ygZ17jsJuK_9__kZBJ1jz9QDdsWL-huPtVXxj_m80nmMghezEdiLRS7Wmt0vai2StGftgAl7Rq3L5GbJd7enRgENE6aZTpkoPyCkcqnN1A-QXooinSyPtn-OCjg-ewlX9Iwl5rOraS3nD5naSZVOsXpk_osXNXdqPHJAw3O3Fdzo26SNtNydWURpvKfLZmCyERcFNzL6humhQXXAcyhI8Q79O09J1LVgqGu0YrJbO2KXDR79kIGezeAaQZeRRnwgplSSok6ccU8KqyHg5He9lqS7Cjl3SrB7hatajpzu1qQI-aK4binMvHq59omXMy2L3_qjwiHh3P1Q6ncyLNeOit6ZpOFJo4CXRM9Gos0AYJ8GmmWd6WUlPpTtXpbyoW3jm0Es8d_mPt-ifRcg7DCDii-2my7uZnLqrxxyrlEKwKbWH_701eI9T4HwO2A-JQ4GpNUSWXh7cbdVPM832a7c6YMv_7bV6aly1?>
+    </g>
+</svg>
