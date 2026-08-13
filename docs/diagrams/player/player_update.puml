@@ -1,0 +1,158 @@
+@startuml player_update
+
+package player {
+  class Player {
+    -- Fields--
+    - pickupCooldown: int
+    - aura: ObjAura
+    - moving: boolean
+    - collision: boolean
+    - knockbackTimer: int
+    - knockBackDx: double
+    - knockBackDy: double
+    - holding: boolean
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - state: PlayerState
+    - spriteCounter: int
+    - spriteNum: int
+
+    -- Methods --
+    + update(): void
+    + updateAura(ms:int): void
+    + processInput(): void
+    + handleInteractInput(nearbyIndex:int): void
+    + findNearbyObjectIndex(): int
+    + getNearbyEntity(p:Player): Entity
+    + isThrowKeyJustPressed(): boolean
+    + isThrowKeyPressed(): boolean
+    + startPickup(e:Entity): void
+    + startPickup(index:int): void
+    + finishPickup(): void
+    + throwHeldBom(): void
+    + throwHeldPot(): void
+    + throwHeldRock(): void
+    + throwHeldChicken(): void
+    + startAttack(): void
+    + playerAttacking(): void
+    + playerGuarding(): void
+    + placeBomb(): void
+    + playerAttackingFireball(): void
+    + updateMovement(): void
+    + updateCollision(): void
+    + updateAnimation(): void
+    + updateTileMovement(): void
+    + updateInvincibility(): void
+    + resolvePenetration(): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getCollisionChecker(): CollisionChecker
+    + getNPC(): Entity[]
+    + getObj(): Entity[]
+    + getMonster(): Entity[]
+    + getItile(): Entity[]
+    + getKeyHandler(): KeyHandler
+    + getUi(): UI
+    + getSoundmanager(): SoundManager
+    + changeMap(tileId:int): void
+    + getTileManager(): TileManager
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(p:Player): void
+    + checkEntity(p:Player, list:Entity[]): void
+  }
+}
+
+package tile {
+  class TileManager {
+    + getTileIdAt(x:int, y:int): int
+  }
+}
+
+package object {
+  class ObjBomb
+  class ObjPot
+  class ObjRock
+  class ObjAura {
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setMapId(id:int): void
+    + activate(durationMs:long): void
+  }
+}
+
+package npc {
+  class NpcChicken
+}
+
+package ui {
+  class UI {
+    + getDamagePopupManager(): DamagePopupManager
+  }
+  class DamagePopupManager
+}
+
+package key {
+  class KeyHandler
+}
+
+Player --> GameWindow : uses
+Player --> collision.CollisionChecker : uses
+Player --> tile.TileManager : uses
+Player --> object.ObjBomb : may hold
+Player --> object.ObjPot : may hold
+Player --> object.ObjRock : may hold
+Player --> object.ObjAura : uses
+Player --> npc.NpcChicken : may hold
+Player --> key.KeyHandler : uses
+Player --> ui.UI : uses
+
+note right of Player
+**Notes**
+- pickupCooldown と aura を更新する
+- pickupCooldown をデクリメントし、aura の状態とタイマーを更新する。
+- moving と collision をリセットし、衝突判定を実行する
+- 移動フラグと衝突フラグをクリアし、タイル、NPC、オブジェクト、モンスター、インタラクティブタイルに対して衝突判定を実行する。
+- 近接オブジェクトを検出する
+- 近接オブジェクトのインデックスを見つけ、近接エンティティ参照を解決する（findNearbyObjectIndex / getNearbyEntity)
+- 瞬間的な投げ／拾いキーを処理する
+- 投げ／拾いキーの瞬間押下時に、所持状態に応じて startPickup を呼ぶか投げ処理を実行する。
+- invincibility の更新
+
+- Update pickupCooldown and aura
+- Decrement pickupCooldown and update the aura state/timer.
+- Reset moving and collision, then run collision checks
+- Clear the movement flag and collision flag, then perform collision checks for tiles, NPCs, objects, monsters, and interactive tiles.
+- Detect nearby objects
+- Find nearby object index and resolve a nearby entity reference (findNearbyObjectIndex / getNearbyEntity).
+- Handle instant throw/pickup key
+- On the momentary throw/pickup key press, invoke startPickup or perform throw logic depending on holding state.
+- changeMap and update aura world position / mapId
+- Call changeMap with the current tile ID and update the aura’s world coordinates and map identifier.
+- Knockback priority handling
+- If knockbackTimer > 0, apply per-frame displacement, decrement the timer, and call resolvePenetration when knockback ends.
+- Update invincibility and cooldowns
+- Advance invincibility counters and decrement bomb/fire cooldowns.
+- If attacking or guarding, run attack/guard routines
+- Call startAttack/startGuard and execute the corresponding attack or guard handling.
+- Process input and interaction
+- Run general input processing and handle interaction/enter input (processInput and handleInteractInput).
+- PICKUP / HOLD_WALK state handling
+- Advance pickup animation frames or keep held entities (bomb, pot, rock, chicken) positioned above the player while held.
+- If moving, update movement, collision, animation, and tile movement — Execute updateMovement, updateCollision, updateAnimation, and updateTileMovement when the moving flag is set.
+- Update invincibility state
+- Finalize invincibility-related updates (timers, transparency, and flag resets).
+end note
+
+note left of GameWindow
+  GameWindow は CollisionChecker, TileManager, UI, SoundManager, 各種エンティティ配列へのアクセサを提供する。
+end note
+@enduml

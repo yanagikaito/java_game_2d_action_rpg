@@ -1,0 +1,129 @@
+@startuml player_potions_and_actions
+
+package player {
+  class Player {
+    -- フィールド(Fields) --
+    - aura: ObjAura
+    - inventory: List<Entity>
+    - gameWindow: GameWindow
+    - loaded: boolean
+    - blockingLeft: boolean
+    - holding: boolean
+    - holdOffset: Map<String, Point>
+    - currentWeapon: Entity
+    - currentShield: Entity
+    - direction: String
+    - screenX: int
+    - screenY: int
+
+    -- ポーション(Potion) --
+    + useRedPotion(index:int): void
+    + useGreenPotion(index:int): void
+    + useBluePotion(index:int): void
+
+    -- 攻撃 / ガード(Attack / Guard) --
+    - startAttack(): void
+    - startGuard(): void
+    - startBlockingLeft(): void
+    - stopBlockingLeft(): void
+
+    -- ヘルパー(Helpers） --
+    + setLife(n:int): void
+    + getLife(): int
+    + getMaxLife(): int
+    + setMana(n:int): void
+    + getMana(): int
+    + getMaxMana(): int
+    + getInventory(): List<Entity>
+    + getCurrentWeapon(): Entity
+    + getCurrentShield(): Entity
+    + getDirection(): String
+    + hasLeftShield(): boolean
+    + setGuarding(b:boolean): void
+  }
+}
+
+package object {
+  class ObjRedPotion {
+    + getHealAmount(): int
+    + getAmount(): int
+    + setAmount(n:int): void
+  }
+  class ObjGreenPotion
+  class ObjBluePotion
+  class ObjSwordNormal
+  class ObjShieldWood
+  class ObjFireball
+  class ObjBomb
+  class ObjAura
+  class ObjPot
+  class ObjRock
+}
+
+package npc {
+  class NpcChicken
+}
+
+package window {
+  class GameWindow {
+    + getUi(): UI
+    + getSoundmanager(): SoundManager
+  }
+}
+
+package ui {
+  class UI {
+    + getDamagePopupManager(): DamagePopupManager
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package sound {
+  class SoundManager {
+    + redPotionWAV(path:String): void
+    + greenPotionWAV(path:String): void
+  }
+}
+
+package popup {
+  enum PopupVariant
+}
+
+Player --> object.ObjRedPotion : uses (consumes)
+Player --> object.ObjGreenPotion : uses (consumes)
+Player --> object.ObjBluePotion : uses (consumes)
+Player --> object.ObjSwordNormal : sets as currentWeapon
+Player --> object.ObjShieldWood : sets as currentShield
+Player --> object.ObjFireball : sets as projectile
+Player --> object.ObjBomb : sets as projectile
+Player --> object.ObjAura : uses (aura cache)
+Player --> window.GameWindow : uses (UI / sound)
+Player --> ui.DamagePopupManager : creates popups
+Player --> sound.SoundManager : plays sounds
+Player --> npc.NpcChicken : may hold (0..1)
+Player --> object.ObjBomb : may hold (0..1)
+Player --> object.ObjPot : may hold (0..1)
+Player --> object.ObjRock : may hold (0..1)
+
+note right of Player
+**Notes**
+- **useRedPotion / useGreenPotion / useBluePotion**:
+- 指定インデックスのインベントリを検査し、該当ポーションなら回復処理・効果音・ポップアップ表示・スタック減少またはスロット削除を行う。
+- RedPotion は満タン時に aura を発動する可能性がある。
+- **startAttack / startGuard**:
+- 装備中の武器/盾の種類と向きに応じて攻撃/ガード方向を設定し、対応するスプライト配列を更新する。
+- **startBlockingLeft / stopBlockingLeft**:
+- 左側ガードの開始/終了。盾の有無を確認してガード状態を切替える。
+
+- **useRedPotion / useGreenPotion / useBluePotion**:
+- Inspect the inventory at the specified index; if the item is the corresponding potion, apply healing, play the appropriate sound effect, show a popup, and decrement the stack or remove the slot.
+- RedPotion may trigger the aura when HP is fully restored.
+- **startAttack / startGuard**:
+- Set the attack or guard direction based on the equipped weapon or shield type and the player’s facing, then switch to the corresponding attack/guard sprite arrays.
+- **startBlockingLeft / stopBlockingLeft**:
+- Begin or end left-side blocking; check whether a shield is equipped and toggle the guarding state accordingly.
+end note
+
+@enduml

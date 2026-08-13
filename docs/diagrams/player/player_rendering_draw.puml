@@ -1,0 +1,180 @@
+@startuml player_rendering_draw
+
+package player {
+  class Player {
+    -- Fields --
+    - state: PlayerState
+    - holding: boolean
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - spriteNum: int
+    - spriteCounter: int
+    - sprites: BufferedImage[][]
+    - guardSprites: BufferedImage[][]
+    - attackSprites: BufferedImage[][]
+    - axeSprites: BufferedImage[][]
+    - pickupSprites: BufferedImage[][]
+    - pickupSprites: BufferedImage[][]
+    - guardDirection: String
+    - attackDirection: String
+    - direction: String
+    - aura: Aura
+    - transparent: boolean
+
+    -- Methods --
+    + draw(g2:Graphics2D): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + getDirection(): String
+    + getSpriteNum(): int
+    + isGuarding(): boolean
+    + getGuardDirection(): String
+    + getAttackDirection(): String
+    + getCurrentShield(): Entity
+    + getCurrentWeapon(): Entity
+    + getSolidArea(): Rectangle
+    + getCollisionBoxWorld(): Rectangle
+    + getSpeed(): int
+    + getState(): PlayerState
+  }
+}
+
+package object {
+  abstract class Obj {
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir:String, frame:int): BufferedImage
+    + getSolidArea(): Rectangle
+  }
+
+  class ObjBomb extends Obj
+  class ObjPot extends Obj
+  class ObjRock extends Obj
+}
+
+package npc {
+  class NpcChicken {
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir:String, frame:int): BufferedImage
+  }
+}
+
+package aura {
+  class Aura {
+    - worldX:int
+    - worldY:int
+    - active:boolean
+    + isActive(): boolean
+    + setActive(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + drawAt(g2:Graphics2D, x:int, y:int, scale:float, alpha:float): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getKeyHandler(): KeyHandler
+    + getTileManager(): TileManager
+    + getUi(): UI
+  }
+}
+
+package input {
+  class KeyHandler {
+    + isShowDebugText(): boolean
+  }
+}
+
+package tile {
+  class TileManager {
+    + getMapTileNum(): int[][]
+    + getTiles(): Tile[]
+  }
+  class Tile {
+    + collision: boolean
+    + bombCollision: boolean
+    + potCollision: boolean
+  }
+}
+
+package ui {
+  class UI {
+    + addMessage(msg:String): void
+    + getDamagePopupManager(): DamagePopupManager
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+    + intersects(r:Rectangle): boolean
+  }
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package java.awt {
+  class Graphics2D
+  class BufferedImage
+  class AlphaComposite
+  class Composite
+  class Color
+}
+
+enum PlayerState {
+  PLAY
+  HOLD_WALK
+  PICKUP
+  THROW
+  // ...
+}
+
+enum PopupVariant {
+  MONSTER_DAMAGE
+  PLAYER_DAMAGE
+  XP
+}
+
+Player --> ObjBomb : may hold
+Player --> ObjPot : may hold
+Player --> ObjRock : may hold
+Player --> NpcChicken : may hold
+Player --> Aura : draws
+Player --> GameWindow : uses
+Player --> KeyHandler : queries
+Player --> TileManager : queries
+Player --> UI : uses
+ObjBomb --> Obj : extends
+ObjPot --> Obj : extends
+ObjRock --> Obj : extends
+
+note right of Player
+**Notes**
+- プレイヤーのワールド座標を画面座標に変換してスプライトを描画する。
+- 透明状態なら合成モードを変更して半透明で描画する。
+- オーラはプレイヤーHP満タン時にアクティブ化され、拡大・半透明で描画される。
+- デバッグ表示時は solidArea、移動予測矩形、周辺タイルを描画し、衝突タイルを強調する。
+- ガード／歩行／攻撃／ピックアップ／スローなどの状態に応じて適切なスプライトセットを選択し、攻撃スプライトは拡大・オフセットして描画する。
+- 所持中のオブジェクト（爆弾・壺・岩・ニワトリ）は頭上に影を付けて描画し、スロー時は専用の投擲スプライトを描画する。
+
+- Convert world coordinates to screen coordinates and draw the player sprite.
+- When the player is transparent, switch the composite mode and render the sprite semi‑transparently.
+- Draw the aura when it is active and the player's HP is full; render it enlarged and semi‑transparent.
+- If debug mode is enabled, draw the solidArea, the predicted movement rectangle, and surrounding tiles, highlighting collision tiles.
+- Select the appropriate sprite set for guard / walk / attack / pickup / throw states; scale and offset attack sprites as needed.
+- Render held objects (bomb, pot, rock, chicken) above the player with a shadow and alpha; use dedicated throw sprites during throw animations.
+end note
+
+@enduml

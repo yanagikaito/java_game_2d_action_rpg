@@ -1,0 +1,54 @@
+@startuml player_animation_state
+
+package player {
+  class Player {
+    -- Fields --
+    - moving: boolean
+    - pixelCounter: int
+    - spriteCounter: int
+    - spriteNum: int
+    - SPRITE_ANIMATION_THRESHOLD: int {static, final}
+    - SPRITE_COUNT: int {static, final}
+    - invincible: boolean
+    - invincibleCounter: int
+    - shotAvailableCounter: int
+
+    -- Methods --
+    + updateAnimation(): void
+    + updateTileMovement(): void
+    + updateInvincibility(): void
+    + getSpriteCounter(): int
+    + setSpriteCounter(v:int): void
+    + getSpriteNum(): int
+    + setSpriteNum(n:int): void
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + getInvincibleCounter(): int
+    + setInvincibleCounter(v:int): void
+    + getShotAvailableCounter(): int
+    + setShotAvailableCounter(v:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+Player --> FrameApp : reads tile size
+
+note right of Player
+**Notes**
+- updateAnimation は spriteCounter が閾値を超えたときにスプライトフレームを進める。
+- updateTileMovement は pixelCounter を増やし、タイル分のピクセル移動が完了したら moving を解除する。
+- updateInvincibility は無敵状態と発射可能カウンタを進め、無敵時間が終了したら無敵を解除する。
+
+- updateAnimation advances sprite frame when spriteCounter exceeds threshold.
+- updateTileMovement increments pixelCounter and clears moving when a tile's worth of pixels moved.
+- updateInvincibility advances invincibility and shot-availability counters and clears invincible when timeout reached.
+end note
+
+@enduml

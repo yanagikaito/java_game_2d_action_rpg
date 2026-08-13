@@ -1,0 +1,122 @@
+@startuml player_movement_input
+
+package player {
+  class Player {
+    -- Fields (movement / input) --
+    - moving: boolean
+    - attemptedMoveThisFrame: boolean
+    - lastAttemptStepX: int
+    - lastAttemptStepY: int
+    - talkNpcIndex: int
+    - pickupCooldown: int
+    - holding: boolean
+    - state: PlayerState
+    - lastSnapTimeMs: long
+
+    -- Methods (movement / input) --
+    + processInput(): void
+    + updateMovement(): void
+    + resolveTileOverlapWithPush(stepX:int, stepY:int): boolean
+    + snapToTileEdge(dir:String, stepX:int, stepY:int): boolean
+    + attemptUnstuck(): boolean
+    + recordSafePosition(): void
+    + isBlockingLeft(): boolean
+    + isGuarding(): boolean
+    + startBlockingLeft(): void
+    + getDirection(): String
+    + setDirection(dir:String): void
+    + getSpeed(): int
+    + setCollision(flag:boolean): void
+    + isCollision(): boolean
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getKeyHandler(): KeyHandler
+    + getCollisionChecker(): CollisionChecker
+    + getNPC(): Entity[]
+    + getObj(): Entity[]
+    + getMonster(): Entity[]
+    + getItile(): Entity[]
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(p:Player, stepX:int, stepY:int): boolean
+    + checkEntity(p:Player, list:Entity[], stepX:int, stepY:int): int
+  }
+}
+
+package key {
+  class KeyHandler {
+    + isPlayerUp(): boolean
+    + isPlayerDown(): boolean
+    + isPlayerLeft(): boolean
+    + isPlayerRight(): boolean
+    + isThrowKeyPressed(): boolean
+    + consumeThrowOnce(): void
+  }
+}
+
+package object {
+  class ObjRock {
+    + isPickable(): boolean
+    + isThrown(): boolean
+    + getAlive(): boolean
+    + setPickable(b:boolean): void
+  }
+  class ObjPot {
+    + isPickable(): boolean
+    + isThrown(): boolean
+    + getAlive(): boolean
+    + setPickable(b:boolean): void
+  }
+}
+
+package npc {
+  class NpcChicken {
+    + isThrown(): boolean
+    + isPickable(): boolean
+    + getAlive(): boolean
+    + onPickedUp(p:Player): void
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + isBlocking(): boolean
+    + getBounds(): Rectangle2D
+  }
+}
+
+Player --> window.GameWindow : uses
+Player --> collision.CollisionChecker : uses
+Player --> key.KeyHandler : uses
+Player --> object.ObjRock : may interact
+Player --> object.ObjPot : may interact
+Player --> npc.NpcChicken : may interact
+Player --> frame.FrameApp : reads tile size
+CollisionChecker --> Entity : checks [0..*]
+
+note right of Player
+**Notes**
+- processInput は方向キーの入力を読み取り、向きと moving フラグを設定する。移動キーが押されていない場合は左側ガード（left-blocking）を開始することがある。
+- updateMovement は移動を複数ステップに分割して処理し、タイル／エンティティの衝突判定を行い、押し出し（push）・スナップ（snap）・アンストック（unstuck）といった対処を試み、NPC／オブジェクト／モンスターとの相互作用を扱い、
+- 衝突がなければ最終的にワールド座標を更新する。
+
+- processInput reads directional keys and sets direction + moving flag; if no movement keys, it may start left-blocking.
+- updateMovement splits movement into steps, runs tile/entity collision checks, attempts push/snap/unstuck strategies, handles NPC/OBJ/Monster interactions, and applies final world position updates when no collision.
+end note
+@enduml

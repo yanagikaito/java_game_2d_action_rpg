@@ -1,0 +1,163 @@
+@startuml player_rendering_and_sprite_drawing
+
+package player {
+  class Player {
+    -- Fields --
+    - aura: Aura
+    - transparent: boolean
+    - state: PlayerState
+    - holding: boolean
+    - heldBomb: ObjBomb
+    - spriteNum: int
+    - spriteCounter: int
+    - sprites: BufferedImage[][]
+    - guardSprites: BufferedImage[][]
+    - attackSprites: BufferedImage[][]
+    - axeSprites: BufferedImage[][]
+    - guardDirection: String
+    - attackDirection: String
+    - direction: String
+    - speed: int
+    - screenX: int
+    - screenY: int
+
+    -- Methods --
+    + draw(g2:Graphics2D): void
+    + isTransparent(): boolean
+    + isGuarding(): boolean
+    + getGuardDirection(): String
+    + getAttackDirection(): String
+    + getDirection(): String
+    + getSpriteNum(): int
+    + getSpriteCounter(): int
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + getSolidArea(): Rectangle
+    + getCollisionBoxWorld(): Rectangle
+    + getCurrentShield(): Entity
+    + getCurrentWeapon(): Entity
+    + getAttacking(): boolean
+    + getSpeed(): int
+    + getState(): PlayerState
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getKeyHandler(): KeyHandler
+    + getTileManager(): TileManager
+    + getUi(): UI
+  }
+}
+
+package aura {
+  class Aura {
+    - worldX: int
+    - worldY: int
+    - active: boolean
+    + isActive(): boolean
+    + setActive(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + drawAt(g2:Graphics2D, x:int, y:int, scale:float, alpha:float): void
+  }
+}
+
+package input {
+  class KeyHandler {
+    + isShowDebugText(): boolean
+  }
+}
+
+package tile {
+  class TileManager {
+    + getMapTileNum(): int[][]
+    + getTiles(): Tile[]
+  }
+  class Tile {
+    + collision: boolean
+    + bombCollision: boolean
+    + potCollision: boolean
+  }
+}
+
+package ui {
+  class UI {
+    + addMessage(msg:String): void
+    + getDamagePopupManager(): DamagePopupManager
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package object {
+  class ObjBomb {
+    + getHeldSprite(): BufferedImage
+    + getSolidArea(): Rectangle
+  }
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+    + intersects(r:Rectangle): boolean
+  }
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package java.awt {
+  class Graphics2D
+  class BufferedImage
+  class AlphaComposite
+  class Composite
+  class Color
+}
+
+enum PlayerState {
+  PLAY
+  HOLD_WALK
+  PICKUP
+  // ...
+}
+
+enum PopupVariant {
+  MONSTER_DAMAGE
+  PLAYER_DAMAGE
+  XP
+}
+
+Player --> GameWindow : uses
+Player --> Aura : draws
+Player --> ObjBomb : may hold
+Player --> TileManager : queries
+Player --> KeyHandler : queries
+Player --> UI : uses
+TileManager --> Tile : provides
+
+note right of Player
+**Notes**
+- ワールド座標を画面座標に変換してプレイヤーのスプライトを描画する。
+- プレイヤーが透明状態のときは半透明で描画する。
+- オーラが有効でかつプレイヤーのHPが満タンのときはオーラを描画する。
+- デバッグモードが有効な場合は solidArea、移動予測矩形、周辺タイルを描画し、衝突タイルを強調表示する。
+- ガード、歩行／待機、攻撃（斧とその他の武器で切り替え）それぞれのスプライトセットを選択し、攻撃スプライトは必要に応じて拡大・オフセットして描画する。
+- 所持中の爆弾はプレイヤーの頭上に影と半透明を付けて描画する。
+
+- Converts world coordinates to screen coordinates and draws player sprite.
+- Applies semi-transparency when player is transparent.
+- Draws aura when active and player HP is full.
+- If debug mode is enabled, draws solidArea, predicted move box, and surrounding tiles with collision highlighting.
+- Chooses sprite sets for guarding, walking/idle, and attacking (axe vs other weapons), scaling and offsetting attack sprites as needed.
+- Renders held bomb above the player's head with shadow and alpha.
+end note
+
+@enduml

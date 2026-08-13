@@ -1,0 +1,117 @@
+@startuml player_playtime_input
+
+package player {
+  class Player {
+    -- Fields --
+    - playTimeSeconds: long
+    - playTimeAccumulator: double
+    - MAX_PLAY_SECONDS: long {static, final}
+    - lastThrowKey: boolean
+    - blockingLeft: boolean
+    - state: PlayerState
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - currentShield: Entity
+    - currentWeapon: Entity
+
+    -- Methods --
+    + updatePlayTime(deltaSeconds:double): void
+    - isThrowKeyJustPressed(): boolean
+    + isBlockingLeft(): boolean
+    + hasLeftShield(): boolean
+    + getPlayTimeSeconds(): long
+    + setPlayTimeSeconds(seconds:long): void
+    + getState(): PlayerState
+    + setState(state:PlayerState): PlayerState
+  }
+}
+
+package window {
+  class GameWindow {
+    + getKeyHandler(): KeyHandler
+    + getUi(): UI
+    + getPlayer(): Player
+  }
+}
+
+package input {
+  class KeyHandler {
+    + isThrowKeyPressed(): boolean
+  }
+}
+
+package object {
+  abstract class Obj {
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir:String, frame:int): BufferedImage
+  }
+  class ObjBomb extends Obj
+  class ObjPot extends Obj
+  class ObjRock extends Obj
+}
+
+package npc {
+  class NpcChicken {
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir:String, frame:int): BufferedImage
+  }
+}
+
+package ui {
+  class UI {
+    + getDamagePopupManager(): DamagePopupManager
+    + addMessage(msg:String): void
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package util {
+  class FrameApp {
+    + getTileSize(): int
+    + getMaxWorldCol(): int
+    + getMaxWorldRow(): int
+  }
+}
+
+enum PlayerState {
+  PLAY
+  HOLD_WALK
+  PICKUP
+  THROW
+  // ...
+}
+
+enum PopupVariant {
+  HEAL
+  MONSTER_DAMAGE
+  PLAYER_DAMAGE
+  XP
+}
+
+Player --> GameWindow : uses
+Player --> KeyHandler : queries
+Player --> ObjBomb : may hold
+Player --> ObjPot : may hold
+Player --> ObjRock : may hold
+Player --> NpcChicken : may hold
+GameWindow --> KeyHandler : provides
+GameWindow --> UI : provides
+UI --> DamagePopupManager : provides
+
+note right of Player
+**Notes**
+- updatePlayTime: フレームごとの経過秒を蓄積して秒単位で playTimeSeconds を増やす。上限(MAX_PLAY_SECONDS)でカンストする。
+- isThrowKeyJustPressed: 投擲キーの「押下開始」を検出するユーティリティ（前フレーム状態を保持）。
+- isBlockingLeft / hasLeftShield: 左側ブロック状態と左手に盾を装備しているかを返す簡易ゲッター。
+
+- updatePlayTime: Accumulate the frame's elapsed seconds and increment playTimeSeconds once per accumulated second; stop increasing when MAX_PLAY_SECONDS is reached (cap at max).
+- isThrowKeyJustPressed: Utility that detects the throw key's rising edge by comparing the current key state with the previous frame's state and updates the stored previous state.
+- isBlockingLeft: Simple getter that returns whether the player is currently blocking to the left.
+- hasLeftShield: Simple getter that returns whether the player has a shield equipped in the left hand (checks getCurrentShield() and its type).
+end note
+
+@enduml

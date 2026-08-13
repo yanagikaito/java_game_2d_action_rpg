@@ -1,0 +1,160 @@
+@startuml player_placeBomb_pickUpObject
+
+package player {
+  class Player {
+    -- Fields --
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - holding: boolean
+    - state: PlayerState
+    - pickupCooldown: int
+    - bombCooldown: int
+    - shotAvailableCounter: int
+    - lastFireTime: long
+    - COOLDOWN_FRAMES: int {static, final}
+    - FIRE_COOLDOWN_MS: long {static, final}
+    - FIREBALL_MANA_COST: int {static, final}
+
+    -- Methods --
+    + placeBomb(): void
+    + pickUpObject(i:int): void
+    + getProjectile(): Projectile
+    + consumeMana(cost:int): boolean
+    + setShotAvailableCounter(v:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getDirection(): String
+    + getSolidArea(): Rectangle
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setCollision(flag:boolean): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getKeyHandler(): KeyHandler
+    + getProjectileList(): List
+    + addObject(o:Obj): void
+    + getObj(): Entity[]
+    + getMonster(): Entity[]
+    + indexOfMonster(m:Monster): int
+    + getSoundmanager(): SoundManager
+    + getTileManager(): TileManager
+  }
+}
+
+package input {
+  class KeyHandler {
+    + isBombKeyPressed(): boolean
+    + isPlayerEnterJustPressed(): boolean
+    + isThrowKeyPressed(): boolean
+  }
+}
+
+package projectile {
+  abstract class Projectile {
+    + getAlive(): boolean
+  }
+}
+
+package object {
+  abstract class Obj extends Entity {
+    + getSolidArea(): Rectangle
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setUser(p:Player): void
+    + setPickable(b:boolean): void
+    + setThrown(b:boolean): void
+    + setAlive(b:boolean): void
+    + setVelocity(vx:int, vy:int): void
+  }
+
+  class ObjBomb extends Obj {
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+  }
+  class ObjPot extends Obj
+  class ObjRock extends Obj
+  class ObjChest extends Obj {
+    + interact(p:Player): void
+    + isOpened(): boolean
+  }
+}
+
+package npc {
+  class NpcChicken extends Entity {
+    + isThrown(): boolean
+    + isPickable(): boolean
+    + onPickedUp(p:Player): void
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getAlive(): boolean
+    + getMapId(): int
+    + getName(): String
+    + getCollisionBoxWorld(): Rectangle
+  }
+}
+
+package audio {
+  class SoundManager {
+    + explosionWAV(path:String): void
+  }
+}
+
+package tile {
+  class TileManager {
+    + getTileIdAt(col:int, row:int): int
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(e:Entity, dx:int, dy:int): boolean
+    + checkEntity(e:Entity, list:Entity[], dx:int, dy:int): int
+  }
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+  }
+}
+
+enum PlayerState {
+  PLAY
+  PICKUP
+  // ...
+}
+
+Player --> GameWindow : uses
+Player --> KeyHandler : queries
+Player --> Projectile : checks
+Player --> ObjBomb : holds
+Player --> ObjPot : holds
+Player --> ObjRock : holds
+Player --> NpcChicken : holds
+Player --> CollisionChecker : uses
+GameWindow --> SoundManager : provides
+GameWindow --> TileManager : provides
+GameWindow --> Obj : stores [0..*]
+GameWindow --> Monster : stores [0..*]
+
+note right of Player
+**Notes**
+- placeBomb は入力・クールダウン・マナをチェックし、対象タイルが空いていればタイルグリッドに合わせて ObjBomb を配置し、ワールドに追加して効果音を再生する。
+- pickUpObject は Enter/Throw 入力を処理する：宝箱の操作、爆弾／壺／岩の拾得（ワールドから削除して heldX に格納）、モンスター配列からのニワトリの拾得、そしてニワトリをアイテム扱いしないためのガードを行う。
+
+- placeBomb checks input, cooldown, mana and places an ObjBomb aligned to the tile grid if the target tile is free; then adds it to the world and plays sound.
+- pickUpObject handles Enter/Throw input: chest interaction, picking up bombs/pots/rocks (removes from world and stores in heldX), picking up chickens from monster array, and item pickup with guards to avoid treating chickens as items.
+end note
+
+@enduml

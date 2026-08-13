@@ -1,0 +1,152 @@
+@startuml player_level_inventory_respawn
+
+package player {
+  class Player {
+    -- Fields --
+    - life: int
+    - maxLife: int
+    - exp: int
+    - nextLevelExp: int
+    - level: int
+    - aura: Aura
+    - lastFireTime: long
+    - COOLDOWN_FRAMES: int {static, final}
+    - FIRE_COOLDOWN_MS: long {static, final}
+    - FIREBALL_MANA_COST: int {static, final}
+
+    - inventory: List<Entity>
+    - maxInventorySize: int
+
+    -- Methods --
+    + getTimer(monster:Entity): Timer
+    + checkLevelUp(): void
+    + selectItem(index:int): void
+    + isEquipped(item:Entity): boolean
+    + searchItemInInventory(itemName:String): int
+    + canObtainItem(item:Entity): boolean
+    + setLevel(v:int): void
+    + setNextLevelExp(v:int): void
+    + setMaxLife(v:int): void
+    + setStrength(v:int): void
+    + setDexterity(v:int): void
+    + calculateTotalAttack(): int
+    + calculateTotalDefense(): int
+    + setAttack(v:int): void
+    + setDefense(v:int): void
+    + setLife(v:int): void
+    + getLife(): int
+    + getMaxLife(): int
+    + getExp(): int
+    + getLevel(): int
+    + getInventory(): List<Entity>
+    + getMaxInventorySize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getAssetSetter(): AssetSetter
+    + getUi(): UI
+    + getSoundmanager(): SoundManager
+    + setGameState(s:GameState): void
+    + dropItem(e:Entity, source:Entity): void
+  }
+}
+
+package asset {
+  class AssetSetter {
+    + setMonster(): void
+  }
+}
+
+package ui {
+  class UI {
+    + setCurrentDialogueMessage(msg:String): void
+    + getItemIndexOnSlot(row:int, col:int): int
+    + getPlayerSlotRow(): int
+    + getPlayerSlotCol(): int
+  }
+}
+
+package audio {
+  class SoundManager {
+    + levelWAV(path:String): void
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getName(): String
+    + getType(): ItemType
+    + isStackable(): boolean
+    + getAmount(): int
+    + setAmount(v:int): void
+    + getMaxLife(): int
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package items {
+  class Weapon extends Entity
+  class Shield extends Entity
+  class Potion extends Entity
+  class ObjCoinBronze extends Entity
+  class ObjRedPotion extends Entity
+  class ObjGreenPotion extends Entity
+}
+
+package types {
+  class ItemType
+  class SwordType extends ItemType
+  class AxeType extends ItemType
+  class ShieldType extends ItemType
+  class RedPotionType extends ItemType
+  class GreenPotionType extends ItemType
+  class BluePotionType extends ItemType
+}
+
+package util {
+  class Timer
+}
+
+enum GameState {
+  PLAY
+  DIALOGUE
+  GAME_OVER
+}
+
+class Aura {
+  + isActive(): boolean
+  + setActive(b:boolean): void
+}
+
+' Associations
+Player --> GameWindow : uses
+GameWindow --> AssetSetter : uses
+GameWindow --> UI : uses
+GameWindow --> SoundManager : uses
+Player --> Entity : stores [0..*] (inventory)
+Player --> Aura : uses
+Entity --> ItemType : has
+ItemType <|-- SwordType
+ItemType <|-- AxeType
+ItemType <|-- ShieldType
+ItemType <|-- RedPotionType
+ItemType <|-- GreenPotionType
+ItemType <|-- BluePotionType
+
+note right of Player
+**Notes**
+- getTimer: 指定モンスターのリスポーン用に一回実行の Timer を生成し、時間経過で AssetSetter による再配置とリスポーンフラグ解除を行う。
+- checkLevelUp: 経験値が閾値を超えたらレベルを上げ、ステータスを強化しダイアログ表示・HP全回復・オーラ発動を行う。
+- selectItem: 選択中のインベントリアイテムを取得し、武器/盾の装備更新やポーション使用を行う。
+- isEquipped / searchItemInInventory / canObtainItem: 装備判定、インベントリ内検索、取得可能判定（スタック処理と空きスロット確認）を行う。
+
+- getTimer: Creates a one‑shot javax.swing.Timer for monster respawn; after the delay it calls AssetSetter.setMonster(), clears the monster’s respawning flag, and stops the timer.
+- checkLevelUp: When current EXP meets or exceeds the next‑level threshold, increments the player level, updates the next level EXP, increases max HP and core stats, recalculates attack/defense, plays the level‑up sound, opens a dialogue message, fully restores HP, and activates the aura.
+- selectItem: Retrieves the item selected in the inventory UI slot; equips weapons/axes (updates current weapon, attack, and attack sprites), equips shields (updates current shield and defense), and invokes potion use handlers for red/green/blue potions.
+- isEquipped / searchItemInInventory / canObtainItem: isEquipped checks if an item is currently equipped as weapon or shield; searchItemInInventory finds an item index by name; canObtainItem determines if an item can be picked up (handles stackable items by incrementing amount or placing in a free slot, and rejects items like bombs), returning whether acquisition succeeded.
+end note
+
+@enduml

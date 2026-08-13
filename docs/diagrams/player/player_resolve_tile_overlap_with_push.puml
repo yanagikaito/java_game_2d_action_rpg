@@ -1,0 +1,80 @@
+@startuml player_resolve_tile_overlap_with_push
+
+package player {
+  class Player {
+    -- Fields --
+    - lastSafeWorldX: int
+    - lastSafeWorldY: int
+    - lastSafeFrame: long
+
+    -- Methods --
+    + resolveTileOverlapWithPush(offsetX:int, offsetY:int): boolean
+    + recordSafePosition(): void
+    + getSolidArea(): Rectangle
+    + getSolidAreaDefaultX(): int
+    + getSolidAreaDefaultY(): int
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setCollision(flag:boolean): void
+    + canMoveBy(dx:int, dy:int): boolean
+    + getMapCols(): int
+    + getMapRows(): int
+    + getTileSolidRect(col:int, row:int): Rectangle
+  }
+}
+
+package window {
+  class GameWindow {
+    + getCollisionChecker(): CollisionChecker
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(p:Player, dx:int, dy:int): boolean
+    + checkEntity(p:Player, list:Entity[], dx:int, dy:int): int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package util {
+  class Rectangle {
+    + x: int
+    + y: int
+    + width: int
+    + height: int
+    + intersects(r:Rectangle): boolean
+    + intersection(r:Rectangle): Rectangle
+    + isEmpty(): boolean
+  }
+}
+
+package entity {
+  abstract class Entity
+}
+
+Player --> GameWindow : uses
+Player --> CollisionChecker : queries
+Player --> FrameApp : reads tile size
+Player --> Rectangle : uses (solid area)
+CollisionChecker --> Entity : checks [0..*]
+
+note right of Player
+**Notes**
+- 周囲タイルを走査して重なり矩形を計算する。
+- X 単独、Y 単独、斜めの順で最小押し出し量を試し、canMoveBy で移動可能か検査する。
+- 有効な押し出しが見つかれば位置を更新し衝突フラグを解除、recordSafePosition を呼ぶ。
+
+- Scan surrounding tiles and compute intersection rectangles.
+- Try minimal pushes in this order: X-only, Y-only, then diagonal; for each candidate, check movability with canMoveBy.
+- If a valid push is found, update the player position, clear the collision flag, and call recordSafePosition.
+end note
+
+@enduml

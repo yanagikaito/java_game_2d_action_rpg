@@ -1,0 +1,138 @@
+@startuml player_nearby_interact
+
+package player {
+  class Player {
+    -- Fields --
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - holding: boolean
+    - state: PlayerState
+    - pickupCooldown: int
+
+    -- Methods --
+    + findNearbyObjectIndex(): int
+    + getNearbyEntity(p:Player): Entity
+    + handleInteractInput(i:int): void
+    + getCollisionBoxWorld(): Rectangle
+    + getWorldX(): int
+    + getWorldY(): int
+    + getInventory(): List<Entity>
+    + getMaxInventorySize(): int
+    + getDirection(): String
+  }
+}
+
+package window {
+  class GameWindow {
+    + getObj(): Entity[]
+    + getMonster(): Entity[]
+    + getKeyHandler(): KeyHandler
+    + indexOfMonster(m:Monster): int
+    + addObject(o:Obj): void
+    + getSoundmanager(): SoundManager
+  }
+}
+
+package input {
+  class KeyHandler {
+    + isPlayerEnter(): boolean
+    + isPlayerEnterJustPressed(): boolean
+    + isThrowKeyPressed(): boolean
+    + isBombKeyPressed(): boolean
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getAlive(): boolean
+    + getCollisionBoxWorld(): Rectangle
+    + getName(): String
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+  }
+}
+
+package object {
+  abstract class Obj extends Entity {
+    + getSolidArea(): Rectangle
+    + setPickable(b:boolean): void
+    + setThrown(b:boolean): void
+    + setAlive(b:boolean): void
+    + setLife(l:int): void
+    + getMaxLife(): int
+    + setVelocity(vx:int, vy:int): void
+  }
+
+  class ObjBomb extends Obj
+  class ObjPot extends Obj
+  class ObjRock extends Obj
+  class ObjChest extends Obj {
+    + interact(p:Player): void
+    + isOpened(): boolean
+  }
+}
+
+package npc {
+  class NpcChicken extends Entity {
+    + isThrown(): boolean
+    + isPickable(): boolean
+    + onPickedUp(p:Player): void
+    + getMaxLife(): int
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(e:Entity, dx:int, dy:int): boolean
+    + checkEntity(e:Entity, list:Entity[], dx:int, dy:int): int
+  }
+}
+
+package audio {
+  class SoundManager {
+    + explosionWAV(path:String): void
+  }
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+    + intersects(r:Rectangle): boolean
+  }
+}
+
+enum PlayerState {
+  PLAY
+  PICKUP
+  // ...
+}
+
+Player --> GameWindow : uses
+Player --> KeyHandler : queries
+Player --> Entity : inspects [0..*]
+Player --> Obj : manipulates
+Player --> NpcChicken : manipulates
+GameWindow --> Obj : stores [0..*]
+GameWindow --> Monster : stores [0..*]
+GameWindow --> SoundManager : provides
+CollisionChecker --> Entity : checks [0..*]
+
+note right of Player
+**Notes**
+- findNearbyObjectIndex は objs[] を走査し、プレイヤーの当たり矩形と交差する最初のオブジェクトの配列インデックスを返す。
+- getNearbyEntity はまず monsters[] をチェックし次に objs[] をチェックして、生存している最初に交差するエンティティを返す（拾えないニワトリは除外する）。
+- handleInteractInput は近接インデックス（モンスターは 999+index で符号化）を解釈し、Enter 入力を必要条件として、宝箱の操作、爆弾／壺／岩の拾得、ニワトリの復帰配置、またはアイテムをインベントリに追加する処理を行う。
+
+- findNearbyObjectIndex scans objs[] and returns the first index whose collision box intersects the player's collision box.
+- getNearbyEntity checks monsters[] then objs[] and returns the first intersecting living entity (skips non-pickable chickens).
+- handleInteractInput interprets the nearby index (monster indices encoded as 999+index), requires Enter input, and handles chest interaction, picking up bombs/pots/rocks, reviving/placing chickens, or adding items to inventory.
+end note
+
+@enduml

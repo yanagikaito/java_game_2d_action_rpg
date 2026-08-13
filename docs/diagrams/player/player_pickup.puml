@@ -1,0 +1,97 @@
+@startuml player_pickup
+
+package player {
+  class Player {
+    -- Fields (pickup related) --
+    - holding: boolean
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - pendingPickupEntity: Entity
+    - pendingPickupIndex: int
+    - pickupCooldown: int
+    - PICKUP_COOLDOWN_FRAMES: int {static, final}
+    - state: PlayerState
+    - spriteNum: int
+    - spriteCounter: int
+
+    -- Methods (pickup related) --
+    + startPickup(e:Entity): void
+    + startPickup(nearbyIndex:int): void
+    + finishPickup(): void
+    + fallbackToHoldWalk(): void
+    + findNearbyObjectIndex(): int
+    + getNearbyEntity(p:Player): Entity
+    + isThrowKeyJustPressed(): boolean
+    + isThrowKeyPressed(): boolean
+    + setState(s:PlayerState): void
+    + setSpriteNum(n:int): void
+    + setSpriteCounter(n:int): void
+  }
+}
+
+package object {
+  class ObjBomb {
+    + isPickable(): boolean
+    + getAlive(): boolean
+    + onPickedUp(): void
+  }
+  class ObjPot {
+    + isPickable(): boolean
+    + getAlive(): boolean
+    + onPickedUp(): void
+  }
+  class ObjRock {
+    + isPickable(): boolean
+    + getAlive(): boolean
+    + onPickedUp(): void
+  }
+}
+
+package npc {
+  class NpcChicken {
+    + isPickable(): boolean
+    + getAlive(): boolean
+    + isThrown(): boolean
+    + isBeingHeld(): boolean
+    + onPickedUp(p:Player): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getObj(): Entity[]
+    + getMonster(): Entity[]
+    + indexOfObj(e:Entity): int
+    + indexOfMonster(e:Entity): int
+    + removeMonster(n:NpcChicken): boolean
+  }
+}
+
+package entity {
+  abstract class Entity
+}
+
+Player --> Entity : extends
+Player --> window.GameWindow : uses
+Player --> object.ObjBomb : may hold (0..1)
+Player --> object.ObjPot : may hold (0..1)
+Player --> object.ObjRock : may hold (0..1)
+Player --> npc.NpcChicken : may hold (0..1)
+Player "1" --> "0..*" object : inventory
+
+note right of Player
+**Notes**
+- startPickup(e) は事前チェックを行う（isPickable、isAlive、投げられていない／既に保持されていないこと）。
+- チェックが通れば pendingPickupEntity を設定し、状態を PICKUP に遷移させる。
+- finishPickup() は最終処理を行う：配列からエンティティを削除し、onPickedUp を呼び、heldX を設定し、holding = true にし、pickupCooldown を設定する。
+- fallbackToHoldWalk() はピックアップ失敗時に状態とスプライトをリセットする。
+
+- startPickup(e) performs pre-checks (isPickable, isAlive, not thrown/held).
+- If checks pass, pendingPickupEntity is set and state -> PICKUP.
+- finishPickup() finalizes: removes entity from arrays, calls onPickedUp, sets heldX, sets holding=true, sets pickupCooldown.
+- fallbackToHoldWalk() resets state/sprite when pickup fails.
+end note
+
+@enduml

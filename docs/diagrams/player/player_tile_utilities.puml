@@ -1,0 +1,117 @@
+@startuml player_tile_utilities
+
+package player {
+  class Player {
+    -- Fields --
+    - lastSafeWorldX: int
+    - lastSafeWorldY: int
+    - lastSafeFrame: long
+    - lastSafeSaWidth: int
+    - lastSafeSaHeight: int
+    - lastSnapTimeMs: long
+    - SNAP_COOLDOWN_MS: long {static, final}
+    - SNAP_PENETRATION_THRESHOLD: int {static, final}
+    - UNSTUCK_PUSH_MAX: int {static, final}
+    - UNSTUCK_BFS_RADIUS: int {static, final}
+
+    -- Methods --
+    + getTileSolidRect(col:int, row:int): Rectangle
+    + isValidTile(row:int, col:int): boolean
+    + isTileBlocking(col:int, row:int): boolean
+    + canMoveBy(dx:int, dy:int): boolean
+    + recordSafePosition(): void
+    + snapToTileEdge(direction:String, dx:int, dy:int): boolean
+    + resolveTileOverlapWithPush(offsetX:int, offsetY:int): boolean
+    + attemptUnstuck(): boolean
+    + restoreToLastSafePosition(): void
+    + findNearestFreeTile(startWX:int, startWY:int, maxRadiusTiles:int): Point
+    + getMapCols(): int
+    + getMapRows(): int
+    + getTileSolidRect(col:int, row:int): Rectangle
+    + getSolidArea(): Rectangle
+    + getSolidAreaDefaultX(): int
+    + getSolidAreaDefaultY(): int
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setCollision(flag:boolean): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getCollisionChecker(): CollisionChecker
+    + getItile(): Entity[]
+    + getNPC(): Entity[]
+    + getTileManager(): TileManager
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(p:Player, dx:int, dy:int): boolean
+    + checkEntity(p:Player, list:Entity[], dx:int, dy:int): int
+  }
+}
+
+package tile {
+  class TileManager {
+    + getMapTileNum(): int[][]
+    + getTiles(): Tile[]
+  }
+  class Tile {
+    + collision: boolean
+  }
+}
+
+package util {
+  class Rectangle {
+    + x: int
+    + y: int
+    + width: int
+    + height: int
+    + intersection(r:Rectangle): Rectangle
+    + intersects(r:Rectangle): boolean
+    + isEmpty(): boolean
+  }
+  class Point {
+    + x: int
+    + y: int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + isBlocking(): boolean
+  }
+}
+
+Player --> GameWindow : uses
+Player --> CollisionChecker : queries
+Player --> TileManager : queries
+Player --> Rectangle : uses (solid area)
+Player --> FrameApp : reads tile size
+CollisionChecker --> Entity : checks [0..*]
+TileManager --> Tile : manages [0..*]
+
+note right of Player
+**Notes**
+- getTileSolidRect はタイル座標から blocking タイルの矩形を返す（blocking でなければ null）。
+- canMoveBy は dx,dy オフセットで tile/itile/npc の衝突をチェックするユーティリティ。
+- resolveTileOverlapWithPush は周囲タイルを走査し最小押し出し量を試して位置を補正する。
+- attemptUnstuck は段階的に小移動→軸分離→snap→BFS→最後に復帰の順で挟まり解除を試みる。
+
+- getTileSolidRect returns the rectangle for a blocking tile at the given tile coordinates, or null if the tile is not blocking.
+- canMoveBy is a utility that checks whether moving by the pixel offsets dx, dy would collide with tiles, itiles, or NPCs.
+- resolveTileOverlapWithPush scans surrounding tiles, computes intersection rectangles, and tries minimal push corrections in this order: X-only, Y-only, then diagonal; each candidate is validated with canMoveBy, and the first valid correction is applied.
+- attemptUnstuck attempts to free the player in stages: small local offsets, axis-separated pushes, a snapToTileEdge attempt, a BFS search for the nearest free tile (teleport), and finally restoring the last saved safe position.
+end note
+
+@enduml
