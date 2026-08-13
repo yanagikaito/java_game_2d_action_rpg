@@ -1,0 +1,186 @@
+@startuml player_combat_interaction
+
+package player {
+  class Player {
+    -- Fields --
+    - life: int
+    - maxLife: int
+    - invincible: boolean
+    - transparent: boolean
+    - knockBackDx: double
+    - knockBackDy: double
+    - knockbackTimer: int
+    - attackCounter: int
+    - guardCounter: int
+    - lastFireTime: long
+
+    -- Methods --
+    + interactNPC(i:int): void
+    + contactMonster(monsterIndex:int, attacker:Entity, knockBackPower:int): void
+    + damageMonster(i:int, attack:int, knockBackPower:int): void
+    + damageInteractiveTile(i:int): void
+    + setKnockBack(target:Entity, source:Entity, power:int): void
+    + setAttack(value:int): int
+    + calculateTotalDefense(): int
+    + checkLevelUp(): void
+    + getTimer(e:Entity): Timer
+    + getCurrentWeapon(): Weapon
+    + getDirection(): String
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + getLife(): int
+    + setLife(v:int): void
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + setTransparent(b:boolean): void
+    + getMaxLife(): int
+    + getAttack(): int
+    + getDefense(): int
+    + recordSafePosition(): void
+    + getSolidArea(): Rectangle
+  }
+}
+
+package window {
+  class GameWindow {
+    + getNPC(): Entity[]
+    + getMonster(): Entity[]
+    + getItile(): Entity[]
+    + getTileManager(): TileManager
+    + getUi(): UI
+    + getSoundmanager(): SoundManager
+    + setGameState(s:GameState): void
+    + dropItem(e:Entity, source:Entity): void
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getLife(): int
+    + setLife(v:int): void
+    + getAttack(): int
+    + getDefense(): int
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + damageReaction(): void
+    + getKnockBackPower(): int
+    + getExp(): int
+    + getType(): MonsterType
+    + getAlive(): boolean
+    + setAlive(b:boolean): void
+    + setDying(b:boolean): void
+    + isRespawning(): boolean
+    + setRespawning(b:boolean): void
+  }
+}
+
+package npc {
+  class Npc extends Entity {
+    + speak(): void
+  }
+  class NpcChicken extends Entity {
+    + isThrown(): boolean
+    + isPickable(): boolean
+    + takeDamage(damage:int, knockBack:int): void
+    + onPickedUp(p:Player): void
+    + getMaxLife(): int
+  }
+}
+
+package monster {
+  class MonsterType {
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+}
+
+package itile {
+  class InteractiveTile extends Entity {
+    + isDestructible(): boolean
+    + isCorrectItem(p:Player): boolean
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + createDestroyedForm(): InteractiveTile
+  }
+}
+
+package ui {
+  class UI {
+    + getDamagePopupManager(): DamagePopupManager
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package audio {
+  class SoundManager {
+    + damageWAV(path:String): void
+    + defeatedWAV(path:String): void
+    + explosionWAV(path:String): void
+  }
+}
+
+package tile {
+  class TileManager {
+    + getTileIdAt(col:int, row:int): int
+  }
+}
+
+package items {
+  class ObjCoinBronze extends Entity
+  class ObjRedPotion extends Entity
+  class ObjGreenPotion extends Entity
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+    + intersects(r:Rectangle): boolean
+  }
+  class Timer
+}
+
+enum PopupVariant {
+  MONSTER_DAMAGE
+  PLAYER_DAMAGE
+  XP
+}
+
+enum GameState {
+  PLAY
+  DIALOGUE
+  GAME_OVER
+}
+
+Player --> GameWindow : uses
+Player --> UI : uses
+Player --> SoundManager : uses
+Player --> Entity : manipulates [0..*]
+Player --> NpcChicken : special-case handling
+GameWindow --> TileManager : provides
+GameWindow --> UI : provides
+GameWindow --> SoundManager : provides
+UI --> DamagePopupManager : provides
+
+note right of Player
+**Notes**
+- interactNPC: Enter キーで NPC がいれば会話を開始、いなければオーラ＋剣装備で射出、そうでなければ近接攻撃を開始する。
+- contactMonster: モンスター接触時にノックバックベクトルを計算し無敵状態やダメージ処理、ゲームオーバー判定を行う。
+- damageMonster: 指定モンスターにダメージを与え、死亡時はドロップ・経験値・レベル判定・リスポーン処理を行う。ニワトリは専用処理を呼ぶ。
+- damageInteractiveTile: 攻撃中に正しいアイテムで破壊可能なインタラクティブタイルへダメージを与え、破壊時に置換する。
+
+- interactNPC: When the Enter key is pressed, start a conversation if an NPC is present; if not, fire the sword when aura is active and a sword is equipped, otherwise begin a melee attack.
+- contactMonster: On collision with a monster, compute a knockback vector, apply invincibility and damage handling, and perform a game-over check if the player's life reaches zero.
+- damageMonster: Apply damage to the specified monster; on death, handle drops, grant experience, check for level-up, play defeat effects, and schedule respawn. Chickens use a specialized damage handler.
+- damageInteractiveTile: While attacking, damage destructible interactive tiles when the correct item is used; play sound and particles, decrement life, set temporary invincibility, and replace the tile with its destroyed form when its life reaches zero.
+end note
+
+@enduml

@@ -1,0 +1,184 @@
+@startuml player_render_utils
+
+package player {
+  class Player {
+    -- Fields --
+    - spriteKey: String
+    - characterTypeId: int
+    - screenX: int
+    - screenY: int
+    - moving: boolean
+    - life: int
+    - maxLife: int
+    - mana: int
+    - maxMana: int
+    - coin: int
+    - strength: int
+    - dexterity: int
+    - aura: Aura
+    - inventory: List<Entity>
+    - maxInventorySize: int
+    - playTimeSeconds: long
+    - playTimeAccumulator: double
+    - MAX_PLAY_SECONDS: long {static, final}
+    - loaded: boolean
+    - talkNpcIndex: int
+    - state: PlayerState
+    - currentWeapon: Entity
+    - currentShield: Entity
+
+    -- Methods --
+    + createImage(original:BufferedImage, width:int, height:int): BufferedImage
+    + getSpriteKey(): String
+    + getScreenX(): int
+    + getScreenY(): int
+    + setMoving(moving:boolean): void
+    + calculateBaseAttackArea(): void
+    + calculateBaseAttack(): int
+    + calculateWeaponBonus(): int
+    + calculateTotalAttack(): int
+    + calculateBaseDefense(): int
+    + calculateShieldBonus(): int
+    + calculateTotalDefense(): int
+    + consumeMana(cost:int): boolean
+    + addCoin(coin:ObjCoinBronze): void
+    + healRedPotion(potion:ObjRedPotion): void
+    + healGreenPotion(potion:ObjGreenPotion): void
+    - capitalize(s:String): String
+    + getTalkNpcIndex(): int
+    + setTalkNpcIndex(idx:int): void
+    + setLoaded(loaded:boolean): void
+    + takeDamage(dmg:int): void
+    + getPlayTimeSeconds(): long
+    + setPlayTimeSeconds(seconds:long): void
+    + getState(): PlayerState
+    + setState(state:PlayerState): PlayerState
+    + getMapCols(): int
+    + getMapRows(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getUi(): UI
+    + getPlayer(): Player
+  }
+}
+
+package ui {
+  class UI {
+    + getDamagePopupManager(): DamagePopupManager
+    + setCurrentDialogueMessage(msg:String): void
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package items {
+  class ObjCoinBronze {
+    + getValue(): int
+  }
+  class ObjRedPotion {
+    + getHealAmount(): int
+  }
+  class ObjGreenPotion {
+    + getHealAmount(): int
+  }
+  abstract class Weapon extends Entity {
+    + getAttackValue(): int
+    + getAttackArea(): Rectangle
+  }
+  abstract class Shield extends Entity {
+    + getDefenseValue(): int
+  }
+}
+
+package types {
+  class ItemType
+  class SwordType extends ItemType
+  class AxeType extends ItemType
+  class ShieldType extends ItemType
+  class RedPotionType extends ItemType
+  class GreenPotionType extends ItemType
+  class BluePotionType extends ItemType
+}
+
+package aura {
+  class Aura {
+    + isActive(): boolean
+    + activate(durationMs:long): void
+    + setActive(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package util {
+  class FrameApp {
+    + getTileSize(): int
+    + getMaxWorldCol(): int
+    + getMaxWorldRow(): int
+  }
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getName(): String
+    + getType(): ItemType
+    + isStackable(): boolean
+    + getAmount(): int
+    + setAmount(v:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+  }
+}
+
+enum PlayerState {
+  PLAY
+  HOLD_WALK
+  PICKUP
+  THROW
+  // ...
+}
+
+enum PopupVariant {
+  HEAL
+  MONSTER_DAMAGE
+  PLAYER_DAMAGE
+  XP
+}
+
+Player --> GameWindow : uses
+Player --> UI : uses
+Player --> DamagePopupManager : uses
+Player --> Aura : uses
+Player --> ObjCoinBronze : interacts
+Player --> ObjRedPotion : interacts
+Player --> ObjGreenPotion : interacts
+Player --> Weapon : may reference
+Player --> Shield : may reference
+Player --> FrameApp : queries
+
+note right of Player
+**Notes**
+- ユーティリティ: 画像リサイズ、スプライトキー選択、画面座標取得、移動フラグ。
+- 戦闘／ステータス: 基本攻撃力・武器ボーナス・総合攻撃力および基本防御力・盾ボーナス・総合防御力の計算。
+- リソース: マナ消費判定、所持ゴールド加算、ポーション回復処理（HP満タン時はオーラを発動）。
+- 状態／時間: プレイ時間の getter/setter、ロード状態フラグ、会話対象 NPC インデックス。
+
+- Utility: image resizing, sprite key selection, screen coordinate getters, movement flag.
+- Combat/stats: base/weapon/total attack and defense calculations.
+- Resources: mana consumption, coin addition, potion healing (with aura activation on full HP).
+- State/time: play time getters/setters, loaded flag, talk NPC index.
+end note
+
+@enduml

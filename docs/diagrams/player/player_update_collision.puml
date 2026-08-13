@@ -1,0 +1,134 @@
+@startuml player_update_collision
+
+package player {
+  class Player {
+    -- Fields --
+    - state: PlayerState
+    - talkNpcIndex: int
+    - pickupCooldown: int
+
+    -- Methods --
+    + updateCollision(): void
+    + interactNPC(npcIndex:int): void
+    + pickUpObject(objIndex:int): void
+    + contactMonster(monsterIndex:int, p:Player, knockBack:int): void
+    + startPickupMonster(monsterIndex:int): void
+    + damageInteractiveTile(iTileIndex:int): void
+    + getSolidArea(): Rectangle
+    + getCollisionBoxWorld(): Rectangle
+    + getMapId(): int
+    + getWorldX(): int
+    + getWorldY(): int
+    + setCollision(flag:boolean): void
+    + getInvincible(): boolean
+    + setInvincible(flag:boolean): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getCollisionChecker(): CollisionChecker
+    + getNPC(): Entity[]
+    + getObj(): Entity[]
+    + getMonster(): Entity[]
+    + getItile(): Entity[]
+    + getTileManager(): TileManager
+    + setGameState(s:GameState): void
+    + getUi(): UI
+    + changeMap(tileId:int): void
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(p:Player): boolean
+    + checkEntity(p:Player, list:Entity[]): int
+  }
+}
+
+package npc {
+  abstract class Npc extends Entity
+  class NpcMerChant extends Npc {
+    + getNextDialogue(): String
+  }
+  class NpcSave extends Npc {
+    + getNextDialogue(): String
+  }
+}
+
+package monster {
+  class Monster extends Entity {
+    + getType(): MonsterType
+    + getKnockBackPower(): int
+  }
+}
+
+package object {
+  class Obj extends Entity
+}
+
+package itile {
+  class Itile extends Entity {
+    + isBlocking(): boolean
+  }
+}
+
+package tile {
+  class TileManager {
+    + getTileIdAt(col:int, row:int): int
+    + getMapTileNum(): int[][]
+  }
+}
+
+package ui {
+  class UI {
+    + addDialogue(text:String): void
+  }
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+    + intersects(r:Rectangle): boolean
+  }
+}
+
+enum GameState {
+  PLAY
+  DIALOGUE
+  PAUSE
+}
+
+class MonsterType {
+  + isHostileToPlayer(): boolean
+}
+
+Player --> GameWindow : uses
+Player --> CollisionChecker : queries
+Player --> UI : uses
+Player --> TileManager : queries
+Player --> Rectangle : uses (collision box)
+Player --> Npc : interacts [0..*]
+Player --> Obj : interacts [0..*]
+Player --> Monster : interacts [0..*]
+Player --> Itile : interacts [0..*]
+CollisionChecker --> Entity : checks [0..*]
+GameWindow --> CollisionChecker : provides
+GameWindow --> TileManager : provides
+GameWindow --> UI : provides
+
+note right of Player
+**Notes**
+- updateCollision はタイル衝突とエンティティ衝突（NPC、オブジェクト、モンスター、インタラクティブタイル）をチェックする。
+- 商人やセーブNPCとの会話開始、オブジェクトの取得、モンスター接触時の処理（ダメージまたは持ち上げ）、インタラクティブタイルへのダメージ処理、現在のタイルに基づくマップ切り替え要求などの相互作用を発生させる。
+- CollisionChecker の結果と GameWindow のサービス（UI、TileManager、ゲーム状態の変更）を利用する。
+
+- updateCollision checks tile collision and entity collisions (NPC, objects, monsters, interactive tiles).
+- It triggers interactions: start dialogue with merchant/save NPCs, pick up objects, handle monster contact (damage or pickup), damage interactive tiles, and request map changes based on current tile.
+- Uses CollisionChecker results and GameWindow services (UI, TileManager, state changes).
+end note
+
+@enduml

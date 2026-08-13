@@ -1,0 +1,126 @@
+@startuml player_attack_guard_and_projectile_actions
+
+package player {
+  class Player {
+    -- Fields --
+    - attackCounter: int
+    - guardCounter: int
+    - spriteCounter: int
+    - spriteNum: int
+    - attacking: boolean
+    - guarding: boolean
+    - projectile: Projectile
+    - shotAvailableCounter: int
+    - fireCooldown: int
+    - lastFireTime: long
+    - COOLDOWN_FRAMES: int {static, final}
+    - FIRE_COOLDOWN_MS: long {static, final}
+    - FIREBALL_MANA_COST: int {static, final}
+    - SPRITE_ATTACKING_THRESHOLD_NUM1: int {static, final}
+    - SPRITE_ATTACKING_THRESHOLD_NUM2: int {static, final}
+    - SPRITE_ATTACKING_THRESHOLD_NUM3: int {static, final}
+    - ATTACK_ANIMATION_FRAMES: int {static, final}
+    - SPRITE_GUARDING_THRESHOLD_NUM1: int {static, final}
+    - SPRITE_GUARDING_THRESHOLD_NUM2: int {static, final}
+    - SPRITE_GUARDING_THRESHOLD_NUM3: int {static, final}
+    - GUARD_ANIMATION_FRAMES: int {static, final}
+
+    -- Methods --
+    + playerAttacking(): void
+    + playerGuarding(): void
+    + shootSword(): void
+    + playerAttackingFireball(): void
+    + damageMonster(idx:int, dmg:int, knock:int): void
+    + damageInteractiveTile(idx:int): void
+    + getAttackArea(): Rectangle
+    + getCurrentWeapon(): Weapon
+    + calculateTotalAttack(): int
+    + consumeMana(cost:int): boolean
+    + getProjectile(): Projectile
+    + setShotAvailableCounter(v:int): void
+    + setSpriteCounter(v:int): void
+    + getSpriteCounter(): int
+    + setSpriteNum(n:int): void
+    + setAttacking(b:boolean): void
+    + setGuarding(b:boolean): void
+    + getDirection(): String
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getSolidArea(): Rectangle
+  }
+}
+
+package projectile {
+  abstract class Projectile {
+    + set(x:int, y:int, dir:String, alive:boolean, owner:Player): void
+    + setLife(l:int): void
+    + setSpriteNum(n:int): void
+    + setSpriteCounter(c:int): void
+    + getMaxLife(): int
+    + getAlive(): boolean
+    + onFire(dir:String): void
+  }
+
+  class ObjSwordProjectile extends Projectile
+  class ObjFireball extends Projectile
+}
+
+package window {
+  class GameWindow {
+    + getProjectileList(): List
+    + getSoundmanager(): SoundManager
+    + getKeyHandler(): KeyHandler
+  }
+}
+
+package audio {
+  class SoundManager {
+    + explosionWAV(path:String): void
+  }
+}
+
+package input {
+  class KeyHandler {
+    + isShotKeyPressed(): boolean
+  }
+}
+
+package weapon {
+  class Weapon {
+    + getKnockBackPower(): int
+  }
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+  }
+}
+
+Player --> Projectile : holds
+Player --> GameWindow : uses
+GameWindow --> SoundManager : provides
+GameWindow --> KeyHandler : provides
+GameWindow --> Projectile : stores [0..*]
+Player --> Weapon : uses
+Projectile --> Player : references (owner)
+
+note right of Player
+**Notes**
+- playerAttacking は攻撃アニメーションを進め、当たり判定を一時的に拡張／移動して攻撃領域を作り、モンスターやインタラクティブタイルをチェックしてダメージを与え、終了後に元の位置と当たり判定を復元する。
+- playerGuarding はガードアニメーションを進め、ガードフレームが終わったら状態をリセットする。
+- shootSword は ObjSwordProjectile を生成して初期化し、ゲームのプロジェクタイルリストに追加し、効果音を再生してクールダウンを開始する。
+- playerAttackingFireball は入力・クールダウン・マナを確認し、条件を満たせば ObjFireball を生成してリストに追加し、効果音を再生してカウンタを更新する。
+
+- playerAttacking advances attack animation, temporarily expands/moves the collision area to the attack region, checks monsters/interactive tiles and applies damage, then restores original position/solid area.
+- playerGuarding advances guard animation and resets state after guard frames complete.
+- shootSword creates an ObjSwordProjectile, initializes it, adds it to the game's projectile list, plays sound, and starts cooldowns.
+- playerAttackingFireball checks input, cooldown, mana, then creates ObjFireball, adds to projectile list, plays sound, and updates counters.
+end note
+
+@enduml

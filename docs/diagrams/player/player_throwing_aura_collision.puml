@@ -1,0 +1,161 @@
+@startuml player_throwing_aura_collision
+
+package player {
+  class Player {
+    -- Fields (throw / aura / collision) --
+    - holding: boolean
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - pickupCooldown: int
+    - PICKUP_COOLDOWN_FRAMES: int {static, final}
+    - state: PlayerState
+    - spriteNum: int
+    - spriteCounter: int
+    - aura: ObjAura
+    - knockbackTimer: int
+
+    -- Methods (throw / aura / collision) --
+    + throwHeldBom(): void
+    + throwHeldPot(): void
+    + throwHeldRock(): void
+    + throwHeldChicken(): void
+    + updateAura(deltaMs: long): void
+    + resolvePenetration(): void
+    + getDirection(): String
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setState(s:PlayerState): void
+  }
+}
+
+package object {
+  class ObjBomb {
+    + getGravity(): double
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setZ(z:int): void
+    + setHasShadow(b:boolean): void
+    + setUser(p:Player): void
+    + setThrown(b:boolean): void
+    + setPickable(b:boolean): void
+    + setAlive(b:boolean): void
+    + setLife(n:int): void
+    + getMaxLife(): int
+    + setVerticalVelocity(v:int): void
+    + setVelocity(vx:double, vy:double): void
+    + getZ(): int
+    + getWorldY(): int
+  }
+  class ObjPot {
+    + getGravity(): double
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setZ(z:int): void
+    + setHasShadow(b:boolean): void
+    + setUser(p:Player): void
+    + setThrown(b:boolean): void
+    + setPickable(b:boolean): void
+    + setAlive(b:boolean): void
+    + setLife(n:int): void
+    + getMaxLife(): int
+    + setVerticalVelocity(v:int): void
+    + setVelocity(vx:double, vy:double): void
+    + getZ(): int
+    + getWorldY(): int
+  }
+  class ObjRock {
+    + getGravity(): double
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setZ(z:int): void
+    + setHasShadow(b:boolean): void
+    + setThrown(b:boolean): void
+    + setPickable(b:boolean): void
+    + setAlive(b:boolean): void
+    + setLife(n:int): void
+    + getMaxLife(): int
+    + setVerticalVelocity(v:int): void
+    + setVelocity(vx:double, vy:double): void
+    + getZ(): int
+    + getWorldY(): int
+  }
+  class ObjAura {
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + updateAnimation(deltaMs:long): void
+  }
+}
+
+package npc {
+  class NpcChicken {
+    + getGravity(): double
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setZ(z:int): void
+    + setHasShadow(b:boolean): void
+    + setUser(p:Player): void
+    + setThrown(b:boolean): void
+    + setPickable(b:boolean): void
+    + setAlive(b:boolean): void
+    + setLife(n:int): void
+    + getMaxLife(): int
+    + setVerticalVelocity(v:int): void
+    + setVelocity(vx:double, vy:double): void
+    + getZ(): int
+    + getWorldY(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + addObject(e:Entity): boolean
+    + getObj(): Entity[]
+    + getMonster(): Entity[]
+    + getKeyHandler(): KeyHandler
+  }
+}
+
+package key {
+  class KeyHandler {
+    + consumeThrowOnce(): void
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getBounds(): Rectangle2D
+  }
+}
+
+Player --> object.ObjBomb : may hold (0..1)
+Player --> object.ObjPot : may hold (0..1)
+Player --> object.ObjRock : may hold (0..1)
+Player --> npc.NpcChicken : may hold (0..1)
+Player --> object.ObjAura : uses
+Player --> window.GameWindow : uses
+Player --> key.KeyHandler : uses
+Player --> frame.FrameApp : reads tile size
+Player --> entity.Entity : interacts
+
+note right of Player
+**Notes**
+- throwHeldX メソッドはタイル距離とオブジェクトの重力から基準となる水平速度を算出し、vx/vy と垂直パラメータを設定して速度を制限し、投擲対象を初期化（位置、z、影、フラグ、ライフ）してワールドに戻し、所持参照をクリアし、状態を THROW に設定し、pickupCooldown をセットして投げ入力を消費する。
+- updateAura はオーラをプレイヤーに追従させ、deltaMs に応じてアニメーションを進める。
+- resolvePenetration はモンスター群を走査してプレイヤーとのバウンディングボックスの重なりを検出し、交差領域を計算して重なりの小さい軸に沿ってプレイヤーを押し出し貫通を解消する。
+
+- throwHeldX methods compute a base horizontal speed from tile distance and object gravity, set vx/vy and vertical parameters, clamp speeds, initialize the thrown entity (position, z, shadow, flags, life), add it back to the world, clear held reference, set state to THROW, set pickupCooldown, and consume the throw input.
+- updateAura keeps the aura positioned on the player and advances its animation by deltaMs.
+- resolvePenetration iterates monsters, detects bounding-box overlap with the player, computes the intersection, and shifts the player out along the smaller overlap axis to resolve penetration.
+end note
+
+@enduml

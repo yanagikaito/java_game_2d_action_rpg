@@ -1,0 +1,97 @@
+@startuml player_snap_record
+
+package player {
+  class Player {
+    -- Fields (movement / snap) --
+    - lastSafeWorldX: int
+    - lastSafeWorldY: int
+    - lastSafeFrame: long
+    - lastSafeSaWidth: int
+    - lastSafeSaHeight: int
+    - lastSnapTimeMs: long
+    - SNAP_COOLDOWN_MS: long {static, final}
+    - SNAP_PENETRATION_THRESHOLD: int {static, final}
+    - pickupCooldown: int
+    - holding: boolean
+    - state: PlayerState
+
+    -- Methods (relevant) --
+    + recordSafePosition(): void
+    + snapToTileEdge(direction:String, dx:int, dy:int): boolean
+    + getSolidArea(): Rectangle
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + isCollision(): boolean
+    + setCollision(flag:boolean): void
+    + getDirection(): String
+    + getSpeed(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getCollisionChecker(): CollisionChecker
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(p:Player, dx:int, dy:int): boolean
+    + checkEntity(p:Player, list:Entity[], dx:int, dy:int): int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity {
+  abstract class Entity
+}
+
+package object {
+  class ObjRock
+  class ObjPot
+  class Itile {
+    + isBlocking(): boolean
+  }
+}
+
+package npc {
+  class NpcChicken
+}
+
+package util {
+  class Rectangle {
+    + x: int
+    + y: int
+    + width: int
+    + height: int
+  }
+}
+
+Player --> GameWindow : uses
+Player --> CollisionChecker : queries
+CollisionChecker --> Entity : checks [0..*]
+Player --> FrameApp : reads tile size
+Player --> Rectangle : uses (solid area)
+Player --> ObjRock : may interact
+Player --> ObjPot : may interact
+Player --> Itile : may check blocking
+Player --> NpcChicken : may interact
+
+note right of Player
+**Notes**
+- recordSafePosition は衝突していないときに現在のワールド座標とソリッド領域サイズを保存する。
+- snapToTileEdge は最寄りのタイル境界への侵入量を計算し、単純補正を試した後、フォールバックの微調整候補（push/snap/unstuck スタイル）を順に試して、タイル／itile／NPC の衝突が解消される最初のオフセットを適用する。
+- CollisionChecker.checkTile と checkEntity をピクセル単位のオフセットで呼び出している。
+
+- recordSafePosition saves current world coords and solid-area size when not colliding.
+- snapToTileEdge computes penetration to nearest tile edge, tries simple correction, then fallback micro-adjustments (push/snap/unstuck style candidates), and applies the first valid offset that clears tile/itile/npc collisions.
+- Uses CollisionChecker.checkTile and checkEntity with pixel offsets.
+end note
+@enduml

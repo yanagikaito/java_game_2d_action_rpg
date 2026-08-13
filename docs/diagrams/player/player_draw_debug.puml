@@ -1,0 +1,123 @@
+@startuml player_draw_debug
+
+package player {
+  class Player {
+    -- Fields --
+    - aura: Aura
+    - transparent: boolean
+    - spriteNum: int
+    - spriteCounter: int
+    - screenX: int
+    - screenY: int
+
+    -- Methods --
+    + draw(g2:Graphics2D): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + isTransparent(): boolean
+    + getSolidArea(): Rectangle
+    + getDirection(): String
+    + getSpeed(): int
+    + getCollisionBoxWorld(): Rectangle
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getKeyHandler(): KeyHandler
+    + getTileManager(): TileManager
+    + getUi(): UI
+  }
+}
+
+package aura {
+  class Aura {
+    - worldX: int
+    - worldY: int
+    - active: boolean
+    + isActive(): boolean
+    + setActive(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + drawAt(g2:Graphics2D, x:int, y:int, scale:float, alpha:float): void
+  }
+}
+
+package tile {
+  class TileManager {
+    + getMapTileNum(): int[][]
+    + getTiles(): Tile[]
+  }
+  class Tile {
+    + collision: boolean
+    + bombCollision: boolean
+    + potCollision: boolean
+  }
+}
+
+package input {
+  class KeyHandler {
+    + isShowDebugText(): boolean
+  }
+}
+
+package ui {
+  class UI {
+    + getDamagePopupManager(): DamagePopupManager
+  }
+  class DamagePopupManager {
+    + pop(text:String, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+}
+
+package audio {
+  class SoundManager {
+    + damageWAV(path:String): void
+    + defeatedWAV(path:String): void
+    + explosionWAV(path:String): void
+  }
+}
+
+package util {
+  class Rectangle {
+    + x:int
+    + y:int
+    + width:int
+    + height:int
+    + intersects(r:Rectangle): boolean
+  }
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+enum PopupVariant {
+  MONSTER_DAMAGE
+  PLAYER_DAMAGE
+  XP
+}
+
+Player --> GameWindow : uses
+Player --> Aura : draws
+Player --> TileManager : queries
+Player --> KeyHandler : queries
+Player --> UI : uses
+TileManager --> Tile : provides
+
+note right of Player
+**Notes**
+- draw はプレイヤーとオーラを画面座標に変換して描画する。
+- 無敵や透明状態では合成モードを変更して半透明で描画する。
+- デバッグ表示が有効な場合は solidArea、移動先矩形、周辺タイルを描画し、衝突タイルは強調表示する。
+- オーラはプレイヤーの HP が満タンのときにアクティブ化され、拡大・半透明で描画される。
+
+- interactNPC: When the Enter key is pressed, start a conversation if an NPC is present; if no NPC is nearby, fire the sword when the aura is active and a sword is equipped, otherwise initiate a melee attack.
+- contactMonster: On colliding with a monster, compute a knockback vector, apply invincibility and damage handling, show damage feedback, and perform a game‑over check if the player's life reaches zero.
+- damageMonster: Apply damage to the specified monster; on death, handle drops, award experience, check for level‑up, play defeat effects, and schedule respawn. Chickens use a specialized damage handler.
+- damageInteractiveTile: While attacking, damage destructible interactive tiles when the correct item is used; play sound and particle effects, decrement tile life, set temporary invincibility, and replace the tile with its destroyed form when its life reaches zero.
+end note
+
+@enduml

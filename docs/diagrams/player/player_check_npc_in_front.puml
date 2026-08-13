@@ -1,0 +1,63 @@
+@startuml player_check_npc_in_front
+
+package player {
+  class Player {
+    -- Methods --
+    + checkNpcInFront(npc: Entity[], range: int): int
+    + getDirection(): String
+    + getCollisionBoxWorld(): Rectangle
+    + getMapId(): int
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getTileSize(): int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getCollisionBoxWorld(): Rectangle
+    + getAlive(): boolean
+    + getMapId(): int
+  }
+}
+
+package util {
+  class Rectangle {
+    + x: int
+    + y: int
+    + width: int
+    + height: int
+    + intersects(r:Rectangle): boolean
+  }
+  class Point
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+Player --> GameWindow : uses
+Player --> FrameApp : reads tile size
+Player --> Entity : examines [0..*]
+Player --> Rectangle : uses (collision box)
+
+note right of Player
+**Notes**
+- プレイヤーの向きベクトルを作成し、前方範囲の検索矩形を構築する。
+- 各 NPC の衝突矩形を評価し、正面度（向きベクトルへの投影）と距離で最良候補を選ぶ。
+- 戻り値は見つかった NPC の配列インデックス、未検出時は -1。
+
+- getTileSolidRect returns the rectangle for a blocking tile at the given tile coordinates, or null if the tile is not blocking.
+- canMoveBy is a utility that checks whether moving by the pixel offsets dx, dy would collide with tiles, itiles, or NPCs.
+- resolveTileOverlapWithPush scans surrounding tiles, computes intersection rectangles, and tries minimal push corrections in this order: X-only, Y-only, then diagonal; each candidate is validated with canMoveBy, and the first valid correction is applied.
+- attemptUnstuck attempts to free the player in stages: small local offsets, axis-separated pushes, a snapToTileEdge attempt, a BFS search for the nearest free tile (teleport), and finally restoring the last saved safe position.
+end note
+
+@enduml

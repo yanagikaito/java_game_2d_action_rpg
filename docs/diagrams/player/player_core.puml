@@ -1,0 +1,173 @@
+@startuml player_core
+
+package player {
+  class Player {
+    -- 状態(State) --
+    + PlayerState state
+    + enum PlayerState { IDLE; WALK; PICKUP; HOLD_WALK; THROW }
+
+    -- 所持・保持関連(Holding / carry) --
+    - holding: boolean
+    - heldBomb: ObjBomb
+    - heldPot: ObjPot
+    - heldRock: ObjRock
+    - heldChicken: NpcChicken
+    - holdOffset: Map<String, Point>
+    - inventory: List<Entity>
+
+    -- スプライト・アニメーション(Sprites / animation) --
+    - DIRECTIONS: String[] {static, final}
+    - ATTACK_DIRECTIONS: String[] {static, final}
+    - GUARD_DIRECTIONS: String[] {static, final}
+    - AXE_DIRECTIONS: String[] {static, final}
+    - SPRITE_COUNT: int {static, final}
+    - PICKUP_SPRITE_COUNT: int {static, final}
+    - SPRITE_ANIMATION_THRESHOLD: int {static, final}
+    - sprites: BufferedImage[][]
+    - attackSprites: BufferedImage[][]
+    - guardSprites: BufferedImage[][]
+    - axeSprites: BufferedImage[][]
+    - pickupSprites: BufferedImage[][]
+    - currentAttackSprites: BufferedImage[][]
+    - currentGuardSprites: BufferedImage[][]
+
+    -- 戦闘・クールダウン(Combat / cooldowns) --
+    - attack: int
+    - attackCounter: int
+    - guardCounter: int
+    - attackCooldown: int
+    - fireCooldown: int
+    - bombCooldown: int
+
+    -- 無敵・ノックバック(Invincibility / knockback) --
+    - invincibleCounter: int
+    - INVINCIBLE_DURATION: int {final}
+    - knockBackDx: double
+    - knockBackDy: double
+
+    -- 移動・当たり判定(Movement / collision) --
+    - moving: boolean
+    - pixelCounter: int
+    - playerSolidAreaX: int {final}
+    - playerSolidAreaY: int {final}
+
+    -- UI/時間/その他(UI / time / misc) --
+    - aura: ObjAura
+    - playTimeSeconds: long
+    - loaded: boolean
+
+    -- 参照(References) --
+    - gameWindow: GameWindow
+    - keyHandler: KeyHandler
+    - screenX: int {final}
+    - screenY: int {final}
+
+    -- コンストラクタ(Constructor) --
+    + Player(gameWindow: GameWindow, keyHandler: KeyHandler)
+
+    -- 主なメソッド(Key methods) --
+    + initializeDefaultStats(): void
+    + setDefaultValues(): void
+    + setDefaultPositions(): void
+    + restoreLifeAndMan(): void
+    + setItems(): void
+    + initHoldOffsets(): void
+    + loadPlayerImages(): void
+    + loadAllAttackSprites(): void
+    + loadGuardSprites(): void
+    + loadPickupSprites(): void
+    + updateCurrentAttackSprites(): void
+    + updateCurrentGuardSprites(): void
+  }
+}
+
+package object {
+  class ObjSwordNormal
+  class ObjShieldWood
+  class ObjRedPotion
+  class ObjGreenPotion
+  class ObjBluePotion
+  class ObjFireball
+  class ObjBomb
+  class ObjAura
+  class ObjPot
+  class ObjRock
+}
+
+package npc {
+  class NpcChicken
+  class NpcMerChant
+  class NpcSave
+}
+
+package window {
+  class GameWindow
+}
+
+package key {
+  class KeyHandler
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getScreenWidth(): int
+    + getScreenHeight(): int
+  }
+}
+
+package ui {
+  class UI
+  class DamagePopupManager
+}
+
+package sound {
+  class SoundManager
+}
+
+package tile {
+  class Tile
+  class TileManager
+}
+
+package game {
+  enum GameState
+}
+
+package entity {
+  abstract class Entity
+}
+
+Player --> Entity : extends
+Player --> window.GameWindow : uses (描画・UI・状態参照)
+Player --> key.KeyHandler : uses (入力)
+Player --> npc.NpcChicken : may hold (0..1)
+Player --> object.ObjBomb : may hold (0..1)
+Player --> object.ObjPot : may hold (0..1)
+Player --> object.ObjRock : may hold (0..1)
+Player --> object.ObjAura : uses (aura cache)
+Player --> frame.FrameApp : reads tile/screen size
+Player --> ui.UI : uses (damage popup)
+Player --> sound.SoundManager : plays sounds
+Player ..> tile.TileManager : interacts with
+Player ..> game.GameState : sets game state
+Player --> object.ObjSwordNormal : sets as currentWeapon (1)
+Player --> object.ObjShieldWood : sets as currentShield (1)
+Player --> object.ObjFireball : sets as projectile (0..1)
+Player --> object.ObjBomb : sets as projectile (0..1)
+Player "1" --> "0..*" object : inventory
+
+note right of Player
+**Notes**
+- Player は Entity を継承し、入力・描画・当たり判定・攻撃・ガード・アイテム保持・時間管理などを担う。
+- 多数の定数でアニメーション閾値やクールダウンを管理している。
+- コンストラクタで画像読み込み・当たり判定・初期装備を行う。
+- 0..1 は「Playerの頭上に持っていない場合もあるし、最大で1まで持てる」ことを示す。
+
+- The Player extends Entity and handles input, rendering, collision, combat, guarding, item holding, and play-time management.
+- Animation thresholds and cooldowns are controlled by many constants.
+- The constructor loads images, sets hitboxes, and equips starter items.
+- 0..1 indicates that the Player may hold zero or one instance — i.e., the player might not be holding it, or can hold at most one.
+end note
+
+@enduml
