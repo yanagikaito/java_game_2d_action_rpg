@@ -1,0 +1,68 @@
+@startuml mon_green_goblin_draw
+
+class MonGreenGoblin {
+  - sprites: BufferedImage[][]
+  - attackSprites: BufferedImage[][]
+  - DIRECTIONS: String[]
+  - ATTACK_DIRECTIONS: String[]
+  - SPRITE_COUNT: int
+  - getWorldX(): int
+  - getWorldY(): int
+  - getDirection(): String
+  - getAttackDirection(): String
+  - getSpriteNum(): int
+  - getAttacking(): boolean
+  - getInvincible(): boolean
+  - draw(g2:Graphics2D): void
+}
+
+class FrameApp {
+  + getTileSize(): int
+}
+
+class GameWindow {
+  + getPlayer(): Player
+  + getTileManager(): TileManager
+}
+
+class Player {
+  + getWorldX(): int
+  + getWorldY(): int
+  + getScreenX(): int
+  + getScreenY(): int
+}
+
+class TileManager {
+  + isObstacle(x:int, y:int): boolean
+}
+
+class Graphics2D {
+  + getComposite(): Composite
+  + setComposite(c:Composite): void
+  + drawImage(img:BufferedImage, x:int, y:int, w:int, h:int, obs:Object): void
+}
+
+MonGreenGoblin --> FrameApp : queries
+MonGreenGoblin --> GameWindow : uses
+MonGreenGoblin --> Player : queries
+MonGreenGoblin --> TileManager : queries
+MonGreenGoblin --> Graphics2D : uses
+
+note right of MonGreenGoblin
+**Notes**
+- 無敵時は Composite を変更して半透明で描画する。
+- 非攻撃時は方向に応じた歩行スプライトを通常サイズで描画する。
+- 攻撃時は ATTACK_DIRECTIONS に応じた attackSprites を選択して描画する。
+- 攻撃スプライトはスケール係数 s を用いて幅または高さを拡大して描画する。
+- 描画位置は方向に応じてオフセットする。
+- 必要に応じて drawHpBarIfNeeded を呼び出す。
+
+- When invincible: change the Composite to render the entity semi‑transparent.
+- When not attacking: draw the walking sprite for the current direction at normal size.
+- When attacking: select attackSprites according to ATTACK_DIRECTIONS and draw them.
+- Attack sprite scaling: use scale factor s to enlarge the sprite’s width or height before drawing.
+- Draw offset: adjust the draw position based on direction so the enlarged attack sprite is positioned correctly.
+- HP bar: call drawHpBarIfNeeded when appropriate.
+end note
+
+@enduml

@@ -1,0 +1,163 @@
+@startuml mon_mint_soldier
+
+package monster {
+  class MonMintSoldier {
+    -- Fields --
+    - pathfinder: core.PathFinder
+    - grid: core.Node[][]
+    - goalX: int
+    - goalY: int
+    - flowFieldInitialized: boolean
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - ATTACK_DIRECTIONS: String[] = {"attackUp","attackDown","attackLeft","attackRight"}
+    - AXE_DIRECTIONS: String[] = {"axeUp","axeDown","axeLeft","axeRight"}
+    - sprites: BufferedImage[][]
+    - attackSprites: BufferedImage[][]
+    - axeSprites: BufferedImage[][]
+    - currentAttackSprites: BufferedImage[][]
+    - SPRITE_COUNT: int = 3
+    - ANIMATION_RATE: int = 3
+    - SPRITE_ATTACKING_THRESHOLD_NUM1: int = 40
+    - SPRITE_ATTACKING_THRESHOLD_NUM2: int = 60
+    - SPRITE_ATTACKING_THRESHOLD_NUM3: int = 80
+    - ATTACK_ANIMATION_FRAMES: int = SPRITE_ATTACKING_THRESHOLD_NUM3
+    - attackCounter: int
+    - actionLockCounter: int
+    - random: Random
+    - ROCK_COOLDOWN_FRAMES: int = 180
+    - shotAvailableCounter: int
+    - NEW_HAIR_COLOR: int = 0xFF00FF00
+    - HAIR_COLORS: Set<Integer>
+
+    -- Methods --
+    + MonMintSoldier(gameWindow: GameWindow)
+    + loadMonsterImages(): void
+    + loadMonsterAttackSprites(): void
+    + setAction(): void
+    + startAttack(): void
+    + updateCurrentAttackSprites(): void
+    + monsterAttacking(): void
+    + initializeFlowField(): void
+    + damageReaction(): void
+    + updateMonsterInvincibility(): void
+    + draw(g2:Graphics2D): void
+    - createImage(original:BufferedImage, width:int, height:int): BufferedImage
+    - capitalize(s:String): String
+  }
+}
+
+package core {
+  class PathFinder {
+    + PathFinder(grid: Node[][])
+    + calculateIntegrationField(goalX:int, goalY:int): void
+    + getMoveDirection(x:int, y:int): int
+    + getWidth(): int
+    + getHeight(): int
+  }
+  class Node {
+    + x:int
+    + y:int
+    + walkable:boolean
+  }
+}
+
+package object {
+  class ObjAxe {
+    + ObjAxe(gameWindow: GameWindow)
+    + getAttackValue(): int
+    + getKnockBackPower(): int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getMaxWorldCol(): int
+    + getMaxWorldRow(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getTileManager(): TileManager
+    + getCollisionChecker(): CollisionChecker
+    + getMonster(): List<Entity>
+    + getItile(): List<Entity>
+  }
+  class TileManager {
+    + isObstacle(x:int, y:int): boolean
+  }
+  class CollisionChecker {
+    + checkEntity(source:Entity, targets:List<Entity>): int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setDirection(dir:String): void
+    + getDirection(): String
+    + setType(t:MonsterType): void
+    + setName(n:String): void
+    + setDefaultSpeed(s:int): void
+    + setSpeed(s:int): void
+    + setMaxLife(l:int): void
+    + setLife(l:int): void
+    + setAttack(a:int): void
+    + setDefense(d:int): void
+    + setExp(e:int): void
+    + setCurrentWeapon(w:ObjAxe): void
+    + getCurrentWeapon(): ObjAxe
+    + setAttackArea(r:Rectangle): void
+    + getAttackArea(): Rectangle
+    + getSolidArea(): Rectangle
+    + setSolidAreaDefaultX(x:int): void
+    + setSolidAreaDefaultY(y:int): void
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + getInvincibleCounter(): int
+    + setInvincibleCounter(v:int): void
+    + getAttacking(): boolean
+    + setAttacking(b:boolean): void
+    + setAttackDirection(dir:String): void
+    + getAttackDirection(): String
+    + getSpriteCounter(): int
+    + setSpriteCounter(v:int): void
+    + getSpriteNum(): int
+    + setSpriteNum(v:int): void
+    + getHpBarOn(): boolean
+    + setHpBarOn(b:boolean): void
+    + getHpBarCounter(): int
+    + setHpBarCounter(v:int): void
+  }
+  class MonsterType
+}
+
+MonMintSoldier --> core.PathFinder : uses
+MonMintSoldier --> core.Node : composes
+MonMintSoldier --> object.ObjAxe : composes / sets as currentWeapon
+MonMintSoldier --> frame.FrameApp : queries
+MonMintSoldier --> window.GameWindow : uses
+MonMintSoldier --> entity.Entity : extends
+MonMintSoldier --> window.CollisionChecker : uses
+
+note right of MonMintSoldier
+**Notes**
+- フロー・フィールドを初期化し PathFinder でプレイヤーへナビゲートする。
+- 近距離に入ると攻撃を開始し、武器種別に応じて斧用スプライトか通常攻撃スプライトを切替える。
+- 攻撃中は攻撃アニメーションを進め、攻撃判定のため一時的に位置と当たり判定を拡張してダメージを与える。
+- スプライトは読み込み後にタイルサイズへリサイズし、髪色ピクセルを置換する処理を行う。
+- 無敵フレームやHPバー表示などの状態管理を行う。
+
+- Initialize a flow field and navigate toward the player using the PathFinder.
+- Begin attacking when the player is within close range, switching between axe-specific sprites and regular attack sprites based on weapon type.
+- Advance attack animations during attacks, temporarily extend position and collision bounds for hit detection, and apply damage.
+- Load sprites, resize them to the tile size after loading, and replace hair-color pixels during image processing.
+- Manage state such as invincibility frames and HP bar display.
+end note
+
+@enduml
