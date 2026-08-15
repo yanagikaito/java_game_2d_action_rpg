@@ -1,0 +1,123 @@
+@startuml mon_green_slime
+
+package monster {
+  class MonGreenSlime {
+    -- Fields --
+    - pathfinder: core.PathFinder
+    - grid: core.Node[][]
+    - goalX: int
+    - goalY: int
+    - flowFieldInitialized: boolean
+    - actionLockCounter: int
+    - actionLockThreshold: int = 180
+    - random: Random
+    - shotAvailableCounter: int
+    - ROCK_COOLDOWN_FRAMES: int = 180
+    - SPRITE_ANIMATION_THRESHOLD: int = 10
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - SPRITE_COUNT: int = 3
+    - sprites: BufferedImage[][]
+    - gridWidth: int
+    - gridHeight: int
+
+    -- Methods --
+    + MonGreenSlime(gameWindow: GameWindow)
+    + loadMonsterImages(): void
+    + setAction(): void
+    + initializeFlowField(): void
+    + shootRandomStone(): void
+    + damageReaction(): void
+    - updateMonsterInvincibility(): void
+    - createImage(original:BufferedImage, width:int, height:int): BufferedImage
+  }
+}
+
+package core {
+  class PathFinder {
+    + PathFinder(grid: Node[][])
+    + calculateIntegrationField(goalX:int, goalY:int): void
+    + getMoveDirection(x:int, y:int): int
+    + getWidth(): int
+    + getHeight(): int
+  }
+  class Node {
+    + x:int
+    + y:int
+    + walkable:boolean
+  }
+}
+
+package object {
+  class ObjStone {
+    + ObjStone(gameWindow: GameWindow)
+    + set(worldX:int, worldY:int, dir:String, alive:boolean, user:Entity): void
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getMaxWorldCol(): int
+    + getMaxWorldRow(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getTileManager(): TileManager
+    + getProjectileList(): List<ObjStone>
+  }
+  class TileManager {
+    + isObstacle(x:int, y:int): boolean
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setDirection(dir:String): void
+    + getDirection(): String
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + getInvincibleCounter(): int
+    + setInvincibleCounter(v:int): void
+    + setType(t:MonsterType): void
+    + setName(n:String): void
+    + setDefaultSpeed(s:int): void
+    + setSpeed(s:int): void
+    + setMaxLife(l:int): void
+    + setLife(l:int): void
+    + setAttack(a:int): void
+    + setDefense(d:int): void
+    + setExp(e:int): void
+    + setProjectile(p:Object): void
+    + getSolidArea(): Rectangle
+    + setSolidAreaDefaultX(x:int): void
+    + setSolidAreaDefaultY(y:int): void
+  }
+  class MonsterType
+}
+
+MonGreenSlime --> core.PathFinder : uses
+MonGreenSlime --> core.Node : composes
+MonGreenSlime --> object.ObjStone : creates
+MonGreenSlime --> frame.FrameApp : queries
+MonGreenSlime --> window.GameWindow : uses
+MonGreenSlime --> entity.Entity : extends
+
+note right of MonGreenSlime
+**Notes**
+- フロー・フィールド（flow field）を初期化して PathFinder を用いプレイヤーへ誘導する。
+- 定期的にランダムで石を射出する（クールダウン管理）。
+- スプライトを読み込みタイルサイズにリサイズして保持する。
+- ダメージ時の反応と無敵時間の更新を行う。
+
+- Initialize a flow field and use the PathFinder to guide the slime toward the player.
+- Periodically launch stones at random intervals, managed by a cooldown timer.
+- Load sprite images and resize them to the tile size for use in animations.
+- Handle damage reactions and update the monster's invincibility (i‑frame) timer.
+end note
+
+@enduml

@@ -1,0 +1,126 @@
+@startuml mon_green_goblin
+
+package monster {
+  class MonGreenGoblin {
+    -- Fields --
+    - pathfinder: core.PathFinder
+    - grid: core.Node[][]
+    - goalX: int
+    - goalY: int
+    - flowFieldInitialized: boolean
+    - ACTION_LOCK_THRESHOLD: int = 180
+    - MAX_RANDOM_VALUE: int = 100
+    - THRESHOLD_UP: int = 25
+    - THRESHOLD_DOWN: int = 50
+    - THRESHOLD_LEFT: int = 75
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - ATTACK_DIRECTIONS: String[] = {"attackUp","attackDown","attackLeft","attackRight"}
+    - SPRITE_COUNT: int = 3
+    - sprites: BufferedImage[][]
+    - attackSprites: BufferedImage[][]
+    - random: Random
+    - actionLockCounter: int
+    - ROCK_COOLDOWN_FRAMES: int = 180
+    - shotAvailableCounter: int
+    - SPRITE_ANIMATION_THRESHOLD: int = 10
+
+    -- Methods --
+    + MonGreenGoblin(gameWindow: GameWindow)
+    + loadMonsterImages(): void
+    + loadMonsterAttackSprites(): void
+    + createImage(original:BufferedImage, width:int, height:int): BufferedImage
+    + setAction(): void
+    + initializeFlowField(): void
+    + damageReaction(): void
+    - updateMonsterInvincibility(): void
+  }
+}
+
+package core {
+  class PathFinder {
+    + PathFinder(grid: Node[][])
+    + calculateIntegrationField(goalX:int, goalY:int): void
+    + getMoveDirection(x:int, y:int): int
+    + getWidth(): int
+    + getHeight(): int
+  }
+  class Node {
+    + x:int
+    + y:int
+    + walkable:boolean
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getMaxWorldCol(): int
+    + getMaxWorldRow(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getTileManager(): TileManager
+  }
+  class TileManager {
+    + isObstacle(x:int, y:int): boolean
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + getDirection(): String
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setDirection(dir:String): void
+    + setAttacking(b:boolean): void
+    + setAttackDirection(dir:String): void
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + getInvincibleCounter(): int
+    + setInvincibleCounter(v:int): void
+    + setHpBarOn(b:boolean): void
+    + setHpBarCounter(v:int): void
+    + getSolidArea(): Rectangle
+    + setSolidAreaDefaultX(x:int): void
+    + setSolidAreaDefaultY(y:int): void
+    + setAttackArea(r:Rectangle): void
+  }
+  class BossMonsterType
+}
+
+MonGreenGoblin --> core.PathFinder : uses
+MonGreenGoblin --> core.Node : composes
+MonGreenGoblin --> frame.FrameApp : queries
+MonGreenGoblin --> window.GameWindow : uses
+MonGreenGoblin --> player.Player : queries
+MonGreenGoblin --> entity.Entity : extends
+MonGreenGoblin --> window.TileManager : queries
+
+note right of MonGreenGoblin
+**Notes**
+- 攻撃範囲外ではフローフィールドを初期化し、PathFinderを使ってプレイヤーへ移動する。
+- プレイヤーが広い視界範囲内に入ると攻撃モードに入り、相対位置に応じて攻撃方向を決定する。
+- 大きめのスプライト（スケール係数 s で拡大）を読み込み、攻撃スプライトは方向に応じてスケーリングして読み込む。
+- 攻撃アニメーションと当たり判定のために、攻撃範囲やソリッド領域を一時的に拡張する。
+- ダメージ時の無敵フレームやHPバー表示を管理する。
+
+- Initialize a flow field and use PathFinder to navigate toward the player when not in attack range.
+- Enter attack mode when the player is within a large vision range; choose attack direction based on relative position.
+- Load large sprites (scaled by a factor s) and load attack sprites with directional scaling.
+- Temporarily expand attack area and solid area for attack animations and hit detection.
+- Manage invincibility frames and HP bar visibility on damage.
+end note
+
+@enduml
