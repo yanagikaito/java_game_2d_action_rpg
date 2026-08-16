@@ -1,9 +1,7 @@
 package npc;
 
-import collision.CollisionChecker;
 import entity.Entity;
 import frame.FrameApp;
-import game.GameState;
 import map.GameMap;
 import window.GameWindow;
 

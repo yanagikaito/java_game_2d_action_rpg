@@ -238,57 +238,6 @@ public class NpcChicken extends Entity {
         getGameWindow().getCollisionChecker().checkPlayer(this);
     }
 
-    private void ensureRegisteredToWorld() {
-        try {
-            GameWindow gw = getGameWindow();
-            // 既に配列にあるか確認
-            int idx = -1;
-            try {
-                idx = gw.indexOfMonster(this);
-            } catch (NoSuchMethodError ignored) {
-                Entity[] arr = gw.getMonster();
-                if (arr != null) {
-                    for (int i = 0; i < arr.length; i++) {
-                        if (arr[i] == this) {
-                            idx = i;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (idx >= 0) return; // 既に登録済み
-
-            // addMonster があれば呼ぶ
-            try {
-                boolean added = gameMap.addMonster(this);
-                System.out.println("[DBG] ensureRegisteredToWorld addMonster result=" + added + " id=" + System.identityHashCode(this));
-                if (added) return;
-            } catch (NoSuchMethodError ignored) {
-            }
-
-            // 最終手段：直接配列に挿入
-            try {
-                Entity[] arr = gw.getMonster();
-                if (arr != null) {
-                    for (int i = 0; i < arr.length; i++) {
-                        if (arr[i] == null) {
-                            arr[i] = this;
-                            System.out.println("[DBG] ensureRegisteredToWorld direct insert idx=" + i + " id=" + System.identityHashCode(this));
-                            return;
-                        }
-                    }
-                    System.out.println("[WARN] ensureRegisteredToWorld: monster array full, cannot re-register id=" + System.identityHashCode(this));
-                }
-            } catch (Exception ex) {
-                System.out.println("[WARN] ensureRegisteredToWorld failed to re-register id=" + System.identityHashCode(this) + " err=" + ex);
-            }
-        } catch (Exception ex) {
-            System.out.println("[WARN] ensureRegisteredToWorld unexpected error id=" + System.identityHashCode(this) + " err=" + ex);
-        }
-    }
-
-
     private void randomWalkStep() {
         actionLockCounter++;
         if (actionLockCounter < ACTION_LOCK_THRESHOLD) return;
