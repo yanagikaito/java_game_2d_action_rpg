@@ -1,0 +1,198 @@
+@startuml npc_chicken
+
+package npc {
+  class NpcChicken {
+    -- Fields --
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - SPRITE_COUNT: int = 3
+    - spritesChicken: BufferedImage[][]
+    - ACTION_LOCK_THRESHOLD: int = 120
+    - MAX_RANDOM_VALUE: int = 100
+    - THRESHOLD_UP: int = 25
+    - THRESHOLD_DOWN: int = 50
+    - THRESHOLD_LEFT: int = 75
+    - invincibleCounter: int
+    - random: Random
+    - actionLockCounter: int
+    - collisionChecker: CollisionChecker
+    - PICKABLE_DELAY_MS: long = 500L
+    - landedAt: long
+    - hitCount: int
+    - HELP_TRIGGER_THRESHOLD: int = 3
+    - life: int = 30
+    - hasTriggeredHelp: boolean
+    - TRIGGER_COOLDOWN_MS: long = 30000L
+    - lastTriggerTime: long
+    - following: boolean
+    - playerFollowing: boolean
+    - beingHeld: boolean
+    - holder: Player
+    - inCoop: boolean
+    - prevTileX: int
+    - prevTileY: int
+    - lastGroundTileY: int
+    - gameMap: GameMap
+    - attackDamage: int = 2
+    - attackCooldownMs: long = 800L
+    - lastAttackAt: long
+    - hasShadow: boolean
+    - vx: double
+    - vy: double
+    - vz: double
+    - z: double
+    - gravity: double = 0.3
+    - verticalGravity: double = 0.45
+    - thrown: boolean
+    - user: Entity
+    - pickable: boolean
+    - landed: boolean
+    - shattering: boolean
+    - shatterFrame: int
+    - damageGiven: boolean
+
+    -- Methods --
+    + NpcChicken(gameWindow: GameWindow)
+    + loadNPCImages(): void
+    + setAction(): void
+    + randomWalkStep(): void
+    + followPlayerStep(): void
+    + checkPlayerCollision(): void
+    + onHitPlayer(): void
+    + setFollowing(f:boolean): void
+    + setPlayerFollowing(f:boolean): void
+    + callForHelp(): void
+    + takeDamage(dmg:int, knockBackPower:int): void
+    + resetState(): void
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir:String, frame:int): BufferedImage
+    + onPickedUp(player:Player): void
+    + setVelocity(vx:double, vy:double): void
+    + worldToTile(worldCoord:int): int
+    + isHasShadow(): boolean
+    + setHasShadow(hasShadow:boolean): void
+    + getVx(): double
+    + setVx(vx:double): void
+    + getVy(): double
+    + setVy(vy:double): void
+    + getVz(): double
+    + setVz(vz:double): void
+    + getZ(): double
+    + setZ(z:double): void
+    + getGravity(): double
+    + setGravity(g:double): void
+    + getVerticalGravity(): double
+    + setVerticalGravity(g:double): void
+    + setVerticalVelocity(vz:double): void
+    + isThrown(): boolean
+    + setThrown(thrown:boolean): void
+    + getUser(): Entity
+    + setUser(user:Entity): void
+    + isPickable(): boolean
+    + setPickable(p:boolean): void
+    + isBeingHeld(): boolean
+    + getHolder(): Player
+    - createImage(original:BufferedImage, width:int, height:int): BufferedImage
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + CollisionChecker(gameWindow: GameWindow)
+    + checkPlayer(e:Entity): boolean
+    + checkTile(e:Entity): boolean
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getScreenWidth(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCurrentMap(): GameMap
+    + getCollisionChecker(): CollisionChecker
+    + getUi(): UI
+    + getSoundmanager(): SoundManager
+  }
+  class UI {
+    + setCurrentDialogueMessage(msg:String): void
+  }
+  class SoundManager {
+    + damageWAV(path:String): void
+    + play(...): void
+  }
+}
+
+package map {
+  class GameMap {
+    + countChickens(): int
+    + canPlaceNpcAt(x:int, y:int, w:int, h:int): boolean
+    + addMonster(n:NpcChicken): void
+    + GLOBAL_MAX_CHICKENS: int
+    + SWARM_SPAWN_COUNT: int
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getDirection(): String
+    + getCoin(): int
+    + setCoin(v:int): void
+    + takeDamage(d:int): void
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setDirection(dir:String): void
+    + setSpeed(s:int): void
+    + setCollision(b:boolean): void
+    + setBlocking(b:boolean): void
+    + setType(t:Object): void
+    + setMaxLife(v:int): void
+    + setLife(v:int): void
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + setAlive(b:boolean): void
+    + getWidth(): int
+    + getHeight(): int
+  }
+}
+
+NpcChicken --> collision.CollisionChecker : uses
+NpcChicken --> frame.FrameApp : queries
+NpcChicken --> window.GameWindow : uses
+NpcChicken --> map.GameMap : queries
+NpcChicken --> player.Player : interacts
+NpcChicken --> entity.Entity : extends
+
+note right of NpcChicken
+**Notes**
+- チキンのスプライトを読み込み、タイルサイズにリサイズして保持する。
+- ランダム歩行、プレイヤー追尾、投げられた（物理）状態を処理する。
+- 投げられている間は𝑣𝑥/𝑣𝑦と高さ方向の運動𝑧/𝑣𝑧を重力で更新し、着地時に当たり判定と拾得可能状態を遅延復元する。
+- プレイヤーとの衝突を検出し、攻撃クールダウンを適用した上でプレイヤーにダメージを与える。
+- takeDamage はノックバックを適用し、最小ライフを保証（倒せない）、一時的な無敵を付与し、必要なら callForHelp() を呼んで追加のチキンをスポーンさせる。
+- callForHelp はマップの上限まで近隣にチキンをスポーンさせ、スポーンしたチキンをプレイヤー追尾状態にする。
+- 拾われる・所持される・投げられる挙動をサポートし、所持時／投擲時表示用のスプライトを提供する。
+
+- Loads and resizes chicken sprites.
+- Handles random walk, player-following, and thrown (physics) states.
+- While thrown, updates world position using vx/vy and vertical motion z/vz with gravity; on landing restores collision and pickable state after delay.
+- Detects player collisions and applies attack cooldown before damaging player.
+- takeDamage applies knockback, enforces minimum life (cannot be killed), grants temporary invincibility, and may call callForHelp() to spawn more chickens.
+- callForHelp spawns nearby chickens up to map limits and sets them to follow the player.
+- Supports being picked up, held, thrown, and provides sprites for held/throw visuals.
+end note
+
+@enduml

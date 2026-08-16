@@ -1,0 +1,123 @@
+@startuml npc_old_man
+
+package npc {
+  class NpcOldMan {
+    -- Fields --
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - SPRITE_COUNT: int = 3
+    - sprites: BufferedImage[][]
+    - ACTION_LOCK_THRESHOLD: int = 120
+    - MAX_RANDOM_VALUE: int = 100
+    - THRESHOLD_UP: int = 25
+    - THRESHOLD_DOWN: int = 50
+    - THRESHOLD_LEFT: int = 75
+    - random: Random
+    - actionLockCounter: int
+    - route: List<Point>
+    - routeIndex: int
+    - following: boolean
+    - collisionChecker: CollisionChecker
+    - eventId: String
+
+    -- Methods --
+    + NpcOldMan(gameWindow: GameWindow, ev: db.MapEvent)
+    + loadNPCImages(): void
+    + applyMapEvent(ev: db.MapEvent): void
+    + setAction(): void
+    + checkPlayerCollision(): void
+    + onHitPlayer(): void
+    + randomWalkStep(): void
+    + followRouteStep(): void
+    + startRouteFollow(mapId:int, pathId:int): void
+    + speak(): void
+    - createImage(original:BufferedImage, width:int, height:int): BufferedImage
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + CollisionChecker(gameWindow: GameWindow)
+    + checkPlayer(n:Entity): boolean
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getUi(): UI
+    + setGameState(state: GameState): void
+  }
+}
+
+package db {
+  class MapEvent {
+    + getId(): String
+    + getName(): String
+    + getTrigger(): String
+    + getDialogues(): List<String>
+  }
+  class PathManager {
+    + loadPath(mapId:int, pathId:int): List<Point>
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getDirection(): String
+  }
+}
+
+package game {
+  enum GameState
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setDirection(dir:String): void
+    + setSpeed(s:int): void
+    + getSpeed(): int
+    + setName(n:String): void
+    + setTrigger(t:String): void
+    + setDialogueArray(arr:String[]): void
+    + getDialogue(): String[]
+    + getDialogueIndex(): int
+    + setDialogueIndex(i:int): void
+  }
+}
+
+NpcOldMan --> collision.CollisionChecker : uses
+NpcOldMan --> frame.FrameApp : queries
+NpcOldMan --> window.GameWindow : uses
+NpcOldMan --> db.MapEvent : consumes
+NpcOldMan --> db.PathManager : uses
+NpcOldMan --> player.Player : queries
+NpcOldMan --> entity.Entity : extends
+
+note right of NpcOldMan
+**Notes**
+- ランダム歩行またはルート追従を切り替えて移動する。
+- 追従中は経路の次ポイントへ逐次移動し、到達判定を緩和している。
+- プレイヤーとの衝突を CollisionChecker で検出し、当たればゲームオーバー処理を行う。
+- MapEvent から会話やトリガー情報を読み込み、会話表示を行う。
+- スプライトはタイルサイズにリサイズして保持する。
+
+- Switch between random walking and following a predefined route for movement.
+- While following a route, move sequentially toward the next waypoint and relax the arrival check to allow reaching within the NPC’s speed.
+- Detect collisions with the player using CollisionChecker; if a collision occurs, trigger the game-over behavior.
+- Load dialogue and trigger information from MapEvent and display the NPC’s dialogue accordingly.
+- Load sprites and resize them to the tile size for rendering and storage.
+end note
+
+@enduml

@@ -1,0 +1,87 @@
+@startuml npc_save
+
+package npc {
+  class NpcSave {
+    -- Fields --
+    - gameWindow: GameWindow
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - SPRITE_COUNT: int = 3
+    - sprites: BufferedImage[][]
+    - dialogueIndex: int
+    - eventId: String
+
+    -- Methods --
+    + NpcSave(gameWindow: GameWindow, ev: db.MapEvent)
+    + loadNPCImages(): void
+    + applyMapEvent(ev: db.MapEvent): void
+    + speak(): void
+    + getNextDialogue(): String
+    + resetDialogue(): void
+    + getEventId(): String
+    + setEventId(eventId:String): void
+    - createImage(original:BufferedImage, width:int, height:int): BufferedImage
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getUi(): UI
+    + setGameState(state: game.GameState): void
+    + getGameState(): game.GameState
+  }
+}
+
+package db {
+  class MapEvent {
+    + getId(): String
+    + getName(): String
+    + getTrigger(): String
+    + getDialogues(): List<String>
+  }
+}
+
+package game {
+  enum GameState
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setDirection(dir:String): void
+    + setSpeed(s:int): void
+    + setName(n:String): void
+    + setTrigger(t:String): void
+    + setDialogueArray(arr:String[]): void
+    + getDialogue(): String[]
+    + getDialogueIndex(): int
+    + setDialogueIndex(i:int): void
+  }
+}
+
+NpcSave --> window.GameWindow : uses
+NpcSave --> frame.FrameApp : queries
+NpcSave --> db.MapEvent : consumes
+NpcSave --> entity.Entity : extends
+
+note right of NpcSave
+**Notes**
+- NPCのスプライトを読み込み、タイルサイズにリサイズして保持する。
+- MapEventから名前・トリガー・ダイアログを読み込み、ダイアログ配列を初期化する。
+- speak()呼び出し時にゲーム状態をSAVEに切り替え、UIに自身を登録する。
+- getNextDialogueで順次ダイアログを取得でき、末尾でインデックスをリセットできる。
+
+- Loads and resizes NPC sprites to tile size.
+- Reads MapEvent to initialize name, trigger, and dialogue array.
+- On speak(), switches game state to SAVE and registers itself with the UI.
+- Provides sequential dialogue retrieval via getNextDialogue and supports resetting.
+end note
+
+@enduml

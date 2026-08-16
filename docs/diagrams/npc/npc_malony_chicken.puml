@@ -1,0 +1,119 @@
+@startuml npc_malony_chicken
+
+package npc {
+  class NpcMalonyChicken {
+    -- Fields --
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - SPRITE_COUNT: int = 3
+    - sprites: BufferedImage[][]
+    - following: boolean
+    - questRewardCoins: int = 100
+    - questOffered: boolean
+    - awaitingChoice: boolean
+    - questAccepted: boolean
+    - questCompleted: boolean
+    - eventId: String
+
+    -- Methods --
+    + NpcMalonyChicken(gameWindow: GameWindow, ev: db.MapEvent)
+    + loadNPCImages(): void
+    + applyMapEvent(ev: db.MapEvent): void
+    + setAction(): void
+    + checkCoopObjective(): void
+    + speak(): void
+    + getOppositeDirection(dir:String): String
+    + showDialogueAndAdvance(): void
+    + isDialogueFinished(): boolean
+    + offerQuest(): void
+    + onPlayerChoice(choiceIndex:int): void
+    + acceptQuest(): void
+    + declineQuest(): void
+    + generateEventId(): String
+    + onQuestObjectiveCompleted(): void
+    + getEventId(): String
+    + setEventId(eventId:String): void
+    - createImage(original:BufferedImage, width:int, height:int): BufferedImage
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getUi(): UI
+    + getCurrentMap(): GameMap
+    + getSoundmanager(): SoundManager
+  }
+  class UI {
+    + setCurrentDialogueMessage(msg:String): void
+    + showChoice(title:String, options:String[], listener:Object): void
+  }
+  class SoundManager {
+    + questChickenCompleteWAV(path:String): void
+  }
+}
+
+package map {
+  class GameMap {
+    + countChickens(): int
+  }
+}
+
+package db {
+  class MapEvent {
+    + getId(): String
+    + getName(): String
+    + getTrigger(): String
+    + getDialogues(): List<String>
+    + isQuestOffered(): boolean
+    + isQuestAccepted(): boolean
+    + isQuestCompleted(): boolean
+    + getMeta(): Map
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setDirection(dir:String): void
+    + setSpeed(s:int): void
+    + setName(n:String): void
+    + setTrigger(t:String): void
+    + setDialogueArray(arr:String[]): void
+    + getDialogue(): String[]
+    + getDialogueIndex(): int
+    + setDialogueIndex(i:int): void
+    + getGameWindow(): GameWindow
+  }
+}
+
+NpcMalonyChicken --> window.GameWindow : uses
+NpcMalonyChicken --> frame.FrameApp : queries
+NpcMalonyChicken --> db.MapEvent : consumes
+NpcMalonyChicken --> map.GameMap : queries
+NpcMalonyChicken --> window.UI : updates
+NpcMalonyChicken --> window.SoundManager : plays sounds
+NpcMalonyChicken --> entity.Entity : extends
+
+note right of NpcMalonyChicken
+**Notes**
+- スプライトを読み込み、タイルサイズにリサイズして保持する。
+- 会話の流れを管理し、会話が終わったらクエストを提案する。
+- クエストが受注されたら定期的に協力目標（マップ上のニワトリ数）をチェックする。
+- 目標達成時にコインを付与し、UIメッセージを更新し、完了音を再生する。
+- UIのコールバックを通じてプレイヤーの選択を受け付けて処理する。
+
+- Loads and resizes sprites to tile size.
+- Handles dialogue flow and offers a quest after dialogue finishes.
+- When quest is accepted, periodically checks coop objective (chicken count) on the current map.
+- On completion, awards coins, updates UI message, and plays completion sound.
+- Supports player choice handling via UI callbacks.
+end note
+
+@enduml
