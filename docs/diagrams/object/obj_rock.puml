@@ -1,0 +1,144 @@
+@startuml obj_rock
+
+package object {
+  class ObjRock {
+    -- Fields --
+    - gameWindow: GameWindow
+    - DIRS: String[] = {"Up","Down","Left","Right"}
+    - OBJ_ROCK_SPRITE_COUNT: int = 1
+    - STONE_SCATTER_SPRITE_COUNT: int = 3
+    - rockSprites: BufferedImage[][]
+    - fragmentSprites: BufferedImage[][]
+    - hasShadow: boolean
+    - vx: double
+    - vy: double
+    - vz: double
+    - z: double
+    - gravity: double = 0.3
+    - verticalGravity: double = 0.45
+    - thrown: boolean
+    - user: Entity
+    - pickable: boolean
+    - landed: boolean
+    - shattering: boolean
+    - shatterFrame: int
+    - damageGiven: boolean
+
+    -- Methods --
+    + ObjRock(gameWindow: GameWindow)
+    + loadSprites(): void
+    + update(): void
+    - updateAnimation(): void
+    + startShatter(): void
+    - giveShatterDamageAndSpawnFragments(player: Player): void
+    + onPickedUp(): void
+    + setVelocity(vx: double, vy: double): void
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir: String, frame: int): BufferedImage
+    + draw(g2: Graphics2D): void
+    + isPickable(): boolean
+    + getGravity(): double
+    + setPickable(p: boolean): void
+    + setHasShadow(v: boolean): void
+    + getZ(): double
+    + setZ(z: double): void
+    + setVerticalVelocity(vz: double): void
+  }
+}
+
+package object {
+  abstract class Projectile {
+    + Projectile(gameWindow: GameWindow, dirs:int, frames:int)
+    + updateAnimation(): void
+    + getSprites(): BufferedImage[][]
+    + getSpriteNum(): int
+    + setSpriteNum(n:int): void
+    + getSpriteCounter(): int
+    + setSpriteCounter(n:int): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCollisionChecker(): CollisionChecker
+    + getCurrentMap(): GameMap
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + damageMonster(id:int, attack:int, knock:int): void
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(e:Entity): boolean
+    + checkEntity(p:Projectile, list:List<Entity>): int
+    + checkPlayer(p:Projectile): boolean
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package map {
+  class GameMap {
+    + addObject(o: Entity): void
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setSpeed(s:int): void
+    + setMaxLife(v:int): void
+    + setAttack(v:int): void
+    + setKnockBackPower(v:int): void
+    + setUseCost(v:int): void
+    + setAlive(b:boolean): void
+    + setBlocking(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getLife(): int
+    + setLife(v:int): void
+    + getSolidArea(): Rectangle
+    + setCollision(b:boolean): void
+    + getImage(): BufferedImage
+  }
+}
+
+ObjRock --> object.Projectile : extends
+ObjRock --> window.GameWindow : uses
+ObjRock --> player.Player : interacts
+ObjRock --> collision.CollisionChecker : uses
+ObjRock --> frame.FrameApp : queries
+ObjRock --> map.GameMap : uses
+
+note right of ObjRock
+**Notes**
+- 投げられたときの放物線運動（vx, vy, vz, z）、影の描画、拾得／着地状態、割れるアニメーションを処理する。
+- updateAnimation は割れていないときにスプライトフレームを進める。
+- startShatter は割れるシーケンスを開始し、運動や当たり判定のフラグをリセットする。
+- giveShatterDamageAndSpawnFragments は近接するエンティティにダメージを与え、当たり判定を無効化する。
+- 所持時／投擲時のスプライトを提供し、高さ z と影を考慮した描画ロジックを備える。
+
+- Handles thrown parabolic physics, shadow rendering, pickup/landing states, and shatter animation.
+- updateAnimation advances sprite frames when not shattering.
+- startShatter begins the shatter sequence and resets motion/collision flags.
+- giveShatterDamageAndSpawnFragments applies damage to nearby entities and disables collision.
+- Provides held/throw sprites and draw logic that accounts for height z and shadow.
+end note
+
+@enduml

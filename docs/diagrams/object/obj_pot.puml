@@ -1,0 +1,194 @@
+@startuml obj_pot
+
+package object {
+  class ObjPot {
+    -- Fields --
+    - gameWindow: GameWindow
+    - DIRS: String[] = {"Up","Down","Left","Right"}
+    - OBJ_POT_SPRITE_COUNT: int = 1
+    - STONE_SCATTER_SPRITE_COUNT: int = 3
+    - potSprites: BufferedImage[][]
+    - fragmentSprites: BufferedImage[][]
+    - entityFactory: EntityFactory
+    - lootTable: List<LootEntry>
+    - random: Random
+    - hasShadow: boolean
+    - vx: double
+    - vy: double
+    - vz: double
+    - z: double
+    - gravity: double = 0.3
+    - verticalGravity: double = 0.45
+    - thrown: boolean
+    - user: Entity
+    - pickable: boolean
+    - landed: boolean
+    - shattering: boolean
+    - shatterFrame: int
+    - damageGiven: boolean
+
+    -- Methods --
+    + ObjPot(gameWindow: GameWindow, entityFactory: EntityFactory)
+    + loadSprites(): void
+    + update(): void
+    - loadLootTableFromJson(resourcePath: String): void
+    - buildLootTableFromConfig(configs: List<LootConfigEntry>): void
+    - buildDefaultLootTable(): void
+    - createRandomLoot(): Entity
+    - updateAnimation(): void
+    + startShatter(): void
+    - giveShatterDamageAndSpawnFragments(player: Player): void
+    + onPickedUp(): void
+    + setVelocity(vx: double, vy: double): void
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir: String, frame: int): BufferedImage
+    + draw(g2: Graphics2D): void
+    + isPickable(): boolean
+    + getGravity(): double
+    + setPickable(p: boolean): void
+    + setHasShadow(v: boolean): void
+    + getZ(): double
+    + setZ(z: double): void
+    + setVerticalVelocity(vz: double): void
+  }
+}
+
+package object {
+  abstract class Projectile {
+    + Projectile(gameWindow: GameWindow, dirs:int, frames:int)
+    + updateAnimation(): void
+    + getSprites(): BufferedImage[][]
+    + getSpriteNum(): int
+    + setSpriteNum(n:int): void
+    + getSpriteCounter(): int
+    + setSpriteCounter(n:int): void
+  }
+}
+
+package factory {
+  class EntityFactory {
+    + createCoinEntity(): Entity
+    + createRedPotionEntity(): Entity
+    + createGreenPotionEntity(): Entity
+    + createBluePotionEntity(): Entity
+  }
+}
+
+package entity.loot {
+  class LootEntry {
+    - factory: Supplier<Entity>
+    - weight: int
+    + factory(): Supplier<Entity>
+    + weight(): int
+  }
+  class LootConfigEntry {
+    - type: String
+    - weight: int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCollisionChecker(): CollisionChecker
+    + getCurrentMap(): GameMap
+    + getUi(): UI
+    + getSoundmanager(): SoundManager
+  }
+  class UI {
+  + getDamagePopupManager(): DamagePopupManager }
+  class DamagePopupManager { + popItem(e:Entity, x:int, y:int, variant:PopupVariant, duration:int): void }
+  class SoundManager { + redPotionWAV(path:String): void }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + addCoin(coin: ObjCoinBronze): void
+    + canObtainItem(e:Entity): boolean
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(e:Entity): boolean
+    + checkEntity(p:Projectile, list:List<Entity>): int
+    + checkPlayer(p:Projectile): boolean
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package map {
+  class GameMap {
+    + addObject(o: Entity): void
+  }
+}
+
+package popup {
+  enum PopupVariant
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setSpeed(s:int): void
+    + setMaxLife(v:int): void
+    + setAttack(v:int): void
+    + setKnockBackPower(v:int): void
+    + setUseCost(v:int): void
+    + setAlive(b:boolean): void
+    + setBlocking(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getLife(): int
+    + setLife(v:int): void
+    + getSolidArea(): Rectangle
+    + setCollision(b:boolean): void
+    + getImage(): BufferedImage
+  }
+}
+
+package object {
+  class ObjCoinBronze
+  class ObjBomb
+}
+
+ObjPot --> object.Projectile : extends
+ObjPot --> window.GameWindow : uses
+ObjPot --> factory.EntityFactory : uses
+ObjPot --> entity.loot.LootEntry : uses
+ObjPot --> player.Player : interacts
+ObjPot --> collision.CollisionChecker : uses
+ObjPot --> frame.FrameApp : queries
+ObjPot --> map.GameMap : uses
+ObjPot --> popup.PopupVariant : uses
+ObjPot --> object.ObjCoinBronze : special-case handling
+ObjPot --> object.ObjBomb : special-case handling
+
+note right of ObjPot
+**Notes**
+- 壺と破片のスプライトおよび重み付きルートテーブルを読み込む（JSON またはデフォルト）。
+- 投げられたときの放物線物理（vx, vy, vz, z）、影の描画、拾得可能状態、着地を管理する。
+- 衝突やタイルへの着地で割れるシーケンスを開始し、破片を生成して一度だけダメージを与える。
+- giveShatterDamageAndSpawnFragments はダメージ処理、当たり判定の無効化、ルートの生成・ドロップ（コイン、爆弾、その他アイテム）を行う。
+- 所持時／投擲時のスプライト、拾得処理、寿命による自動破壊（ライフ切れでの割れ）をサポートする。
+
+- Loads pot and fragment sprites and a weighted loot table (JSON or default).
+- Manages thrown parabolic physics (vx, vy, vz, z), shadow rendering, pickup state, and landing.
+- On collision or tile impact starts shatter sequence that spawns fragments and deals damage once.
+- giveShatterDamageAndSpawnFragments handles damage, disables collision, and spawns/drops loot (coins, bombs, or items).
+- Supports held/throw sprites, pick-up handling, and life-based shatter fallback.
+end note
+
+@enduml

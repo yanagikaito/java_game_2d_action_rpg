@@ -1,0 +1,40 @@
+@startuml sprite_glow_util
+
+package object {
+  class SpriteGlowUtil {
+    -- Constructors --
+    - SpriteGlowUtil()
+
+    -- Methods --
+    + createGlowFromSprite(src: BufferedImage, glowColor: Color, blurRadius: int): BufferedImage
+    - boxBlur(src: BufferedImage): BufferedImage
+  }
+}
+
+package java.awt.image {
+  class BufferedImage
+  class ConvolveOp
+  class Kernel
+}
+
+package java.awt {
+  class Color
+}
+
+SpriteGlowUtil ..> BufferedImage : uses
+SpriteGlowUtil ..> Color : uses
+SpriteGlowUtil ..> Kernel : uses
+SpriteGlowUtil ..> ConvolveOp : uses
+
+note right of SpriteGlowUtil
+**Notes**
+- スプライトの白（ほぼ白）ピクセルを抽出して指定色で塗り、繰り返しボックスブラーを適用して軽量な「グロー（発光）」画像を生成するユーティリティクラス。
+- createGlowFromSprite は入力画像と色・ブラー強度を受け取り、同サイズの ARGB グロー画像を返す。
+- boxBlur は 3x3 の分離ボックスブラー（横パス＋縦パス）を実行する内部ユーティリティ。
+
+- Utility class that extracts near-white pixels from a sprite, fills them with a specified color, and applies repeated box-blur passes to produce a lightweight glow image.
+- createGlowFromSprite accepts an input image, a color, and a blur strength, and returns an ARGB glow image of the same size.
+- boxBlur is an internal utility that performs a separable 3×3 box blur (horizontal pass + vertical pass).
+end note
+
+@enduml

@@ -1,0 +1,105 @@
+@startuml obj_stone
+
+package object {
+  class ObjStone {
+    -- Fields --
+    - DIRS: String[] = {"Up","Down","Left","Right"}
+    - SPRITE_COUNT: int = 3
+    - sprites: BufferedImage[][]
+    - gameWindow: GameWindow
+
+    -- Methods --
+    + ObjStone(gw: GameWindow)
+    + loadSprites(): void
+    + getParticleColor(): Color
+    + getParticleSize(): int
+    + getParticleSpeed(): int
+    + getParticleMaxLife(): int
+    + draw(g2: Graphics2D): void
+  }
+}
+
+package object {
+  abstract class Projectile {
+    + Projectile(gameWindow: GameWindow, dirs:int, frames:int)
+    + update(): void
+    + updateAnimation(): void
+    + setVelocity(vx: double, vy: double): void
+    + getSpriteNum(): int
+    + setSpriteNum(n:int): void
+    + getSpriteCounter(): int
+    + setSpriteCounter(n:int): void
+    + sprites: BufferedImage[][]
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCollisionChecker(): CollisionChecker
+    + getCurrentMap(): GameMap
+    + getUi(): UI
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(e:Entity): boolean
+    + checkEntity(p:Projectile, list:List<Entity>): int
+    + checkPlayer(p:Projectile): boolean
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setSpeed(s:int): void
+    + setMaxLife(v:int): void
+    + setAttack(v:int): void
+    + setUseCost(v:int): void
+    + setAlive(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getLife(): int
+    + setLife(v:int): void
+    + getSolidArea(): Rectangle
+    + setCollision(b:boolean): void
+  }
+}
+
+ObjStone --> object.Projectile : extends
+ObjStone --> frame.FrameApp : queries
+ObjStone --> window.GameWindow : uses
+ObjStone --> player.Player : interacts
+ObjStone --> collision.CollisionChecker : uses
+
+note right of ObjStone
+**Notes**
+- 方向別スプライトを読み込み、タイルサイズにリサイズする。
+- 投擲時の弾（Projectile）として振る舞い、パーティクル色・サイズ・速度・寿命を提供する。
+- 描画はスプライト配列を参照して行う。
+
+- Loads direction-specific sprites and resizes them to the tile size.
+- Behaves as a thrown projectile, providing particle color, size, speed, and lifetime parameters.
+- Renders by referencing the appropriate sprite array for direction and frame.
+end note
+
+@enduml

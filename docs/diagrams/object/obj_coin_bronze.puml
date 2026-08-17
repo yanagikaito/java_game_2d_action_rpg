@@ -1,0 +1,61 @@
+@startuml obj_coin_bronze
+
+package object {
+  class ObjCoinBronze {
+    -- Fields --
+    - gameWindow: GameWindow
+    - value: int = 1
+    - name: String = "ブロンズコイン"
+    - image: BufferedImage
+
+    -- Methods --
+    + ObjCoinBronze(gameWindow: GameWindow)
+    + draw(g2: Graphics2D): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity.type {
+  class PickupOnlyType
+}
+
+package entity {
+  abstract class Entity {
+    + setValue(v:int): void
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setImage(img:BufferedImage, tileSize:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getImage(): BufferedImage
+  }
+}
+
+ObjCoinBronze --> window.GameWindow : uses
+ObjCoinBronze --> frame.FrameApp : queries
+ObjCoinBronze --> entity.Entity : extends
+ObjCoinBronze --> entity.type.PickupOnlyType : composes
+
+note right of ObjCoinBronze
+**Notes**
+- 値が1のブロンズコインの拾得アイテムを表す。
+- コンストラクタでスプライトを読み込み、タイルサイズにリサイズして保持する。
+- プレイヤーのカメラ位置に対して相対的に自身を描画する。
+
+- Represents a bronze coin pickup with value 1.
+- Loads and resizes its sprite to tile size in the constructor.
+- Draws itself relative to the player's camera position.
+end note
+
+@enduml

@@ -1,0 +1,79 @@
+@startuml obj_blue_potion
+
+package object {
+  class ObjBluePotion {
+    -- Fields --
+    - gameWindow: GameWindow
+    - healAmount: int = 100
+    - name: String = "ブルーポーション"
+    - description: String
+    - price: int = 100
+    - maxStack: int = 99
+    - amount: int = 1
+    - stackable: boolean = true
+    - image: BufferedImage
+
+    -- Methods --
+    + ObjBluePotion(gameWindow: GameWindow)
+    + draw(g2: Graphics2D): void
+    + copy(): Entity
+    + getHealAmount(): int
+    + getPrice(): int
+    - loadImage(path: String): void
+  }
+}
+
+package entity.type {
+  class BluePotionType
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t: Object): void
+    + setName(n: String): void
+    + setDescription(d: String): void
+    + setPrice(p: int): void
+    + setMaxStack(n: int): void
+    + setAmount(a: int): void
+    + setStackable(b: boolean): void
+    + setImage(img: BufferedImage, tileSize: int): void
+    + getImage(): BufferedImage
+    + getWorldX(): int
+    + getWorldY(): int
+    + getWidth(): int
+    + getHeight(): int
+    + copy(): Entity
+  }
+}
+
+ObjBluePotion --> window.GameWindow : uses
+ObjBluePotion --> frame.FrameApp : queries
+ObjBluePotion --> entity.type.BluePotionType : composes
+ObjBluePotion --> entity.Entity : extends
+
+note right of ObjBluePotion
+**Notes**
+- 魔力を完全に回復する消費アイテムのブルーポーションを表す。
+- コンストラクタでアイテムのメタデータ（価格、スタック上限など）を初期化し、スプライトを読み込んでタイルサイズにリサイズして保持する。
+- プレイヤーのカメラ位置に対して相対的に自身を描画する。
+- インベントリ用に新しいインスタンスを作成できるようコピーをサポートする。
+
+- Represents a consumable blue potion that fully restores magic.
+- Initializes item metadata (price, stack limits) and loads/resizes its sprite on construction.
+- Draws itself relative to the player's camera position.
+- Supports copying to create new instances for inventories.
+end note
+
+@enduml

@@ -1,0 +1,71 @@
+@startuml obj_axe
+
+package object {
+  class ObjAxe {
+    -- Fields --
+    - gameWindow: GameWindow
+    - name: String = "木の斧"
+    - attackValue: int = 2
+    - knockBackPower: int = 2
+    - description: String
+    - attackArea.width: int = 25
+    - attackArea.height: int = 25
+    - image: BufferedImage
+
+    -- Methods --
+    + ObjAxe(gameWindow: GameWindow)
+    + draw(g2: Graphics2D): void
+    - loadImage(path: String): void
+  }
+}
+
+package entity.type {
+  class AxeType
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t: Object): void
+    + setName(n: String): void
+    + setAttackValue(v: int): void
+    + setKnockBackPower(v: int): void
+    + getAttackArea(): Rectangle
+    + setDescription(d: String): void
+    + setImage(img: BufferedImage, tileSize: int): void
+    + getImage(): BufferedImage
+    + getWorldX(): int
+    + getWorldY(): int
+    + getWidth(): int
+    + getHeight(): int
+  }
+}
+
+ObjAxe --> window.GameWindow : uses
+ObjAxe --> frame.FrameApp : queries
+ObjAxe --> entity.Entity : extends
+ObjAxe --> entity.type.AxeType : composes
+
+note right of ObjAxe
+**Notes**
+- 攻撃力とノックバックを持つ木の斧アイテムを表す。
+- コンストラクタでスプライトを読み込み、タイルサイズにリサイズして保持する。
+- プレイヤーのカメラ位置に対して相対的に自身を描画する。
+
+- Represents a wooden axe item with attack and knockback stats.
+- Loads its sprite and resizes it to tile size on construction.
+- Draws itself relative to the player's camera position.
+end note
+
+@enduml

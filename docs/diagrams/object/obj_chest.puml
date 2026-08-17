@@ -1,0 +1,152 @@
+@startuml obj_chest
+
+package object {
+  class ObjChest {
+    -- Fields --
+    - random: Random
+    - gameWindow: GameWindow
+    - loot: Entity
+    - entityFactory: EntityFactory
+    - opened: boolean
+    - chestFrames: BufferedImage[]
+    - chestFrameIndex: int
+    - chestFrameDelay: int
+    - chestFrameCounter: int
+    - animatingOpen: boolean
+    - playerNearby: boolean
+    - lootTable: List<LootEntry>
+
+    -- Methods --
+    + ObjChest(gameWindow: GameWindow, loot: Entity, entityFactory: EntityFactory)
+    + update(): void
+    - loadLootTableFromJson(resourcePath: String): void
+    - buildLootTableFromConfig(configs: List<LootConfigEntry>): void
+    - buildDefaultLootTable(): void
+    - createRandomLoot(): Entity
+    + interact(player: Player): void
+    - open(player: Player): void
+    + isOpened(): boolean
+    + draw(g2: Graphics2D): void
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + setName(name:String): void
+    + setBlocking(b:boolean): void
+    + setImage(img:BufferedImage, tileSize:int): void
+    + getImage(): BufferedImage
+    + getMaxLife(): int
+    + setLife(v:int): void
+  }
+}
+
+package factory {
+  class EntityFactory {
+    + createCoinEntity(): Entity
+    + createRedPotionEntity(): Entity
+    + createGreenPotionEntity(): Entity
+    + createBluePotionEntity(): Entity
+  }
+}
+
+package entity.loot {
+  class LootEntry {
+    - factory: Supplier<Entity>
+    - weight: int
+    + factory(): Supplier<Entity>
+    + weight(): int
+  }
+  class LootConfigEntry {
+    - type: String
+    - weight: int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getUi(): UI
+    + getKeyHandler(): KeyHandler
+    + getCurrentMap(): GameMap
+    + getSoundmanager(): SoundManager
+  }
+  class UI {
+    + getDamagePopupManager(): DamagePopupManager
+  }
+  class KeyHandler {
+    + isPlayerEnter(): boolean
+  }
+  class DamagePopupManager {
+    + popItem(e:Entity, x:int, y:int, variant:PopupVariant, duration:int): void
+  }
+  class SoundManager {
+    + redPotionWAV(path:String): void
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + getDirection(): String
+    + addCoin(coin: ObjCoinBronze): void
+    + canObtainItem(e:Entity): boolean
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package map {
+  class GameMap {
+    + addObject(o: Entity): void
+  }
+}
+
+package object {
+  class ObjCoinBronze
+  class ObjBomb
+}
+
+package popup {
+  enum PopupVariant
+}
+
+ObjChest --> window.GameWindow : uses
+ObjChest --> factory.EntityFactory : uses
+ObjChest --> entity.Entity : composes
+ObjChest --> entity.loot.LootEntry : uses
+ObjChest --> entity.loot.LootConfigEntry : uses
+ObjChest --> player.Player : interacts
+ObjChest --> frame.FrameApp : queries
+ObjChest --> map.GameMap : uses
+ObjChest --> popup.PopupVariant : uses
+ObjChest --> object.ObjCoinBronze : special-case handling
+ObjChest --> object.ObjBomb : special-case handling
+
+note right of ObjChest
+**Notes**
+- チェストのフレームとルートテーブルを読み込み（JSONから、またはデフォルトを使用）。
+- プレイヤーの近接と正面タイルの位置を検出して開封操作を判定する。
+- 開封アニメを再生し、重み付きテーブルからランダムにルートを選択する。
+- ルートをドロップする：コインはプレイヤーに加算、爆弾は地面に配置、その他のアイテムはインベントリまたはマップに追加する。
+- EntityFactory を使ってルートエンティティを生成し、PopupManager でドロップ表示を行う。
+
+- Loads chest frames and loot table (from JSON or default).
+- Detects player proximity and front-tile interaction to open.
+- Plays open animation and selects random loot from weighted table.
+- Drops loot: adds coins to player, places bombs on ground, or adds items to inventory or map.
+- Uses EntityFactory to instantiate loot entities and PopupManager to show drops.
+end note
+
+@enduml
