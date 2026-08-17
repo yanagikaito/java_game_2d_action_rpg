@@ -1,0 +1,51 @@
+@startuml obj_heart
+
+package object {
+  class ObjHeart {
+    -- Fields --
+    - gameWindow: GameWindow
+    - name: String = "ハート"
+    - imageFrames: BufferedImage[] (loaded via loadAnimationFrames)
+
+    -- Methods --
+    + ObjHeart(gameWindow: GameWindow)
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setName(n: String): void
+    + loadAnimationFrames(path1: String, path2: String, path3: String, tileSize: int): void
+    + setImage(img: BufferedImage, tileSize: int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getImage(): BufferedImage
+  }
+}
+
+ObjHeart --> window.GameWindow : uses
+ObjHeart --> frame.FrameApp : queries
+ObjHeart --> entity.Entity : extends
+
+note right of ObjHeart
+**Notes**
+- ハートのアニメフレーム（満、半分、空）を読み込み、タイルサイズにリサイズする。
+- ハートの UI／HP 表示要素を表し、コンストラクタで画像フレームを準備する。
+
+- Loads heart animation frames (full, half, blank) and resizes them to tile size.
+- Represents a heart UI/HP element; image frames are prepared in the constructor.
+end note
+
+@enduml

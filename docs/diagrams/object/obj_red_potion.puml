@@ -1,0 +1,76 @@
+@startuml obj_red_potion
+
+package object {
+  class ObjRedPotion {
+    -- Fields --
+    - gameWindow: GameWindow
+    - healAmount: int = 2
+    - name: String = "レッドポーション"
+    - description: String
+    - price: int = 10
+    - maxStack: int = 99
+    - amount: int = 1
+    - stackable: boolean = true
+    - image: BufferedImage
+
+    -- Methods --
+    + ObjRedPotion(gameWindow: GameWindow)
+    + draw(g2: Graphics2D): void
+    + copy(): Entity
+    + getHealAmount(): int
+    + getPrice(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity.type {
+  class RedPotionType
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setDescription(d:String): void
+    + setPrice(p:int): void
+    + setMaxStack(n:int): void
+    + setAmount(a:int): void
+    + setStackable(b:boolean): void
+    + setImage(img:BufferedImage, tileSize:int): void
+    + getImage(): BufferedImage
+    + getWorldX(): int
+    + getWorldY(): int
+    + copy(): Entity
+  }
+}
+
+ObjRedPotion --> window.GameWindow : uses
+ObjRedPotion --> frame.FrameApp : queries
+ObjRedPotion --> entity.type.RedPotionType : composes
+ObjRedPotion --> entity.Entity : extends
+
+note right of ObjRedPotion
+**Notes**
+- 体力を2回復する消費アイテムを表す。
+- コンストラクタでメタデータ（価格、スタック上限等）を初期化し、スプライトを読み込んでタイルサイズにリサイズする。
+- プレイヤーのカメラ位置に対して相対的に描画する。
+- インベントリ用に新しいインスタンスを作成できるよう copy を提供する。
+
+- Represents a consumable red potion that restores 2 health.
+- Initializes item metadata (price, max stack, etc.) and loads/resizes its sprite to the tile size in the constructor.
+- Draws itself relative to the player's camera position.
+- Provides a copy method to create new instances for inventory use.
+end note
+
+@enduml

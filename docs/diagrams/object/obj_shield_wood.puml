@@ -1,0 +1,66 @@
+@startuml obj_shield_wood
+
+package object {
+  class ObjShieldWood {
+    -- Fields --
+    - gameWindow: GameWindow
+    - name: String = "木の盾"
+    - defenseValue: int = 1
+    - description: String
+    - price: int = 75
+    - image: BufferedImage
+
+    -- Methods --
+    + ObjShieldWood(gameWindow: GameWindow)
+    + copy(): Entity
+    + getPrice(): int
+  }
+}
+
+package entity.type {
+  class ShieldType
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setDescription(d:String): void
+    + setPrice(p:int): void
+    + setDefenseValue(v:int): void
+    + setImage(img:BufferedImage, tileSize:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + copy(): Entity
+  }
+}
+
+ObjShieldWood --> entity.Entity : extends
+ObjShieldWood --> entity.type.ShieldType : composes
+ObjShieldWood --> window.GameWindow : uses
+ObjShieldWood --> frame.FrameApp : queries
+
+note right of ObjShieldWood
+**Notes**
+- 木製の盾を表す装備アイテム。
+- コンストラクタでタイプ・防御値・説明・価格を設定し、スプライトを読み込んでタイルサイズに合わせる。
+- copy によりインベントリや装備スロット用の複製を作成できる。
+
+- Represents a wooden shield equipment item.
+- In the constructor it sets the item type, defense value, description, and price, and loads/resizes the sprite to the tile size.
+- Provides a copy method to create duplicates for inventory or equipment slots.
+end note
+
+@enduml

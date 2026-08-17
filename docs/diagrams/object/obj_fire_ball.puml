@@ -1,0 +1,78 @@
+@startuml obj_fire_ball
+
+package object {
+  class ObjFireball {
+    -- Fields --
+    - DIRS: String[] = {"Up","Down","Left","Right"}
+    - SPRITE_COUNT: int = 3
+    - name: String = "ファイアーボール"
+    - speed: int = 5
+    - maxLife: int = 80
+    - attack: int = 2
+    - knockBackPower: int = 5
+    - useCost: int = 1
+    - alive: boolean = false
+    - sprites: BufferedImage[][]
+    -- Methods --
+    + ObjFireball(gw: GameWindow)
+    + loadSprites(): void
+  }
+}
+
+package object {
+  abstract class Projectile {
+    + Projectile(gw: GameWindow, dirs: int, frames: int)
+    + update(): void
+    + setSpeed(s: int): void
+    + setMaxLife(l: int): void
+    + setAttack(a: int): void
+    + setKnockBackPower(k: int): void
+    + setUseCost(c: int): void
+    + setAlive(b: boolean): void
+    + getSprites(): BufferedImage[][]
+    + getSpriteNum(): int
+    + setSpriteNum(n: int): void
+    + getSpriteCounter(): int
+    + setSpriteCounter(n: int): void
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCollisionChecker(): CollisionChecker
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setName(n: String): void
+    + setImage(img: BufferedImage, tileSize: int): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+ObjFireball --> object.Projectile : extends
+ObjFireball --> frame.FrameApp : queries
+ObjFireball --> window.GameWindow : uses
+Projectile --> entity.Entity : extends
+
+note right of ObjFireball
+**Notes**
+- 方向別のファイアボールスプライトを読み込み、タイルサイズにリサイズして保持する。
+- コンストラクタで射撃物のステータス（速度、寿命、攻撃力、ノックバック、消費コスト）を設定する。
+- アニメーションと更新ロジックは Projectile 基底クラスを利用し、スプライトは方向とフレームごとに整理されている。
+
+- Loads directional fireball sprites and resizes them to tile size.
+- Configures projectile stats (speed, life, attack, knockback, cost) on construction.
+- Uses Projectile base for animation and update logic; sprites are organized by direction and frame.
+end note
+
+@enduml

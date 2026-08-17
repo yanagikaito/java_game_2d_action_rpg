@@ -1,0 +1,74 @@
+@startuml obj_aura
+
+package object {
+  class ObjAura {
+    -- Fields --
+    - gameWindow: GameWindow
+    - DIRECTIONS: String[] = {"Up","Down","Left","Right"}
+    - FRAMES_PER_DIRECTION: int = 3
+    - active: boolean
+    - expireAt: long
+    - elapsedMilliseconds: long
+    - currentFrameIndexOneBased: int = 1
+    - totalFrames: int = 3
+    - FRAME_INTERVAL_MS: long = 1500L
+    - sprites: BufferedImage[][]
+    -- Methods --
+    + ObjAura(gameWindow: GameWindow)
+    - loadSpriteFrames(): void
+    + getAnimationFrame(): BufferedImage
+    + updateAnimation(deltaMs: long): void
+    + drawAt(g2: Graphics2D, screenX: int, screenY: int, scale: float, alpha: float): void
+    + activate(durationMs: long): void
+    + deactivate(): void
+    + isActive(): boolean
+    + setActive(active: boolean): void
+    + isActiveRaw(): boolean
+    + getExpireAt(): long
+    - createImage(original:BufferedImage, width:int, height:int): BufferedImage
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getScreenWidth(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getUi(): UI
+  }
+  class UI {
+    + setCurrentDialogueMessage(msg: String): void
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + getGameWindow(): GameWindow
+    + setName(name: String): void
+    + sprites: BufferedImage[][]
+  }
+}
+
+ObjAura --> window.GameWindow : uses
+ObjAura --> frame.FrameApp : queries
+ObjAura --> entity.Entity : extends
+
+note right of ObjAura
+**Notes**
+- スプライトフレームを読み込みタイルサイズにリサイズして保持する
+- フレーム間隔でアニメを更新し有効期限で自動的に無効化する
+- 指定スクリーン座標に拡大・アルファ合成で描画する
+- activate で有効化し指定時間後に expireAt により無効化される
+
+- Load sprite frames, resize them to the tile size, and store them.
+- Update the animation based on frame intervals and automatically deactivate when the expiration time is reached.
+- Render the animation at a specified screen position with scaling and alpha compositing.
+- Activate the aura for a given duration; it becomes inactive after expireAt is reached.
+end note
+
+@enduml

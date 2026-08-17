@@ -1,0 +1,105 @@
+@startuml projectile
+
+package object {
+  abstract class Projectile {
+    -- Fields --
+    - sprites: BufferedImage[][]
+    - SPRITE_COUNT: int = 3
+    - SPRITE_ANIMATION_THRESHOLD: int = 12
+    - DIRECTIONS: String[] = {"up","down","left","right"}
+    - user: Entity
+
+    -- Methods --
+    + Projectile(gw: GameWindow, dirCount:int, spriteCount:int)
+    # loadSprites(): void
+    + set(worldX:int, worldY:int, direction:String, alive:boolean, user:Entity): void
+    + update(): void
+    - move(): void
+    - updateAnimation(): void
+    + draw(g2:Graphics2D): void
+    + setUser(user:Entity): void
+    + getUser(): Entity
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + Entity(gw: GameWindow)
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + setDirection(dir:String): void
+    + getDirection(): String
+    + setAlive(b:boolean): void
+    + getAlive(): boolean
+    + setLife(n:int): void
+    + getLife(): int
+    + setMaxLife(n:int): void
+    + getMaxLife(): int
+    + setSpriteNum(n:int): void
+    + getSpriteNum(): int
+    + setSpriteCounter(n:int): void
+    + getSpriteCounter(): int
+    + getSpeed(): int
+    + getAttack(): int
+    + getKnockBackPower(): int
+    + getGameWindow(): GameWindow
+    + getAttacking(): boolean
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCollisionChecker(): CollisionChecker
+    + getCurrentMap(): GameMap
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+    + damageMonster(id:int, attack:int, knock:int): void
+    + getInvincible(): boolean
+  }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(e:Entity): boolean
+    + checkEntity(p:Projectile, list:List<Entity>): int
+    + checkPlayer(p:Projectile): boolean
+  }
+}
+
+package map {
+  class GameMap
+}
+
+Projectile --> entity.Entity : extends
+Projectile --> window.GameWindow : uses
+Projectile --> player.Player : interacts
+Projectile --> collision.CollisionChecker : uses
+
+note right of Projectile
+**Notes**
+- 方向・フレーム別スプライト配列を保持する抽象投射物基底クラス。
+- set() で初期配置・向き・使用者を設定する。
+- update() は移動・衝突判定（プレイヤー or モンスター）・パーティクル生成・寿命管理を行い、当たりで無効化する。
+- move() は方向に応じたワールド座標の更新を行う。
+- updateAnimation() はスプライトアニメーションを進める。
+- draw() は現在の方向とフレームに応じたスプライトを画面に描画する。
+
+- Abstract projectile base class that stores direction- and frame-specific sprite arrays.
+- set() initializes world position, direction, alive state, and the user (owner).
+- update() handles movement, collision checks (against player or monsters), particle generation, lifespan management, and deactivates the projectile on hit.
+- move() updates world coordinates according to the current direction.
+- updateAnimation() advances the sprite animation frames.
+- draw() renders the sprite corresponding to the current direction and animation frame.
+end note
+
+@enduml

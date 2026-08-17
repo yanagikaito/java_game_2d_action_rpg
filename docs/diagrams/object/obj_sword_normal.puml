@@ -1,0 +1,68 @@
+@startuml obj_sword_normal
+
+package object {
+  class ObjSwordNormal {
+    -- Fields --
+    - gameWindow: GameWindow
+    - name: String = "普通の剣"
+    - attackValue: int = 1
+    - knockBackPower: int = 2
+    - description: String
+    - price: int = 100
+    - image: BufferedImage
+
+    -- Methods --
+    + ObjSwordNormal(gameWindow: GameWindow)
+    + copy(): Entity
+    + getPrice(): int
+  }
+}
+
+package entity.type {
+  class SwordType
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setDescription(d:String): void
+    + setPrice(p:int): void
+    + setAttackValue(v:int): void
+    + setKnockBackPower(v:int): void
+    + setImage(img:BufferedImage, tileSize:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + copy(): Entity
+  }
+}
+
+ObjSwordNormal --> entity.Entity : extends
+ObjSwordNormal --> entity.type.SwordType : composes
+ObjSwordNormal --> window.GameWindow : uses
+ObjSwordNormal --> frame.FrameApp : queries
+
+note right of ObjSwordNormal
+**Notes**
+- 攻撃力とノックバック値を持つ基本的な剣の装備アイテムを表す。
+- コンストラクタでタイプ、ステータス、説明、価格を設定し、スプライトを読み込んでタイルサイズにリサイズする。
+- インベントリや装備スロット用に複製を作成するための copy()
+
+- Represents a basic sword equipment item with attack and knockback values.
+- Constructor sets type, stats, description, price and loads/resizes the sprite to tile size.
+- Provides copy() for inventory/equipment duplication.
+end note
+
+@enduml

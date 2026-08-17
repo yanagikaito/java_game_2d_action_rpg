@@ -1,0 +1,76 @@
+@startuml obj_green_potion
+
+package object {
+  class ObjGreenPotion {
+    -- Fields --
+    - gameWindow: GameWindow
+    - healAmount: int = 20
+    - name: String = "グリーンポーション"
+    - description: String
+    - price: int = 10
+    - maxStack: int = 99
+    - amount: int = 1
+    - stackable: boolean = true
+    - image: BufferedImage
+
+    -- Methods --
+    + ObjGreenPotion(gameWindow: GameWindow)
+    + draw(g2: Graphics2D): void
+    + copy(): Entity
+    + getHealAmount(): int
+    + getPrice(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package entity.type {
+  class GreenPotionType
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setDescription(d:String): void
+    + setPrice(p:int): void
+    + setMaxStack(n:int): void
+    + setAmount(a:int): void
+    + setStackable(b:boolean): void
+    + setImage(img:BufferedImage, tileSize:int): void
+    + getImage(): BufferedImage
+    + getWorldX(): int
+    + getWorldY(): int
+    + copy(): Entity
+  }
+}
+
+ObjGreenPotion --> window.GameWindow : uses
+ObjGreenPotion --> frame.FrameApp : queries
+ObjGreenPotion --> entity.type.GreenPotionType : composes
+ObjGreenPotion --> entity.Entity : extends
+
+note right of ObjGreenPotion
+**Notes**
+- 魔力を20回復する消費アイテムのグリーンポーションを表す。
+- コンストラクタでアイテムのメタデータ（価格、スタック上限など）を初期化し、スプライトを読み込んでタイルサイズにリサイズして保持する。
+- プレイヤーのカメラ位置に対して相対的に自身を描画する。
+- インベントリ用に新しいインスタンスを作成できるようコピーをサポートする。
+
+- Represents a consumable green potion that restores 20 magic.
+- Initializes item metadata (price, stack limits) and loads/resizes its sprite on construction.
+- Draws itself relative to the player's camera position.
+- Supports copying to create new instances for inventories.
+end note
+
+@enduml

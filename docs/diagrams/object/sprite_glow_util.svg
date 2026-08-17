@@ -1,0 +1,215 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="516px" preserveAspectRatio="none"
+     style="width:1657px;height:516px;background:#FFFFFF;" version="1.1" viewBox="0 0 1657 516" width="1657px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster object-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L50.7275,6.0137 A3.75,3.75 0 0 1 53.2275,8.5137 L60.2275,30.6348 L637.5,30.6348 A2.5,2.5 0 0 1 640,33.1348 L640,216.5137 A2.5,2.5 0 0 1 637.5,219.0137 L8.5,219.0137 A2.5,2.5 0 0 1 6,216.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="60.2275" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.2275" x="10" y="23.1211">object
+            </text>
+        </g><!--cluster java-->
+        <g class="cluster" id="ent0006">
+            <path d="M27.5,270.0137 L55.748,270.0137 A3.75,3.75 0 0 1 58.248,272.5137 L65.248,294.6348 L603.5,294.6348 A2.5,2.5 0 0 1 606,297.1348 L606,506.5137 A2.5,2.5 0 0 1 603.5,509.0137 L27.5,509.0137 A2.5,2.5 0 0 1 25,506.5137 L25,272.5137 A2.5,2.5 0 0 1 27.5,270.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="25" x2="65.248" y1="294.6348" y2="294.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="27.248" x="29" y="287.1211">java
+            </text>
+        </g><!--cluster awt-->
+        <g class="cluster" id="ent0007">
+            <path d="M51.5,315.0137 L75.8379,315.0137 A3.75,3.75 0 0 1 78.3379,317.5137 L85.3379,339.6348 L579.5,339.6348 A2.5,2.5 0 0 1 582,342.1348 L582,482.5137 A2.5,2.5 0 0 1 579.5,485.0137 L51.5,485.0137 A2.5,2.5 0 0 1 49,482.5137 L49,317.5137 A2.5,2.5 0 0 1 51.5,315.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="49" x2="85.3379" y1="339.6348" y2="339.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="23.3379" x="53" y="332.1211">awt
+            </text>
+        </g><!--cluster image-->
+        <g class="cluster" id="ent0004">
+            <path d="M152.5,360.0137 L193.9619,360.0137 A3.75,3.75 0 0 1 196.4619,362.5137 L203.4619,384.6348 L555.5,384.6348 A2.5,2.5 0 0 1 558,387.1348 L558,458.5137 A2.5,2.5 0 0 1 555.5,461.0137 L152.5,461.0137 A2.5,2.5 0 0 1 150,458.5137 L150,362.5137 A2.5,2.5 0 0 1 152.5,360.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="150" x2="203.4619" y1="384.6348" y2="384.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="40.4619" x="154" y="377.1211">image
+            </text>
+        </g><!--class SpriteGlowUtil-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="159.7266" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="601.7842" x="22" y="43.0137"/>
+            <ellipse cx="274.2974" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M277.063,54.8887 Q277.2192,54.6699 277.4067,54.5605 Q277.5942,54.4512 277.813,54.4512 Q278.188,54.4512 278.4224,54.7168 Q278.6567,54.9668 278.6567,55.5762 L278.6567,57.0293 Q278.6567,57.6387 278.4224,57.9043 Q278.188,58.1699 277.813,58.1699 Q277.4692,58.1699 277.2661,57.9668 Q277.063,57.7793 276.9536,57.2637 Q276.9067,56.9043 276.7192,56.7168 Q276.3911,56.3418 275.7817,56.123 Q275.1724,55.9043 274.5474,55.9043 Q273.7817,55.9043 273.1411,56.2324 Q272.5161,56.5605 272.0161,57.3105 Q271.5317,58.0605 271.5317,59.0918 L271.5317,60.1855 Q271.5317,61.4199 272.4224,62.248 Q273.313,63.0605 274.9067,63.0605 Q275.8442,63.0605 276.5005,62.8105 Q276.8911,62.6543 277.313,62.2168 Q277.5786,61.9512 277.7192,61.873 Q277.8755,61.7949 278.0786,61.7949 Q278.4067,61.7949 278.6567,62.0605 Q278.9224,62.3105 278.9224,62.6543 Q278.9224,62.998 278.5786,63.4043 Q278.0786,63.9824 277.2817,64.3105 Q276.2036,64.7637 274.9067,64.7637 Q273.3911,64.7637 272.188,64.1387 Q271.2036,63.6387 270.5161,62.5762 Q269.8286,61.498 269.8286,60.2168 L269.8286,59.0605 Q269.8286,57.7324 270.438,56.5918 Q271.063,55.4355 272.1567,54.8262 Q273.2505,54.2012 274.4849,54.2012 Q275.2192,54.2012 275.8599,54.373 Q276.5161,54.5293 277.063,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88.6895"
+                  x="294.7974" y="64.8105">SpriteGlowUtil
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="622.7842" y1="75.0137" y2="75.0137"/>
+            <g>
+                <rect fill="#F24D5C" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30" y="109.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98.0137"
+                  x="42" y="116.7422">SpriteGlowUtil()
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42" y="135.3633">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23" x2="283.2129" y1="92.3242" y2="92.3242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="79.3584"
+                  x="283.2129" y="97.6211">Constructors
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="362.5713" x2="622.7842" y1="92.3242" y2="92.3242"/>
+            <g>
+                <ellipse cx="33" cy="172.3086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="575.7842"
+                  x="42" y="176.6055">createGlowFromSprite(src: BufferedImage, glowColor: Color, blurRadius: int):
+                BufferedImage
+            </text>
+            <g>
+                <rect fill="#F24D5C" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30" y="187.9297"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="274.6816"
+                  x="42" y="195.2266">boxBlur(src: BufferedImage): BufferedImage
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23" x2="296.0439" y1="152.1875" y2="152.1875"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="53.6963"
+                  x="296.0439" y="157.4844">Methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="349.7402" x2="622.7842" y1="152.1875" y2="152.1875"/>
+        </g><!--class Color-->
+        <g class="entity" id="ent0010">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="65.4551"
+                  x="65.5" y="397.0137"/>
+            <ellipse cx="80.5" cy="413.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M83.2656,408.8887 Q83.4219,408.6699 83.6094,408.5605 Q83.7969,408.4512 84.0156,408.4512 Q84.3906,408.4512 84.625,408.7168 Q84.8594,408.9668 84.8594,409.5762 L84.8594,411.0293 Q84.8594,411.6387 84.625,411.9043 Q84.3906,412.1699 84.0156,412.1699 Q83.6719,412.1699 83.4688,411.9668 Q83.2656,411.7793 83.1563,411.2637 Q83.1094,410.9043 82.9219,410.7168 Q82.5938,410.3418 81.9844,410.123 Q81.375,409.9043 80.75,409.9043 Q79.9844,409.9043 79.3438,410.2324 Q78.7188,410.5605 78.2188,411.3105 Q77.7344,412.0605 77.7344,413.0918 L77.7344,414.1855 Q77.7344,415.4199 78.625,416.248 Q79.5156,417.0605 81.1094,417.0605 Q82.0469,417.0605 82.7031,416.8105 Q83.0938,416.6543 83.5156,416.2168 Q83.7813,415.9512 83.9219,415.873 Q84.0781,415.7949 84.2813,415.7949 Q84.6094,415.7949 84.8594,416.0605 Q85.125,416.3105 85.125,416.6543 Q85.125,416.998 84.7813,417.4043 Q84.2813,417.9824 83.4844,418.3105 Q82.4063,418.7637 81.1094,418.7637 Q79.5938,418.7637 78.3906,418.1387 Q77.4063,417.6387 76.7188,416.5762 Q76.0313,415.498 76.0313,414.2168 L76.0313,413.0605 Q76.0313,411.7324 76.6406,410.5918 Q77.2656,409.4355 78.3594,408.8262 Q79.4531,408.2012 80.6875,408.2012 Q81.4219,408.2012 82.0625,408.373 Q82.7188,408.5293 83.2656,408.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33.4551"
+                  x="94.5" y="418.8105">Color
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="66.5" x2="129.9551" y1="429.0137" y2="429.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="66.5" x2="129.9551" y1="437.0137" y2="437.0137"/>
+        </g><!--class BufferedImage-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="123.834"
+                  x="166" y="397.0137"/>
+            <ellipse cx="181" cy="413.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M183.7656,408.8887 Q183.9219,408.6699 184.1094,408.5605 Q184.2969,408.4512 184.5156,408.4512 Q184.8906,408.4512 185.125,408.7168 Q185.3594,408.9668 185.3594,409.5762 L185.3594,411.0293 Q185.3594,411.6387 185.125,411.9043 Q184.8906,412.1699 184.5156,412.1699 Q184.1719,412.1699 183.9688,411.9668 Q183.7656,411.7793 183.6563,411.2637 Q183.6094,410.9043 183.4219,410.7168 Q183.0938,410.3418 182.4844,410.123 Q181.875,409.9043 181.25,409.9043 Q180.4844,409.9043 179.8438,410.2324 Q179.2188,410.5605 178.7188,411.3105 Q178.2344,412.0605 178.2344,413.0918 L178.2344,414.1855 Q178.2344,415.4199 179.125,416.248 Q180.0156,417.0605 181.6094,417.0605 Q182.5469,417.0605 183.2031,416.8105 Q183.5938,416.6543 184.0156,416.2168 Q184.2813,415.9512 184.4219,415.873 Q184.5781,415.7949 184.7813,415.7949 Q185.1094,415.7949 185.3594,416.0605 Q185.625,416.3105 185.625,416.6543 Q185.625,416.998 185.2813,417.4043 Q184.7813,417.9824 183.9844,418.3105 Q182.9063,418.7637 181.6094,418.7637 Q180.0938,418.7637 178.8906,418.1387 Q177.9063,417.6387 177.2188,416.5762 Q176.5313,415.498 176.5313,414.2168 L176.5313,413.0605 Q176.5313,411.7324 177.1406,410.5918 Q177.7656,409.4355 178.8594,408.8262 Q179.9531,408.2012 181.1875,408.2012 Q181.9219,408.2012 182.5625,408.373 Q183.2188,408.5293 183.7656,408.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.834"
+                  x="195" y="418.8105">BufferedImage
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="167" x2="288.834" y1="429.0137" y2="429.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="167" x2="288.834" y1="437.0137" y2="437.0137"/>
+        </g><!--class ConvolveOp-->
+        <g class="entity" id="ent0008">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="109.041"
+                  x="325.5" y="397.0137"/>
+            <ellipse cx="340.5" cy="413.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M343.2656,408.8887 Q343.4219,408.6699 343.6094,408.5605 Q343.7969,408.4512 344.0156,408.4512 Q344.3906,408.4512 344.625,408.7168 Q344.8594,408.9668 344.8594,409.5762 L344.8594,411.0293 Q344.8594,411.6387 344.625,411.9043 Q344.3906,412.1699 344.0156,412.1699 Q343.6719,412.1699 343.4688,411.9668 Q343.2656,411.7793 343.1563,411.2637 Q343.1094,410.9043 342.9219,410.7168 Q342.5938,410.3418 341.9844,410.123 Q341.375,409.9043 340.75,409.9043 Q339.9844,409.9043 339.3438,410.2324 Q338.7188,410.5605 338.2188,411.3105 Q337.7344,412.0605 337.7344,413.0918 L337.7344,414.1855 Q337.7344,415.4199 338.625,416.248 Q339.5156,417.0605 341.1094,417.0605 Q342.0469,417.0605 342.7031,416.8105 Q343.0938,416.6543 343.5156,416.2168 Q343.7813,415.9512 343.9219,415.873 Q344.0781,415.7949 344.2813,415.7949 Q344.6094,415.7949 344.8594,416.0605 Q345.125,416.3105 345.125,416.6543 Q345.125,416.998 344.7813,417.4043 Q344.2813,417.9824 343.4844,418.3105 Q342.4063,418.7637 341.1094,418.7637 Q339.5938,418.7637 338.3906,418.1387 Q337.4063,417.6387 336.7188,416.5762 Q336.0313,415.498 336.0313,414.2168 L336.0313,413.0605 Q336.0313,411.7324 336.6406,410.5918 Q337.2656,409.4355 338.3594,408.8262 Q339.4531,408.2012 340.6875,408.2012 Q341.4219,408.2012 342.0625,408.373 Q342.7188,408.5293 343.2656,408.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="77.041"
+                  x="354.5" y="418.8105">ConvolveOp
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="326.5" x2="433.541" y1="429.0137" y2="429.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="326.5" x2="433.541" y1="437.0137" y2="437.0137"/>
+        </g><!--class Kernel-->
+        <g class="entity" id="ent0009">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="72.4688"
+                  x="470" y="397.0137"/>
+            <ellipse cx="485" cy="413.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M487.7656,408.8887 Q487.9219,408.6699 488.1094,408.5605 Q488.2969,408.4512 488.5156,408.4512 Q488.8906,408.4512 489.125,408.7168 Q489.3594,408.9668 489.3594,409.5762 L489.3594,411.0293 Q489.3594,411.6387 489.125,411.9043 Q488.8906,412.1699 488.5156,412.1699 Q488.1719,412.1699 487.9688,411.9668 Q487.7656,411.7793 487.6563,411.2637 Q487.6094,410.9043 487.4219,410.7168 Q487.0938,410.3418 486.4844,410.123 Q485.875,409.9043 485.25,409.9043 Q484.4844,409.9043 483.8438,410.2324 Q483.2188,410.5605 482.7188,411.3105 Q482.2344,412.0605 482.2344,413.0918 L482.2344,414.1855 Q482.2344,415.4199 483.125,416.248 Q484.0156,417.0605 485.6094,417.0605 Q486.5469,417.0605 487.2031,416.8105 Q487.5938,416.6543 488.0156,416.2168 Q488.2813,415.9512 488.4219,415.873 Q488.5781,415.7949 488.7813,415.7949 Q489.1094,415.7949 489.3594,416.0605 Q489.625,416.3105 489.625,416.6543 Q489.625,416.998 489.2813,417.4043 Q488.7813,417.9824 487.9844,418.3105 Q486.9063,418.7637 485.6094,418.7637 Q484.0938,418.7637 482.8906,418.1387 Q481.9063,417.6387 481.2188,416.5762 Q480.5313,415.498 480.5313,414.2168 L480.5313,413.0605 Q480.5313,411.7324 481.1406,410.5918 Q481.7656,409.4355 482.8594,408.8262 Q483.9531,408.2012 485.1875,408.2012 Q485.9219,408.2012 486.5625,408.373 Q487.2188,408.5293 487.7656,408.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="40.4688"
+                  x="499" y="418.8105">Kernel
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="471" x2="541.4688" y1="429.0137" y2="429.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="471" x2="541.4688" y1="437.0137" y2="437.0137"/>
+        </g>
+        <g class="entity" id="ent0016">
+            <path d="M659.5,49.0137 L659.5,119.0137 L624.03,123.0137 L659.5,127.0137 L659.5,197.3418 A0,0 0 0 0 659.5,197.3418 L1650.4409,197.3418 A0,0 0 0 0 1650.4409,197.3418 L1650.4409,59.0137 L1640.4409,49.0137 L659.5,49.0137 A0,0 0 0 0 659.5,49.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1640.4409,49.0137 L1640.4409,59.0137 L1650.4409,59.0137 L1640.4409,49.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="665.5" y="68.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="969.9409"
+                  x="665.5" y="85.333">- &#12473;&#12503;&#12521;&#12452;&#12488;&#12398;&#30333;&#65288;&#12411;&#12412;&#30333;&#65289;&#12500;&#12463;&#12475;&#12523;&#12434;&#25277;&#20986;&#12375;&#12390;&#25351;&#23450;&#33394;&#12391;&#22615;&#12426;&#12289;&#32368;&#12426;&#36820;&#12375;&#12508;&#12483;&#12463;&#12473;&#12502;&#12521;&#12540;&#12434;&#36969;&#29992;&#12375;&#12390;&#36605;&#37327;&#12394;&#12300;&#12464;&#12525;&#12540;&#65288;&#30330;&#20809;&#65289;&#12301;&#30011;&#20687;&#12434;&#29983;&#25104;&#12377;&#12427;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12463;&#12521;&#12473;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="614.6563"
+                  x="665.5" y="102.624">- createGlowFromSprite &#12399;&#20837;&#21147;&#30011;&#20687;&#12392;&#33394;&#12539;&#12502;&#12521;&#12540;&#24375;&#24230;&#12434;&#21463;&#12369;&#21462;&#12426;&#12289;&#21516;&#12469;&#12452;&#12474;&#12398;
+                ARGB &#12464;&#12525;&#12540;&#30011;&#20687;&#12434;&#36820;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="538.8145"
+                  x="665.5" y="119.915">- boxBlur &#12399; 3x3 &#12398;&#20998;&#38626;&#12508;&#12483;&#12463;&#12473;&#12502;&#12521;&#12540;&#65288;&#27178;&#12497;&#12473;&#65291;&#32294;&#12497;&#12473;&#65289;&#12434;&#23455;&#34892;&#12377;&#12427;&#20869;&#37096;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="665.5" y="137.2061">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="945.1089"
+                  x="665.5" y="154.4971">- Utility class that extracts near-white pixels from a sprite, fills them with
+                a specified color, and applies repeated box-blur passes to produce a lightweight glow image.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="739.9146"
+                  x="665.5" y="171.7881">- createGlowFromSprite accepts an input image, a color, and a blur strength,
+                and returns an ARGB glow image of the same size.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="580.2266"
+                  x="665.5" y="189.0791">- boxBlur is an internal utility that performs a separable 3&#215;3 box blur
+                (horizontal pass + vertical pass).
+            </text>
+        </g><!--link SpriteGlowUtil to BufferedImage-->
+        <g class="link"
+           id="lnk11">
+            <path d="M297.54,203.3337 C276.71,268.2437 250.4434,350.0707 237.2534,391.1707" fill="none"
+                  id="SpriteGlowUtil-to-BufferedImage" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="235.42,396.8837,241.9788,389.5365,236.9479,392.1228,234.3615,387.0919,235.42,396.8837"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="287" y="250.042">uses
+            </text>
+        </g><!--link SpriteGlowUtil to Color-->
+        <g class="link"
+           id="lnk12">
+            <path
+                    d="M204.27,203.2737 C184.12,220.7737 164.92,240.5637 150,262.0137 C120.57,304.3337 107.9147,358.5401 102.3347,391.0601"
+                    fill="none" id="SpriteGlowUtil-to-Color"
+                    style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="101.32,396.9737,106.7844,388.7798,102.1656,392.0457,98.8997,387.4268,101.32,396.9737"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="170" y="250.042">uses
+            </text>
+        </g><!--link SpriteGlowUtil to Kernel-->
+        <g class="link"
+           id="lnk13">
+            <path
+                    d="M407.63,203.2837 C423.9,221.4437 439.68,241.4837 452,262.0137 C478.48,306.1337 492.8905,359.1783 500.0405,391.1483"
+                    fill="none" id="SpriteGlowUtil-to-Kernel"
+                    style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="501.35,397.0037,503.2893,387.3476,500.2587,392.1242,495.4821,389.0937,501.35,397.0037"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="447" y="250.042">uses
+            </text>
+        </g><!--link SpriteGlowUtil to ConvolveOp-->
+        <g class="link"
+           id="lnk14">
+            <path d="M338.27,203.3337 C350.77,268.2437 366.4947,349.8921 374.4147,390.9921" fill="none"
+                  id="SpriteGlowUtil-to-ConvolveOp" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="375.55,396.8837,377.7748,387.2894,374.6039,391.974,369.9193,388.8031,375.55,396.8837"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="347" y="250.042">uses
+            </text>
+        </g>
+        <?plantuml-src VLHTJnD157tVNt4VeTA-z8q74o6H6ACc67_0i9tImUtEPdQMLWm9knk-CO1f88W9mGy4Z8MO68MM-E1FcMmBJ_m5x-nkApILbtPsxhdtd7jcxZZ4V4acAV29AMfAU6q0c1PnNNZk22RfcCKhBoIpuW10DWkZt7Qby4p9XOlVoNOFUc3GwC2VK5dYXIxo7fY2aWJvKF1oaZVW2dCOHhnYaGfQU5H6GKCmYP1HRd4n3F7V44nOdXWd1UQvmy1iETYJaagPuDKH1FQfsITXrfWr32VrO8fCanofo1pJqHjUz6Obk-Z4DBUcwJEdk_MO2fjQ_MhUg1Ptep4z5kTozsypmJ1uBdNxuU8QTyGJ8NSMw8ZlW0oRImg2JPOay6BFYHgPp5CCkvcCaGKLdAbmMuL7AlYamYNbrzix5zTDN3IKtupNoogigU141GqLVbN1szRAHRHuhlnjvH-qrXQZ-hlBvU_A_nBjRwjWHStvxRDJN5p-hcbC-5w5OPoEH5kQA6nYaIl_g5qxJ8fSDYwk5jULVwpcrbHmgi9lY44DxPtpQ7vP2vXxqwured0T4zkrlTRIXl9tLB2gmWDTBLnGmKSL7gSBvDBjdAcv01liTqT1-IVH_ETePJSjwn_g5i96Ls7K_1cT7o1Tj8uADwFrhQIrQ0CL_j1U1UX07HwCZur0LtDNPDpxJY8WlSEQ4_BLFFxNewM5gzqFVQt1jbk7sCacRbutLzk_3ZhhPQscldUvlvOq7otCNuM7_Ir0OcJMXytag_IgoXAHGAjI45EwO5CYifMIDiDXLMgvK4HxW80REpG4HMPPEecMeS9aAOvGanKPBO2Pp32n2q0SnsBK1K4TxND1jvlLmmqEac90Sd04BtWcnHAMlf4L6jzB_IP0F9sv_nqJCKtge5XYunlXU3A18_4j1V5R0lYGKNjIbf9DGQKdx3WpFg9_P7eUi2jmIHb_s4pCtZaZbd9973bYWPSQ65ldK57aekng9wX319cmAEJ_RETrTg9XeCG5c-6sn5pTFZwHqrH8PgRVWpc3eZWzdCPV?>
+    </g>
+</svg>

@@ -1,0 +1,138 @@
+@startuml obj_bomb
+
+package object {
+  class ObjBomb {
+    -- Fields --
+    - gameWindow: GameWindow
+    - DIRS: String[] = {"Up","Down","Left","Right"}
+    - SPRITE_COUNT: int = 11
+    - explosionFrame: int
+    - exploding: boolean
+    - damageGiven: boolean
+    - hasShadow: boolean
+    - vx: double
+    - vy: double
+    - vz: double
+    - z: double
+    - gravity: double = 0.3
+    - verticalGravity: double = 0.45
+    - thrown: boolean
+    - user: Entity
+    - pickable: boolean
+    - landed: boolean
+    - landedAt: long
+    - fuseDurationMs: long = 3000L
+    - DAMAGE_FRAME: int = 0
+
+    -- Methods --
+    + ObjBomb(gameWindow: GameWindow)
+    + loadSprites(): void
+    + update(): void
+    + startExplosion(): void
+    + updateAnimation(): void
+    + giveExplosionDamage(): void
+    + draw(g2: Graphics2D): void
+    + onPickedUp(): void
+    + setPickable(p: boolean): void
+    + isPickable(): boolean
+    + setUser(user: Entity): void
+    + getUser(): Entity
+    + setThrown(thrown: boolean): void
+    + isThrown(): boolean
+    + getGravity(): double
+    + setVelocity(vx: double, vy: double): void
+    + setHasShadow(v: boolean): void
+    + getHeldSprite(): BufferedImage
+    + getThrowSprite(dir: String, frame: int): BufferedImage
+    + setVerticalVelocity(vz: double): void
+    + getZ(): double
+    + setZ(z: double): void
+  }
+}
+
+package object {
+  abstract class Projectile {
+    + Projectile(gameWindow: GameWindow, dirs:int, frames:int)
+    + updateAnimation(): void
+    + getSprites(): BufferedImage[][]
+    + getSpriteNum(): int
+    + setSpriteNum(n:int): void
+    + getSpriteCounter(): int
+    + setSpriteCounter(n:int): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCollisionChecker(): CollisionChecker
+    + getMonster(): Entity[]
+    + getUi(): UI
+    + getSoundmanager(): SoundManager
+  }
+  class UI {
+  + setCurrentDialogueMessage(msg:String): void }
+  class SoundManager { + play(...): void }
+}
+
+package collision {
+  class CollisionChecker {
+    + checkTile(e:Entity): boolean
+    + checkEntity(p:Projectile, list:List<Entity>): int
+    + checkPlayer(p:Projectile): boolean
+  }
+}
+
+package entity.type {
+  class BombType
+}
+
+package entity {
+  abstract class Entity {
+    + setType(t:Object): void
+    + setName(n:String): void
+    + setSpeed(s:int): void
+    + setMaxLife(v:int): void
+    + setAttack(v:int): void
+    + setKnockBackPower(v:int): void
+    + setUseCost(v:int): void
+    + setAlive(b:boolean): void
+    + setBlocking(b:boolean): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getLife(): int
+    + setLife(v:int): void
+    + getType(): Object
+    + getSolidArea(): Rectangle
+    + setCollision(b:boolean): void
+    + getMaxLife(): int
+  }
+}
+
+ObjBomb --> object.Projectile : extends
+ObjBomb --> window.GameWindow : uses
+ObjBomb --> collision.CollisionChecker : uses
+ObjBomb --> entity.type.BombType : composes
+ObjBomb --> entity.Entity : interacts
+Projectile --> entity.Entity : extends
+
+note right of ObjBomb
+**Notes**
+- 投げられた物理挙動（vx, vy, vz, z）と、空中時の影の描画を管理する。
+- 着地すると導火線（fuseDurationMs）を開始し、時間経過または衝突で startExplosion を呼び出す。
+- startExplosion は爆発アニメを開始し、移動・拾得を無効化し、速度をリセットする。
+- giveExplosionDamage はユーザーに応じてモンスターまたはプレイヤーに一度だけダメージを与え、その後当たり判定を無効化して爆弾を除去する。
+- draw は高度オフセットと、空中時に任意の地面影を描画してスプライトをレンダリングする。
+- 拾得、所持／投擲用スプライトのサポートと、垂直速度のクランプ（上限下限の制御）を備える。
+
+- Manages thrown physics (vx, vy, vz, z) and shadow rendering while airborne.
+- On landing starts a fuse (fuseDurationMs) and calls startExplosion when time elapses or on collision.
+- startExplosion begins explosion animation, disables movement/pickup, and resets velocities.
+- giveExplosionDamage applies damage once to monsters or player depending on user, then disables collision and removes the bomb.
+- draw renders sprite with altitude offset and optional ground shadow while airborne.
+- Supports pickup, held/throw sprites, and vertical velocity clamping.
+end note
+
+@enduml

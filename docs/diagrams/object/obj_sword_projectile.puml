@@ -1,0 +1,98 @@
+@startuml obj_sword_projectile
+
+package object {
+  class ObjSwordProjectile {
+    -- Fields --
+    - DIRS: String[] = {"Up","Down","Left","Right"}
+    - SPRITE_COUNT: int = 3
+    - prototype: ObjSwordProjectile = null
+    - auraEffect: SwordAuraEffect
+    - representativeSprite: BufferedImage
+    - gameWindow: GameWindow
+    - glowCache: Map<String, BufferedImage>
+    - sprites: BufferedImage[][]
+
+    -- Methods --
+    + ObjSwordProjectile(gw: GameWindow)
+    + loadSprites(): void
+    + update(): void
+    + draw(g2: Graphics2D): void
+    + onFire(direction: String): void
+    + getPrototype(gw: GameWindow): ObjSwordProjectile
+    + getSprite(dir: String): BufferedImage
+  }
+}
+
+package object {
+  abstract class Projectile {
+    + Projectile(gameWindow: GameWindow, dirs:int, frames:int)
+    + update(): void
+    + draw(g2: Graphics2D): void
+    + setVelocity(vx: double, vy: double): void
+    + sprites: BufferedImage[][]
+    + getSpriteNum(): int
+    + setSpriteNum(n:int): void
+    + getSpriteCounter(): int
+    + setSpriteCounter(n:int): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getCollisionChecker(): CollisionChecker
+    + getCurrentMap(): GameMap
+  }
+}
+
+package entity.particle {
+  class SwordAuraEffect {
+    + SwordAuraEffect(gw: GameWindow, owner: ObjSwordProjectile, sprite: BufferedImage, glow: BufferedImage, centers: List<Point>)
+    + update(): void
+    + draw(g2: Graphics2D): void
+  }
+  class SpriteUtil {
+    + findWhitePixelCentersCached(img: BufferedImage): List<Point>
+  }
+  class SpriteGlowUtil {
+    + createGlowFromSprite(src: BufferedImage, color: Color, radius: int): BufferedImage
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package player {
+  class Player
+}
+
+package collision {
+  class CollisionChecker
+}
+
+ObjSwordProjectile --> Projectile : extends
+ObjSwordProjectile --> window.GameWindow : uses
+ObjSwordProjectile --> entity.particle.SwordAuraEffect : composes
+ObjSwordProjectile --> entity.particle.SpriteUtil : uses
+ObjSwordProjectile --> entity.particle.SpriteGlowUtil : uses
+ObjSwordProjectile --> frame.FrameApp : queries
+
+note right of ObjSwordProjectile
+**Notes**
+- 3フレームのスプライトを持つ方向別の剣の投射物。
+- 方向ごとにスプライトを読み込み・リサイズし、Projectile として振る舞う（移動・衝突は親クラスが処理）。
+- onFire(direction) は代表スプライトを準備し、グロー画像を生成・キャッシュし、白ピクセルの中心点を算出して SwordAuraEffect を生成する。
+- update は親クラスに処理を委譲しつつオーラエフェクトを更新し、draw は代表スプライトとオーラを描画する。
+- getPrototype は再利用のための簡易なシングルトン／プロトタイプアクセサを実装する。
+
+- Directional sword projectile with 3-frame sprites.
+- Loads/resizes sprites per direction; acts as a Projectile (movement/collision handled by parent).
+- onFire(direction) prepares a representative sprite, generates/caches a glow image, computes white-pixel centers, and creates a SwordAuraEffect for visual aura.
+- update delegates to parent and updates the aura effect; draw renders the representative sprite and the aura effect.
+- getPrototype implements a simple singleton/prototype accessor for reuse.
+end note
+
+@enduml
