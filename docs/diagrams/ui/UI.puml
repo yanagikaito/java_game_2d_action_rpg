@@ -1,0 +1,243 @@
+@startuml UI
+
+package ui {
+  class UI {
+    -- Fields --
+    - gameWindow: GameWindow
+    - arial40: Font
+    - arial80Bold: Font
+    - MANA_BAR_X: int
+    - MANA_BAR_Y: int
+    - MANA_BAR_WIDTH: int
+    - MANA_BAR_HEIGHT: int
+    - messageOn: boolean
+    - currentDialogueMessage: String
+    - message: ArrayList<String>
+    - messageCounter: ArrayList<Integer>
+    - greenHexPanel: GreenHexPanel
+    - spriteManager: SpriteManager
+    - popupManager: PopupManager
+    - heartFull: BufferedImage
+    - heartHalf: BufferedImage
+    - heartBlank: BufferedImage
+    - coin: BufferedImage
+    - playerSlotCol: int
+    - playerSlotRow: int
+    - npcSlotCol: int
+    - npcSlotRow: int
+    - dialogueOn: boolean
+    - npc: Entity
+    - subState: int
+    - saveMetas: SaveMeta[]
+    - SLOT_COUNT: int
+    - loadSlotIndex: int
+    - tradeCtx: TradeScreenContext
+    - saveCtx: SaveScreenContext
+    - loadCtx: LoadScreenContext
+    - saveMenuSelected: int
+    - saveInProgress: boolean
+    - saveMenuOpen: boolean
+    - awaitingChoice: boolean
+    - currentChoiceNpc: Entity
+    - choiceTitle: String
+    - currentOptions: String[]
+    - selectedOption: int
+    - MAX_PLAY_SECONDS: long
+    - ev: MapEvent
+
+    -- Methods --
+    + UI(gameWindow: GameWindow)
+    + initLoadScreen(): void
+    + addDialogue(text: String): void
+    + draw(g2: Graphics2D): void
+    + drawTitleScreen(g2: Graphics2D): void
+    + drawLoadScreen(g2: Graphics2D): void
+    + drawDialogueSaveScreen(g2: Graphics2D): void
+    + drawDialogueLoadScreen(g2: Graphics2D): void
+    + drawCharacterScreen(g2: Graphics2D): void
+    + drawInventory(g2: Graphics2D, entity: Entity, cursor: boolean): void
+    + drawPlayerLife(g2: Graphics2D): void
+    + drawLoadPlayerLife(g2: Graphics2D): void
+    + drawPlayerLifeAt(g2: Graphics2D, x:int, y:int, hp:int, maxHp:int): void
+    + drawManaBar(g2: Graphics2D): void
+    + drawPauseScreen(g2: Graphics2D): void
+    + drawDialogueScreen(g2: Graphics2D): void
+    + drawSpritePreview(g2: Graphics2D, meta: SaveMeta, x:int, y:int, w:int, h:int): void
+    + drawGameOverScreen(g2: Graphics2D): void
+    + drawMessage(g2: Graphics2D): void
+    + drawSubWindow(g2: Graphics2D, x:int, y:int, w:int, h:int): void
+    + drawChoice(g2: Graphics2D): void
+    + drawDialogueScreen(g2: Graphics2D): void
+    + getXForCenteredText(g2: Graphics2D, text:String): int
+    + getXForAlignToRightText(g2: Graphics2D, text:String, tailX:int): int
+    + getItemIndexOnSlot(slotRow:int, slotCol:int): int
+    + formatPlayTime(seconds: long): String
+    + returnToTitleFromGameOver(): void
+    + updateSave(keyCode:int): void
+    + updateLoad(keyCode:int): void
+    + updateTrade(keyCode:int): void
+
+    + setSaveInProgress(inProgress: boolean): void
+    + reloadSaveMeta(slotZeroBased: int): void
+    + closeSaveMenuUI(): void
+    + setSaveMeta(slot:int, meta: SaveMeta): void
+
+    + isAwaitingChoice(): boolean
+    + showChoice(title:String, options:String[], npc:Entity): void
+    + clearChoice(): void
+    + moveChoiceLeft(): void
+    + moveChoiceRight(): void
+    + getSelectedOption(): int
+    + getCurrentChoiceNpc(): Entity
+
+    + getArial40(): Font
+    + getCoin(): BufferedImage
+    + getTriforcePanel(): GreenHexPanel
+    + getDamagePopupManager(): PopupManager
+    + getters/setters for slot indices, dialogue flags, npc, subState, saveInProgress
+  }
+}
+
+package window {
+  class GameWindow {
+    + getGameState(): GameState
+    + getPlayer(): Player
+    + setDialogueActive(b: boolean): void
+    + getKeyHandler(): KeyHandler
+    + setGameState(s: GameState): void
+    + getLoadedPlayTimeSeconds(): long
+  }
+}
+
+package save {
+  class SaveMeta {
+    + exists(): boolean
+    + getHp(): int
+    + getMaxHp(): int
+    + getPlayTimeSeconds(): long
+    + getSpriteKey(): String
+    + getFacing(): String
+  }
+  class SaveManager {
+    + loadMeta(slot:int): SaveMeta
+  }
+}
+
+package input {
+  class KeyHandler {
+    + getCommandNum(): int
+    + clearAllKeys(): void
+  }
+}
+
+package hex {
+  class GreenHexPanel {
+    + startAnimation(): void
+    + resetAnimation(): void
+    + getTris(): List
+    + isForming(): boolean
+    + getFormTime(): int
+    + getFormDuration(): int
+  }
+  class GreenHexRenderer {
+    + drawGreenHex(g: Graphics2D, tris: List, forming: boolean, formTime: int, formDuration: int): void
+  }
+}
+
+package popup {
+  class PopupManager {
+    + PopupManager(capacity:int)
+    + drawAll(g2: Graphics2D): void
+  }
+}
+
+package player {
+  class Player {
+    + getLife(): int
+    + getMaxLife(): int
+    + getMana(): int
+    + getMaxMana(): int
+    + getLevel(): int
+    + getStrength(): int
+    + getDexterity(): int
+    + getExp(): int
+    + getNextLevelExp(): int
+    + getCoin(): int
+    + getCurrentWeapon(): Entity
+    + getCurrentShield(): Entity
+    + getPlayTimeSeconds(): long
+  }
+  class SpriteManager {
+    + getSprite(key:String, facing:String, frame:int): BufferedImage
+  }
+}
+
+package entity {
+  class Entity {
+    + getInventory(): List<Entity>
+    + getType(): EntityType
+    + getImage(): BufferedImage
+    + getAmount(): int
+    + getCount(): int
+    + getDescription(): String
+    + getCurrentWeapon(): Entity
+    + getCurrentShield(): Entity
+  }
+  enum EntityType
+}
+
+package ui.state.trade {
+  class TradeScreenContext {
+    + draw(g2: Graphics2D): void
+    + handleKey(keyCode:int): void
+  }
+  class SaveScreenContext {
+    + draw(g2: Graphics2D): void
+    + handleKey(keyCode:int): void
+  }
+  class LoadScreenContext {
+    + draw(g2: Graphics2D): void
+    + handleKey(keyCode:int): void
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getScreenWidth(): int
+    + getScreenHeight(): int
+  }
+}
+
+package game {
+  enum GameState
+}
+
+' Associations
+UI --> window.GameWindow : uses
+UI --> save.SaveManager : uses
+UI --> save.SaveMeta : uses
+UI --> input.KeyHandler : uses
+UI --> hex.GreenHexPanel : composes
+UI --> hex.GreenHexRenderer : uses
+UI --> popup.PopupManager : composes
+UI --> player.SpriteManager : composes
+UI --> player.Player : uses
+UI --> entity.Entity : uses
+UI --> ui.state.trade.TradeScreenContext : composes
+UI --> ui.state.trade.SaveScreenContext : composes
+UI --> ui.state.trade.LoadScreenContext : composes
+UI --> frame.FrameApp : queries
+
+note right of UI
+**Notes**
+- セーブ制御メソッド: setSaveInProgress、reloadSaveMeta、closeSaveMenuUI、setSaveMeta。
+- 選択肢 UI: showChoice、drawChoice、clearChoice、選択移動用ヘルパー（左右移動）および選択中のオプション／NPC を取得するゲッター。
+- ダメージ用ポップアップ管理の公開: PopupManager を UI から公開し、セーブメタの安全な再読み込みと UI 状態リセット用ユーティリティを提供。
+
+- Save control methods: setSaveInProgress, reloadSaveMeta, closeSaveMenuUI, setSaveMeta.
+- Choice UI: showChoice, drawChoice, clearChoice, navigation helpers, and getters for selected option and NPC.
+- UI exposes PopupManager for damage popups and provides safe save-meta reload and UI state reset utilities.
+end note
+
+@enduml

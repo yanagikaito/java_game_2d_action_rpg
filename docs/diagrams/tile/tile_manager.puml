@@ -50,7 +50,6 @@ class Player {
   + int getScreenY()
 }
 
-' 関係
 TileManager --> Tile : contains [tiles]
 TileManager --> GameWindow : uses
 TileManager ..> FrameApp : reads static config
