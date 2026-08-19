@@ -1,0 +1,68 @@
+@startuml interactive_tile
+
+package tileInteractive {
+  class InteractiveTile {
+    -- Fields --
+    - gameWindow: GameWindow
+    - destructible: boolean = false
+    - SPRITE_ANIMATION_THRESHOLD: int = 20
+    - active: boolean = true
+    - blocking: boolean = false
+
+    -- Methods --
+    + InteractiveTile(gw: GameWindow, row:int, col:int)
+    + isCorrectItem(entity: Entity): boolean
+    + createDestroyedForm(): InteractiveTile
+    + update(): void
+    + isActive(): boolean
+    + setActive(active: boolean): void
+    + isBlocking(): boolean
+    + setBlocking(blocking: boolean): void
+    + isDestructible(): boolean
+    + setDestructible(destructible: boolean): void
+  }
+}
+
+package entity {
+  class Entity {
+    + update(): void
+    + getInvincible(): boolean
+    + setInvincible(b:boolean): void
+    + getInvincibleCounter(): int
+    + setInvincibleCounter(int): void
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+  }
+}
+
+package window {
+  class GameWindow
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+    + getScreenWidth(): int
+    + getScreenHeight(): int
+  }
+}
+
+tileInteractive.InteractiveTile --|> entity.Entity : extends
+
+tileInteractive.InteractiveTile --> window.GameWindow : uses
+tileInteractive.InteractiveTile ..> frame.FrameApp : queries
+
+note right of tileInteractive.InteractiveTile
+**Notes**
+- インタラクティブなマップタイル（例：木、岩）を表す。状態フラグ：active（有効）、blocking（通行不可）、destructible（破壊可能）。
+- update() による継承された無敵カウンターのロジックで一時的な無敵状態を管理する。
+- アイテム判定用のフック（isCorrectItem）と、破壊後の形状を生成するためのフック（createDestroyedForm）を提供する。
+- コンストラクタで FrameApp.getTileSize() を使って位置を初期化する。
+
+- Represents an interactive map tile (e.g., tree, rock) with state flags: active, blocking, destructible.
+- Tracks temporary invincibility via inherited invincible counter logic in update().
+- Provides hooks for item-checking (isCorrectItem) and producing a destroyed variant (createDestroyedForm).
+- Position initialized using FrameApp.getTileSize() in constructor.
+end note
+
+@enduml

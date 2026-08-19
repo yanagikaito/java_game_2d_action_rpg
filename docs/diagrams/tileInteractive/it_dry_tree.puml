@@ -1,0 +1,96 @@
+@startuml it_dry_tree
+
+package tileInteractive {
+  class ItDryTree {
+    -- Fields --
+    - (inherited) gameWindow: GameWindow
+    - (inherited) destructible: boolean
+    - (inherited) active: boolean
+    - (inherited) blocking: boolean
+    - (inherited) SPRITE_ANIMATION_THRESHOLD: int
+    - (inherited) life: int
+    - (inherited) image: BufferedImage
+
+    -- Methods --
+    + ItDryTree(gw: GameWindow, col:int, row:int)
+    + isCorrectItem(entity: Entity): boolean
+    + createDestroyedForm(): InteractiveTile
+    + getParticleColor(): Color
+    + getParticleSize(): int
+    + getParticleSpeed(): int
+    + getParticleMaxLife(): int
+    + draw(g2: Graphics2D): void
+  }
+}
+
+package tileInteractive {
+  class InteractiveTile {
+    + InteractiveTile(gw: GameWindow, row:int, col:int)
+    + isCorrectItem(entity: Entity): boolean
+    + createDestroyedForm(): InteractiveTile
+    + update(): void
+    + getParticleColor(): Color
+    + getParticleSize(): int
+    + getParticleSpeed(): int
+    + getParticleMaxLife(): int
+    + draw(g2: Graphics2D): void
+    + setDestructible(b:boolean): void
+    + setBlocking(b:boolean): void
+    + setLife(l:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getGameWindow(): GameWindow
+  }
+}
+
+package tileInteractive {
+  class ItTrunk
+}
+
+package entity {
+  class Entity {
+    + getCurrentWeapon(): Entity
+    + getType(): Object
+    + getImage(): BufferedImage
+  }
+}
+
+package entity.type {
+  class AxeType
+}
+
+package window {
+  class GameWindow
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+tileInteractive.ItDryTree --|> tileInteractive.InteractiveTile
+
+tileInteractive.ItDryTree --> window.GameWindow : uses
+tileInteractive.ItDryTree --> frame.FrameApp : queries
+tileInteractive.ItDryTree --> entity.Entity : uses
+tileInteractive.ItDryTree --> tileInteractive.ItTrunk : creates
+tileInteractive.ItDryTree ..> entity.type.AxeType : checks instanceof
+tileInteractive.ItDryTree ..> javax.imageio.ImageIO : reads image
+
+note right of tileInteractive.ItDryTree
+**Notes**
+- 破壊可能な乾いた木を表すタイル。初期化で destructible=true, blocking=true, life=6 を設定する。
+- 装備中の武器が AxeType の場合に破壊可能と判定する isCorrectItem を実装する。
+- 破壊時に ItTrunk を生成する createDestroyedForm を提供する。
+- パーティクル色・サイズ・速度・寿命を返すメソッドを持ち、draw で画面に画像を描画する。
+- 画像は ImageIO で読み込み、FrameApp.getTileSize() を用いて描画サイズを決定する。
+
+- Represents a destructible dry tree tile. In the constructor it sets destructible = true, blocking = true, and life = 6.
+- Implements isCorrectItem to return true when the currently equipped weapon is an AxeType.
+- Provides createDestroyedForm which returns an ItTrunk when the tree is destroyed.
+- Provides particle parameter methods (color, size, speed, max life) and renders its image in draw().
+- Loads its image with ImageIO and uses FrameApp.getTileSize() to determine the drawing size.
+end note
+
+@enduml
