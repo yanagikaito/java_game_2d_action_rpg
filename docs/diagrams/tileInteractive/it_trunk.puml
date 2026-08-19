@@ -1,0 +1,103 @@
+@startuml it_trunk
+
+package tileInteractive {
+  class ItTrunk {
+    -- Fields --
+    - gameWindow: GameWindow
+
+    -- Methods --
+    + ItTrunk(gameWindow: GameWindow, row:int, col:int)
+    + draw(g2: Graphics2D): void
+  }
+
+  class InteractiveTile {
+    -- Fields --
+    - gameWindow: GameWindow
+    - destructible: boolean
+    - SPRITE_ANIMATION_THRESHOLD: int
+    - active: boolean
+    - blocking: boolean
+    - life: int
+    - image: BufferedImage
+    - solidArea: Rectangle
+    - solidAreaDefaultX: int
+    - solidAreaDefaultY: int
+
+    -- Methods --
+    + InteractiveTile(gw: GameWindow, row:int, col:int)
+    + isCorrectItem(entity: Entity): boolean
+    + createDestroyedForm(): InteractiveTile
+    + update(): void
+    + draw(g2: Graphics2D): void
+    + setImage(img: BufferedImage, tileSize:int): void
+    + setDestructible(b:boolean): void
+    + setBlocking(b:boolean): void
+    + setLife(l:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+    + getGameWindow(): GameWindow
+    + getSolidArea(): Rectangle
+    + setSolidAreaDefaultX(x:int): void
+    + setSolidAreaDefaultY(y:int): void
+  }
+}
+
+package entity {
+  class Entity {
+    + update(): void
+    + getCurrentWeapon(): Entity
+    + getType(): Object
+    + getImage(): BufferedImage
+    + setWorldX(x:int): void
+    + setWorldY(y:int): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package javax.imageio {
+  class ImageIO
+}
+
+tileInteractive.ItTrunk --|> tileInteractive.InteractiveTile
+tileInteractive.InteractiveTile --|> entity.Entity
+
+tileInteractive.ItTrunk --> window.GameWindow : uses
+tileInteractive.ItTrunk ..> javax.imageio.ImageIO : reads image
+tileInteractive.ItTrunk --> frame.FrameApp : queries
+tileInteractive.ItTrunk --> entity.Entity : uses (via draw/player)
+tileInteractive.InteractiveTile --> frame.FrameApp : queries
+tileInteractive.InteractiveTile --> window.GameWindow : uses
+
+note right of tileInteractive.ItTrunk
+**Notes**
+- 木の切り株タイルを表す。木が破壊されたときに生成される。
+- ImageIO で画像を読み込み、FrameApp.getTileSize() を使ってサイズを決定する。
+- 当たり判定領域（solidArea）をクリアして衝突判定を無効化する（幅・高さを 0 に設定）。
+- draw() はプレイヤー基準のスクリーン座標を計算して画像を描画する。
+
+- Represents a trunk tile created when a tree is destroyed.
+- Loads image via ImageIO and sizes it using FrameApp.getTileSize().
+- Clears solid area (no collision) by setting solidArea width/height to 0.
+- draw() computes screen coordinates relative to player and renders the image.
+end note
+
+@enduml
