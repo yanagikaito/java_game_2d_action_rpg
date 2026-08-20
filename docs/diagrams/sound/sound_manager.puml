@@ -1,0 +1,88 @@
+@startuml sound_manager
+
+package sound {
+  class SoundManager {
+    -- Fields --
+    - gameWindow: GameWindow
+    - clipCache: Map<String, Clip>
+    - currentBgm: Clip
+    - currentBgmName: String
+    - muted: boolean
+    - bgmVolume: float
+    - ioExecutor: ExecutorService
+
+    -- Methods --
+    + SoundManager(gameWindow: GameWindow)
+    + playSE(filePath: String): void
+    + damageWAV(filePath: String): void
+    + defeatedWAV(filePath: String): void
+    + levelWAV(filePath: String): void
+    + cursorWAV(filePath: String): void
+    + redPotionWAV(filePath: String): void
+    + greenPotionWAV(filePath: String): void
+    + explosionWAV(filePath: String): void
+    + questChickenCompleteWAV(filePath: String): void
+    + preload(filePath: String): void
+    + playBGM(filePath: String): void
+    + stopBGM(): void
+    + fadeOutBGM(durationMs: int): void
+    - applyBgmVolumeAndMute(clip: Clip): void
+    - setClipVolume(clip: Clip, linearVolume: float): void
+    - getVolumeControl(clip: Clip): FloatControl
+    - createClipFromResource(filePath: String): Clip
+    + getCurrentBgmName(): String
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+package javax.sound.sampled {
+  class Clip
+  class AudioInputStream
+  class AudioSystem
+  class FloatControl
+  class LineEvent
+}
+
+package java.util.concurrent {
+  class ExecutorService
+  class Executors
+}
+
+package java.util {
+  class Map
+  class ConcurrentHashMap
+}
+
+sound.SoundManager --> window.GameWindow : uses
+sound.SoundManager ..> javax.sound.sampled.Clip : manages
+sound.SoundManager ..> javax.sound.sampled.AudioSystem : uses
+sound.SoundManager ..> javax.sound.sampled.AudioInputStream : uses
+sound.SoundManager ..> javax.sound.sampled.FloatControl : uses
+sound.SoundManager ..> java.util.concurrent.ExecutorService : uses
+sound.SoundManager ..> java.util.Map : caches
+
+note right of sound.SoundManager
+**Notes**
+- SE（効果音）とBGMの再生を単一スレッドのIO実行機構で管理する。
+- Clipをキャッシュして再利用する；プリロード、即時BGM切替、停止、フェードアウトに対応する。
+- 音量はFloatControlで扱う（線形値 → dB変換）；ミュートフラグをサポートする。
+- クラスパス上のリソースから音声を読み込み、必要に応じてPCM_SIGNEDにデコードして再生する。
+
+- Manages SE and BGM playback with a single-threaded IO executor.
+- Caches Clips for reuse; supports preload, immediate BGM switch, stop, and fade-out.
+- Volume is handled via FloatControl (linear -> dB conversion); supports mute flag.
+- Loads audio from classpath resources and decodes to PCM_SIGNED when needed.
+end note
+
+@enduml
