@@ -1,0 +1,147 @@
+@startuml asset_setter
+
+package asset {
+  class AssetSetter {
+    -- Fields --
+    - gameWindow: GameWindow
+
+    -- Methods --
+    + AssetSetter(gameWindow: GameWindow)
+    + setNpcOldMan(eventId: String, tileX: int, tileY: int): void
+    + setNpcMalonyChicken(eventId: String, tileX: int, tileY: int): void
+    + setNpcMerChant(eventId: String, tileX: int, tileY: int): void
+    + setNpcSave(eventId: String, tileX: int, tileY: int): void
+    + setMonster(): void
+    + setBossMonster(): void
+    + setObjPot(): void
+    + setObjRock(): void
+    + setObjAxe(): void
+    + setObjChest(): void
+    + setObjRedPotion(): void
+    + setObjGreenPotion(): void
+    + setObjBluePotion(): void
+    + setInteractiveTile(): void
+
+    -- Factory / helpers --
+    - createObjRedPotion(worldX: int, worldY: int): ObjRedPotion
+    - createObjGreenPotion(worldX: int, worldY: int): ObjGreenPotion
+    - createObjBluePotion(worldX: int, worldY: int): ObjBluePotion
+    - createMonGreenSlime(worldX: int, worldY: int): MonGreenSlime
+    - createMonMintSoldier(worldX: int, worldY: int): MonMintSoldier
+    - createMonGreenGoblin(worldX: int, worldY: int): MonGreenGoblin
+    - createObjAxe(worldX: int, worldY: int): ObjAxe
+    - createObjChest(worldX: int, worldY: int): ObjChest
+    - createObjPot(worldX: int, worldY: int): ObjPot
+    - createObjRock(worldX: int, worldY: int): ObjRock
+    + createNpcChicken(worldX: int, worldY: int): NpcChicken
+  }
+}
+
+package window {
+  class GameWindow {
+    + getModel(): db.MapModel
+    + getNPC(): Entity[]
+    + setNPC(npcs: Entity[]): void
+    + getMonster(): Entity[]
+    + setMonster(monsters: Entity[]): void
+    + getObj(): Entity[]
+    + setItile(tiles: InteractiveTile[]): void
+    + repaint(): void
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package db {
+  class MapModel {
+    + loadEventsFromDb(mapId: int): void
+    + getEventById(id: String): MapEvent
+    + findEventAt(x: int, y: int): MapEvent
+  }
+  class MapEvent {
+    + getX(): int
+    + getY(): int
+  }
+}
+
+package entity {
+  class Entity
+}
+
+package monster {
+  class MonGreenGoblin
+  class MonGreenSlime
+  class MonMintSoldier
+}
+
+package npc {
+  class NpcOldMan
+  class NpcMalonyChicken
+  class NpcMerChant
+  class NpcSave
+  class NpcChicken
+}
+
+package object {
+  class ObjPot
+  class ObjRock
+  class ObjAxe
+  class ObjChest
+  class ObjRedPotion
+  class ObjGreenPotion
+  class ObjBluePotion
+}
+
+package factory {
+  class EntityFactory
+}
+
+package tileInteractive {
+  class InteractiveTile
+  class ItDryTree
+}
+
+' Associations / usages
+asset.AssetSetter --> window.GameWindow : uses
+asset.AssetSetter ..> db.MapModel : loads events
+asset.AssetSetter ..> db.MapEvent : uses
+asset.AssetSetter ..> frame.FrameApp : uses tile size
+asset.AssetSetter ..> entity.Entity : creates/assigns
+asset.AssetSetter ..> monster.MonGreenGoblin : instantiates
+asset.AssetSetter ..> monster.MonGreenSlime : instantiates
+asset.AssetSetter ..> monster.MonMintSoldier : instantiates
+asset.AssetSetter ..> npc.NpcOldMan : instantiates
+asset.AssetSetter ..> npc.NpcMalonyChicken : instantiates
+asset.AssetSetter ..> npc.NpcMerChant : instantiates
+asset.AssetSetter ..> npc.NpcSave : instantiates
+asset.AssetSetter ..> npc.NpcChicken : instantiates
+asset.AssetSetter ..> object.ObjPot : instantiates
+asset.AssetSetter ..> object.ObjRock : instantiates
+asset.AssetSetter ..> object.ObjAxe : instantiates
+asset.AssetSetter ..> object.ObjChest : instantiates
+asset.AssetSetter ..> object.ObjRedPotion : instantiates
+asset.AssetSetter ..> object.ObjGreenPotion : instantiates
+asset.AssetSetter ..> object.ObjBluePotion : instantiates
+asset.AssetSetter ..> factory.EntityFactory : uses
+asset.AssetSetter ..> tileInteractive.ItDryTree : instantiates
+asset.AssetSetter ..> javax.swing.SwingUtilities : invokes repaint
+
+note right of asset.AssetSetter
+**Notes**
+- ワールド座標と初期プロパティを設定して、モンスター・NPC・オブジェクトを生成するヘルパー（ファクトリ）メソッドを提供する。
+- setMonster／setBossMonster は createXXX ヘルパーを使って GameWindow の monster 配列を埋める。
+- オブジェクト生成メソッド（ObjPot／ObjRock 等）は solidArea や pickable／user／thrown／alive フラグを必要に応じて初期化する。
+- setInteractiveTile は InteractiveTile 配列（ItDryTree インスタンス）を作成して GameWindow に設定する。
+
+- Provides helper factory methods to create monsters, NPCs, and objects with world coordinates and initial properties.
+- setMonster/setBossMonster populate GameWindow.monster array using createXXX helpers.
+- Object creators (ObjPot/ObjRock/etc.) initialize solidArea, pickable/user/thrown/alive flags where applicable.
+- setInteractiveTile fills an InteractiveTile array (ItDryTree instances) and assigns it to GameWindow.
+end note
+
+@enduml

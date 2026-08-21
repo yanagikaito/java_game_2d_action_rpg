@@ -12,8 +12,6 @@ import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
 
-import java.awt.*;
-
 public class AssetSetter {
 
     private GameWindow gameWindow;
