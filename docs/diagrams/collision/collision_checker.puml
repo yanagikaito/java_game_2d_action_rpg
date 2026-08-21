@@ -1,0 +1,123 @@
+@startuml collision_checker
+
+package collision {
+  class CollisionChecker {
+    -- Fields --
+    - gameWindow: GameWindow
+
+    -- Methods --
+    + CollisionChecker(gameWindow: GameWindow)
+    + checkTile(entity: Entity): boolean
+    + checkTile(entity: Entity, offsetX: int, offsetY: int): boolean
+    + checkEntity(entity: Entity, targets: Entity[]): int
+    + checkEntity(entity: Entity, targets: Entity[], offsetX: int, offsetY: int): int
+    + checkEntity(entity: Entity, tiles: InteractiveTile[], offsetX: int, offsetY: int): int
+    + checkPlayer(entity: Entity): boolean
+    - isTileIndexValid(tileId: int, tiles: Tile[]): boolean
+    + worldSolid(e: Entity): Rectangle
+  }
+}
+
+package entity {
+  class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getSpeed(): int
+    + getDirection(): String
+    + isInKnockBack(): boolean
+    + getKnockBackDirection(): String
+    + isThrown(): boolean
+    + setCollision(flag: boolean): void
+    + getAlive(): boolean
+    + getMapId(): int
+    + getSolidArea(): Rectangle
+    + getSolidAreaDefaultX(): int
+    + getSolidAreaDefaultY(): int
+  }
+}
+
+package tile {
+  class Tile {
+    + collision: boolean
+    + bombCollision: boolean
+    + potCollision: boolean
+    + rockCollision: boolean
+  }
+
+  class TileManager {
+    + getMapTileNum(): int[][]
+    + getTiles(): Tile[]
+  }
+}
+
+package object {
+  class ObjBomb
+  class ObjPot
+}
+
+package npc {
+  class NpcChicken
+}
+
+package tileInteractive {
+  class InteractiveTile {
+    + isActive(): boolean
+    + isBlocking(): boolean
+    + getMapId(): int
+    + getCollisionBoxWorld(): Rectangle
+  }
+}
+
+package window {
+  class GameWindow {
+    + getTileManager(): TileManager
+    + getCollisionChecker(): CollisionChecker
+    + getPlayer(): Player
+  }
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+object.ObjBomb --|> entity.Entity
+object.ObjPot --|> entity.Entity
+npc.NpcChicken --|> entity.Entity
+tileInteractive.InteractiveTile --|> entity.Entity
+
+collision.CollisionChecker --> window.GameWindow : uses
+collision.CollisionChecker --> tile.TileManager : queries
+collision.CollisionChecker --> tile.Tile : checks
+collision.CollisionChecker ..> object.ObjBomb : instanceof check
+collision.CollisionChecker ..> object.ObjPot : instanceof check
+collision.CollisionChecker ..> tileInteractive.InteractiveTile : checks
+collision.CollisionChecker ..> frame.FrameApp : uses
+collision.CollisionChecker ..> java.awt.Rectangle : computes
+collision.CollisionChecker ..> java.lang.Math : uses floorDiv/clamp
+
+note right of collision.CollisionChecker
+**Notes**
+- タイル衝突判定は現在位置と移動後の矩形（offsetX/offsetY）両方をサポートする。
+- 投擲物（ObjBomb/ObjPot/投げられたエンティティ）は底面タイルを優先チェックする。
+- エンティティ同士の判定は方向やオフセットを考慮して当たり判定を行い、当たった対象のインデックスを返す。
+- InteractiveTile 判定は blocking を優先して即時返却、非 blocking はイベント用に最初のインデックスを保持する。
+- checkPlayer はプレイヤーとの接触を判定し、特定条件（設置中の爆弾や保持中のニワトリ等）を除外する。
+- worldSolid はエンティティの solidArea をワールド座標に変換したコピーを返す（元オブジェクトは変更しない）。
+
+- Supports tile collision checks for both current position and projected movement using offsetX/offsetY.
+- Prioritizes bottom-tile checks for throwable objects (e.g., ObjBomb, ObjPot, or thrown entities).
+- Performs entity-vs-entity collision by considering direction and offsets, returning the index of the collided target.
+- InteractiveTile checks prioritize blocking tiles, returning immediately for blocking hits; non-blocking tiles are recorded for event handling.
+- checkPlayer detects contact with the player while excluding special cases (e.g., placed bombs, held chickens).
+- worldSolid returns a world-coordinate copy of an entity’s solidArea without modifying the original object.
+end note
+
+@enduml
