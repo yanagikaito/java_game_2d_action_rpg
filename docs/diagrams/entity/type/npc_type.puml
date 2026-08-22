@@ -1,0 +1,28 @@
+@startuml npc_type
+
+package entity.type {
+  interface EntityType {
+    + typeId(): int
+    + name(): String
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+
+  class NpcType <<record>> {
+    + typeId(): int
+    + name(): String
+  }
+}
+
+NpcType ..|> EntityType
+
+note right of EntityType
+**Notes**
+- シールドインターフェース: 許可された型のみが EntityType を実装できる。
+- デフォルトメソッド isHostileToPlayer() と canRespawn() は true を返す。
+
+- Sealed interface: Only the permitted types may implement EntityType.
+- Default methods: isHostileToPlayer() and canRespawn() return true by default.
+end note
+
+@enduml

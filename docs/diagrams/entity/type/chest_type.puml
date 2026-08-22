@@ -1,0 +1,28 @@
+@startuml chest_type
+
+package entity.type {
+  interface EntityType {
+    + typeId(): int
+    + name(): String
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+
+  class ChestType <<record>> {
+    + typeId(): int
+    + name(): String
+  }
+}
+
+ChestType ..|> EntityType
+
+note right of EntityType
+**Notes**
+- シールドインターフェース: 許可された型のみが EntityType を実装できる。
+- デフォルトメソッド: isHostileToPlayer() と canRespawn() はデフォルトで true を返す。
+
+- Sealed interface: only the permitted types may implement EntityType.
+- Default methods isHostileToPlayer() and canRespawn() return true.
+end note
+
+@enduml

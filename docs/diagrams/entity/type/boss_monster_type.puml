@@ -1,0 +1,34 @@
+@startuml boss_monster_type
+
+package entity.type {
+  interface EntityType {
+    + typeId(): int
+    + name(): String
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+
+  class BossMonsterType <<record>> {
+    + typeId(): int
+    + name(): String
+  }
+}
+
+BossMonsterType ..|> EntityType
+
+note right of EntityType
+**Notes**
+- シールドインターフェース: PlayerType, NpcType, MonsterType, ChickenType,
+- SwordType, AxeType, ShieldType, RedPotionType, GreenPotionType,
+- BluePotionType, PickupOnlyType, BombType, BossMonsterType, ChestType,
+- PotType, RockType のみが EntityType を実装できる。
+- デフォルトメソッド: isHostileToPlayer() と canRespawn() は true を返す。
+
+- Sealed interface: Only PlayerType, NpcType, MonsterType, ChickenType,
+- SwordType, AxeType, ShieldType, RedPotionType, GreenPotionType,
+- BluePotionType, PickupOnlyType, BombType, BossMonsterType, ChestType,
+- PotType, and RockType may implement EntityType.
+- Default methods: isHostileToPlayer() and canRespawn() return true by default.
+end note
+
+@enduml

@@ -1,0 +1,150 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="452px" preserveAspectRatio="none"
+     style="width:854px;height:452px;background:#FFFFFF;" version="1.1" viewBox="0 0 854 452" width="854px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0004">
+            <path d="M8.5,6.0137 L46.8379,6.0137 A3.75,3.75 0 0 1 49.3379,8.5137 L56.3379,30.6348 L285.5,30.6348 A2.5,2.5 0 0 1 288,33.1348 L288,442.5137 A2.5,2.5 0 0 1 285.5,445.0137 L8.5,445.0137 A2.5,2.5 0 0 1 6,442.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="23.1211">entity
+            </text>
+        </g><!--cluster type-->
+        <g class="cluster" id="ent0002">
+            <path d="M32.5,51.0137 L62.2861,51.0137 A3.75,3.75 0 0 1 64.7861,53.5137 L71.7861,75.6348 L261.5,75.6348 A2.5,2.5 0 0 1 264,78.1348 L264,418.5137 A2.5,2.5 0 0 1 261.5,421.0137 L32.5,421.0137 A2.5,2.5 0 0 1 30,418.5137 L30,53.5137 A2.5,2.5 0 0 1 32.5,51.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="30" x2="71.7861" y1="75.6348" y2="75.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="28.7861" x="34" y="68.1211">type
+            </text>
+        </g><!--class EntityType-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="122.4844" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="201.8545" x="46" y="283.0137"/>
+            <ellipse cx="109.6084" cy="299.0137" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M110.5615,295.6543 L110.5615,302.3105 L112.2803,302.3105 Q112.8896,302.3105 113.1553,302.5449 Q113.4209,302.7793 113.4209,303.1699 Q113.4209,303.5449 113.1553,303.7793 Q112.8896,304.0137 112.2803,304.0137 L107.1396,304.0137 Q106.5303,304.0137 106.2646,303.7793 Q105.999,303.5449 105.999,303.1543 Q105.999,302.7793 106.2646,302.5449 Q106.5303,302.3105 107.1396,302.3105 L108.8584,302.3105 L108.8584,295.6543 L107.1396,295.6543 Q106.5303,295.6543 106.2646,295.4199 Q105.999,295.1855 105.999,294.7949 Q105.999,294.4199 106.2646,294.1855 Q106.5303,293.9512 107.1396,293.9512 L112.2803,293.9512 Q112.8896,293.9512 113.1553,294.1855 Q113.4209,294.4199 113.4209,294.7949 Q113.4209,295.1855 113.1553,295.4199 Q112.8896,295.6543 112.2803,295.6543 L110.5615,295.6543 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="66.1377" x="130.1084" y="304.8105">EntityType
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="246.8545" y1="315.0137" y2="315.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="246.8545" y1="323.0137" y2="323.0137"/>
+            <g>
+                <ellipse cx="57" cy="337.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70.0273"
+                  x="66" y="342.1211">typeId(): int
+            </text>
+            <g>
+                <ellipse cx="57" cy="356.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88.6963"
+                  x="66" y="360.7422">name(): String
+            </text>
+            <g>
+                <ellipse cx="57" cy="375.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="175.8545"
+                  x="66" y="379.3633">isHostileToPlayer(): boolean
+            </text>
+            <g>
+                <ellipse cx="57" cy="393.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8682"
+                  x="66" y="397.9844">canRespawn(): boolean
+            </text>
+        </g><!--class ChickenType-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="135.0664" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="201.8545" x="46" y="88.0137"/>
+            <ellipse cx="101.8257" cy="110.3047" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M104.5913,106.1797 Q104.7476,105.9609 104.9351,105.8516 Q105.1226,105.7422 105.3413,105.7422 Q105.7163,105.7422 105.9507,106.0078 Q106.1851,106.2578 106.1851,106.8672 L106.1851,108.3203 Q106.1851,108.9297 105.9507,109.1953 Q105.7163,109.4609 105.3413,109.4609 Q104.9976,109.4609 104.7944,109.2578 Q104.5913,109.0703 104.4819,108.5547 Q104.4351,108.1953 104.2476,108.0078 Q103.9194,107.6328 103.3101,107.4141 Q102.7007,107.1953 102.0757,107.1953 Q101.3101,107.1953 100.6694,107.5234 Q100.0444,107.8516 99.5444,108.6016 Q99.0601,109.3516 99.0601,110.3828 L99.0601,111.4766 Q99.0601,112.7109 99.9507,113.5391 Q100.8413,114.3516 102.4351,114.3516 Q103.3726,114.3516 104.0288,114.1016 Q104.4194,113.9453 104.8413,113.5078 Q105.1069,113.2422 105.2476,113.1641 Q105.4038,113.0859 105.6069,113.0859 Q105.9351,113.0859 106.1851,113.3516 Q106.4507,113.6016 106.4507,113.9453 Q106.4507,114.2891 106.1069,114.6953 Q105.6069,115.2734 104.8101,115.6016 Q103.7319,116.0547 102.4351,116.0547 Q100.9194,116.0547 99.7163,115.4297 Q98.7319,114.9297 98.0444,113.8672 Q97.3569,112.7891 97.3569,111.5078 L97.3569,110.3516 Q97.3569,109.0234 97.9663,107.8828 Q98.5913,106.7266 99.6851,106.1172 Q100.7788,105.4922 102.0132,105.4922 Q102.7476,105.4922 103.3882,105.6641 Q104.0444,105.8203 104.5913,106.1797 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="47.3613" x="139.4966" y="105.9629">&#171;record&#187;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81.7031"
+                  x="122.3257" y="124.082">ChickenType
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="246.8545" y1="132.5957" y2="132.5957"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="246.8545" y1="140.5957" y2="140.5957"/>
+            <g>
+                <ellipse cx="57" cy="155.4063" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70.0273"
+                  x="66" y="159.7031">typeId(): int
+            </text>
+            <g>
+                <ellipse cx="57" cy="174.0273" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88.6963"
+                  x="66" y="178.3242">name(): String
+            </text>
+            <g>
+                <ellipse cx="57" cy="192.6484" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="175.8545"
+                  x="66" y="196.9453">isHostileToPlayer(): boolean
+            </text>
+            <g>
+                <ellipse cx="57" cy="211.2695" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8682"
+                  x="66" y="215.5664">canRespawn(): boolean
+            </text>
+        </g>
+        <g class="entity" id="ent0008">
+            <path d="M304,124.5137 L304,151.5137 L248.06,155.5137 L304,159.5137 L304,186.3867 A0,0 0 0 0 304,186.3867 L517.8862,186.3867 A0,0 0 0 0 517.8862,186.3867 L517.8862,134.5137 L507.8862,124.5137 L304,124.5137 A0,0 0 0 0 304,124.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M507.8862,124.5137 L507.8862,134.5137 L517.8862,134.5137 L507.8862,124.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="59.96"
+                  x="310" y="143.542">Overrides:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="192.8862"
+                  x="310" y="160.833">- isHostileToPlayer() returns false
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="166.8989"
+                  x="310" y="178.124">- canRespawn() returns false
+            </text>
+        </g>
+        <g class="entity" id="ent0011">
+            <path d="M304.5,287.0137 L304.5,340.0137 L248.38,344.0137 L304.5,348.0137 L304.5,400.7598 A0,0 0 0 0 304.5,400.7598 L847.7407,400.7598 A0,0 0 0 0 847.7407,400.7598 L847.7407,297.0137 L837.7407,287.0137 L304.5,287.0137 A0,0 0 0 0 304.5,287.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M837.7407,287.0137 L837.7407,297.0137 L847.7407,297.0137 L837.7407,287.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="310.5" y="306.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="447.8018"
+                  x="310.5" y="323.333">- &#12471;&#12540;&#12523;&#12489;&#12452;&#12531;&#12479;&#12540;&#12501;&#12455;&#12540;&#12473;:
+                &#35377;&#21487;&#12373;&#12428;&#12383;&#22411;&#12398;&#12415;&#12364; EntityType &#12434;&#23455;&#35013;&#12391;&#12365;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="522.2407"
+                  x="310.5" y="340.624">- &#12487;&#12501;&#12457;&#12523;&#12488;&#12513;&#12477;&#12483;&#12489;:
+                isHostileToPlayer() &#12392; canRespawn() &#12399;&#12487;&#12501;&#12457;&#12523;&#12488;&#12391; true
+                &#12434;&#36820;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="310.5" y="357.915">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="385.8359"
+                  x="310.5" y="375.2061">- Sealed interface: only permitted types may implement EntityType.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="395.9414"
+                  x="310.5" y="392.4971">- Default methods isHostileToPlayer() and canRespawn() return true.
+            </text>
+        </g><!--link ChickenType to EntityType-->
+        <g class="link"
+           id="lnk6">
+            <path d="M147,223.0537 C147,242.5137 147,245.6637 147,264.7137" fill="none"
+                  id="ChickenType-to-EntityType" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="none" points="147,282.7137,153,264.7137,141,264.7137,147,282.7137"
+                     style="stroke:#181818;stroke-width:1;"/>
+        </g>
+        <?plantuml-src lPB1QXH148RlynHrD2kP1nZ2NbGm5mr9Ng2TgTrjqjCzTFSQXaImUn2LH0JHWnU39B09GeBa40J3Faoni8zXzx0XasNFNeQP_w-f_wlkgbY-nuO8A2stTMhh2k4W0U3IeXwm7E5Pw-pU6G2F8LPj5e_MibYsq2GhCIexLdCvN8ZSF5V6Se6xQakm6dMiUAMKG2ON9JcJssWgjYyVUc-IyCW5CmQUZ7Y-Xx95sDZGc2jTzFl_cIRmT3dIzB3VEPeaaSeYQ3uSML23BdBu--Lhr9eNQBBmiRwA0pJQiPO61amORAkwA4isoW9Ytd9gXwVNUn4iq-ibwq3-Xfg_rFoYvYFvCsgkoKzRvHlvINpnVpAOd_-UVRuY5xHZSYUp7qVaBibDoHrtTu3ybzdboVpq7Ra9kK_aZ-YjZo7D-xRVHPlpWPgVv6-fQK9cjd9YSkSFPoHtjTp4JS3gSHiwdtubzprcXR0TP0AB-oNDG4bHGuMwvDO69-w4WPBLmCjAO1dMkpD46beynG4R2mibsf4gp4f45ivvnJMqJEdzBVm3?>
+    </g>
+</svg>

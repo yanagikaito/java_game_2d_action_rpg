@@ -1,0 +1,34 @@
+@startuml axe_type
+
+package entity.type {
+  interface EntityType {
+    + typeId(): int
+    + name(): String
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+
+  class AxeType <<record>> {
+    + typeId(): int
+    + name(): String
+  }
+}
+
+AxeType ..|> EntityType
+
+note right of EntityType
+**Notes**
+- シールドインターフェース: PlayerType、NpcType、MonsterType、ChickenType、
+- SwordType、AxeType、ShieldType、RedPotionType、GreenPotionType、
+- BluePotionType、PickupOnlyType、BombType、BossMonsterType、ChestType、
+- PotType、RockType のみが EntityType を実装できる。
+- デフォルトメソッド: isHostileToPlayer() と canRespawn() はデフォルトで true を返す。
+
+- Sealed interface: only PlayerType, NpcType, MonsterType, ChickenType,
+- SwordType, AxeType, ShieldType, RedPotionType, GreenPotionType,
+- BluePotionType, PickupOnlyType, BombType, BossMonsterType, ChestType,
+- PotType, RockType may implement EntityType.
+- Default methods isHostileToPlayer() and canRespawn() return true.
+end note
+
+@enduml

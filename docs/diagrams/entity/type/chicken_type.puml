@@ -1,0 +1,36 @@
+@startuml chicken_type
+
+package entity.type {
+  interface EntityType {
+    + typeId(): int
+    + name(): String
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+
+  class ChickenType <<record>> {
+    + typeId(): int
+    + name(): String
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+}
+
+ChickenType ..|> EntityType
+
+note right of ChickenType
+  Overrides:
+  - isHostileToPlayer() returns false
+  - canRespawn() returns false
+end note
+
+note right of EntityType
+**Notes**
+- シールドインターフェース: 許可された型のみが EntityType を実装できる。
+- デフォルトメソッド: isHostileToPlayer() と canRespawn() はデフォルトで true を返す。
+
+- Sealed interface: only permitted types may implement EntityType.
+- Default methods isHostileToPlayer() and canRespawn() return true.
+end note
+
+@enduml
