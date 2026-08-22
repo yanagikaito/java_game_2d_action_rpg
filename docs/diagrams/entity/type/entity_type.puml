@@ -1,0 +1,59 @@
+@startuml entity_type
+
+package entity.type {
+  interface EntityType {
+    + typeId(): int
+    + name(): String
+    + isHostileToPlayer(): boolean
+    + canRespawn(): boolean
+  }
+
+  class PlayerType
+  class NpcType
+  class MonsterType
+  class ChickenType
+  class SwordType
+  class AxeType
+  class ShieldType
+  class RedPotionType
+  class GreenPotionType
+  class BluePotionType
+  class PickupOnlyType
+  class BombType
+  class BossMonsterType
+  class ChestType
+  class PotType
+  class RockType
+}
+
+PlayerType ..|> EntityType
+NpcType ..|> EntityType
+MonsterType ..|> EntityType
+ChickenType ..|> EntityType
+SwordType ..|> EntityType
+AxeType ..|> EntityType
+ShieldType ..|> EntityType
+RedPotionType ..|> EntityType
+GreenPotionType ..|> EntityType
+BluePotionType ..|> EntityType
+PickupOnlyType ..|> EntityType
+BombType ..|> EntityType
+BossMonsterType ..|> EntityType
+ChestType ..|> EntityType
+PotType ..|> EntityType
+RockType ..|> EntityType
+
+note right of EntityType
+**Notes**
+- シールドインターフェース: 列挙された型のみが EntityType を実装できる。
+- デフォルトの振る舞い:
+- isHostileToPlayer() はデフォルトで true を返す。
+- canRespawn() はデフォルトで true を返す。
+
+- Sealed interface: only the listed types may implement EntityType.
+- Default behaviors:
+- isHostileToPlayer() returns true by default.
+- canRespawn() returns true by default.
+end note
+
+@enduml

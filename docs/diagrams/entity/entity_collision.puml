@@ -65,24 +65,24 @@ Entity ..> entity.type.MonsterType : instance check(インスタンス判定に�
 Entity --> player.Player : may affect(影響を与える可能性がある)
 
 note right of CollisionChecker
-  **役割**
-  **Role**
-  - タイル衝突、エンティティ間衝突、プレイヤー接触を判定する責務を持つ。
-  - Responsible for detecting tile collisions, entity-to-entity collisions, and player contact.
-  - Entity.checkCollision は CollisionChecker の複数メソッドを順に呼び出す。
-  - Entity.checkCollision calls multiple CollisionChecker methods in sequence.
+**役割**
+**Role**
+- タイル衝突、エンティティ間衝突、プレイヤー接触を判定する責務を持つ。
+- Responsible for detecting tile collisions, entity-to-entity collisions, and player contact.
+- Entity.checkCollision は CollisionChecker の複数メソッドを順に呼び出す。
+- Entity.checkCollision calls multiple CollisionChecker methods in sequence.
 end note
 
 note right of Entity
-  **checkCollision の振る舞い**
-  **Behavior of checkCollision**
-  - setCollision(false)
-  - checkTile(this)
-  - call checkTile(this)
-  - checkEntity(this, NPC/Monster/Itile)
-  - contactPlayer = checkPlayer(this)
-  - 自身が MonsterType かつ contactPlayer かつ プレイヤーが無敵でない場合、かつ自身が無敵でない場合に damagePlayer を呼ぶ
-  - If this is a MonsterType and contactPlayer is true and the player is not invincible, and this entity is not invincible, call damagePlayer
+**checkCollision の振る舞い**
+**Behavior of checkCollision**
+- setCollision(false)
+- checkTile(this)
+- call checkTile(this)
+- checkEntity(this, NPC/Monster/Itile)
+- contactPlayer = checkPlayer(this)
+- 自身が MonsterType かつ contactPlayer かつ プレイヤーが無敵でない場合、かつ自身が無敵でない場合に damagePlayer を呼ぶ
+- If this is a MonsterType and contactPlayer is true and the player is not invincible, and this entity is not invincible, call damagePlayer
 end note
 
 @enduml
