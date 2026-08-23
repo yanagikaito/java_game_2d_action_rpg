@@ -1,0 +1,351 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="811px" preserveAspectRatio="none"
+     style="width:1558px;height:811px;background:#FFFFFF;" version="1.1" viewBox="0 0 1558 811" width="1558px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0004">
+            <path d="M100.5,110 L138.8379,110 A3.75,3.75 0 0 1 141.3379,112.5 L148.3379,134.6211 L759.5,134.6211 A2.5,2.5 0 0 1 762,137.1211 L762,351.5 A2.5,2.5 0 0 1 759.5,354 L100.5,354 A2.5,2.5 0 0 1 98,351.5 L98,112.5 A2.5,2.5 0 0 1 100.5,110"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="98" x2="148.3379" y1="134.6211" y2="134.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="102" y="127.1074">entity
+            </text>
+        </g><!--cluster particle-->
+        <g class="cluster" id="ent0002">
+            <path d="M124.5,155 L175.2998,155 A3.75,3.75 0 0 1 177.7998,157.5 L184.7998,179.6211 L735.5,179.6211 A2.5,2.5 0 0 1 738,182.1211 L738,327.5 A2.5,2.5 0 0 1 735.5,330 L124.5,330 A2.5,2.5 0 0 1 122,327.5 L122,157.5 A2.5,2.5 0 0 1 124.5,155"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="122" x2="184.7998" y1="179.6211" y2="179.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="49.7998" x="126" y="172.1074">particle
+            </text>
+        </g><!--cluster java-->
+        <g class="cluster" id="ent0007">
+            <path d="M8.5,565 L36.748,565 A3.75,3.75 0 0 1 39.248,567.5 L46.248,589.6211 L956.5,589.6211 A2.5,2.5 0 0 1 959,592.1211 L959,801.5 A2.5,2.5 0 0 1 956.5,804 L8.5,804 A2.5,2.5 0 0 1 6,801.5 L6,567.5 A2.5,2.5 0 0 1 8.5,565"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="46.248" y1="589.6211" y2="589.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="27.248" x="10" y="582.1074">java
+            </text>
+        </g><!--cluster awt-->
+        <g class="cluster" id="ent0008">
+            <path d="M32.5,610 L56.8379,610 A3.75,3.75 0 0 1 59.3379,612.5 L66.3379,634.6211 L306.5,634.6211 A2.5,2.5 0 0 1 309,637.1211 L309,777.5 A2.5,2.5 0 0 1 306.5,780 L32.5,780 A2.5,2.5 0 0 1 30,777.5 L30,612.5 A2.5,2.5 0 0 1 32.5,610"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="30" x2="66.3379" y1="634.6211" y2="634.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="23.3379" x="34" y="627.1074">awt
+            </text>
+        </g><!--cluster image-->
+        <g class="cluster" id="ent0005">
+            <path d="M131.5,655 L172.9619,655 A3.75,3.75 0 0 1 175.4619,657.5 L182.4619,679.6211 L282.5,679.6211 A2.5,2.5 0 0 1 285,682.1211 L285,753.5 A2.5,2.5 0 0 1 282.5,756 L131.5,756 A2.5,2.5 0 0 1 129,753.5 L129,657.5 A2.5,2.5 0 0 1 131.5,655"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="129" x2="182.4619" y1="679.6211" y2="679.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="40.4619" x="133" y="672.1074">image
+            </text>
+        </g><!--cluster util-->
+        <g class="cluster" id="ent0010">
+            <path d="M335.5,655 L357.4932,655 A3.75,3.75 0 0 1 359.9932,657.5 L366.9932,679.6211 L932.5,679.6211 A2.5,2.5 0 0 1 935,682.1211 L935,753.5 A2.5,2.5 0 0 1 932.5,756 L335.5,756 A2.5,2.5 0 0 1 333,753.5 L333,657.5 A2.5,2.5 0 0 1 335.5,655"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="333" x2="366.9932" y1="679.6211" y2="679.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="20.9932" x="337" y="672.1074">util
+            </text>
+        </g><!--class SpriteUtil-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="122.4844" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="582.7939" x="138.5" y="192"/>
+            <ellipse cx="397.2505" cy="208" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M400.0161,203.875 Q400.1724,203.6563 400.3599,203.5469 Q400.5474,203.4375 400.7661,203.4375 Q401.1411,203.4375 401.3755,203.7031 Q401.6099,203.9531 401.6099,204.5625 L401.6099,206.0156 Q401.6099,206.625 401.3755,206.8906 Q401.1411,207.1563 400.7661,207.1563 Q400.4224,207.1563 400.2192,206.9531 Q400.0161,206.7656 399.9067,206.25 Q399.8599,205.8906 399.6724,205.7031 Q399.3442,205.3281 398.7349,205.1094 Q398.1255,204.8906 397.5005,204.8906 Q396.7349,204.8906 396.0942,205.2188 Q395.4692,205.5469 394.9692,206.2969 Q394.4849,207.0469 394.4849,208.0781 L394.4849,209.1719 Q394.4849,210.4063 395.3755,211.2344 Q396.2661,212.0469 397.8599,212.0469 Q398.7974,212.0469 399.4536,211.7969 Q399.8442,211.6406 400.2661,211.2031 Q400.5317,210.9375 400.6724,210.8594 Q400.8286,210.7813 401.0317,210.7813 Q401.3599,210.7813 401.6099,211.0469 Q401.8755,211.2969 401.8755,211.6406 Q401.8755,211.9844 401.5317,212.3906 Q401.0317,212.9688 400.2349,213.2969 Q399.1567,213.75 397.8599,213.75 Q396.3442,213.75 395.1411,213.125 Q394.1567,212.625 393.4692,211.5625 Q392.7817,210.4844 392.7817,209.2031 L392.7817,208.0469 Q392.7817,206.7188 393.3911,205.5781 Q394.0161,204.4219 395.1099,203.8125 Q396.2036,203.1875 397.438,203.1875 Q398.1724,203.1875 398.813,203.3594 Q399.4692,203.5156 400.0161,203.875 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56.793"
+                  x="417.7505" y="213.7969">SpriteUtil
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="139.5" x2="720.2939" y1="224" y2="224"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="146.5" y="235.8105"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="556.7939"
+                  x="158.5" y="243.1074">whiteCentersCache: Map&lt;BufferedImage, List&lt;Point&gt;&gt; &#171;static,
+                private&#187; = WeakHashMap
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="139.5" x2="720.2939" y1="250.6211" y2="250.6211"/>
+            <g>
+                <rect fill="#F24D5C" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="146.5"
+                      y="262.4316"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="66.1172"
+                  x="158.5" y="269.7285">SpriteUtil()
+            </text>
+            <g>
+                <ellipse cx="149.5" cy="284.0527" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="503.4736"
+                  x="158.5" y="288.3496">findWhitePixelCentersCached(sprite: BufferedImage): List&lt;Point&gt; &#171;static,
+                public&#187;
+            </text>
+            <g>
+                <ellipse cx="149.5" cy="302.6738" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="455.2188"
+                  x="158.5" y="306.9707">findWhitePixelCenters(sprite: BufferedImage): List&lt;Point&gt; &#171;static,
+                public&#187;
+            </text>
+        </g><!--class Point-->
+        <g class="entity" id="ent0009">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="63.9102"
+                  x="46" y="692"/>
+            <ellipse cx="61" cy="708" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M63.7656,703.875 Q63.9219,703.6563 64.1094,703.5469 Q64.2969,703.4375 64.5156,703.4375 Q64.8906,703.4375 65.125,703.7031 Q65.3594,703.9531 65.3594,704.5625 L65.3594,706.0156 Q65.3594,706.625 65.125,706.8906 Q64.8906,707.1563 64.5156,707.1563 Q64.1719,707.1563 63.9688,706.9531 Q63.7656,706.7656 63.6563,706.25 Q63.6094,705.8906 63.4219,705.7031 Q63.0938,705.3281 62.4844,705.1094 Q61.875,704.8906 61.25,704.8906 Q60.4844,704.8906 59.8438,705.2188 Q59.2188,705.5469 58.7188,706.2969 Q58.2344,707.0469 58.2344,708.0781 L58.2344,709.1719 Q58.2344,710.4063 59.125,711.2344 Q60.0156,712.0469 61.6094,712.0469 Q62.5469,712.0469 63.2031,711.7969 Q63.5938,711.6406 64.0156,711.2031 Q64.2813,710.9375 64.4219,710.8594 Q64.5781,710.7813 64.7813,710.7813 Q65.1094,710.7813 65.3594,711.0469 Q65.625,711.2969 65.625,711.6406 Q65.625,711.9844 65.2813,712.3906 Q64.7813,712.9688 63.9844,713.2969 Q62.9063,713.75 61.6094,713.75 Q60.0938,713.75 58.8906,713.125 Q57.9063,712.625 57.2188,711.5625 Q56.5313,710.4844 56.5313,709.2031 L56.5313,708.0469 Q56.5313,706.7188 57.1406,705.5781 Q57.7656,704.4219 58.8594,703.8125 Q59.9531,703.1875 61.1875,703.1875 Q61.9219,703.1875 62.5625,703.3594 Q63.2188,703.5156 63.7656,703.875 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="31.9102"
+                  x="75" y="713.7969">Point
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="108.9102" y1="724" y2="724"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="108.9102" y1="732" y2="732"/>
+        </g><!--class BufferedImage-->
+        <g class="entity" id="ent0006">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="123.834"
+                  x="145" y="692"/>
+            <ellipse cx="160" cy="708" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M162.7656,703.875 Q162.9219,703.6563 163.1094,703.5469 Q163.2969,703.4375 163.5156,703.4375 Q163.8906,703.4375 164.125,703.7031 Q164.3594,703.9531 164.3594,704.5625 L164.3594,706.0156 Q164.3594,706.625 164.125,706.8906 Q163.8906,707.1563 163.5156,707.1563 Q163.1719,707.1563 162.9688,706.9531 Q162.7656,706.7656 162.6563,706.25 Q162.6094,705.8906 162.4219,705.7031 Q162.0938,705.3281 161.4844,705.1094 Q160.875,704.8906 160.25,704.8906 Q159.4844,704.8906 158.8438,705.2188 Q158.2188,705.5469 157.7188,706.2969 Q157.2344,707.0469 157.2344,708.0781 L157.2344,709.1719 Q157.2344,710.4063 158.125,711.2344 Q159.0156,712.0469 160.6094,712.0469 Q161.5469,712.0469 162.2031,711.7969 Q162.5938,711.6406 163.0156,711.2031 Q163.2813,710.9375 163.4219,710.8594 Q163.5781,710.7813 163.7813,710.7813 Q164.1094,710.7813 164.3594,711.0469 Q164.625,711.2969 164.625,711.6406 Q164.625,711.9844 164.2813,712.3906 Q163.7813,712.9688 162.9844,713.2969 Q161.9063,713.75 160.6094,713.75 Q159.0938,713.75 157.8906,713.125 Q156.9063,712.625 156.2188,711.5625 Q155.5313,710.4844 155.5313,709.2031 L155.5313,708.0469 Q155.5313,706.7188 156.1406,705.5781 Q156.7656,704.4219 157.8594,703.8125 Q158.9531,703.1875 160.1875,703.1875 Q160.9219,703.1875 161.5625,703.3594 Q162.2188,703.5156 162.7656,703.875 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.834"
+                  x="174" y="713.7969">BufferedImage
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="146" x2="267.834" y1="724" y2="724"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="146" x2="267.834" y1="732" y2="732"/>
+        </g><!--class Map-->
+        <g class="entity" id="ent0011">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="59.2344"
+                  x="349.5" y="692"/>
+            <ellipse cx="364.5" cy="708" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M365.4531,704.6406 L365.4531,711.2969 L367.1719,711.2969 Q367.7813,711.2969 368.0469,711.5313 Q368.3125,711.7656 368.3125,712.1563 Q368.3125,712.5313 368.0469,712.7656 Q367.7813,713 367.1719,713 L362.0313,713 Q361.4219,713 361.1563,712.7656 Q360.8906,712.5313 360.8906,712.1406 Q360.8906,711.7656 361.1563,711.5313 Q361.4219,711.2969 362.0313,711.2969 L363.75,711.2969 L363.75,704.6406 L362.0313,704.6406 Q361.4219,704.6406 361.1563,704.4063 Q360.8906,704.1719 360.8906,703.7813 Q360.8906,703.4063 361.1563,703.1719 Q361.4219,702.9375 362.0313,702.9375 L367.1719,702.9375 Q367.7813,702.9375 368.0469,703.1719 Q368.3125,703.4063 368.3125,703.7813 Q368.3125,704.1719 368.0469,704.4063 Q367.7813,704.6406 367.1719,704.6406 L365.4531,704.6406 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="27.2344" x="378.5" y="713.7969">Map
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="350.5" x2="407.7344" y1="724" y2="724"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="350.5" x2="407.7344" y1="732" y2="732"/>
+        </g><!--class List-->
+        <g class="entity" id="ent0012">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="53.7861"
+                  x="742" y="692"/>
+            <ellipse cx="757" cy="708" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M757.9531,704.6406 L757.9531,711.2969 L759.6719,711.2969 Q760.2813,711.2969 760.5469,711.5313 Q760.8125,711.7656 760.8125,712.1563 Q760.8125,712.5313 760.5469,712.7656 Q760.2813,713 759.6719,713 L754.5313,713 Q753.9219,713 753.6563,712.7656 Q753.3906,712.5313 753.3906,712.1406 Q753.3906,711.7656 753.6563,711.5313 Q753.9219,711.2969 754.5313,711.2969 L756.25,711.2969 L756.25,704.6406 L754.5313,704.6406 Q753.9219,704.6406 753.6563,704.4063 Q753.3906,704.1719 753.3906,703.7813 Q753.3906,703.4063 753.6563,703.1719 Q753.9219,702.9375 754.5313,702.9375 L759.6719,702.9375 Q760.2813,702.9375 760.5469,703.1719 Q760.8125,703.4063 760.8125,703.7813 Q760.8125,704.1719 760.5469,704.4063 Q760.2813,704.6406 759.6719,704.6406 L757.9531,704.6406 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="21.7861" x="771" y="713.7969">List
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="743" x2="794.7861" y1="724" y2="724"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="743" x2="794.7861" y1="732" y2="732"/>
+        </g><!--class Collections-->
+        <g class="entity" id="ent0013">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100.4756"
+                  x="444" y="692"/>
+            <ellipse cx="459" cy="708" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M461.7656,703.875 Q461.9219,703.6563 462.1094,703.5469 Q462.2969,703.4375 462.5156,703.4375 Q462.8906,703.4375 463.125,703.7031 Q463.3594,703.9531 463.3594,704.5625 L463.3594,706.0156 Q463.3594,706.625 463.125,706.8906 Q462.8906,707.1563 462.5156,707.1563 Q462.1719,707.1563 461.9688,706.9531 Q461.7656,706.7656 461.6563,706.25 Q461.6094,705.8906 461.4219,705.7031 Q461.0938,705.3281 460.4844,705.1094 Q459.875,704.8906 459.25,704.8906 Q458.4844,704.8906 457.8438,705.2188 Q457.2188,705.5469 456.7188,706.2969 Q456.2344,707.0469 456.2344,708.0781 L456.2344,709.1719 Q456.2344,710.4063 457.125,711.2344 Q458.0156,712.0469 459.6094,712.0469 Q460.5469,712.0469 461.2031,711.7969 Q461.5938,711.6406 462.0156,711.2031 Q462.2813,710.9375 462.4219,710.8594 Q462.5781,710.7813 462.7813,710.7813 Q463.1094,710.7813 463.3594,711.0469 Q463.625,711.2969 463.625,711.6406 Q463.625,711.9844 463.2813,712.3906 Q462.7813,712.9688 461.9844,713.2969 Q460.9063,713.75 459.6094,713.75 Q458.0938,713.75 456.8906,713.125 Q455.9063,712.625 455.2188,711.5625 Q454.5313,710.4844 454.5313,709.2031 L454.5313,708.0469 Q454.5313,706.7188 455.1406,705.5781 Q455.7656,704.4219 456.8594,703.8125 Q457.9531,703.1875 459.1875,703.1875 Q459.9219,703.1875 460.5625,703.3594 Q461.2188,703.5156 461.7656,703.875 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="68.4756"
+                  x="473" y="713.7969">Collections
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="445" x2="543.4756" y1="724" y2="724"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="445" x2="543.4756" y1="732" y2="732"/>
+        </g><!--class WeakHashMap-->
+        <g class="entity" id="ent0014">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="127.7031"
+                  x="579" y="692"/>
+            <ellipse cx="594" cy="708" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M596.7656,703.875 Q596.9219,703.6563 597.1094,703.5469 Q597.2969,703.4375 597.5156,703.4375 Q597.8906,703.4375 598.125,703.7031 Q598.3594,703.9531 598.3594,704.5625 L598.3594,706.0156 Q598.3594,706.625 598.125,706.8906 Q597.8906,707.1563 597.5156,707.1563 Q597.1719,707.1563 596.9688,706.9531 Q596.7656,706.7656 596.6563,706.25 Q596.6094,705.8906 596.4219,705.7031 Q596.0938,705.3281 595.4844,705.1094 Q594.875,704.8906 594.25,704.8906 Q593.4844,704.8906 592.8438,705.2188 Q592.2188,705.5469 591.7188,706.2969 Q591.2344,707.0469 591.2344,708.0781 L591.2344,709.1719 Q591.2344,710.4063 592.125,711.2344 Q593.0156,712.0469 594.6094,712.0469 Q595.5469,712.0469 596.2031,711.7969 Q596.5938,711.6406 597.0156,711.2031 Q597.2813,710.9375 597.4219,710.8594 Q597.5781,710.7813 597.7813,710.7813 Q598.1094,710.7813 598.3594,711.0469 Q598.625,711.2969 598.625,711.6406 Q598.625,711.9844 598.2813,712.3906 Q597.7813,712.9688 596.9844,713.2969 Q595.9063,713.75 594.6094,713.75 Q593.0938,713.75 591.8906,713.125 Q590.9063,712.625 590.2188,711.5625 Q589.5313,710.4844 589.5313,709.2031 L589.5313,708.0469 Q589.5313,706.7188 590.1406,705.5781 Q590.7656,704.4219 591.8594,703.8125 Q592.9531,703.1875 594.1875,703.1875 Q594.9219,703.1875 595.5625,703.3594 Q596.2188,703.5156 596.7656,703.875 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95.7031"
+                  x="608" y="713.7969">WeakHashMap
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="580" x2="705.7031" y1="724" y2="724"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="580" x2="705.7031" y1="732" y2="732"/>
+        </g><!--class ArrayList-->
+        <g class="entity" id="ent0015">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="87.2344"
+                  x="831.5" y="692"/>
+            <ellipse cx="846.5" cy="708" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M849.2656,703.875 Q849.4219,703.6563 849.6094,703.5469 Q849.7969,703.4375 850.0156,703.4375 Q850.3906,703.4375 850.625,703.7031 Q850.8594,703.9531 850.8594,704.5625 L850.8594,706.0156 Q850.8594,706.625 850.625,706.8906 Q850.3906,707.1563 850.0156,707.1563 Q849.6719,707.1563 849.4688,706.9531 Q849.2656,706.7656 849.1563,706.25 Q849.1094,705.8906 848.9219,705.7031 Q848.5938,705.3281 847.9844,705.1094 Q847.375,704.8906 846.75,704.8906 Q845.9844,704.8906 845.3438,705.2188 Q844.7188,705.5469 844.2188,706.2969 Q843.7344,707.0469 843.7344,708.0781 L843.7344,709.1719 Q843.7344,710.4063 844.625,711.2344 Q845.5156,712.0469 847.1094,712.0469 Q848.0469,712.0469 848.7031,711.7969 Q849.0938,711.6406 849.5156,711.2031 Q849.7813,710.9375 849.9219,710.8594 Q850.0781,710.7813 850.2813,710.7813 Q850.6094,710.7813 850.8594,711.0469 Q851.125,711.2969 851.125,711.6406 Q851.125,711.9844 850.7813,712.3906 Q850.2813,712.9688 849.4844,713.2969 Q848.4063,713.75 847.1094,713.75 Q845.5938,713.75 844.3906,713.125 Q843.4063,712.625 842.7188,711.5625 Q842.0313,710.4844 842.0313,709.2031 L842.0313,708.0469 Q842.0313,706.7188 842.6406,705.5781 Q843.2656,704.4219 844.3594,703.8125 Q845.4531,703.1875 846.6875,703.1875 Q847.4219,703.1875 848.0625,703.3594 Q848.7188,703.5156 849.2656,703.875 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.2344"
+                  x="860.5" y="713.7969">ArrayList
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="832.5" x2="917.7344" y1="724" y2="724"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="832.5" x2="917.7344" y1="732" y2="732"/>
+        </g>
+        <g class="entity" id="ent0023">
+            <path d="M778,6 L778,249 L721.77,253 L778,257 L778,500.1484 A0,0 0 0 0 778,500.1484 L1551.9399,500.1484 A0,0 0 0 0 1551.9399,500.1484 L1551.9399,16 L1541.9399,6 L778,6 A0,0 0 0 0 778,6"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1541.9399,6 L1541.9399,16 L1551.9399,16 L1541.9399,6" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="784" y="25.0283">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="52.0317"
+                  x="784" y="42.3193">Purpose:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="605.9409"
+                  x="784" y="59.6104">- &#12473;&#12503;&#12521;&#12452;&#12488;&#30011;&#20687;&#12363;&#12425;&#12300;&#30333;&#12500;&#12463;&#12475;&#12523;&#12398;&#24231;&#27161;&#12301;&#12434;&#25277;&#20986;&#12375;&#12289;&#20877;&#21033;&#29992;&#12398;&#12383;&#12417;&#12395;&#12461;&#12515;&#12483;&#12471;&#12517;&#12377;&#12427;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="784" y="76.9014">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="580.9185"
+                  x="784" y="94.1924">- Utility for extracting coordinates of white pixels from sprite images and
+                caching the results for reuse.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="784" y="111.4834">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="85.9917"
+                  x="784" y="128.7744">Key behaviors:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="564.8589"
+                  x="784" y="146.0654">- findWhitePixelCentersCached: &#12461;&#12515;&#12483;&#12471;&#12517;&#12434;&#21442;&#29031;&#12375;&#12289;&#26410;&#30331;&#37682;&#12394;&#12425;&#36208;&#26619;&#12375;&#12390;&#32080;&#26524;&#12434;&#20445;&#23384;&#12375;&#12390;&#36820;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="667.0435"
+                  x="784" y="163.3564">- findWhitePixelCenters: &#30011;&#20687;&#12434;&#36208;&#26619;&#12375;&#12390;&#12450;&#12523;&#12501;&#12449;&gt;0&#12363;&#12388;RGB&#12364;&#38334;&#20516;&#12434;&#36229;&#12360;&#12427;&#12500;&#12463;&#12475;&#12523;&#12434;&#30333;&#12392;&#12375;&#12390;&#24231;&#27161;&#12434;&#21454;&#38598;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="784" y="180.6475">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="752.9399"
+                  x="784" y="197.9385">- findWhitePixelCentersCached: returns cached coordinates if available; otherwise
+                scans the image, caches, and returns the result.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="737.4263"
+                  x="784" y="215.2295">- findWhitePixelCenters: scans every pixel and treats a pixel as white when alpha
+                &gt; 0 and RGB components exceed a threshold.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="784" y="232.5205">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="127.9053"
+                  x="784" y="249.8115">Implementation notes:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="660.918"
+                  x="784" y="267.1025">- &#12461;&#12515;&#12483;&#12471;&#12517;&#12399; WeakHashMap &#12434;&#20351;&#29992;&#12375;&#12390;&#12362;&#12426;&#12289;BufferedImage
+                &#12364;&#20182;&#12391;&#21442;&#29031;&#12373;&#12428;&#12394;&#12367;&#12394;&#12428;&#12400;&#33258;&#21205;&#30340;&#12395;&#22238;&#21454;&#12373;&#12428;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="475.6172"
+                  x="784" y="284.3936">- &#30333;&#21028;&#23450;&#12398;&#38334;&#20516;&#12399;&#22266;&#23450;&#65288;RGB
+                &gt; 230&#65289;&#12384;&#12364;&#12289;&#12473;&#12503;&#12521;&#12452;&#12488;&#12398;&#30011;&#39080;&#12395;&#24540;&#12376;&#12390;&#35519;&#25972;&#21487;&#33021;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="548.958"
+                  x="784" y="301.6846">- null &#20837;&#21147;&#26178;&#12399; Collections.emptyList() &#12434;&#36820;&#12377;&#12383;&#12417;&#21628;&#12403;&#20986;&#12375;&#20596;&#12391;&#12398;
+                null &#12481;&#12455;&#12483;&#12463;&#12364;&#19981;&#35201;&#12395;&#12394;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="784" y="318.9756">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="730.5708"
+                  x="784" y="336.2666">- Uses a WeakHashMap for the cache so BufferedImage keys can be garbage-collected
+                when no longer referenced elsewhere.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="545.9238"
+                  x="784" y="353.5576">- The white-detection threshold is currently RGB &gt; 230 and can be tuned for
+                different art styles.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="393.0278"
+                  x="784" y="370.8486">- Returns Collections.emptyList() for null input to simplify caller logic.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="784" y="388.1396">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="90.3271"
+                  x="784" y="405.4307">Considerations:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="668.8271"
+                  x="784" y="422.7217">- BufferedImage &#12434;&#12461;&#12540;&#12395;&#12375;&#12390;&#12356;&#12427;&#12383;&#12417;&#12289;&#21516;&#19968;&#30011;&#20687;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12434;&#20351;&#12356;&#22238;&#12377;&#12371;&#12392;&#12364;&#12461;&#12515;&#12483;&#12471;&#12517;&#12498;&#12483;&#12488;&#12398;&#26465;&#20214;&#12395;&#12394;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="462.9409"
+                  x="784" y="440.0127">- &#22823;&#12365;&#12394;&#30011;&#20687;&#12420;&#22810;&#25968;&#12398;&#30064;&#12394;&#12427;&#30011;&#20687;&#12434;&#25201;&#12358;&#22580;&#21512;&#12399;&#12513;&#12514;&#12522;&#12392;&#36208;&#26619;&#12467;&#12473;&#12488;&#12395;&#27880;&#24847;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="784" y="457.3037">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="440.0767"
+                  x="784" y="474.5947">- Cache hits require the same BufferedImage object to be reused as the key.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="749.2646"
+                  x="784" y="491.8857">- For many or very large images, consider sampling, lower thresholds, or
+                precomputing during asset import to reduce runtime cost.
+            </text>
+        </g><!--link SpriteUtil to BufferedImage-->
+        <g class="link"
+           id="lnk16">
+            <path d="M400.85,314.27 C351.03,417.26 254.253,617.3088 220.853,686.3488" fill="none"
+                  id="SpriteUtil-to-BufferedImage" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="218.24,691.75,225.7602,685.3902,220.4175,687.249,218.5587,681.9063,218.24,691.75"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="68.6436"
+                  x="293" y="545.0283">uses as key
+            </text>
+        </g><!--link SpriteUtil to Point-->
+        <g class="link"
+           id="lnk17">
+            <path
+                    d="M352.36,314.08 C284.64,370.23 188.22,459.8 129,557 C102.38,600.69 89.3007,653.8594 83.0807,685.9794"
+                    fill="none" id="SpriteUtil-to-Point" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818" points="81.94,691.87,87.5781,683.7946,82.8906,686.9612,79.724,682.2737,81.94,691.87"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="112.7153"
+                  x="143" y="545.0283">returns list of points
+            </text>
+        </g><!--link SpriteUtil to Map-->
+        <g class="link"
+           id="lnk18">
+            <path d="M423.33,314.27 C411.94,417.26 389.8699,616.7464 382.2299,685.7864" fill="none"
+                  id="SpriteUtil-to-Map" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="381.57,691.75,386.5356,683.2446,382.1199,686.7803,378.5842,682.3646,381.57,691.75"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="400" y="545.0283">uses
+            </text>
+        </g><!--link SpriteUtil to WeakHashMap-->
+        <g class="link"
+           id="lnk19">
+            <path
+                    d="M469.84,314.1 C504.65,368.65 554.7,452.21 588,530 C612.06,586.22 628.4267,650.4523 636.6067,686.0623"
+                    fill="none" id="SpriteUtil-to-WeakHashMap"
+                    style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="637.95,691.91,639.8335,682.2429,636.8306,687.0369,632.0366,684.034,637.95,691.91"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="84.5444"
+                  x="595" y="545.0283">uses for cache
+            </text>
+        </g><!--link SpriteUtil to Collections-->
+        <g class="link"
+           id="lnk20">
+            <path d="M438.37,314.27 C452.67,417.26 480.3653,616.7669 489.9453,685.8069" fill="none"
+                  id="SpriteUtil-to-Collections" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="490.77,691.75,493.495,682.2856,490.0828,686.7975,485.571,683.3852,490.77,691.75"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="108.3608"
+                  x="471" y="545.0283">returns emptyList()
+            </text>
+        </g><!--link SpriteUtil to ArrayList-->
+        <g class="link"
+           id="lnk21">
+            <path
+                    d="M516.82,314.25 C616.33,384.69 771.21,499 814,557 C845.16,599.24 861.1456,653.5495 868.8056,686.0995"
+                    fill="none" id="SpriteUtil-to-ArrayList"
+                    style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="870.18,691.94,872.012,682.263,869.0346,687.073,864.2247,684.0956,870.18,691.94"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="106.9326"
+                  x="806" y="545.0283">creates list in scan
+            </text>
+        </g>
+        <?plantuml-src dLPRKnH757xVNt4UbS2MbRnjo5P5gf9OkPHbOldSpFRkjixEJBfdmAsKLSmC8284Ga15l0S5iHGJBp42uSUqimjF_eMSqpCBivl8GrxOeVjSl-yxPyPZrWLMuy0TN_ZDeiUaBooRmqy50CjcIi7tdXG-F-iBsnm23EIEZXtFZaRhU3A4KRXKGyogyn9yoxp1aq6roYMld6fWadxuHYX_yBGh7BzSXi51vJFCrWyOReJv7Cy-WtESNVYAgJfwcz0VGLKubNCK_hIuoEryZienPIefGLUUuwLyedoUODWMLhbyLE3_7_9IuLAXu6LudcSZhCX6_Q8WznoSNM7_ooDdQxBzooReK26eu2gpEAHW7VvFjHv46N9jcrk-S1rrSDQDSdhskPIiQJmnOuxrOh7SNJMK851S0LDmWJTxJKtHQ2Av7qX7WOqHmQs2H-UgrneBoCBrtkHAx2IikX8i8hxNDjTYBZDlUBvf25NQut3GAvfRagFuiaA50yfYJg7Wk3u7AMfrK_oXUw6lxpkyKdrzXTE1z5p5IuK1qD5VEhwkuySwMjNnL7jnAuddT7XLHrVqs4nxUKV7YphQrD6MZf_ey5doTgsrlgp7PdMqq9hUIIw_rU5rFHOcaxF9rEFsuZhQwF2kZa8TFj7HKnt_fkDOHt_g-A4EbtLqLSUFTBojuqaTuTL6zZ0M5R0QgXEdsU35B_gI8JHE3IpNbHNXc6Qn9pEou97s4LhfDY2LFXZ98hrEnQ1DhduTmU0giFsK1ScHa6AXy3LlmZ2lin7XIaL0736i9UXj95f8vgBsn5hQU-lMHdjvQt_c3nrk86vxhvwtxcxHLVYe_Mg-TUSMsh_RlPqylP4Uxkqk4XJOyWVIbY3Z8Lh81zFH0o8XNjBH_V898YbSFVFbIHtEx5_xEnbR9VFN4pgSCYZdQ8iMYCXmFGsJKKWz_Bo_CfcnaX9m90eTUHebLxfO4LN02HSs6xRvf-0Ywd9KA6uagGm98bsanbVr6uuwyGuvAduOaJGI7-6ocL9lGlWq0iXuvqXbuXYjSmUOxTKPbE64CKMaiEI6vpeO4YDTj3WsmJ0xvgwxTWLLSQhXsRo1zun64cYKL3ebFKBUx9foudTdruZVy1HEwsWQXT6zV92dTrlNTBZMqGxoE4EI2UUCSF3v-TxbZUJgKllcE4vFid876ShCKeO608bCfbQJPpTnpZBMmyravIsUlD-UeXxByF4d9zvlNz7XFSo8LVICE3gYklOVh5EAtLiwl46ItDXjBRrCvZRtufqqaHFODYGJ3vFfbTPoH1tdTbKnjw6e-qpHPkwJNxPr-29T34du4ll5Z6au7MCnQmR6JKBZpUpU8xCdgFsE1C-Q3Ts5BmqkYSI81vJRizLnbvCe7Hneg34vZ6S3LbeiCcoauBXWkqwDqm8WJyV26rmV76yb9zdzKEUfTWOgt4_RF9G624mGIFJpxIOSe9nj6fFO3nmCIPLMX2aEtoNuJGBARzfSKOOpcTm_X2Fv6fY4umK--2ueWNeKrIRcG1U9BTI4XJ8TGbTHuTAer0YqHsdHWb7iji4sbUGu8PmkPjpMymZ-M6V9u0w-fgCtH0toWWenSaONLA2XzLUpEsPwfo1Ue6UZgDRj---sNdTHEG39Ab8_YoUTHEF9witMqdDI8FqbouD5rxhokmudatilataCY6NSr_43UZ-4wzaEZ5uO9UFjazQBzTRuNDVcCaiAa4255FyO2CcDP1Hhy1vqtE7p23_XEypJzq655WTPevA8gI-GYGPpce2_Pk7OJDOwhnVSOHdy51pvSMhzoCmebuTwGIDqzIIdXHEOTrWbaFI3toiSNzQuXgGf0QiAyBj71lWPYvLQhi8bo55Mj7iA_m00?>
+    </g>
+</svg>

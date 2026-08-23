@@ -1,0 +1,66 @@
+@startuml sprite_util
+
+package entity.particle {
+  class SpriteUtil {
+    - SpriteUtil()
+    - whiteCentersCache: Map<BufferedImage, List<Point>> <<static, private>> = WeakHashMap
+    + findWhitePixelCentersCached(sprite: BufferedImage): List<Point> <<static, public>>
+    + findWhitePixelCenters(sprite: BufferedImage): List<Point> <<static, public>>
+  }
+}
+
+package java.awt.image {
+  class BufferedImage
+}
+
+package java.awt {
+  class Point
+}
+
+package java.util {
+  interface Map
+  interface List
+  class Collections
+  class WeakHashMap
+  class ArrayList
+}
+
+SpriteUtil ..> BufferedImage : uses as key
+SpriteUtil ..> Point : returns list of points
+SpriteUtil ..> Map : uses
+SpriteUtil ..> WeakHashMap : uses for cache
+SpriteUtil ..> Collections : returns emptyList()
+SpriteUtil ..> ArrayList : creates list in scan
+
+note right of SpriteUtil
+**Notes**
+Purpose:
+- スプライト画像から「白ピクセルの座標」を抽出し、再利用のためにキャッシュするユーティリティ。
+
+- Utility for extracting coordinates of white pixels from sprite images and caching the results for reuse.
+
+Key behaviors:
+- findWhitePixelCentersCached: キャッシュを参照し、未登録なら走査して結果を保存して返す。
+- findWhitePixelCenters: 画像を走査してアルファ>0かつRGBが閾値を超えるピクセルを白として座標を収集する。
+
+- findWhitePixelCentersCached: returns cached coordinates if available; otherwise scans the image, caches, and returns the result.
+- findWhitePixelCenters: scans every pixel and treats a pixel as white when alpha > 0 and RGB components exceed a threshold.
+
+Implementation notes:
+- キャッシュは WeakHashMap を使用しており、BufferedImage が他で参照されなくなれば自動的に回収される。
+- 白判定の閾値は固定（RGB > 230）だが、スプライトの画風に応じて調整可能。
+- null 入力時は Collections.emptyList() を返すため呼び出し側での null チェックが不要になる。
+
+- Uses a WeakHashMap for the cache so BufferedImage keys can be garbage-collected when no longer referenced elsewhere.
+- The white-detection threshold is currently RGB > 230 and can be tuned for different art styles.
+- Returns Collections.emptyList() for null input to simplify caller logic.
+
+Considerations:
+- BufferedImage をキーにしているため、同一画像オブジェクトを使い回すことがキャッシュヒットの条件になる。
+- 大きな画像や多数の異なる画像を扱う場合はメモリと走査コストに注意する。
+
+- Cache hits require the same BufferedImage object to be reused as the key.
+- For many or very large images, consider sampling, lower thresholds, or precomputing during asset import to reduce runtime cost.
+end note
+
+@enduml

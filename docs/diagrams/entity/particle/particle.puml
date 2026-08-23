@@ -1,0 +1,134 @@
+@startuml particle
+
+package entity.particle {
+  class Particle {
+    - gameWindow: GameWindow
+    - generator: Entity
+    - color: Color
+    - size: int
+    - speed: int
+    - xd: int
+    - yd: int
+    - startY: int
+    - tileSize: int
+    - gravity: double = 1.0
+    + Particle(GameWindow, Entity, Color, int, int, int, int, int)
+    + update(): void
+    + draw(Graphics2D): void
+    + setLife(int): void
+    + getLife(): int
+    + getMaxLife(): int
+    + setAlive(boolean): void
+    + setWorldX(int): void
+    + setWorldY(int): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+
+  class FireworkParticle <<extends Particle>> {
+    - vx: double
+    - vy: double
+    - initLife: float
+    - color: Color
+    - size: int
+    + FireworkParticle(GameWindow, Entity, int, int, Color, int, int, double, double, double)
+    + update(): void
+    + draw(Graphics2D): void
+  }
+}
+
+package entity {
+  class Entity {
+    + Entity(GameWindow)
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+Particle --|> Entity
+FireworkParticle --|> Particle
+Particle --> GameWindow : uses
+Particle --> Entity : generator
+Particle .. Color : uses
+Particle .. Graphics2D : uses
+
+note right of Particle
+**Notes**
+Purpose:
+- 位置・寿命・描画に関する共通の振る舞いを提供する汎用パーティクル基底クラス。
+
+- Generic particle base class providing common behavior for position, life, and rendering.
+
+Fields:
+- gameWindow: Player を介してワールド座標をスクリーン座標に変換するための参照。
+- generator: このパーティクルを生成した Entity。
+- color: 描画色。
+- size: 描画サイズ（ピクセル）。
+- speed: 速度のスケール。
+- xd, yd: 方向成分（整数）。
+- startY: 生成時の Y 座標（地面／着地判定に使用）。
+- tileSize: タイルサイズ（FrameApp から取得）。
+- gravity: 固定の重力値（デフォルト 1.0）。
+
+- gameWindow: Reference used to convert world coordinates to screen coordinates via Player.
+- generator: The Entity that spawned this particle.
+- color: Rendering color.
+- size: Render size in pixels.
+- speed: Speed scale.
+- xd, yd: Direction components (integers).
+- startY: Y coordinate at creation (used for ground/landing check).
+- tileSize: Tile size (obtained from FrameApp).
+- gravity: Fixed gravity value (default 1.0).
+
+Constructor:
+- Particle(GameWindow, Entity, Color, size, speed, maxLife, xd, yd)
+- 生成元（generator）の位置からオフセットを計算して、初期のワールド座標とライフを設定する。
+
+- Particle(GameWindow, Entity, Color, size, speed, maxLife, xd, yd)
+- Calculates an offset from the generator's position to set initial world coordinates and life.
+
+update():
+- ライフを減少させる。
+- ライフが少なくなると yd に重力を加算する。
+- xd／yd と speed を使って位置を更新する。
+- worldY が startY + tileSize を超えたらパーティクルを非生存にする。
+
+- Decrements life.
+- Adds gravity to yd when life is low.
+- Updates position using xd/yd and speed.
+- Marks particle dead when worldY exceeds startY + tileSize.
+
+draw(Graphics2D):
+- gameWindow.getPlayer() を使ってワールド座標をスクリーン座標に変換する。
+- 指定された色とサイズで塗りつぶした矩形を描画する。
+
+- Converts world coordinates to screen coordinates using gameWindow.getPlayer().
+- Draws a filled rectangle with the specified color and size.
+
+Dependencies:
+- Entity（スーパークラス）: 位置やライフ管理のメソッドを提供する。
+- GameWindow / Player: ワールド座標からスクリーン座標への変換とパーティクル管理を提供する。
+- FrameApp: タイルサイズを取得するために使用される。
+
+- Entity (superclass): provides position and life-management methods.
+- GameWindow / Player: provide screen conversion and particle management.
+- FrameApp: used to obtain tile size.
+end note
+
+@enduml

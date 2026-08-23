@@ -1,0 +1,111 @@
+@startuml fire_work_particle
+
+package entity.particle {
+  abstract class Particle {
+    + Particle(GameWindow, Entity, Color, int, int, int, int, int)
+    + update(): void
+    + draw(Graphics2D): void
+    + setLife(int): void
+    + getLife(): int
+    + setAlive(boolean): void
+    + setWorldX(int): void
+    + setWorldY(int): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+
+  class FireworkParticle {
+    - gameWindow: GameWindow
+    - vx: double
+    - vy: double
+    - gravity: double
+    - initLife: float
+    - size: int
+    - color: Color
+    + FireworkParticle(GameWindow, Entity, int, int, Color, int, int, double, double, double)
+    + update(): void
+    + draw(Graphics2D): void
+  }
+}
+
+package entity {
+  class Entity
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+FireworkParticle --|> Particle
+FireworkParticle --> GameWindow : uses
+FireworkParticle --> Entity : generator
+FireworkParticle .. Color : uses
+FireworkParticle .. Graphics2D : uses
+
+note right of FireworkParticle
+**Notes**
+Purpose:
+- 花火の単一パーティクルを表現する。簡易な物理挙動とフェードアウトを持つ。
+- Represents a single firework particle with simple physics and fade-out.
+
+Fields:
+- gameWindow: プレイヤー経由でスクリーン座標を計算するための参照。
+- vx, vy: 水平および垂直方向の速度。
+- gravity: フレームごとに vy に加算される重力。
+- initLife: アルファ値の計算に使う初期ライフ。
+- size: 描画される直径（ピクセル）。
+- color: パーティクルの色。
+
+- gameWindow: reference used to compute screen coordinates via the Player.
+- vx, vy: horizontal and vertical velocities.
+- gravity: per-frame gravity applied to vy.
+- initLife: initial life used to compute alpha fade.
+- size: rendered diameter in pixels.
+- color: particle color.
+
+Constructor parameters:
+- (GameWindow, Entity generator, originX, originY, Color, size, maxLife, angle, speed, gravity)
+- 角度と速度から速度ベクトルを初期化し、初期ライフと原点を中心としたワールド位置を設定する。
+
+- (GameWindow, Entity generator, originX, originY, Color, size, maxLife, angle, speed, gravity)
+- Initializes velocity from angle and speed, sets initial life and world position centered on origin.
+
+update():
+- vy に重力を適用する。
+- vx, vy によってワールド位置を進める。
+- ライフを減少させ、life <= 0 になったらパーティクルを非生存にする。
+
+- Applies gravity to vy.
+- Advances world position by vx, vy.
+- Decrements life; marks particle dead when life <= 0.
+
+draw(Graphics2D):
+- life / initLife をアルファとして計算し、AlphaComposite を設定する。
+- GameWindow.getPlayer() を使ってワールド座標をスクリーン座標に変換する。
+- 指定されたサイズと色で (screenX, screenY) に塗りつぶしの楕円を描画する。
+- 描画後に元の Composite を復元する。
+
+- Computes alpha as life / initLife and sets AlphaComposite.
+- Converts world coordinates to screen coordinates using GameWindow.getPlayer().
+- Renders a filled oval at (screenX, screenY) with given size and color.
+- Restores previous Composite after drawing.
+
+Dependencies / Assumptions:
+- Particle スーパークラスはライフや位置のゲッター／セッターおよび setAlive() を提供する。
+- GameWindow は getPlayer() を公開し、Player は getWorldX(), getWorldY(), getScreenX(), getScreenY() を公開する。
+- 描画には java.awt.Color と Graphics2D を使用する。
+
+- Particle superclass provides life/position getters and setters and setAlive().
+- GameWindow exposes getPlayer(); Player exposes getWorldX(), getWorldY(), getScreenX(), getScreenY().
+- Uses java.awt.Color and Graphics2D for rendering.
+end note
+
+@enduml
