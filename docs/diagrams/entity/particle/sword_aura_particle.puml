@@ -1,0 +1,128 @@
+@startuml sword_aura_particle
+
+package entity.particle {
+  abstract class Particle {
+    + Particle(GameWindow, Entity, Color, int, int, int, int, int)
+    + update(): void
+    + draw(Graphics2D): void
+    + setLife(int): void
+    + getLife(): int
+    + getMaxLife(): int
+    + setAlive(boolean): void
+    + setWorldX(int): void
+    + setWorldY(int): void
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+
+  class SwordAuraParticle {
+    - gameWindow: GameWindow
+    - vx: double
+    - vy: double
+    - gravity: double
+    - initLife: float
+    - size: int
+    - color: Color
+    - rotationSpeed: float
+    - angle: float
+    + SwordAuraParticle(GameWindow, Entity, int, int, Color, int, int, double, double, double, float)
+    + update(): void
+    + draw(Graphics2D): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+package entity {
+  class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getAlive(): boolean
+  }
+}
+
+package java.awt {
+  class Graphics2D
+  class Color
+}
+
+SwordAuraParticle --|> Particle
+SwordAuraParticle --> GameWindow : uses
+SwordAuraParticle --> Entity : generator
+SwordAuraParticle ..> Color : uses
+SwordAuraParticle ..> Graphics2D : uses
+
+note right of SwordAuraParticle
+**Notes**
+Purpose:
+- 剣のオーラ表現用の粒子。角度と速度で移動し、重力と回転、フェードアウトを伴う描画を行う。
+
+- Particle used for sword aura effects; moves by angle-derived velocity, affected by gravity, rotates, and fades out.
+
+Fields:
+- gameWindow: ワールド→スクリーン変換とパーティクル管理に使う参照。
+- vx, vy: 水平・垂直の速度成分。
+- gravity: 毎フレーム vy に加算される重力。
+- initLife: 初期ライフ（アルファ計算に使用）。
+- size: 描画サイズ（ピクセル）。
+- color: 描画色。
+- rotationSpeed: フレームごとの角度変化量。
+- angle: 現在の回転角度。
+
+- gameWindow: reference for world-to-screen conversion and particle list access.
+- vx, vy: horizontal and vertical velocity components.
+- gravity: per-frame gravity applied to vy.
+- initLife: initial life used to compute alpha fade.
+- size: rendered diameter in pixels.
+- color: particle color.
+- rotationSpeed: per-frame angular increment.
+- angle: current rotation angle.
+
+Constructor:
+- SwordAuraParticle(GameWindow, Entity, originX, originY, Color, size, maxLife, angleRad, speed, gravity, rotationSpeed)
+- angleRad と speed から vx/vy を算出し、origin を中心にワールド座標とライフを初期化する。
+
+- SwordAuraParticle(GameWindow, Entity, originX, originY, Color, size, maxLife, angleRad, speed, gravity, rotationSpeed)
+- Computes vx/vy from angleRad and speed, centers world position on origin, and sets life.
+
+update():
+- vy に gravity を加算する。
+- vx/vy でワールド座標を更新する。
+- angle を rotationSpeed で増加させる。
+- ライフを減らし、0 以下で非生存にする。
+
+- Adds gravity to vy.
+- Advances world position by vx and vy.
+- Increments angle by rotationSpeed.
+- Decrements life and marks particle dead when life <= 0.
+
+draw(Graphics2D):
+- アルファを getLife()/initLife で計算して AlphaComposite を設定する。
+- gameWindow.getPlayer() を使ってワールド→スクリーン座標に変換する。
+- 指定色・サイズで塗りつぶし楕円を描画し、Composite を復元する。
+
+- Computes alpha as getLife() / initLife and sets AlphaComposite.
+- Converts world coordinates to screen coordinates via gameWindow.getPlayer().
+- Renders a filled oval at the computed screen position with the particle color and size, then restores the previous Composite
+
+Implementation notes:
+- initLife は float で保存し、アルファ計算でゼロ除算が起きないように注意する。
+- 回転を視覚化する場合は角度に応じた描画変換（AffineTransform）を検討する。
+- 高頻度生成時は描画コストとガベージを抑えるためオブジェクト再利用を検討する。
+
+- Guard against initLife == 0 when computing alpha.
+- Use AffineTransform for visual rotation if needed.
+- Consider pooling particles to reduce allocation overhead under heavy spawn rates.
+end note
+
+@enduml

@@ -1,0 +1,115 @@
+@startuml sword_aura_effect
+
+package entity.particle {
+  class SwordAuraEffect {
+    - gameWindow: GameWindow
+    - owner: Entity
+    - sprite: BufferedImage
+    - glowImage: BufferedImage
+    - whiteCenters: List<Point>
+    - rnd: Random
+    - spawnCounter: int
+    - spawnInterval: int
+    - particleColor: Color
+    + SwordAuraEffect(GameWindow, Entity, BufferedImage, BufferedImage, List<Point>)
+    + update(): void
+    + draw(Graphics2D): void
+    - spawnParticlesFromWhitePixels(): void
+  }
+
+  class SwordAuraParticle
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getParticleList(): List<Particle>
+  }
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+package entity {
+  class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getAlive(): boolean
+  }
+}
+
+package java.awt {
+  class Graphics2D
+  class Color
+  class Point
+}
+
+package java.awt.image {
+  class BufferedImage
+}
+
+package java.util {
+  class Random
+  interface List
+}
+
+SwordAuraEffect --> GameWindow : uses
+SwordAuraEffect --> Entity : owner
+SwordAuraEffect --> BufferedImage : sprite, glowImage
+SwordAuraEffect --> Point : whiteCenters [*]
+SwordAuraEffect ..> Random : uses
+SwordAuraEffect ..> Graphics2D : draw(Graphics2D)
+SwordAuraEffect ..> SwordAuraParticle : spawns
+GameWindow --> Player
+GameWindow --> "List<Particle>" : getParticleList()
+
+note right of SwordAuraEffect
+**Notes**
+Purpose:
+- 剣スプライトに紐づくグロー表示と、スプライト上の白ピクセルに沿った粒子生成を管理するクラス。
+
+- Manages a glow overlay for a sword sprite and spawns particles along white pixels of the sprite.
+
+Fields:
+- gameWindow: 描画やパーティクルリスト、プレイヤー座標取得に使う参照。
+- owner: エフェクトを持つ Entity（プロジェクタイルやプレイヤー）。
+- sprite: 剣のスプライト画像（向きに応じたもの）。
+- glowImage: スプライトから生成したグロー画像（キャッシュ）。
+- whiteCenters: スプライト内の白ピクセル座標リスト（キャッシュ済み）。
+- rnd: サンプリングや揺らぎに使う Random。
+- spawnCounter / spawnInterval: 粒子生成のタイミング制御。
+- particleColor: 生成する粒子の色。
+
+- gameWindow: reference used for rendering, particle list access, and player-based world-to-screen conversion.
+- owner: the Entity that owns this effect (projectile or player).
+- sprite: the sword sprite image (direction-specific).
+- glowImage: cached glow image derived from the sprite.
+- whiteCenters: cached list of white pixel coordinates within the sprite.
+- rnd: Random for sampling and slight variation.
+- spawnCounter / spawnInterval: control particle spawn timing.
+- particleColor: default color for spawned particles.
+
+Key behaviors:
+- update(): 所有者が生存している場合にカウンタを進め、所定間隔で粒子を生成する。
+- draw(Graphics2D): ワールド→スクリーン変換を行い、glowImage を重ね描画する。
+- spawnParticlesFromWhitePixels(): whiteCenters をサンプリングして SwordAuraParticle を生成し、GameWindow のパーティクルリストに追加する。
+
+- update(): increments spawn counter and triggers particle spawning at configured intervals if owner is alive.
+- draw(Graphics2D): converts world to screen coordinates and draws the glowImage with appropriate composite.
+- spawnParticlesFromWhitePixels(): samples whiteCenters, converts sprite-local coordinates to world coordinates, creates SwordAuraParticle instances, and appends them to GameWindow.getParticleList().
+
+Implementation notes:
+- whiteCenters はスプライト単位で事前に算出・キャッシュしておくと高速。
+- スプライト中心基準のオフセット計算（centerX/centerY）と owner のワールド座標の扱いに注意すること。
+- サンプリング率や spawnInterval はパフォーマンスと表現のバランスで調整可能。
+
+- Cache white pixel centers per sprite to avoid repeated expensive scans.
+- Ensure coordinate conversion accounts for sprite center and owner world position.
+- Tune sampling probability and spawnInterval to balance visual density and performance.
+
+end note
+
+@enduml
