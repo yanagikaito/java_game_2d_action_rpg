@@ -1,0 +1,54 @@
+@startuml loot_entry
+package entity.loot {
+  class LootEntry {
+    + factory: Supplier<Entity>
+    + weight: int
+    + toString(): String
+  }
+}
+
+package "java.util.function" {
+  interface Supplier
+}
+
+package entity {
+  class Entity
+}
+
+LootEntry ..> Supplier : uses
+LootEntry ..> Entity : produces
+
+note right of LootEntry
+**Notes**
+Purpose:
+- ドロップ生成用の不変エントリを表す record。
+- 必要なときに Entity を生成するための Supplier を保持する。
+
+- Represents an immutable record for a loot spawn entry.
+- Holds a Supplier<Entity> to create an Entity on demand.
+
+Key fields:
+- factory: Entity を生成する Supplier。遅延生成や依存注入に適する。
+- weight: 重み。重み付きランダム選択での優先度を示す。
+
+- factory: Supplier<Entity> that produces an Entity; suitable for lazy instantiation or dependency injection.
+- weight: Integer weight indicating priority in weighted random selection.
+
+Intended usage:
+- toString(): デバッグやログ出力向けに内容を分かりやすく表示する。
+
+- toString(): Provides a readable representation for debugging and logging.
+
+Implementation notes:
+- record によりフィールドは不変（final）でスレッドセーフな読み取りが容易。
+- Supplier の生成コストや例外を呼び出し側で扱うこと。
+- weight のバリデーション（負値やゼロの扱い）を設計で決める。
+- 設定ファイルから読み込む場合は Supplier の復元方法（リフレクションやファクトリマッピング）を明確にする。
+
+- As a record, fields are immutable (final) and safe for simple concurrent reads.
+- Call sites should handle potential exceptions or high cost from the Supplier.
+- Decide where to validate weight (e.g., loader or selection logic) to prevent negative or zero values.
+- When loading from configuration, define how to reconstruct Supplier instances (reflection, factory mapping, or other strategies).
+end note
+
+@enduml

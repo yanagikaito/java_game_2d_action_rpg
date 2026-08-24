@@ -1,0 +1,148 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="507px" preserveAspectRatio="none"
+     style="width:996px;height:507px;background:#FFFFFF;" version="1.1" viewBox="0 0 996 507" width="996px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0004">
+            <path d="M8.5,128.5 L46.8379,128.5 A3.75,3.75 0 0 1 49.3379,131 L56.3379,153.1211 L215.5,153.1211 A2.5,2.5 0 0 1 218,155.6211 L218,333 A2.5,2.5 0 0 1 215.5,335.5 L8.5,335.5 A2.5,2.5 0 0 1 6,333 L6,131 A2.5,2.5 0 0 1 8.5,128.5"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="153.1211" y2="153.1211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="145.6074">entity
+            </text>
+        </g><!--cluster loot-->
+        <g class="cluster" id="ent0002">
+            <path d="M32.5,173.5 L59.1553,173.5 A3.75,3.75 0 0 1 61.6553,176 L68.6553,198.1211 L191.5,198.1211 A2.5,2.5 0 0 1 194,200.6211 L194,309 A2.5,2.5 0 0 1 191.5,311.5 L32.5,311.5 A2.5,2.5 0 0 1 30,309 L30,176 A2.5,2.5 0 0 1 32.5,173.5"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="30" x2="68.6553" y1="198.1211" y2="198.1211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="25.6553" x="34" y="190.6074">loot
+            </text>
+        </g><!--class LootConfigEntry-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="85.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="132.3926" x="46" y="210.5"/>
+            <ellipse cx="61" cy="226.5" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M63.7656,222.375 Q63.9219,222.1563 64.1094,222.0469 Q64.2969,221.9375 64.5156,221.9375 Q64.8906,221.9375 65.125,222.2031 Q65.3594,222.4531 65.3594,223.0625 L65.3594,224.5156 Q65.3594,225.125 65.125,225.3906 Q64.8906,225.6563 64.5156,225.6563 Q64.1719,225.6563 63.9688,225.4531 Q63.7656,225.2656 63.6563,224.75 Q63.6094,224.3906 63.4219,224.2031 Q63.0938,223.8281 62.4844,223.6094 Q61.875,223.3906 61.25,223.3906 Q60.4844,223.3906 59.8438,223.7188 Q59.2188,224.0469 58.7188,224.7969 Q58.2344,225.5469 58.2344,226.5781 L58.2344,227.6719 Q58.2344,228.9063 59.125,229.7344 Q60.0156,230.5469 61.6094,230.5469 Q62.5469,230.5469 63.2031,230.2969 Q63.5938,230.1406 64.0156,229.7031 Q64.2813,229.4375 64.4219,229.3594 Q64.5781,229.2813 64.7813,229.2813 Q65.1094,229.2813 65.3594,229.5469 Q65.625,229.7969 65.625,230.1406 Q65.625,230.4844 65.2813,230.8906 Q64.7813,231.4688 63.9844,231.7969 Q62.9063,232.25 61.6094,232.25 Q60.0938,232.25 58.8906,231.625 Q57.9063,231.125 57.2188,230.0625 Q56.5313,228.9844 56.5313,227.7031 L56.5313,226.5469 Q56.5313,225.2188 57.1406,224.0781 Q57.7656,222.9219 58.8594,222.3125 Q59.9531,221.6875 61.1875,221.6875 Q61.9219,221.6875 62.5625,221.8594 Q63.2188,222.0156 63.7656,222.375 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100.3926"
+                  x="75" y="232.2969">LootConfigEntry
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="177.3926" y1="242.5" y2="242.5"/>
+            <g>
+                <ellipse cx="57" cy="257.3105" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70.8135"
+                  x="66" y="261.6074">type: String
+            </text>
+            <g>
+                <ellipse cx="57" cy="275.9316" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="63.0342"
+                  x="66" y="280.2285">weight: int
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47" x2="177.3926" y1="287.7422" y2="287.7422"/>
+        </g>
+        <g class="entity" id="ent0006">
+            <path d="M234.5,6 L234.5,249 L178.41,253 L234.5,257 L234.5,500.1484 A0,0 0 0 0 234.5,500.1484 L989.3398,500.1484 A0,0 0 0 0 989.3398,500.1484 L989.3398,16 L979.3398,6 L234.5,6 A0,0 0 0 0 234.5,6"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M979.3398,6 L979.3398,16 L989.3398,16 L979.3398,6" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="240.5" y="25.0283">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="52.0317"
+                  x="240.5" y="42.3193">Purpose:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="371.9409"
+                  x="240.5" y="59.6104">- &#12489;&#12525;&#12483;&#12503;&#35373;&#23450;&#12398;&#21336;&#19968;&#12456;&#12531;&#12488;&#12522;&#12434;&#34920;&#12377;&#12471;&#12531;&#12503;&#12523;&#12394;&#12487;&#12540;&#12479;&#12463;&#12521;&#12473;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="240.5" y="76.9014">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="393.0913"
+                  x="240.5" y="94.1924">- Represents a single loot configuration entry as a simple data class.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="240.5" y="111.4834">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="59.9727"
+                  x="240.5" y="128.7744">Key fields:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="377.7363"
+                  x="240.5" y="146.0654">- type: &#12489;&#12525;&#12483;&#12503;&#12373;&#12428;&#12427;&#12450;&#12452;&#12486;&#12512;&#21517;&#12420;&#12459;&#12486;&#12468;&#12522;&#12434;&#35672;&#21029;&#12377;&#12427;&#25991;&#23383;&#21015;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="377.7427"
+                  x="240.5" y="163.3564">- weight: &#12489;&#12525;&#12483;&#12503;&#36984;&#25246;&#26178;&#12398;&#37325;&#12415;&#12290;&#20516;&#12364;&#22823;&#12365;&#12356;&#12411;&#12393;&#36984;&#12400;&#12428;&#12420;&#12377;&#12356;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="240.5" y="180.6475">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="406.1104"
+                  x="240.5" y="197.9385">- type: A string that identifies the item name or category to be dropped.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="629.3892"
+                  x="240.5" y="215.2295">- weight: An integer weight used when selecting drops; larger values make the
+                entry more likely to be chosen.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="240.5" y="232.5205">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="93.2471"
+                  x="240.5" y="249.8115">Intended usage:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="540.3633"
+                  x="240.5" y="267.1025">- LootTable &#12420; LootPool &#12364;&#35079;&#25968;&#12398; LootConfigEntry
+                &#12434;&#20445;&#25345;&#12375;&#12289;&#37325;&#12415;&#20184;&#12365;&#12521;&#12531;&#12480;&#12512;&#36984;&#25246;&#12434;&#34892;&#12358;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="432.6245"
+                  x="240.5" y="284.3936">- &#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#65288;JSON/YAML&#65289;&#12363;&#12425;&#35501;&#12415;&#36796;&#12435;&#12391;&#12452;&#12531;&#12473;&#12479;&#12531;&#12473;&#21270;&#12377;&#12427;&#24819;&#23450;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="240.5" y="301.6846">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="628.6846"
+                  x="240.5" y="318.9756">- A LootTable or LootPool holds multiple LootConfigEntry instances and performs
+                weighted random selection.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="479.083"
+                  x="240.5" y="336.2666">- Instances are expected to be created by loading configuration files
+                (JSON/YAML).
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="240.5" y="353.5576">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="127.9053"
+                  x="240.5" y="370.8486">Implementation notes:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="733.8398"
+                  x="240.5" y="388.1396">- &#12501;&#12451;&#12540;&#12523;&#12489;&#12364; public &#12395;&#12394;&#12387;&#12390;&#12356;&#12427;&#12383;&#12417;&#12289;&#22806;&#37096;&#12363;&#12425;&#30452;&#25509;&#22793;&#26356;&#12373;&#12428;&#12427;&#12290;&#19981;&#22793;&#24615;&#12434;&#20445;&#12385;&#12383;&#12356;&#22580;&#21512;&#12399;
+                private &#12395;&#12375;&#12390; getter &#12434;&#29992;&#12356;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="413.1309"
+                  x="240.5" y="405.4307">- weight &#12364;&#36000;&#12398;&#20516;&#12420;&#12476;&#12525;&#12395;&#12394;&#12425;&#12394;&#12356;&#12424;&#12358;&#12496;&#12522;&#12487;&#12540;&#12471;&#12519;&#12531;&#12434;&#34892;&#12358;&#12392;&#23433;&#20840;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="335.1245"
+                  x="240.5" y="422.7217">- type &#12434;&#21015;&#25369;&#22411;&#12420;&#23450;&#25968;&#12391;&#31649;&#29702;&#12377;&#12427;&#12392;&#12479;&#12452;&#12503;&#12511;&#12473;&#12434;&#38450;&#12370;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="240.5" y="440.0127">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="684.9819"
+                  x="240.5" y="457.3037">- Fields are public, so they can be modified externally. If immutability is
+                desired, make them private and provide getters.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="454.543"
+                  x="240.5" y="474.5947">- Validate that weight is not negative or zero to avoid invalid selection
+                behavior.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="511.6021"
+                  x="240.5" y="491.8857">- Consider using an enum or constants for type to prevent typos and improve
+                type safety.
+            </text>
+        </g>
+        <?plantuml-src PLLRRnj557xVNp6F4Dhm7fuY15AWb8eY91x7th4zokwEjJDsCQYIPpSaDdLG56WkLBG9THitKTAgYKHG8_9ZJjP9dleNE6TcSsbvyvoTEPVlSjparLbU5qmaHfhEPAIKOJy5Z5KZhZMxXSTFLLAJzSyIatRS5yO-OgRJ55FihabbKYz3zuIiDymKaud1oFtWVX0aoWYMKfYfslkvWec9s_XTJqm4TrffKsan5TnaaFSXtuKyXtprRBHRxFq1TgzON3ivx48sWdmVyXxasv0jdssEmAv3zhSBhaA-0tORyWN8Zo0xXkmbv2yW-mUwMO1vln7DL6WSKZFED7OT2UPchRgEMYatKYM40ax9_QMuYPT2RhW7Op88lXGTLfCY2ZNrwa6utZ7OXv0D87i0sL-G3I6VXtoZM5g4R0wo7Jfc1sNtksj5xvaRuC5uPQ7ONIrwgzJhpKiWhoS-juVZNnwFrpD4utnX4UmntYswGx23OhW55YDpOD-0VO4tmRvoNSnHUenx17otqqmxqfXfSCDaIBJZH1hFWaaZOfRmM32LiYeteguG3QDO1N58LRCfmibh3KudHBQeYxGCiPOM8RlN40dJ8X9LGuNeeVw4HJobYsqUjR1Qp6U5A-a1ZrMATCXP4LsKgpPG40b2FeCLaX3JjZJAb60d7NtBAyWDZkXETvIA649nDbmOFto54FrFjuZuoV6Vuu45YoXR3-79cpL23cL22keYLHvc9wu1s7dFHod37AdTTAJkl3tgVN7twziVVp_zrQstHtsmo7V_R7iNSvxzY-hx3UoMkxbF0aGnkX_5OANaEz-dX9wMwMlp8EgNupGKgep5hSX8ak7x0yb46vvK4KgUXAmfqffAOrtoW6Yb65Rn1Gqg8TvchjuWtEA79dx2goNWgU1qgdJG5pmavjwrHar6-FA3oy4_97B88Z5owA-GtxLtCOBrb9o8haGPsm5hjYgHh29BpgRsATZdf4sqYdq2cKLIYk7AUJxoO9u-EXZ_-gmOziUF3gvCrSrE3XSfsDtoX8BTfETshjWuA9PwO5-oPYhRE8WlX8Pypkh265GUlZZzVLJMl6Oq9vpN6xHcq4zar2EodUypwxjkCTWZFUHBvDvon-3YsNBCNgZ5ZegzVl7po6Sdlr5HzFLui5uynh7ca7OdqAtJlStJfNal1tpd5jRGRR4dJZBBvsklmIwNhMAspztMSSHv96ymhSX17JHgGWJ6AYGdXqWiZflmAEfCifaQat7SChmY8rplJ6eM2YrJ4Twuz61yYPcJKghQk1PAr3JfvZiUoP2-kvrHeeQPa6wMY3fottRQ_L6aYjJ4sqg6gD0slRkI83RPu6sfKig9MjPO9aLRazGuhTvMxFQESZB5HOsIzYXYJjpURTGPdPNNFAvdR5Nu6vhN1Fvx1RWgd0g3_m00?>
+    </g>
+</svg>
