@@ -1,0 +1,229 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="846px" preserveAspectRatio="none"
+     style="width:1048px;height:846px;background:#FFFFFF;" version="1.1" viewBox="0 0 1048 846" width="1048px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0004">
+            <path d="M8.5,136.5 L46.8379,136.5 A3.75,3.75 0 0 1 49.3379,139 L56.3379,161.1211 L263.5,161.1211 A2.5,2.5 0 0 1 266,163.6211 L266,788.5 A2.5,2.5 0 0 1 263.5,791 L8.5,791 A2.5,2.5 0 0 1 6,788.5 L6,139 A2.5,2.5 0 0 1 8.5,136.5"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="161.1211" y2="161.1211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="153.6074">entity
+            </text>
+        </g><!--cluster loot-->
+        <g class="cluster" id="ent0002">
+            <path d="M32.5,181.5 L59.1553,181.5 A3.75,3.75 0 0 1 61.6553,184 L68.6553,206.1211 L239.5,206.1211 A2.5,2.5 0 0 1 242,208.6211 L242,336 A2.5,2.5 0 0 1 239.5,338.5 L32.5,338.5 A2.5,2.5 0 0 1 30,336 L30,184 A2.5,2.5 0 0 1 32.5,181.5"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="30" x2="68.6553" y1="206.1211" y2="206.1211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="25.6553" x="34" y="198.6074">loot
+            </text>
+        </g><!--cluster java-->
+        <g class="cluster" id="ent0007">
+            <path d="M292.5,600 L320.748,600 A3.75,3.75 0 0 1 323.248,602.5 L330.248,624.6211 L499.5,624.6211 A2.5,2.5 0 0 1 502,627.1211 L502,836.5 A2.5,2.5 0 0 1 499.5,839 L292.5,839 A2.5,2.5 0 0 1 290,836.5 L290,602.5 A2.5,2.5 0 0 1 292.5,600"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="290" x2="330.248" y1="624.6211" y2="624.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="27.248" x="294" y="617.1074">java
+            </text>
+        </g><!--cluster util-->
+        <g class="cluster" id="ent0008">
+            <path d="M316.5,645 L338.4932,645 A3.75,3.75 0 0 1 340.9932,647.5 L347.9932,669.6211 L475.5,669.6211 A2.5,2.5 0 0 1 478,672.1211 L478,812.5 A2.5,2.5 0 0 1 475.5,815 L316.5,815 A2.5,2.5 0 0 1 314,812.5 L314,647.5 A2.5,2.5 0 0 1 316.5,645"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="314" x2="347.9932" y1="669.6211" y2="669.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="20.9932" x="318" y="662.1074">util
+            </text>
+        </g><!--cluster function-->
+        <g class="cluster" id="ent0005">
+            <path d="M340.5,690 L396.707,690 A3.75,3.75 0 0 1 399.207,692.5 L406.207,714.6211 L451.5,714.6211 A2.5,2.5 0 0 1 454,717.1211 L454,788.5 A2.5,2.5 0 0 1 451.5,791 L340.5,791 A2.5,2.5 0 0 1 338,788.5 L338,692.5 A2.5,2.5 0 0 1 340.5,690"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="338" x2="406.207" y1="714.6211" y2="714.6211"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="55.207" x="342" y="707.1074">function
+            </text>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0009">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="67.0137"
+                  x="102.5" y="727"/>
+            <ellipse cx="117.5" cy="743" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M120.2656,738.875 Q120.4219,738.6563 120.6094,738.5469 Q120.7969,738.4375 121.0156,738.4375 Q121.3906,738.4375 121.625,738.7031 Q121.8594,738.9531 121.8594,739.5625 L121.8594,741.0156 Q121.8594,741.625 121.625,741.8906 Q121.3906,742.1563 121.0156,742.1563 Q120.6719,742.1563 120.4688,741.9531 Q120.2656,741.7656 120.1563,741.25 Q120.1094,740.8906 119.9219,740.7031 Q119.5938,740.3281 118.9844,740.1094 Q118.375,739.8906 117.75,739.8906 Q116.9844,739.8906 116.3438,740.2188 Q115.7188,740.5469 115.2188,741.2969 Q114.7344,742.0469 114.7344,743.0781 L114.7344,744.1719 Q114.7344,745.4063 115.625,746.2344 Q116.5156,747.0469 118.1094,747.0469 Q119.0469,747.0469 119.7031,746.7969 Q120.0938,746.6406 120.5156,746.2031 Q120.7813,745.9375 120.9219,745.8594 Q121.0781,745.7813 121.2813,745.7813 Q121.6094,745.7813 121.8594,746.0469 Q122.125,746.2969 122.125,746.6406 Q122.125,746.9844 121.7813,747.3906 Q121.2813,747.9688 120.4844,748.2969 Q119.4063,748.75 118.1094,748.75 Q116.5938,748.75 115.3906,748.125 Q114.4063,747.625 113.7188,746.5625 Q113.0313,745.4844 113.0313,744.2031 L113.0313,743.0469 Q113.0313,741.7188 113.6406,740.5781 Q114.2656,739.4219 115.3594,738.8125 Q116.4531,738.1875 117.6875,738.1875 Q118.4219,738.1875 119.0625,738.3594 Q119.7188,738.5156 120.2656,738.875 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35.0137"
+                  x="131.5" y="748.7969">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="103.5" x2="168.5137" y1="759" y2="759"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="103.5" x2="168.5137" y1="767" y2="767"/>
+        </g><!--class LootEntry-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="103.8633" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="178.5234" x="46.5" y="218.5"/>
+            <ellipse cx="101.5498" cy="234.5" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M104.3154,230.375 Q104.4717,230.1563 104.6592,230.0469 Q104.8467,229.9375 105.0654,229.9375 Q105.4404,229.9375 105.6748,230.2031 Q105.9092,230.4531 105.9092,231.0625 L105.9092,232.5156 Q105.9092,233.125 105.6748,233.3906 Q105.4404,233.6563 105.0654,233.6563 Q104.7217,233.6563 104.5186,233.4531 Q104.3154,233.2656 104.2061,232.75 Q104.1592,232.3906 103.9717,232.2031 Q103.6436,231.8281 103.0342,231.6094 Q102.4248,231.3906 101.7998,231.3906 Q101.0342,231.3906 100.3936,231.7188 Q99.7686,232.0469 99.2686,232.7969 Q98.7842,233.5469 98.7842,234.5781 L98.7842,235.6719 Q98.7842,236.9063 99.6748,237.7344 Q100.5654,238.5469 102.1592,238.5469 Q103.0967,238.5469 103.7529,238.2969 Q104.1436,238.1406 104.5654,237.7031 Q104.8311,237.4375 104.9717,237.3594 Q105.1279,237.2813 105.3311,237.2813 Q105.6592,237.2813 105.9092,237.5469 Q106.1748,237.7969 106.1748,238.1406 Q106.1748,238.4844 105.8311,238.8906 Q105.3311,239.4688 104.5342,239.7969 Q103.4561,240.25 102.1592,240.25 Q100.6436,240.25 99.4404,239.625 Q98.4561,239.125 97.7686,238.0625 Q97.0811,236.9844 97.0811,235.7031 L97.0811,234.5469 Q97.0811,233.2188 97.6904,232.0781 Q98.3154,230.9219 99.4092,230.3125 Q100.5029,229.6875 101.7373,229.6875 Q102.4717,229.6875 103.1123,229.8594 Q103.7686,230.0156 104.3154,230.375 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59.9238"
+                  x="122.0498" y="240.2969">LootEntry
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47.5" x2="224.0234" y1="250.5" y2="250.5"/>
+            <g>
+                <ellipse cx="57.5" cy="265.3105" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152.5234"
+                  x="66.5" y="269.6074">factory: Supplier&lt;Entity&gt;
+            </text>
+            <g>
+                <ellipse cx="57.5" cy="283.9316" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="63.0342"
+                  x="66.5" y="288.2285">weight: int
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="47.5" x2="224.0234" y1="295.7422" y2="295.7422"/>
+            <g>
+                <ellipse cx="57.5" cy="310.5527" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="101.9238"
+                  x="66.5" y="314.8496">toString(): String
+            </text>
+        </g><!--class Supplier-->
+        <g class="entity" id="ent0006">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="83.3652"
+                  x="354.5" y="727"/>
+            <ellipse cx="369.5" cy="743" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M370.4531,739.6406 L370.4531,746.2969 L372.1719,746.2969 Q372.7813,746.2969 373.0469,746.5313 Q373.3125,746.7656 373.3125,747.1563 Q373.3125,747.5313 373.0469,747.7656 Q372.7813,748 372.1719,748 L367.0313,748 Q366.4219,748 366.1563,747.7656 Q365.8906,747.5313 365.8906,747.1406 Q365.8906,746.7656 366.1563,746.5313 Q366.4219,746.2969 367.0313,746.2969 L368.75,746.2969 L368.75,739.6406 L367.0313,739.6406 Q366.4219,739.6406 366.1563,739.4063 Q365.8906,739.1719 365.8906,738.7813 Q365.8906,738.4063 366.1563,738.1719 Q366.4219,737.9375 367.0313,737.9375 L372.1719,737.9375 Q372.7813,737.9375 373.0469,738.1719 Q373.3125,738.4063 373.3125,738.7813 Q373.3125,739.1719 373.0469,739.4063 Q372.7813,739.6406 372.1719,739.6406 L370.4531,739.6406 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing"
+                  textLength="51.3652" x="383.5" y="748.7969">Supplier
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="355.5" x2="436.8652" y1="759" y2="759"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="355.5" x2="436.8652" y1="767" y2="767"/>
+        </g>
+        <g class="entity" id="ent0013">
+            <path d="M282.5,6 L282.5,266.5 L225.64,270.5 L282.5,274.5 L282.5,534.7305 A0,0 0 0 0 282.5,534.7305 L1041.2563,534.7305 A0,0 0 0 0 1041.2563,534.7305 L1041.2563,16 L1031.2563,6 L282.5,6 A0,0 0 0 0 282.5,6"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1031.2563,6 L1031.2563,16 L1041.2563,16 L1031.2563,6" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="288.5" y="25.0283">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="52.0317"
+                  x="288.5" y="42.3193">Purpose:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="282.4009"
+                  x="288.5" y="59.6104">- &#12489;&#12525;&#12483;&#12503;&#29983;&#25104;&#29992;&#12398;&#19981;&#22793;&#12456;&#12531;&#12488;&#12522;&#12434;&#34920;&#12377;
+                record&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="362.5972"
+                  x="288.5" y="76.9014">- &#24517;&#35201;&#12394;&#12392;&#12365;&#12395; Entity &#12434;&#29983;&#25104;&#12377;&#12427;&#12383;&#12417;&#12398;
+                Supplier &#12434;&#20445;&#25345;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="288.5" y="94.1924">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="328.0405"
+                  x="288.5" y="111.4834">- Represents an immutable record for a loot spawn entry.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="331.6904"
+                  x="288.5" y="128.7744">- Holds a Supplier&lt;Entity&gt; to create an Entity on demand.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="288.5" y="146.0654">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="59.9727"
+                  x="288.5" y="163.3564">Key fields:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="401.6099"
+                  x="288.5" y="180.6475">- factory: Entity &#12434;&#29983;&#25104;&#12377;&#12427; Supplier&#12290;&#36933;&#24310;&#29983;&#25104;&#12420;&#20381;&#23384;&#27880;&#20837;&#12395;&#36969;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="338.7427"
+                  x="288.5" y="197.9385">- weight: &#37325;&#12415;&#12290;&#37325;&#12415;&#20184;&#12365;&#12521;&#12531;&#12480;&#12512;&#36984;&#25246;&#12391;&#12398;&#20778;&#20808;&#24230;&#12434;&#31034;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="288.5" y="215.2295">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="601.231"
+                  x="288.5" y="232.5205">- factory: Supplier&lt;Entity&gt; that produces an Entity; suitable for lazy
+                instantiation or dependency injection.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="411.1631"
+                  x="288.5" y="249.8115">- weight: Integer weight indicating priority in weighted random selection.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="288.5" y="267.1025">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="93.2471"
+                  x="288.5" y="284.3936">Intended usage:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="406.6245"
+                  x="288.5" y="301.6846">- toString(): &#12487;&#12496;&#12483;&#12464;&#12420;&#12525;&#12464;&#20986;&#21147;&#21521;&#12369;&#12395;&#20869;&#23481;&#12434;&#20998;&#12363;&#12426;&#12420;&#12377;&#12367;&#34920;&#31034;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="288.5" y="318.9756">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="428.5493"
+                  x="288.5" y="336.2666">- toString(): Provides a readable representation for debugging and logging.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="288.5" y="353.5576">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="127.9053"
+                  x="288.5" y="370.8486">Implementation notes:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="462.249"
+                  x="288.5" y="388.1396">- record &#12395;&#12424;&#12426;&#12501;&#12451;&#12540;&#12523;&#12489;&#12399;&#19981;&#22793;&#65288;final&#65289;&#12391;&#12473;&#12524;&#12483;&#12489;&#12475;&#12540;&#12501;&#12394;&#35501;&#12415;&#21462;&#12426;&#12364;&#23481;&#26131;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="332.249"
+                  x="288.5" y="405.4307">- Supplier &#12398;&#29983;&#25104;&#12467;&#12473;&#12488;&#12420;&#20363;&#22806;&#12434;&#21628;&#12403;&#20986;&#12375;&#20596;&#12391;&#25201;&#12358;&#12371;&#12392;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="387.1309"
+                  x="288.5" y="422.7217">- weight &#12398;&#12496;&#12522;&#12487;&#12540;&#12471;&#12519;&#12531;&#65288;&#36000;&#20516;&#12420;&#12476;&#12525;&#12398;&#25201;&#12356;&#65289;&#12434;&#35373;&#35336;&#12391;&#27770;&#12417;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="673.8608"
+                  x="288.5" y="440.0127">- &#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12363;&#12425;&#35501;&#12415;&#36796;&#12416;&#22580;&#21512;&#12399;
+                Supplier &#12398;&#24489;&#20803;&#26041;&#27861;&#65288;&#12522;&#12501;&#12524;&#12463;&#12471;&#12519;&#12531;&#12420;&#12501;&#12449;&#12463;&#12488;&#12522;&#12510;&#12483;&#12500;&#12531;&#12464;&#65289;&#12434;&#26126;&#30906;&#12395;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="288.5" y="457.3037">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="452.3022"
+                  x="288.5" y="474.5947">- As a record, fields are immutable (final) and safe for simple concurrent
+                reads.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="440.8003"
+                  x="288.5" y="491.8857">- Call sites should handle potential exceptions or high cost from the Supplier.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="572.3047"
+                  x="288.5" y="509.1768">- Decide where to validate weight (e.g., loader or selection logic) to prevent
+                negative or zero values.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="737.7563"
+                  x="288.5" y="526.4678">- When loading from configuration, define how to reconstruct Supplier instances
+                (reflection, factory mapping, or other strategies).
+            </text>
+        </g><!--link LootEntry to Supplier-->
+        <g class="link"
+           id="lnk10">
+            <path
+                    d="M159.37,322.72 C184.22,376.34 225.35,462.64 265,535 C304.17,606.49 352.5353,682.8795 377.6853,721.8295"
+                    fill="none" id="LootEntry-to-Supplier" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="380.94,726.87,379.4183,717.1394,378.2278,722.6695,372.6976,721.479,380.94,726.87"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="293" y="580.0283">uses
+            </text>
+        </g><!--link LootEntry to Entity-->
+        <g class="link"
+           id="lnk11">
+            <path d="M136,322.71 C136,425.53 136,647.55 136,720.84" fill="none" id="LootEntry-to-Entity"
+                  style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818" points="136,726.84,140,717.84,136,721.84,132,717.84,136,726.84"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53.479"
+                  x="137" y="580.0283">produces
+            </text>
+        </g>
+        <?plantuml-src TLLTJzn657tthnZb2IZP7q2hI5KRgLMhAceU-ZonnxjElROrjg6RAXAssR10qf0626sLXBGquQCif4HjW1NycC7ByfI_q7F7tez-IVjW-yuzzznppvqDkFarhmeclCY96XNNzoFshS6OwV8mP9_ZzReNoOR-njXxpEPcvCl65BiP1u7h2Fd1TPrvhOpF2ATQYwQOuqNbbyY_6Kd7guwD8qa_8N3Nk6iOGLdxocq-pIjnvBWLE_RCoF6zAxeWG8H4HJ6eDffMK1vXMp2X8qFUbSgrGJAROd4emdz4Yop40kbRiOcuuVcHO98QORuz5C6OcFW2aN1YmhWHoy0FnPHnbQbiGMLxAijKzkHYvNctjNonigMIzldR1_dcWagtL7QeifRATbJwVUy5GZymAKnVMcesHNv-rkozJ5IoenB47gXajqy9vmj0fAXqIINFLOg3xM53E75-zhHxFobF0128Nuf0YX3oX8nxpAdNuuZVSaLPbTc-P9pfIOS1d_58IDce8F4JtxMGyw_POeRCb8935G2Mx7oFMQBEFQjY69-91hCTWMnIPE2H_-vZ00-wbqapF_cZZAPpvwTFyxtrxk5MtlmLGbmcsyF6hWwyTJaFbSueMp-SdwoJRjcs5dfMPHkNoTlkuZELl89O-TnEtcpbno-9nUOnuHKg_Q-JMLJZqS0DmuxVPs7i54gIX2w_qu13muWZoicq35yj4GZF4fv9iTj2cxaomlrJMBgAoHNlE6Cv9fAzAWewlYIv7A-C2ej9wElNMIZSFfH12AXWmSlO0j9xTCDKDg-oPN9ZUW11oPdfGJv_d2_-b2y_KWb-k_czPju-WXvvwvvAbbIwI2SXJF8G_Yn56hXf5Fs6zASTYqI1cRXLkgfqMw61hKMu5LUhr1JemsdwcQZN0rVK1qTfpRHXIcE2cafRH2TRLUalAkkeR9VMAzalbkbTfsKx7dVVTHPekEcHodxJYuSrEz77Lx57lPqzk29_k4P8oNsqsbr_N3Xek3X9ks-wGutJqkvRoZVNI9T77PKSGZMLFCcJDwZLNNYj4eZrc9Pqn8m4fFNUqS9tLFgdobx1YA3Q-tqZdzqaQTCEpI5fQvGvOe-RO6kljzKYwDV7jDPza-DxtlvHA_12fPka08reeUYgTueIi_d6ctmPkVj_QoW_tSwRMNVjg7kuYlAQqoefbEuFQ6bB5D3xvQMKFTCIhkZeGK6kk_xTnS_7D8zH9tnOp9rcDLckE-DIZDmmOteyuthi8RUBHGaT6ZipVS-CfSJqjNT2segFkEiY3XkmiER7hiLgICNX0DQWjNAP-COK0TabfFMgGNGWXH6p9VOYgWt_6WZlOs72dcoc9a0BbzOqTnsBhgroMcEYKgrCmf7SWcR4hRzOv5B77ASas7cQM7gY2fzE2pftHqYD5WlD-wkQy3GAULmpGNUsKusbTlOaDW1A25RpPmYHDCD58MCp6awik3heXXcJmYvfJFQl9LRdGG3qIQhkeqzmZO0kgeu8noi6hW2zFyPV?>
+    </g>
+</svg>

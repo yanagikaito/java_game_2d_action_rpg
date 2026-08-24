@@ -1,0 +1,40 @@
+@startuml loot_config_entry
+package entity.loot {
+  class LootConfigEntry {
+    + type: String
+    + weight: int
+  }
+}
+
+note right of LootConfigEntry
+**Notes**
+Purpose:
+- ドロップ設定の単一エントリを表すシンプルなデータクラス。
+
+- Represents a single loot configuration entry as a simple data class.
+
+Key fields:
+- type: ドロップされるアイテム名やカテゴリを識別する文字列。
+- weight: ドロップ選択時の重み。値が大きいほど選ばれやすい。
+
+- type: A string that identifies the item name or category to be dropped.
+- weight: An integer weight used when selecting drops; larger values make the entry more likely to be chosen.
+
+Intended usage:
+- LootTable や LootPool が複数の LootConfigEntry を保持し、重み付きランダム選択を行う。
+- 設定ファイル（JSON/YAML）から読み込んでインスタンス化する想定。
+
+- A LootTable or LootPool holds multiple LootConfigEntry instances and performs weighted random selection.
+- Instances are expected to be created by loading configuration files (JSON/YAML).
+
+Implementation notes:
+- フィールドが public になっているため、外部から直接変更される。不変性を保ちたい場合は private にして getter を用いる。
+- weight が負の値やゼロにならないようバリデーションを行うと安全。
+- type を列挙型や定数で管理するとタイプミスを防げる。
+
+- Fields are public, so they can be modified externally. If immutability is desired, make them private and provide getters.
+- Validate that weight is not negative or zero to avoid invalid selection behavior.
+- Consider using an enum or constants for type to prevent typos and improve type safety.
+end note
+
+@enduml
