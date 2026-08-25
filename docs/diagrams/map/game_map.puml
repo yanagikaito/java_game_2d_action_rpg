@@ -1,0 +1,82 @@
+@startuml
+package map {
+  class GameMap {
+    - objects: List<Entity>
+    - gameWindow: GameWindow
+    + GLOBAL_MAX_CHICKENS: int {static}
+    + SWARM_SPAWN_COUNT: int {static}
+    + GameMap(gameWindow: GameWindow)
+    + addObject(e: Entity): void
+    + addMonster(e: Entity): boolean
+    + countEntitiesOfType(cls: Class<? extends Entity>): int
+    + countChickens(): int
+    + canPlaceNpcAt(worldX: int, worldY: int, width: int, height: int): boolean
+    + removeAllChickens(): void
+    + resetChickensState(): void
+    - sortObjectsByY(): void
+  }
+}
+
+package entity {
+  class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getWidth(): int
+    + getHeight(): int
+  }
+  class NpcChicken
+}
+
+package window {
+  class GameWindow {
+    + getMonster(): Entity[]
+    + getObj(): Entity[]
+    + clearMonsters(): void
+  }
+}
+
+package "java.awt" {
+  class Rectangle
+}
+
+package "java.util" {
+  interface List
+  interface Comparator
+}
+
+GameMap --> GameWindow : has
+GameMap ..> Entity : manages
+GameMap ..> NpcChicken : references
+GameMap ..> Rectangle : uses
+GameMap ..> List : uses
+GameMap ..> Comparator : uses
+GameMap ..> "Entity[]" : interacts with
+
+note right of GameMap
+Purpose:
+- マップ上のエンティティ（NPC/モンスター/オブジェクト）を管理する。
+- スポーン判定、描画順ソート、GameWindow との簡易同期を提供する。
+
+- Manage entities on the map (NPCs, monsters, objects).
+- Provide spawn checks, drawing-order sorting, and simple synchronization with GameWindow.
+
+Key responsibilities:
+- 内部リスト objects を保持し、addObject で追加後に Y 座標でソートする。
+- GameWindow の monster 配列へエンティティを登録・クリアするユーティリティを提供する。
+- 指定クラスの個数カウントや配置可否判定（矩形衝突）を行う。
+
+- Maintain the internal objects list and sort it by Y coordinate after addObject calls.
+- Provide utilities to register and clear entities in GameWindow’s monster array.
+- Count entities of a specified class and determine placement availability via rectangle-based collision checks.
+
+Implementation considerations:
+- GameWindow と配列を二重管理しているため、同期ミスに注意すること。
+- gameWindow が null になる可能性があるため、呼び出し前に null チェックが必要。
+- 衝突判定は単純な矩形判定のため、タイル通行判定やマップ境界チェックは別途実装が必要。
+
+- Be careful of synchronization issues because entity storage is duplicated between GameMap and GameWindow.
+- gameWindow may be null; always perform null checks before accessing its arrays.
+- Collision checks use simple rectangle intersection; implement tile passability and map-boundary checks separately if needed.
+end note
+
+@enduml
