@@ -1,0 +1,110 @@
+@startuml entity_factory
+package factory {
+  class EntityFactory {
+    - gameWindow: GameWindow
+    - ev: MapEvent
+    + EntityFactory(gameWindow: GameWindow)
+    + create(type: EntityType): Entity
+    + createCoinEntity(): Entity
+    + createRedPotionEntity(): Entity
+    + createGreenPotionEntity(): Entity
+    + createBluePotionEntity(): Entity
+  }
+}
+
+package db {
+  class MapEvent
+}
+
+package entity {
+  class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getWidth(): int
+    + getHeight(): int
+  }
+  package type {
+    class EntityType {
+      + typeId(): int
+    }
+  }
+}
+
+package monster {
+  class MonGreenSlime
+}
+
+package npc {
+  class NpcChicken
+  class NpcOldMan
+}
+
+package object {
+  class ObjCoinBronze
+  class ObjSwordNormal
+  class ObjAxe
+  class ObjShieldWood
+  class ObjRedPotion
+  class ObjGreenPotion
+  class ObjBluePotion
+  class ObjBomb
+}
+
+package player {
+  class Player
+}
+
+package window {
+  class GameWindow {
+    + getKeyHandler(): Object
+  }
+}
+
+EntityFactory --> GameWindow : uses
+EntityFactory --> MapEvent : holds (optional)
+EntityFactory ..> EntityType : reads
+EntityFactory ..> Entity : creates
+EntityFactory ..> Player : creates
+EntityFactory ..> NpcOldMan : creates
+EntityFactory ..> MonGreenSlime : creates
+EntityFactory ..> NpcChicken : creates
+EntityFactory ..> ObjCoinBronze : creates
+EntityFactory ..> ObjSwordNormal : creates
+EntityFactory ..> ObjAxe : creates
+EntityFactory ..> ObjShieldWood : creates
+EntityFactory ..> ObjRedPotion : creates
+EntityFactory ..> ObjGreenPotion : creates
+EntityFactory ..> ObjBluePotion : creates
+EntityFactory ..> ObjBomb : creates
+
+note right of EntityFactory
+**Notes**
+Purpose:
+- EntityType に基づいて Entity インスタンスを生成する。
+- 生成時に必要なエンティティへ GameWindow 依存を注入する。
+- コインやポーションなどの一般的なアイテム用の簡易ファクトリメソッドを提供する。
+
+- Create Entity instances based on EntityType.
+- Inject GameWindow dependency for entities that require it.
+- Provide convenience factory methods for common items (coins, potions).
+
+Key responsibilities:
+- EntityType.typeId() を具体的な Entity サブクラスへマッピングする。
+- 必要なコンストラクタ依存（GameWindow, MapEvent）を供給する。
+- 頻繁に使われるエンティティのための専用生成メソッドを提供する。
+
+- Map EntityType.typeId() to concrete Entity subclasses.
+- Supply required constructor dependencies (GameWindow, MapEvent).
+- Offer specialized creators for frequently used entities.
+
+Implementation considerations:
+- 未知の typeId に対して create() が null を返す可能性があるため、例外を投げるか Optional を使うことを検討する。
+- MapEvent ev が現在 null 初期化されているため、必要ならセッターやコンストラクタ引数で注入できるようにする。
+- 大きな switch 文を避けるため、enum やレジストリによるマッピング（設定の一元化）を検討する。
+
+- create() may return null for unknown typeIds; consider throwing an exception or using Optional.
+- MapEvent ev is currently null-initialized; provide a setter or constructor parameter if needed.
+- Consider centralizing configuration for typeId mappings (enum or registry) to avoid large switch statements.
+end note
+
+@enduml

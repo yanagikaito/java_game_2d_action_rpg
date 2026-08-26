@@ -1,0 +1,61 @@
+@startuml frame_factory
+package factory {
+  class FrameFactory {
+    + createFrame(size: FrameSize, gameWindow: GameWindow): GameFrame {static}
+  }
+}
+
+package frame {
+  class FrameSize {
+    + width(): int
+    + height(): int
+  }
+  interface GameFrame {
+    + create(): javax.swing.JFrame
+  }
+  class GameFrameImpl
+}
+
+package window {
+  class GameWindow
+}
+
+package "javax.swing" {
+  class JFrame
+}
+
+FrameFactory ..> FrameSize : uses
+FrameFactory ..> GameWindow : uses
+FrameFactory ..> GameFrame : returns
+GameFrameImpl ..|> GameFrame
+GameFrameImpl --> JFrame : creates/returns
+
+note right of FrameFactory
+**Notes**
+Purpose:
+- ゲーム用の JFrame を生成・設定するファクトリメソッドを提供する。
+- JFrame を構築・表示する GameFrame（関数型ラッパー）を返す。
+
+- Provide a factory method to create and configure a JFrame for the game.
+- Return a GameFrame (functional wrapper) that constructs and shows the JFrame.
+
+Key responsibilities:
+- フレームのプロパティ（サイズ、タイトル、デフォルトの終了動作、リサイズ可否）を設定する。
+- GameWindow コンポーネントをフレームに追加し、画面中央に配置する。
+- フレームを可視化し、GameFrame.create() 経由で返す。
+
+- Set frame properties: size, title, default close operation, resizable flag.
+- Add GameWindow component to the frame and center it on screen.
+- Make the frame visible and return it via GameFrame.create().
+
+Implementation considerations:
+- 返される GameFrame はラムダ／関数型オブジェクトとして実装されている。
+- 必要に応じてタイトルやリサイズ可否などの設定を外部から変更できるようにすることを検討する。
+- Swing の操作はスレッド安全のため Event Dispatch Thread（EDT）上で実行することを確認する（SwingUtilities.invokeLater 等の使用を検討）。
+
+- The returned GameFrame is implemented as a lambda/functional object.
+- Consider exposing configuration options (title, resizable) if needed.
+- Ensure Swing calls run on the Event Dispatch Thread (EDT) for thread safety.
+end note
+
+@enduml
