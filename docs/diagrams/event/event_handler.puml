@@ -1,0 +1,97 @@
+@startuml event_handler
+package event {
+  class EventHandler {
+    - gameWindow: GameWindow
+    - eventRect: EventRect[][]
+    - canTouchEvent: boolean
+    - previousEventX: int
+    - previousEventY: int
+    + EventHandler(gameWindow: GameWindow)
+    + checkEvent(): void
+    + hit(row: int, col: int, reqDirection: String): boolean
+    - applyDamageToPlayer(dmg: int, col: int, row: int): void
+  }
+
+  class EventRect {
+    + x: int
+    + y: int
+    + width: int
+    + height: int
+    + eventRectDefaultX: int
+    + eventRectDefaultY: int
+    + eventDone: boolean
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getMaxWorldCol(): int
+    + getMaxWorldRow(): int
+    + getTileSize(): int
+  }
+}
+
+package player {
+  class Player {
+    + getWorldX(): int
+    + getWorldY(): int
+    + getDirection(): String
+    + getSolidArea(): java.awt.Rectangle
+    + getSolidAreaDefaultX(): int
+    + getSolidAreaDefaultY(): int
+    + getInvincible(): boolean
+    + takeDamage(dmg: int): void
+    + setInvincible(flag: boolean): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getSoundmanager(): Object
+  }
+}
+
+EventHandler --> GameWindow : uses
+EventHandler --> EventRect : contains [*]
+EventHandler ..> FrameApp : reads (static)
+EventHandler ..> Player : interacts with
+EventHandler ..> GameWindow : calls getPlayer(), getSoundmanager()
+
+note right of EventHandler
+Purpose:
+- タイルごとのイベント矩形を管理し、プレイヤーとイベントの衝突を検出する。
+- イベント発生の頻度を制御し、ダメージなどの効果を適用する。
+
+- Manage per-tile event rectangles and detect player-event collisions.
+- Control event triggering frequency and apply effects (e.g., damage).
+
+Key responsibilities:
+- FrameApp の寸法を使って eventRect[][] を初期化する。
+- 前回のイベントからの距離をチェックして即時再発生を防ぐ。
+- 衝突と向きの一致を検出し、eventDone を設定して効果を適用する。
+
+- Initialize eventRect[][] for all map tiles using FrameApp dimensions.
+- Check distance from previous event to prevent immediate retrigger.
+- Detect collision and direction match, then mark eventDone and apply effects.
+
+Implementation considerations:
+- 行列インデックス（row/col）の扱いを一貫させること。
+- 衝突判定後に Player の solidArea と eventRect の位置をリセットすることを忘れない。
+- 衝突判定や UI に影響する処理は適切なスレッド上で実行することを検討する。
+
+- Ensure indices (row/col) usage is consistent (row vs col ordering).
+- Reset player's solidArea and eventRect positions after collision checks.
+- Run collision and UI-affecting logic on appropriate thread if needed.
+end note
+
+note left of EventRect
+EventRect:
+- EventRect は各タイルに対応する小さな衝突矩形である。
+- チェック時の一時的な平行移動に対応するためのデフォルトオフセットを保持している。
+
+- Small collision rectangle per tile.
+- Stores default offsets to allow temporary translation during checks.
+end note
+
+@enduml
