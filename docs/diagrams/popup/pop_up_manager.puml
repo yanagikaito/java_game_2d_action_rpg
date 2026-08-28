@@ -1,0 +1,93 @@
+@startuml pop_up_manager
+package popup {
+  class PopupManager {
+    - pool: Deque<Popup>
+    - active: List<Popup>
+    - poolSize: int
+    + PopupManager(poolSize: int)
+    + pop(text: String, screenX: int, screenY: int, variant: PopupVariant, lifeFrames: int): void
+    + popItem(item: entity.Entity, screenX: int, screenY: int, variant: PopupVariant, lifeFrames: int): void
+    + updateAll(): void
+    + drawAll(g2: java.awt.Graphics2D): void
+  }
+
+  class Popup {
+    + text: String
+    + icon: java.awt.Image
+    + screenX: int
+    + screenY: int
+    + vy: float
+    + life: int
+    + maxLife: int
+    + alpha: float
+    + variant: PopupVariant
+    + init(text: String, icon: Image, sx: int, sy: int, variant: PopupVariant, lifeFrames: int): void
+    + update(): void
+    + isAlive(): boolean
+  }
+
+  enum PopupVariant {
+    PLAYER_DAMAGE
+    MONSTER_DAMAGE
+    GUARDED_DAMAGE
+    HEAL
+    XP
+    DROP
+    INFO
+  }
+}
+
+package entity {
+  class Entity {
+    + getName(): String
+    + getImage(): java.awt.Image
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+PopupManager --> Popup : manages
+PopupManager ..> PopupVariant : uses
+PopupManager ..> entity.Entity : reads
+PopupManager ..> java.awt.Graphics2D : draws
+Popup ..> PopupVariant : has
+Popup ..> java.awt.Image : has
+PopupManager ..> FrameApp : uses (static)
+
+note right of PopupManager
+**Notes**
+Purpose
+- ポップアップのオブジェクトプール管理とライフサイクル制御を行う。
+- アクティブなポップアップの更新と描画を一元化する。
+
+- Manage an object pool for popups and control their lifecycle.
+- Centralize updating and rendering of active popups.
+end note
+
+note left of PopupManager
+**Notes**
+Responsibilities
+- メソッドは synchronized でスレッド安全を確保しているが、描画は EDT で行うこと。
+- プールサイズを超える場合は新規生成する設計。必要なら上限や破棄ポリシーを検討する。
+- 大量のポップアップ発生時はオブジェクトプールのサイズ調整で GC を抑える。
+
+- Methods are synchronized to ensure thread safety, but rendering must run on the Swing Event Dispatch Thread (EDT).
+- When the pool is exhausted, new Popup instances are created; consider adding an upper bound or eviction policy if needed.
+- Tune the pool size to reduce GC pressure when many popups are generated simultaneously.
+end note
+
+note right of Popup
+**Notes**
+Display logic
+- alpha を使ってフェードアウト、vy で上方向移動、life で寿命管理。
+- icon がある場合はアイコン描画（DROP など）とテキスト描画を組み合わせる。
+
+- Use alpha for fade-out, vy for upward movement, and life for lifetime management.
+- When an icon is present (e.g., DROP variant), draw the icon and combine it with text rendering.
+end note
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml pop_up_variant
+package popup {
+  enum PopupVariant {
+    PLAYER_DAMAGE
+    MONSTER_DAMAGE
+    GUARDED_DAMAGE
+    HEAL
+    XP
+    DROP
+  }
+
+  class Popup {
+    + text: String
+    + icon: java.awt.Image
+    + screenX: int
+    + screenY: int
+    + vy: float
+    + life: int
+    + maxLife: int
+    + alpha: float
+    + variant: PopupVariant
+    + init(text: String, icon: Image, sx: int, sy: int, variant: PopupVariant, lifeFrames: int): void
+    + update(): void
+    + isAlive(): boolean
+  }
+
+  class PopupManager {
+    - pool: Deque<Popup>
+    - active: List<Popup>
+    - poolSize: int
+    + PopupManager(poolSize: int)
+    + pop(text: String, screenX: int, screenY: int, variant: PopupVariant, lifeFrames: int): void
+    + popItem(item: entity.Entity, screenX: int, screenY: int, variant: PopupVariant, lifeFrames: int): void
+    + updateAll(): void
+    + drawAll(g2: java.awt.Graphics2D): void
+  }
+}
+
+Popup --> PopupVariant : uses
+PopupManager --> Popup : manages
+PopupManager ..> java.awt.Graphics2D : draws
+
+note right of PopupManager
+**Notes**
+Purpose
+- ポップアップのインスタンス用オブジェクトプールを管理し、そのライフサイクルを制御する。
+- アクティブなポップアップの更新と描画を一元化する。
+
+- Manage an object pool for Popup instances and control their lifecycle.
+- Centralize updating and rendering of active popups.
+
+Responsibilities
+- ポップアップオブジェクトを再利用して割り当てを減らし GC 負荷を軽減する。
+- アクティブ一覧を維持し、寿命が尽きたポップアップをプールへ戻す。
+- ポップアップの生成・更新・描画をスレッド安全に提供する。
+
+- Reuse Popup objects to reduce allocations and GC pressure.
+- Maintain active list, recycle expired popups back to the pool.
+- Provide thread-safe spawn/update/draw operations.
+
+Implementation considerations
+- メソッドはスレッド安全のため synchronized になっているが、drawAll は必ず Swing の Event Dispatch Thread（EDT）上で呼ぶこと。
+- プールが枯渇した場合は新しいインスタンスを生成する設計になっているが、必要なら上限や破棄ポリシーを検討すること。
+- 高負荷時の割り当てスパイクを抑えるために poolSize を調整すること。
+
+- Methods are synchronized for thread safety; ensure drawAll is called on the EDT.
+- When pool is exhausted new instances are created; consider an upper bound or eviction policy.
+- Tune poolSize to balance memory and allocation spikes under heavy load.
+end note
+
+note left of PopupManager
+**Notes**
+Threading and performance
+- 描画や UI の変更は必ず Swing の EDT 上で行うこと。
+- ロック競合を最小化する。必要なら並行コレクションの採用を検討する。
+- フレーム落ちを避けるために更新のバッチ化や生成レートの上限設定を検討する。
+
+- Keep drawing and UI changes on the Swing Event Dispatch Thread.
+- Minimize lock contention; consider using concurrent collections if needed.
+- Consider batching updates or capping spawn rate to avoid frame drops.
+end note
+
+note right of Popup
+**Notes**
+Display logic
+- alpha でフェードアウト、vy で上方向移動、life / maxLife で寿命を管理する。
+- icon が存在する場合（例: DROP バリアント）はアイコンを描画し、テキストと組み合わせて表示する。
+- update() と drawAll() の実行を調整して、位置や透明度が描画時に一貫するようにする。
+
+- Use alpha for fade-out, vy for upward movement, and life/maxLife for lifetime management.
+- If icon is present (e.g., DROP variant), draw the icon and combine it with text rendering.
+- Ensure update() and drawAll() are coordinated so position and alpha remain consistent.
+end note
+
+@enduml
