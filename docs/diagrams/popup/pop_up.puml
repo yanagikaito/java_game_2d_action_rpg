@@ -1,0 +1,52 @@
+@startuml pop_up
+package popup {
+  class Popup {
+    + text: String
+    + icon: java.awt.Image
+    + screenX: int
+    + screenY: int
+    + vy: float
+    + life: int
+    + maxLife: int
+    + alpha: float
+    + variant: PopupVariant
+    + init(text: String, icon: Image, sx: int, sy: int, variant: PopupVariant, lifeFrames: int): void
+    + update(): void
+    + isAlive(): boolean
+  }
+
+  enum PopupVariant {
+    DAMAGE
+    HEAL
+    ITEM
+    INFO
+  }
+}
+
+note right of Popup
+**Notes**
+Purpose
+- 画面上に一時的に表示されるポップアップ（テキスト／アイコン）を表現する。
+
+- Represent a temporary on-screen popup (text and/or icon).
+
+Responsibilities
+- 表示位置・速度・残存フレーム・透明度を管理する。
+- 毎フレームの更新（移動・減速・フェード）を行う。
+
+- Manage display position, velocity, remaining lifetime, and opacity.
+- Perform per-frame updates (movement, deceleration, fade-out).
+end note
+
+note left of Popup
+Implementation considerations
+- Swing の描画スレッド（EDT）から描画・更新を呼ぶこと。
+- 複数ポップアップを扱う場合はオブジェクトプール化で GC を抑えると良い。
+- `icon` が null の場合はテキストのみ描画する。
+
+- Invoke rendering and updates from the Swing Event Dispatch Thread (EDT).
+- Use an object pool for multiple popups to reduce GC pressure.
+- If icon is null, render text only.
+end note
+
+@enduml

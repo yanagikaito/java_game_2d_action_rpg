@@ -59,6 +59,7 @@ EventHandler ..> Player : interacts with
 EventHandler ..> GameWindow : calls getPlayer(), getSoundmanager()
 
 note right of EventHandler
+**Notes**
 Purpose:
 - タイルごとのイベント矩形を管理し、プレイヤーとイベントの衝突を検出する。
 - イベント発生の頻度を制御し、ダメージなどの効果を適用する。
