@@ -1,0 +1,103 @@
+@startuml green_hex_renderer
+package hex {
+  class GreenHexRenderer <<final>> {
+    - GreenHexRenderer()
+    + drawGreenHex(g2: java.awt.Graphics2D, tris: SmallHex[], forming: boolean, formTime: double, formDuration: double): void
+    - createRegularPolygonPath(sides: int, radius: double, rotRad: double): java.awt.geom.Path2D
+  }
+
+  class GreenHexPanel {
+    - tris: SmallHex[6]
+    - timer: javax.swing.Timer
+    - forming: boolean
+    - formDuration: double
+    - formTime: double
+    - fpsDelay: int
+    - particles: java.util.List<Particle>
+    - assembled: boolean
+    - PARTICLE_POOL: int
+    - rnd: java.util.Random
+    - lastTimeNanos: long
+    + GreenHexPanel()
+    - initPieces(): void
+    - initParticles(): void
+    + resetAnimation(): void
+    + startAnimation(): void
+    - finalPositions(): java.awt.geom.Point2D.Double[]
+    - update(dt: double): void
+    - createParticle(background: boolean): Particle
+    - lerp(a: double, b: double, t: double): double
+    - lerpAngle(a: double, b: double, t: double): double
+    + getTris(): SmallHex[]
+    + isForming(): boolean
+    + getFormTime(): double
+    + getFormDuration(): double
+  }
+
+  class SmallHex {
+    + x: double
+    + y: double
+    + size: double
+    + angle: double
+    + displayAngle: double
+    + vy: double
+    + angularVel: double
+    + startX: double
+    + startY: double
+    + startSize: double
+    + startAngle: double
+    + targetX: double
+    + targetY: double
+    + targetSize: double
+    + setTarget(tx: double, ty: double, tSize: double): void
+  }
+
+  class Particle {
+    + x: double
+    + y: double
+    + vx: double
+    + vy: double
+    + size: int
+    + alpha: float
+    + life: double
+    + Particle(x: double, y: double, vx: double, vy: double, size: int, alpha: float, life: double)
+  }
+}
+
+GreenHexRenderer ..> SmallHex : draws
+GreenHexRenderer ..> java.awt.Graphics2D : uses
+GreenHexPanel --> SmallHex : contains
+GreenHexPanel --> Particle : manages
+GreenHexPanel ..> GreenHexRenderer : uses
+GreenHexPanel ..> javax.swing.Timer : uses
+GreenHexPanel ..> java.util.Random : uses
+
+note right of GreenHexRenderer
+**Notes**
+Purpose
+- 正規化座標系で緑の六角エンブレムを描画する静的ユーティリティ。
+- インスタンス化せず drawGreenHex を呼んで使用する。
+
+- Static utility to render the green hex emblem in a normalized coordinate system.
+- Intended to be used without instantiation by calling drawGreenHex.
+end note
+
+note left of GreenHexPanel
+**Notes**
+Related
+- GreenHexPanel はアニメーション状態を保持し、描画時に GreenHexRenderer を呼び出す想定。
+
+- GreenHexPanel maintains animation state and is expected to call GreenHexRenderer when drawing.
+end note
+
+note right of Particle
+**Notes**
+Particle
+- 軽量なデータ構造。位置・速度・サイズ・透明度・寿命を保持。
+- GreenHexPanel 内部クラスとして実装されるが図では独立クラスとして表現。
+
+- Lightweight data structure holding position, velocity, size, alpha, and life.
+- Implemented as an inner class of GreenHexPanel but represented as a separate class in the diagram.
+end note
+
+@enduml

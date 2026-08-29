@@ -1,0 +1,320 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="815px" preserveAspectRatio="none"
+     style="width:2292px;height:815px;background:#FFFFFF;" version="1.1" viewBox="0 0 2292 815" width="2292px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster hex-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L33.624,6.0137 A3.75,3.75 0 0 1 36.124,8.5137 L43.124,30.6348 L959.5,30.6348 A2.5,2.5 0 0 1 962,33.1348 L962,805.5137 A2.5,2.5 0 0 1 959.5,808.0137 L8.5,808.0137 A2.5,2.5 0 0 1 6,805.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="43.124" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="24.124" x="10" y="23.1211">hex
+            </text>
+        </g><!--class SmallHex-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="401.8008" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="495.2803" x="411.5" y="390.0137"/>
+            <ellipse cx="624.9385" cy="406.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M627.7041,401.8887 Q627.8604,401.6699 628.0479,401.5605 Q628.2354,401.4512 628.4541,401.4512 Q628.8291,401.4512 629.0635,401.7168 Q629.2979,401.9668 629.2979,402.5762 L629.2979,404.0293 Q629.2979,404.6387 629.0635,404.9043 Q628.8291,405.1699 628.4541,405.1699 Q628.1104,405.1699 627.9072,404.9668 Q627.7041,404.7793 627.5947,404.2637 Q627.5479,403.9043 627.3604,403.7168 Q627.0322,403.3418 626.4229,403.123 Q625.8135,402.9043 625.1885,402.9043 Q624.4229,402.9043 623.7822,403.2324 Q623.1572,403.5605 622.6572,404.3105 Q622.1729,405.0605 622.1729,406.0918 L622.1729,407.1855 Q622.1729,408.4199 623.0635,409.248 Q623.9541,410.0605 625.5479,410.0605 Q626.4854,410.0605 627.1416,409.8105 Q627.5322,409.6543 627.9541,409.2168 Q628.2197,408.9512 628.3604,408.873 Q628.5166,408.7949 628.7197,408.7949 Q629.0479,408.7949 629.2979,409.0605 Q629.5635,409.3105 629.5635,409.6543 Q629.5635,409.998 629.2197,410.4043 Q628.7197,410.9824 627.9229,411.3105 Q626.8447,411.7637 625.5479,411.7637 Q624.0322,411.7637 622.8291,411.1387 Q621.8447,410.6387 621.1572,409.5762 Q620.4697,408.498 620.4697,407.2168 L620.4697,406.0605 Q620.4697,404.7324 621.0791,403.5918 Q621.7041,402.4355 622.7979,401.8262 Q623.8916,401.2012 625.126,401.2012 Q625.8604,401.2012 626.501,401.373 Q627.1572,401.5293 627.7041,401.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59.9033"
+                  x="645.4385" y="411.8105">SmallHex
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="412.5" x2="905.7803" y1="422.0137" y2="422.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="419.5" y="433.8242"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="257.9473"
+                  x="431.5" y="441.1211">DEFAULT_START_ANGLE: double = 0.0
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="419.5" y="452.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="231.4922"
+                  x="431.5" y="459.7422">COLOR_SEED_BOUND: int = 10000
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,470.0664,418.5,476.0664,426.5,476.0664"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56.8203"
+                  x="431.5" y="478.3633">x: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,488.6875,418.5,494.6875,426.5,494.6875"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56.8203"
+                  x="431.5" y="496.9844">y: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,507.3086,418.5,513.3086,426.5,513.3086"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94.958"
+                  x="431.5" y="515.6055">targetX: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,525.9297,418.5,531.9297,426.5,531.9297"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94.958"
+                  x="431.5" y="534.2266">targetY: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,544.5508,418.5,550.5508,426.5,550.5508"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86.3857"
+                  x="431.5" y="552.8477">startX: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,563.1719,418.5,569.1719,426.5,569.1719"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86.3857"
+                  x="431.5" y="571.4688">startY: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,581.793,418.5,587.793,426.5,587.793"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="74.7168"
+                  x="431.5" y="590.0898">size: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,600.4141,418.5,606.4141,426.5,606.4141"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.8545"
+                  x="431.5" y="608.7109">targetSize: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,619.0352,418.5,625.0352,426.5,625.0352"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="104.2822"
+                  x="431.5" y="627.332">startSize: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,637.6563,418.5,643.6563,426.5,643.6563"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84.0752"
+                  x="431.5" y="645.9531">angle: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,656.2773,418.5,662.2773,426.5,662.2773"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.8545"
+                  x="431.5" y="664.5742">startAngle: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,674.8984,418.5,680.8984,426.5,680.8984"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="116.7578"
+                  x="431.5" y="683.1953">angularVel: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,693.5195,418.5,699.5195,426.5,699.5195"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="63.8203"
+                  x="431.5" y="701.8164">vy: double
+            </text>
+            <g>
+                <polygon fill="none" points="422.5,712.1406,418.5,718.1406,426.5,718.1406"
+                         style="stroke:#1963A0;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85.6064"
+                  x="431.5" y="720.4375">colorSeed: int
+            </text>
+            <g>
+                <ellipse cx="422.5" cy="734.7617" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129.2061"
+                  x="431.5" y="739.0586">displayAngle: double
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="412.5" x2="905.7803" y1="746.5723" y2="746.5723"/>
+            <g>
+                <ellipse cx="422.5" cy="761.3828" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="469.2803"
+                  x="431.5" y="765.6797">SmallHex(x: double, y: double, size: double, vy: double, angularVel: double)
+            </text>
+            <g>
+                <ellipse cx="422.5" cy="780.0039" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="319.8467"
+                  x="431.5" y="784.3008">setTarget(tx: double, ty: double, tSize: double): void
+            </text>
+        </g><!--class GreenHexPanel-->
+        <g class="entity" id="ent0004">
+            <rect fill="#F1F1F1" height="122.4844" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="190.1855" x="240" y="43.0137"/>
+            <ellipse cx="281.3575" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M284.1231,54.8887 Q284.2794,54.6699 284.4669,54.5605 Q284.6544,54.4512 284.8731,54.4512 Q285.2481,54.4512 285.4825,54.7168 Q285.7169,54.9668 285.7169,55.5762 L285.7169,57.0293 Q285.7169,57.6387 285.4825,57.9043 Q285.2481,58.1699 284.8731,58.1699 Q284.5294,58.1699 284.3263,57.9668 Q284.1231,57.7793 284.0138,57.2637 Q283.9669,56.9043 283.7794,56.7168 Q283.4513,56.3418 282.8419,56.123 Q282.2325,55.9043 281.6075,55.9043 Q280.8419,55.9043 280.2013,56.2324 Q279.5763,56.5605 279.0763,57.3105 Q278.5919,58.0605 278.5919,59.0918 L278.5919,60.1855 Q278.5919,61.4199 279.4825,62.248 Q280.3731,63.0605 281.9669,63.0605 Q282.9044,63.0605 283.5606,62.8105 Q283.9513,62.6543 284.3731,62.2168 Q284.6388,61.9512 284.7794,61.873 Q284.9356,61.7949 285.1388,61.7949 Q285.4669,61.7949 285.7169,62.0605 Q285.9825,62.3105 285.9825,62.6543 Q285.9825,62.998 285.6388,63.4043 Q285.1388,63.9824 284.3419,64.3105 Q283.2638,64.7637 281.9669,64.7637 Q280.4513,64.7637 279.2481,64.1387 Q278.2638,63.6387 277.5763,62.5762 Q276.8888,61.498 276.8888,60.2168 L276.8888,59.0605 Q276.8888,57.7324 277.4981,56.5918 Q278.1231,55.4355 279.2169,54.8262 Q280.3106,54.2012 281.545,54.2012 Q282.2794,54.2012 282.92,54.373 Q283.5763,54.5293 284.1231,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="99.6133"
+                  x="301.2147" y="64.8105">GreenHexPanel
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="241" x2="429.1855" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="241" x2="429.1855" y1="83.0137" y2="83.0137"/>
+            <g>
+                <ellipse cx="251" cy="97.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="127.5723"
+                  x="260" y="102.1211">getTris(): SmallHex[]
+            </text>
+            <g>
+                <ellipse cx="251" cy="116.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128.3857"
+                  x="260" y="120.7422">isForming(): boolean
+            </text>
+            <g>
+                <ellipse cx="251" cy="135.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="142.3789"
+                  x="260" y="139.3633">getFormTime(): double
+            </text>
+            <g>
+                <ellipse cx="251" cy="153.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="164.1855"
+                  x="260" y="157.9844">getFormDuration(): double
+            </text>
+        </g><!--class GreenHexRenderer-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="66.6211" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="784.6523" x="160.5" y="244.0137"/>
+            <ellipse cx="487.4902" cy="260.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M490.2559,255.8887 Q490.4121,255.6699 490.5996,255.5605 Q490.7871,255.4512 491.0059,255.4512 Q491.3809,255.4512 491.6152,255.7168 Q491.8496,255.9668 491.8496,256.5762 L491.8496,258.0293 Q491.8496,258.6387 491.6152,258.9043 Q491.3809,259.1699 491.0059,259.1699 Q490.6621,259.1699 490.459,258.9668 Q490.2559,258.7793 490.1465,258.2637 Q490.0996,257.9043 489.9121,257.7168 Q489.584,257.3418 488.9746,257.123 Q488.3652,256.9043 487.7402,256.9043 Q486.9746,256.9043 486.334,257.2324 Q485.709,257.5605 485.209,258.3105 Q484.7246,259.0605 484.7246,260.0918 L484.7246,261.1855 Q484.7246,262.4199 485.6152,263.248 Q486.5059,264.0605 488.0996,264.0605 Q489.0371,264.0605 489.6934,263.8105 Q490.084,263.6543 490.5059,263.2168 Q490.7715,262.9512 490.9121,262.873 Q491.0684,262.7949 491.2715,262.7949 Q491.5996,262.7949 491.8496,263.0605 Q492.1152,263.3105 492.1152,263.6543 Q492.1152,263.998 491.7715,264.4043 Q491.2715,264.9824 490.4746,265.3105 Q489.3965,265.7637 488.0996,265.7637 Q486.584,265.7637 485.3809,265.1387 Q484.3965,264.6387 483.709,263.5762 Q483.0215,262.498 483.0215,261.2168 L483.0215,260.0605 Q483.0215,258.7324 483.6309,257.5918 Q484.2559,256.4355 485.3496,255.8262 Q486.4434,255.2012 487.6777,255.2012 Q488.4121,255.2012 489.0527,255.373 Q489.709,255.5293 490.2559,255.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="122.1719"
+                  x="507.9902" y="265.8105">GreenHexRenderer
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="161.5" x2="944.1523" y1="276.0137" y2="276.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="161.5" x2="944.1523" y1="284.0137" y2="284.0137"/>
+            <g>
+                <ellipse cx="171.5" cy="298.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="758.6523"
+                  x="180.5" y="303.1211">drawGreenHex(g2: java.awt.Graphics2D, tris: SmallHex[], forming: boolean,
+                formTime: double, formDuration: double): void
+            </text>
+        </g>
+        <g class="entity" id="ent0010">
+            <path d="M978,525.5137 L978,587.0137 L906.64,591.0137 L978,595.0137 L978,656.5508 A0,0 0 0 0 978,656.5508 L1513.9409,656.5508 A0,0 0 0 0 1513.9409,656.5508 L1513.9409,535.5137 L1503.9409,525.5137 L978,525.5137 A0,0 0 0 0 978,525.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1503.9409,525.5137 L1503.9409,535.5137 L1513.9409,535.5137 L1503.9409,525.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="984" y="544.542">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="48.4199"
+                  x="984" y="561.833">Purpose
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="514.9409"
+                  x="984" y="579.124">- &#32209;&#12398;&#20845;&#35282;&#12456;&#12531;&#12502;&#12524;&#12512;&#12398;&#12450;&#12491;&#12513;&#12540;&#12471;&#12519;&#12531;&#12391;&#20351;&#12431;&#12428;&#12427;&#23567;&#12373;&#12394;&#19977;&#35282;&#12500;&#12540;&#12473;&#12398;&#29366;&#24907;&#12434;&#20445;&#25345;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="501.9409"
+                  x="984" y="596.415">- &#20301;&#32622;&#12289;&#12479;&#12540;&#12466;&#12483;&#12488;&#12289;&#38283;&#22987;&#29366;&#24907;&#12289;&#12469;&#12452;&#12474;&#12289;&#22238;&#36578;&#12289;&#36895;&#24230;&#12289;&#12459;&#12521;&#8213;&#12471;&#12540;&#12489;&#12394;&#12393;&#12434;&#20844;&#38283;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="984" y="613.7061">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="471.1294"
+                  x="984" y="630.9971">- Holds state for a small triangular piece used in the green hex emblem
+                animation.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="455.9521"
+                  x="984" y="648.2881">- Exposes position, target, start state, size, rotation, velocities and a color
+                seed.
+            </text>
+        </g>
+        <g class="entity" id="ent0013">
+            <path d="M1549,508.0137 L1549,673.6328 L2285.0317,673.6328 L2285.0317,518.0137 L2275.0317,508.0137 L1549,508.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M2275.0317,508.0137 L2275.0317,518.0137 L2285.0317,518.0137 L2275.0317,508.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="1555" y="527.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="124.2935"
+                  x="1555" y="544.333">Implementation notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="669.5317"
+                  x="1555" y="561.624">- &#36605;&#37327;&#12450;&#12463;&#12475;&#12473;&#12398;&#12383;&#12417;&#12501;&#12451;&#12540;&#12523;&#12489;&#12399;&#12497;&#12483;&#12465;&#12540;&#12472;&#12503;&#12521;&#12452;&#12505;&#12540;&#12488;&#12395;&#12394;&#12387;&#12390;&#12356;&#12427;&#12290;&#24517;&#35201;&#12394;&#12425;
+                getter/setter &#12395;&#22793;&#26356;&#12377;&#12427;&#12371;&#12392;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="497.688"
+                  x="1555" y="578.915">- displayAngle &#12399;&#12521;&#12472;&#12450;&#12531;&#12391;&#25201;&#12356;&#12289;&#25551;&#30011;&#21521;&#12369;&#12398;&#21521;&#12365;&#12392;&#12375;&#12390;
+                angle&#65288;&#24230;&#65289;&#12392;&#12399;&#21029;&#12395;&#20351;&#12358;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="715.0317"
+                  x="1555" y="596.2061">- setTarget &#12399;&#35036;&#38291;&#12398;&#12383;&#12417;&#12395;&#29694;&#22312;&#12398;&#29366;&#24907;&#12434;
+                start* &#12501;&#12451;&#12540;&#12523;&#12489;&#12408;&#35352;&#37682;&#12377;&#12427;&#12290;&#22806;&#37096;&#12398;&#26356;&#26032;&#12525;&#12472;&#12483;&#12463;&#12364;&#12371;&#12428;&#12425;&#12434;&#20351;&#12387;&#12390;&#35036;&#38291;&#12434;&#34892;&#12358;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="1555" y="613.4971">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="601.1992"
+                  x="1555" y="630.7881">- Fields are package-private for lightweight access; change to getters/setters
+                if encapsulation is required.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="540.4395"
+                  x="1555" y="648.0791">- displayAngle is in radians and used for rendering orientation separate from
+                'angle' (degrees).
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="515.9248"
+                  x="1555" y="665.3701">- setTarget records current state into start* fields for interpolation by
+                external update logic.
+            </text>
+        </g><!--link GreenHexPanel to SmallHex-->
+        <g class="link"
+           id="lnk6">
+            <path
+                    d="M239.73,134.4437 C146.24,168.6737 24.47,230.8737 75,311.0137 C149.09,428.5137 282.1017,495.7457 405.7517,535.7757"
+                    fill="none" id="GreenHexPanel-to-SmallHex" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="411.46,537.6237,404.1295,531.0461,406.7031,536.0837,401.6655,538.6572,411.46,537.6237"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="66.4854"
+                  x="76" y="283.042">contains [6]
+            </text>
+        </g><!--link GreenHexRenderer to SmallHex-->
+        <g class="link"
+           id="lnk7">
+            <path d="M564.14,311.2637 C571.05,331.5637 578.6374,353.8534 588.9874,384.2734" fill="none"
+                  id="GreenHexRenderer-to-SmallHex" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="590.92,389.9537,591.8079,380.1449,589.3095,385.2201,584.2343,382.7217,590.92,389.9537"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="32.519"
+                  x="579" y="356.042">reads
+            </text>
+        </g><!--link GreenHexPanel to GreenHexRenderer-->
+        <g class="link"
+           id="lnk8">
+            <path d="M411.55,165.2337 C445.17,191.6837 478.5939,217.9844 506.7939,240.1644" fill="none"
+                  id="GreenHexPanel-to-GreenHexRenderer" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="511.51,243.8737,506.9088,235.1657,507.58,240.7826,501.9631,241.4538,511.51,243.8737"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="470" y="210.042">uses
+            </text>
+        </g><!--link GMN12 to SmallHex-->
+        <g class="link"
+           id="lnk14">
+            <path d="M1813.7,507.8037 C1736.4,451.1537 1625.34,381.1037 1514.5,350.5137 C1399.68,318.8237 1091.47,312.7437 978.5,350.5137 C949.2,360.3137 920.43,373.9637 892.89,389.8437"
+                  fill="none" id="GMN12-SmallHex" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+        </g>
+        <?plantuml-src TLLRKnn557xVNz5luRAic0SVrj8gb4kieY35RYojL8fgPdgNqTcPiNkMYvOMCoFA2gar926c4eq9o4MIaCHBC43uBpQpB4_v2vxJC-nT7c0vrw-_yvsp3jK-ftb6fjaS-If1Y6PI8KYcG4tpKcmYf8yC3WqFN1dDJcQo0nFPoO6naT6XDD7jufJ9o7kaFzKVntquFZe-CPaP6XgS_63yojXWcXYM2n5lzyEFYlc6p9rdnl_Fj_plKfvdxYSThP-sM0MOsqALiItI-99rB9bfTwW27UpKofiTOmSwE22uQ5B-CJDR73Ej3zPiq-OPndJ5bZBs4jqGZaddsoltrgRJLMCoMISnsVJIP4EtP0T8tN59mToiOgFBRIZgDkGsyT6T9ZEseKForucQQ4OuOnR0kamjPiRAwILGCyiDqGKfvxYlNejzXXYsUS6mykYTicsJKQkUXhwiKM3eR7f_x1iiSkeQjjNaxu1dWbawuupN8EcSpfuxk_8Nq-GpEaDJTDPDZN3gJ1kQk3W83mRKZPYJ91U1hK6DB0YnJbEk0LWdjW1VCqzzVU_NroqDMh1SQbY2N7tdMgBj1QbKKp1dL1SjzJ2aBIzDYeA9X6MxZ70ZF-qIErShbEZf6GE7wEb9N2vonnOiqKTENzwGtjDmyKbrQrNwspBuGmPhCdWiWr_1Blr7CbYMmKCP74h_fGosCC3REZawbdvP-YlINmwVbQLtMtg_d-oNi4XmImN_0-cdF_nTMLoM_kh9yS-L5KzwTo5UBlZGz-Je-kdHKxdWIVzOnR-GGI239R2ShIs7MyjnBWRy9VqDwR-2p-6zNwe7Zp1cuK7uQbDvTsMmy-_2RGNlK0ObG2Az7MWQBZw6KlMcqFMIRUe2LnduWGaIIWIIWng8TuOu1jCOqgZ3aX9tcf4yigmE9ol0b0kmNaP13Ju59OVca4b1uBU1jcHyRfBHnOYQHSkQ9DnsQHGqmqnRWmJ8f9OEGDHnWFraUYe1uoGumqGqIPFb_c-G7nKSGCIigAnA4W2gUd1qzdqPf-VlIVyWceRq7aZVam5GjQwesbLixSdW1dBlFrTps9V17M0KAG_kgh0bwUqgKjUbjoczRoCwm-F5wgQ7Th-4c-eo_fPGVmZ4Xnkbohq_O-wzczBRZiRUUEs8whs3BL5cgAjAwJasMF0gvVBfhOFmHn2dqYT-k8vLl3i08ZhGRmwNG0Dl3alAlXSk_GQDKPdUTr6psh73JjNr-sThD-iqUBkdvTVX_Ur6cKOZwo5j7ErNjtywMtbHqrAuiNOMO2eyihBsJ0PF5741qksju8DnDKgeVCI3nCNz_TNgmvKO8K0SDXWgad96dEWRki_XniovFatSuLccDfbg6XFYNQ9Dm-iPSUsOTH7JBeYH8ypIg2D0o4eEXe3JyKNHu2Yg5lB11_hcL0VbHnfKciUkN9qJk834vaPDMu8vb2jWt2wG2se45qYNpd0_H7UgYN3ED9l3mxGYXshn5k2tddtESIvwEVO3CuDx58EUcYTi3WmMDKdHqJ7FjFE6rh0M_m40?>
+    </g>
+</svg>

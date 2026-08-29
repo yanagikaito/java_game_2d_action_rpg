@@ -2,7 +2,6 @@ package hex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.geom.*;
 import java.util.Iterator;
 import java.util.Random;
