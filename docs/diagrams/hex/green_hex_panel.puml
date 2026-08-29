@@ -1,0 +1,92 @@
+@startuml green_hex_panel
+
+package hex {
+  class GreenHexPanel {
+    - tris: SmallHex[6]
+    - timer: javax.swing.Timer
+    - forming: boolean
+    - formDuration: double
+    - formTime: double
+    - fpsDelay: int
+    - particles: java.util.List<Particle>
+    - assembled: boolean
+    - PARTICLE_POOL: int
+    - rnd: java.util.Random
+    - lastTimeNanos: long
+    + GreenHexPanel()
+    - initPieces(): void
+    - initParticles(): void
+    + resetAnimation(): void
+    + startAnimation(): void
+    - finalPositions(): java.awt.geom.Point2D.Double[]
+    - update(dt: double): void
+    - createParticle(background: boolean): Particle
+    - lerp(a: double, b: double, t: double): double
+    - lerpAngle(a: double, b: double, t: double): double
+    + getTris(): SmallHex[]
+    + isForming(): boolean
+    + getFormTime(): double
+    + getFormDuration(): double
+  }
+
+  class SmallHex {
+    + x: double
+    + y: double
+    + size: double
+    + angle: double
+    + displayAngle: double
+    + vy: double
+    + angularVel: double
+    + startX: double
+    + startY: double
+    + startSize: double
+    + startAngle: double
+    + targetX: double
+    + targetY: double
+    + targetSize: double
+    + setTarget(tx: double, ty: double, tSize: double): void
+  }
+
+  class Particle {
+    + x: double
+    + y: double
+    + vx: double
+    + vy: double
+    + size: int
+    + alpha: float
+    + life: double
+    + Particle(x: double, y: double, vx: double, vy: double, size: int, alpha: float, life: double)
+  }
+}
+
+GreenHexPanel --> SmallHex : contains
+GreenHexPanel --> Particle : manages
+GreenHexPanel ..> javax.swing.Timer : uses
+GreenHexPanel ..> java.util.Random : uses
+
+note right of GreenHexPanel
+**Notes**
+Additions
+- createParticle(background) を図示
+- lerp / lerpAngle の補間ユーティリティを公開
+- Particle を内部クラスとして明示（図では独立クラスとして表現）
+- getTris, isForming, getFormTime, getFormDuration のアクセサを追加
+
+- Illustrates createParticle(background).
+- Exposes lerp / lerpAngle interpolation utilities.
+- Marks Particle as an inner class (represented as a separate class in the diagram).
+- Adds accessors: getTris, isForming, getFormTime, getFormDuration.
+
+end note
+
+note left of Particle
+**Notes**
+Particle
+- 位置・速度・サイズ・透明度・寿命を保持する軽量データ構造
+- background フラグで生成パラメータが変化する（速度・寿命・サイズ・alpha）
+
+- Lightweight data structure holding position, velocity, size, alpha, and life.
+- Generation parameters vary based on the background flag (speed, life, size, alpha).
+end note
+
+@enduml

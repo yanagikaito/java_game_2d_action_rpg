@@ -1,0 +1,62 @@
+@startuml small_hex
+package hex {
+  class SmallHex {
+    - DEFAULT_START_ANGLE: double = 0.0
+    - COLOR_SEED_BOUND: int = 10000
+    ~ x: double
+    ~ y: double
+    ~ targetX: double
+    ~ targetY: double
+    ~ startX: double
+    ~ startY: double
+    ~ size: double
+    ~ targetSize: double
+    ~ startSize: double
+    ~ angle: double
+    ~ startAngle: double
+    ~ angularVel: double
+    ~ vy: double
+    ~ colorSeed: int
+    + displayAngle: double
+    + SmallHex(x: double, y: double, size: double, vy: double, angularVel: double)
+    + setTarget(tx: double, ty: double, tSize: double): void
+  }
+
+  class GreenHexPanel {
+    + getTris(): SmallHex[]
+    + isForming(): boolean
+    + getFormTime(): double
+    + getFormDuration(): double
+  }
+
+  class GreenHexRenderer {
+    + drawGreenHex(g2: java.awt.Graphics2D, tris: SmallHex[], forming: boolean, formTime: double, formDuration: double): void
+  }
+}
+
+GreenHexPanel --> SmallHex : contains [6]
+GreenHexRenderer ..> SmallHex : reads
+GreenHexPanel ..> GreenHexRenderer : uses
+note right of SmallHex
+**Notes**
+Purpose
+- 緑の六角エンブレムのアニメーションで使われる小さな三角ピースの状態を保持する。
+- 位置、ターゲット、開始状態、サイズ、回転、速度、カラ―シードなどを公開する。
+
+- Holds state for a small triangular piece used in the green hex emblem animation.
+- Exposes position, target, start state, size, rotation, velocities and a color seed.
+end note
+
+note left of SmallHex
+**Notes**
+Implementation notes
+- 軽量アクセスのためフィールドはパッケージプライベートになっている。必要なら getter/setter に変更すること。
+- displayAngle はラジアンで扱い、描画向けの向きとして angle（度）とは別に使う。
+- setTarget は補間のために現在の状態を start* フィールドへ記録する。外部の更新ロジックがこれらを使って補間を行う。
+
+- Fields are package-private for lightweight access; change to getters/setters if encapsulation is required.
+- displayAngle is in radians and used for rendering orientation separate from 'angle' (degrees).
+- setTarget records current state into start* fields for interpolation by external update logic.
+end note
+
+@enduml
