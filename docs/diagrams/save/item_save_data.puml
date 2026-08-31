@@ -1,0 +1,24 @@
+@startuml item_save_data
+package save {
+  record ItemSaveData {
+    + slot: int
+    + typeId: int
+    + count: int
+    + ItemSaveData(slot: int, typeId: int, count: int)
+  }
+}
+
+note right of ItemSaveData
+**Notes**
+ItemSaveData は Java record（不変のデータキャリア）です。
+- フィールドは final 相当でイミュータブル
+- equals / hashCode / toString が自動生成される
+- セーブデータのインベントリ要素を表す軽量構造
+
+- ItemSaveData is a Java record (an immutable data carrier).
+- Fields are effectively final and immutable.
+- equals / hashCode / toString are auto-generated.
+- Lightweight structure representing an inventory element in save data.
+end note
+
+@enduml

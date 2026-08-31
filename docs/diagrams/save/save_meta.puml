@@ -1,0 +1,40 @@
+@startuml save_meta
+package save {
+  class SaveMeta {
+    - exists: boolean
+    - hp: int
+    - maxHp: int
+    - facing: String
+    - spriteKey: String
+    - savedAt: long
+    - playTimeSeconds: long
+    + SaveMeta()
+    + SaveMeta(exists: boolean, hp: int, maxHp: int, facing: String, spriteKey: String, savedAt: long)
+    + exists(): boolean
+    + getHp(): int
+    + getMaxHp(): int
+    + getFacing(): String
+    + getSavedAt(): long
+    + getSpriteKey(): String
+    + getPlayTimeSeconds(): long
+    + setPlayTimeSeconds(playTimeSeconds: long): void
+  }
+}
+
+package save {
+  class SaveManager
+}
+SaveManager ..> SaveMeta : reads/writes
+
+note right of SaveMeta
+**Notes**
+- SaveMeta はセーブスロットのメタ情報を保持する POJO。
+- Gson でのシリアライズ/デシリアライズを想定し、デフォルトコンストラクタを持つ。
+- playTimeSeconds はセーブ時に Player から設定される可変フィールド。
+
+- SaveMeta holds metadata for a save slot.
+- Designed for Gson serialization/deserialization and therefore provides a default constructor.
+- playTimeSeconds is a mutable field set from Player at save time.
+end note
+
+@enduml

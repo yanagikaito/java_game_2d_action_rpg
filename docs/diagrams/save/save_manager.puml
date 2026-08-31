@@ -1,0 +1,205 @@
+@startuml save_manager
+package save {
+  class SaveManager {
+    + saveGame(slot: int, player: player.Player): boolean
+    - saveMainData(conn: java.sql.Connection, data: SaveData): void
+    - clearInventory(conn: java.sql.Connection, slot: int): void
+    - saveInventory(conn: java.sql.Connection, saveId: int, player: player.Player): void
+    - saveEquipment(conn: java.sql.Connection, saveId: int, data: SaveData): void
+    - saveEquipmentItem(conn: java.sql.Connection, saveId: int, itemType: String, typeId: int): void
+    + loadMeta(slotIndex: int): SaveMeta
+    + writeMeta(slotIndex: int, meta: SaveMeta): boolean
+    + hasSave(slotNumber: int): boolean
+    - buildItemSaveDataList(player: player.Player): java.util.List<ItemSaveData>
+    - DB_URL: String
+    - SLOT_COUNT: int
+    - metas: SaveMeta[]
+    - SAVE_DIR: String
+    - SLOT_PREFIX: String
+    - SUFFIX: String
+    - gson: com.google.gson.Gson
+  }
+
+  record SaveData {
+    + id: int
+    + x: int
+    + y: int
+    + mapId: int
+    + hp: int
+    + maxHp: int
+    + mana: int
+    + maxMana: int
+    + level: int
+    + strength: int
+    + dexterity: int
+    + exp: int
+    + next_exp: int
+    + coin: int
+    + weaponTypeId: int
+    + shieldTypeId: int
+    + inventory: java.util.List<ItemSaveData>
+    + savedAt: java.time.LocalDateTime
+  }
+
+  record ItemSaveData {
+    + slot: int
+    + typeId: int
+    + count: int
+  }
+
+  class SaveMeta {
+    + exists(): boolean
+    + getPlayTimeSeconds(): long
+    + setPlayTimeSeconds(long): void
+  }
+
+  class EntityStateConverter {
+    + toSaveData(slot: int, entity: entity.Entity, savedAt: java.time.LocalDateTime): SaveData
+  }
+
+  class LoadManager {
+    + loadPlayer(slotNumber: int, gameWindow: window.GameWindow): entity.Player
+    + hasSaveData(slot: int): boolean
+    - loadInventory(conn: java.sql.Connection, saveId: int, player: entity.Entity, gameWindow: window.GameWindow): void
+    - loadEquipment(conn: java.sql.Connection, saveId: int, player: entity.Entity, gameWindow: window.GameWindow): void
+    - findEntityTypeById(typeId: int): entity.type.EntityType
+    - determineMaxStackForType(typeId: int): int
+  }
+}
+
+package db {
+  class DbManager {
+    + getConnection(): java.sql.Connection
+  }
+}
+
+package factory {
+  class EntityFactory {
+    + EntityFactory(gameWindow: window.GameWindow)
+    + create(type: entity.type.EntityType): entity.Entity
+  }
+}
+
+package player {
+  class Player {
+    + getPlayTimeSeconds(): long
+    + getFacing(): int
+    + getSpriteKey(): String
+    + getInventory(): java.util.List<entity.Entity>
+    + setPlayTimeSeconds(long): void
+  }
+}
+
+package entity {
+  class Entity {
+    + getInventory(): java.util.List<Entity>
+    + getType(): entity.type.EntityType
+    + isStackable(): boolean
+    + setMaxStack(int): void
+    + setAmount(int): void
+    + getAmount(): int
+    + getMaxStack(): int
+    + getName(): String
+  }
+
+  class Player extends Entity {
+    + setLoaded(boolean): void
+    + setWorldX(int): void
+    + setWorldY(int): void
+    + setMapId(int): void
+    + setLife(int): void
+    + setMaxLife(int): void
+    + setMana(int): void
+    + setMaxMana(int): void
+    + setLevel(int): void
+    + setStrength(int): void
+    + setDexterity(int): void
+    + setExp(int): void
+    + setNextLevelExp(int): void
+    + setCoin(int): void
+    + setCurrentWeapon(Entity): void
+    + setCurrentShield(Entity): void
+  }
+}
+
+package entity.type {
+  class EntityType {
+    + typeId(): int
+  }
+  class PlayerType
+  class NpcType
+  class MonsterType
+  class ChickenType
+  class SwordType
+  class AxeType
+  class ShieldType
+  class RedPotionType
+  class GreenPotionType
+  class BluePotionType
+  class BombType
+}
+
+package window {
+  class GameWindow {
+    + getKeyHandler(): Object
+  }
+}
+
+SaveManager ..> db.DbManager : uses
+SaveManager ..> EntityStateConverter : uses
+SaveManager ..> SaveData : persists
+SaveManager ..> SaveMeta : reads/writes
+SaveManager ..> factory.EntityFactory : uses
+SaveManager ..> player.Player : reads
+SaveManager ..> com.google.gson.Gson : uses
+
+LoadManager ..> db.DbManager : uses
+LoadManager ..> factory.EntityFactory : uses
+LoadManager ..> SaveManager : uses
+LoadManager ..> entity.Player : creates/initializes
+LoadManager ..> entity.Entity : reads/writes
+LoadManager ..> entity.type.EntityType : resolves
+
+EntityStateConverter ..> SaveData : creates
+EntityStateConverter ..> ItemSaveData : creates
+SaveData "1" *-- "0..*" ItemSaveData : contains
+
+
+note right of SaveManager
+**Notes**
+- saveGame は H2 DB を使いトランザクション内で実行（conn.setAutoCommit(false)）。
+- saveMainData は MERGE INTO を使って saves テーブルを更新。
+- clearInventory は inventory_items の該当 save_id を削除してから saveInventory で挿入する。
+- saveInventory は buildItemSaveDataList で分割された ItemSaveData をバッチ挿入する。
+- saveEquipmentItem は MERGE INTO を使い装備（weapon/shield）を安全に保存する。
+- writeMeta は JSON を一時ファイルに書き、原子移動で保存する（ATOMIC_MOVE）。
+
+- saveGame runs inside an H2 DB transaction (conn.setAutoCommit(false)).
+- saveMainData updates the saves table using MERGE INTO.
+- clearInventory deletes inventory_items for the given save_id before saveInventory inserts new rows.
+- saveInventory batch-inserts ItemSaveData produced by buildItemSaveDataList.
+- saveEquipmentItem uses MERGE INTO to safely persist equipment (weapon/shield).
+- writeMeta writes JSON to a temporary file and moves it atomically (ATOMIC_MOVE).
+end note
+
+note left of LoadManager
+**Notes**
+- loadEquipment はまずインベントリ内で同一 typeId のアイテムを探し装備に割当て、見つからなければ EntityFactory.create で生成して装備にセットする。
+- findEntityTypeById は typeId を具体的な EntityType クラスにマッピングする。
+- determineMaxStackForType はポーション等のスタック上限を返す（例: 7,8,9 -> 99）。
+
+- loadEquipment first searches the inventory for an item with the same typeId and assigns it as equipment; if not found, it creates one via EntityFactory.create and equips it.
+- findEntityTypeById maps numeric typeId values to concrete EntityType classes.
+- determineMaxStackForType returns stack limits for item types (e.g., typeIds 7, 8, 9 -> 99).
+end note
+
+note left of ItemSaveData
+**Notes**
+- ItemSaveData は Java record（不変のデータキャリア）。
+- インベントリスロットのエントリ（slot, typeId, count）を表す。
+
+- ItemSaveData is modeled as a Java record (an immutable data carrier).
+- Represents an inventory slot entry (slot, typeId, count).
+end note
+
+@enduml

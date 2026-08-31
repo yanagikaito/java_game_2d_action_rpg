@@ -1,0 +1,90 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="202px" preserveAspectRatio="none"
+     style="width:792px;height:202px;background:#FFFFFF;" version="1.1" viewBox="0 0 792 202" width="792px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster save-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L40.6445,6.0137 A3.75,3.75 0 0 1 43.1445,8.5137 L50.1445,30.6348 L337.5,30.6348 A2.5,2.5 0 0 1 340,33.1348 L340,178.5137 A2.5,2.5 0 0 1 337.5,181.0137 L8.5,181.0137 A2.5,2.5 0 0 1 6,178.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="50.1445" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="31.1445" x="10" y="23.1211">save
+            </text>
+        </g><!--class ItemSaveData-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="122.4844" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="301.4609" x="22.5" y="43.0137"/>
+            <ellipse cx="124.6255" cy="59.0137" fill="#FF8F00" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M123.4692,60.1699 L123.4692,62.3105 L124.0786,62.3105 Q124.7036,62.3105 124.9536,62.5449 Q125.2192,62.7793 125.2192,63.1699 Q125.2192,63.5449 124.9536,63.7793 Q124.7036,64.0137 124.0786,64.0137 L121.5005,64.0137 Q120.8911,64.0137 120.6255,63.7793 Q120.3599,63.5449 120.3599,63.1543 Q120.3599,62.7793 120.6255,62.5449 Q120.8911,62.3105 121.5005,62.3105 L121.7661,62.3105 L121.7661,55.6543 L121.5005,55.6543 Q120.8911,55.6543 120.6255,55.4199 Q120.3599,55.1855 120.3599,54.7949 Q120.3599,54.4199 120.6255,54.1855 Q120.8911,53.9512 121.5005,53.9512 L125.3599,53.9512 Q127.1567,53.9512 128.1411,54.8418 Q129.1411,55.7324 129.1411,57.0137 Q129.1411,57.8105 128.6724,58.4668 Q128.2036,59.123 127.2661,59.623 Q127.813,60.0918 128.4224,60.8418 Q128.813,61.3105 129.4536,62.3105 Q130.1099,62.3105 130.313,62.4512 Q130.688,62.7012 130.688,63.1699 Q130.688,63.5449 130.4224,63.7793 Q130.1724,64.0137 129.563,64.0137 L128.5786,64.0137 Q126.5161,60.8105 125.1567,60.1699 L123.4692,60.1699 Z M123.4692,58.4668 L124.7974,58.4668 Q125.5317,58.4668 126.1255,58.248 Q126.9067,57.9512 127.1724,57.623 Q127.438,57.2793 127.438,56.9512 Q127.438,56.4824 126.9224,56.0762 Q126.4067,55.6543 125.4224,55.6543 L123.4692,55.6543 L123.4692,58.4668 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88.71"
+                  x="145.1255" y="64.8105">ItemSaveData
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="322.9609" y1="75.0137" y2="75.0137"/>
+            <g>
+                <ellipse cx="33.5" cy="89.8242" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44.3516"
+                  x="42.5" y="94.1211">slot: int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="108.4453" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.7031"
+                  x="42.5" y="112.7422">typeId: int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="127.0664" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56.8135"
+                  x="42.5" y="131.3633">count: int
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="322.9609" y1="138.877" y2="138.877"/>
+            <g>
+                <ellipse cx="33.5" cy="153.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="275.4609"
+                  x="42.5" y="157.9844">ItemSaveData(slot: int, typeId: int, count: int)
+            </text>
+        </g>
+        <g class="entity" id="ent0005">
+            <path d="M359,12.5137 L359,100.0137 L323.79,104.0137 L359,108.0137 L359,195.4238 A0,0 0 0 0 359,195.4238 L785.3931,195.4238 A0,0 0 0 0 785.3931,195.4238 L785.3931,22.5137 L775.3931,12.5137 L359,12.5137 A0,0 0 0 0 359,12.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M775.3931,12.5137 L775.3931,22.5137 L785.3931,22.5137 L775.3931,12.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="365" y="31.542">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="365.5171"
+                  x="365" y="48.833">ItemSaveData &#12399; Java record&#65288;&#19981;&#22793;&#12398;&#12487;&#12540;&#12479;&#12461;&#12515;&#12522;&#12450;&#65289;&#12391;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="247.0127"
+                  x="365" y="66.124">- &#12501;&#12451;&#12540;&#12523;&#12489;&#12399; final &#30456;&#24403;&#12391;&#12452;&#12511;&#12517;&#12540;&#12479;&#12502;&#12523;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="279.6016"
+                  x="365" y="83.415">- equals / hashCode / toString &#12364;&#33258;&#21205;&#29983;&#25104;&#12373;&#12428;&#12427;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="293.9409"
+                  x="365" y="100.7061">- &#12475;&#12540;&#12502;&#12487;&#12540;&#12479;&#12398;&#12452;&#12531;&#12505;&#12531;&#12488;&#12522;&#35201;&#32032;&#12434;&#34920;&#12377;&#36605;&#37327;&#27083;&#36896;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="365" y="117.9971">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="348.9688"
+                  x="365" y="135.2881">- ItemSaveData is a Java record (an immutable data carrier).
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="246.3843"
+                  x="365" y="152.5791">- Fields are effectively final and immutable.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="289.7959"
+                  x="365" y="169.8701">- equals / hashCode / toString are auto-generated.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="405.3931"
+                  x="365" y="187.1611">- Lightweight structure representing an inventory element in save data.
+            </text>
+        </g>
+        <?plantuml-src XPBDRXCn58NtVegxR4CRzcn1IAqGcpw1cRb9HapirED95Q5A7NkHL2a20QrKiMYXVwW8MD15fQRYOIvfqbLVWUiXefCL6yk-Fj-vnpyT6RsKJOHCTX5U2G23aJOnh5Xiht7jYRIoh0CyW2pLzX4aoixMjjV1bRXQYNIkvYHLduL__58LNQfGYunjYaqXbBO89ccsBEZ6d8kerPxpPbQhYRcGLFo0LTcLinFSZGQ_Br-FZxUf-4w-Jtv4xXUvR-IFo9-J-tmtugqpAlPfoubb8BzBxYZ8_5Vosy6jaIYPmkJZvVZwVP2wO_87v4zcNdwFfKpYUYxJ31v2IsQjnpf6dbgzPasYcfngPze_7mzt9nyERWPlgU0kE-I6eQExAjljtSVZgA79J_BxvJZWgDFJOd9nIExTzDCNJZkzkhxjlxav6zvk7GfscRk390DPlGHOa0gITZktyaMA40TD98r9q2pM6NwQO1epOn2mqS389brCUxE3InNVi_N_7JHuoDpgvIOgDD9Y791duGKti7p7p9eyiZdh37OCPgXi2N92rUM5DZt05DiyvShV7naIrmLoal0Xn1y0?>
+    </g>
+</svg>

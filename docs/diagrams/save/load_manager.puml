@@ -1,0 +1,167 @@
+@startuml load_manager
+package save {
+  class LoadManager {
+    + loadPlayer(slotNumber: int, gameWindow: window.GameWindow): entity.Entity
+    + hasSaveData(slot: int): boolean
+    - loadInventory(conn: java.sql.Connection, saveId: int, player: entity.Entity, gameWindow: window.GameWindow): void
+    - loadEquipment(conn: java.sql.Connection, saveId: int, player: entity.Entity, gameWindow: window.GameWindow): void
+    - findEntityTypeById(typeId: int): entity.type.EntityType
+    - determineMaxStackForType(typeId: int): int
+  }
+
+  class EntityStateConverter {
+    + toSaveData(slot: int, entity: entity.Entity, savedAt: java.time.LocalDateTime): SaveData
+  }
+
+  class SaveData {
+    + slot: int
+    + worldX: int
+    + worldY: int
+    + mapId: int
+    + life: int
+    + maxLife: int
+    + mana: int
+    + maxMana: int
+    + level: int
+    + strength: int
+    + dexterity: int
+    + exp: int
+    + nextLevelExp: int
+    + coin: int
+    + weaponId: int
+    + shieldId: int
+    + inventory: java.util.List<ItemSaveData>
+    + savedAt: java.time.LocalDateTime
+    + SaveData(...)
+  }
+
+  class SaveMeta {
+    + exists(): boolean
+    + getPlayTimeSeconds(): long
+  }
+
+  class SaveManager {
+    + loadMeta(index: int): SaveMeta
+  }
+}
+
+package entity {
+  class Entity {
+    + getInventory(): java.util.List<Entity>
+    + getCurrentWeapon(): Entity
+    + getCurrentShield(): Entity
+    + getType(): entity.type.EntityType
+    + getCount(): int
+    + getAmount(): int
+    + setAmount(int): void
+    + isStackable(): boolean
+    + setMaxStack(int): void
+    + getMaxStack(): int
+    + getName(): String
+  }
+
+  class Player extends Entity {
+    + setLoaded(boolean): void
+    + setWorldX(int): void
+    + setWorldY(int): void
+    + setMapId(int): void
+    + setLife(int): void
+    + setMaxLife(int): void
+    + setMana(int): void
+    + setMaxMana(int): void
+    + setLevel(int): void
+    + setStrength(int): void
+    + setDexterity(int): void
+    + setExp(int): void
+    + setNextLevelExp(int): void
+    + setCoin(int): void
+    + setPlayTimeSeconds(long): void
+    + getInventory(): java.util.List<Entity>
+    + setCurrentWeapon(Entity): void
+    + setCurrentShield(Entity): void
+  }
+}
+
+package factory {
+  class EntityFactory {
+    + EntityFactory(gameWindow: window.GameWindow)
+    + create(type: entity.type.EntityType): entity.Entity
+  }
+}
+
+package db {
+  class DbManager {
+    + getConnection(): java.sql.Connection
+  }
+}
+
+package entity.type {
+  class EntityType {
+    + typeId(): int
+  }
+  class PlayerType
+  class NpcType
+  class MonsterType
+  class ChickenType
+  class SwordType
+  class AxeType
+  class ShieldType
+  class RedPotionType
+  class GreenPotionType
+  class BluePotionType
+  class BombType
+}
+
+package window {
+  class GameWindow {
+    + getKeyHandler(): Object
+  }
+}
+
+LoadManager ..> db.DbManager : uses
+LoadManager ..> factory.EntityFactory : uses
+LoadManager ..> SaveManager : uses
+LoadManager ..> SaveMeta : reads
+LoadManager ..> entity.Player : creates/initializes
+LoadManager ..> entity.Entity : reads/writes
+LoadManager ..> entity.type.EntityType : resolves
+LoadManager ..> ItemSaveData : reads
+EntityStateConverter ..> SaveData : creates
+EntityStateConverter ..> ItemSaveData : creates
+SaveData "1" *-- "0..*" ItemSaveData : contains
+EntityFactory ..> entity.type.EntityType : uses
+EntityFactory ..> entity.Entity : creates
+
+note right of LoadManager
+  Responsibilities:
+    - Load player state from DB and restore inventory and equipment.
+    - loadEquipment: map equipment rows to inventory items when possible; fallback to factory.create(type).
+    - findEntityTypeById: maps numeric typeId to concrete EntityType instances.
+    - determineMaxStackForType: returns stack limits (e.g., potions -> 99).
+end note
+
+note right of entity.type.EntityType
+  Mapping (findEntityTypeById):
+    0 -> PlayerType
+    1 -> NpcType
+    2 -> MonsterType
+    3 -> ChickenType
+    4 -> SwordType
+    5 -> AxeType
+    6 -> ShieldType
+    7 -> RedPotionType
+    8 -> GreenPotionType
+    9 -> BluePotionType
+    10 -> BombType
+end note
+
+note left of ItemSaveData
+**Notes**
+- Java の record としてモデル化（不変のデータキャリア）。
+- セーブデータ内のインベントリスロットのエントリを表す。
+
+- Modeled as a Java record (immutable data carrier).
+- Represents an inventory slot entry in save data.
+end note
+
+@enduml

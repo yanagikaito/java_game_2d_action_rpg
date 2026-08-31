@@ -1,0 +1,76 @@
+@startuml entity_state_converter
+package save {
+  class EntityStateConverter {
+    + toSaveData(slot: int, entity: entity.Entity, savedAt: java.time.LocalDateTime): SaveData
+  }
+
+  class SaveData {
+    + slot: int
+    + worldX: int
+    + worldY: int
+    + mapId: int
+    + life: int
+    + maxLife: int
+    + mana: int
+    + maxMana: int
+    + level: int
+    + strength: int
+    + dexterity: int
+    + exp: int
+    + nextLevelExp: int
+    + coin: int
+    + weaponId: int
+    + shieldId: int
+    + inventory: java.util.List<ItemSaveData>
+    + savedAt: java.time.LocalDateTime
+    + SaveData(slot: int, worldX: int, worldY: int, mapId: int,
+               life: int, maxLife: int, mana: int, maxMana: int,
+               level: int, strength: int, dexterity: int, exp: int,
+               nextLevelExp: int, coin: int, weaponId: int, shieldId: int,
+               inventory: java.util.List<ItemSaveData>, savedAt: java.time.LocalDateTime)
+  }
+
+  class ItemSaveData {
+    + slotIndex: int
+    + typeId: int
+    + count: int
+    + ItemSaveData(slotIndex: int, typeId: int, count: int)
+  }
+}
+
+EntityStateConverter ..> SaveData : creates
+EntityStateConverter ..> ItemSaveData : creates
+EntityStateConverter ..> entity.Entity : reads
+SaveData "1" *-- "0..*" ItemSaveData : contains
+
+note right of EntityStateConverter
+**Notes**
+Purpose
+- entity.Entity の現在状態を永続化用の SaveData に変換するユーティリティ。
+- null 安全性と簡易バリデーション（typeId <= 0 をスキップ）を行う。
+
+- Utility that converts the current state of entity.Entity into SaveData for persistence.
+- Performs null-safety checks and simple validation (skips items with typeId <= 0).
+end note
+
+note right of SaveData
+**Notes**
+SaveData
+- セーブファイルに書き出すプレイヤー／エンティティのスナップショットを保持。
+- 将来の互換性のために version フィールドを追加することを検討。
+
+- Holds a snapshot of the player/entity to be written to save files.
+- Consider adding a version field to support future compatibility.
+end note
+
+note left of ItemSaveData
+**Notes**
+ItemSaveData
+- インベントリ内のアイテムを表す軽量データ（スロット・タイプID・個数）。
+- ロード時に欠損スロットをどう扱うか仕様を合わせる必要あり。
+
+- Lightweight data representing an inventory item (slot index, type ID, count).
+- Ensure the load-side behavior for missing slots is specified and aligned with the save format.
+end note
+
+@enduml
