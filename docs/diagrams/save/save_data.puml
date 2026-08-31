@@ -1,0 +1,139 @@
+@startuml save_data
+package save {
+  record SaveData {
+    + id: int
+    + x: int
+    + y: int
+    + mapId: int
+    + hp: int
+    + maxHp: int
+    + mana: int
+    + maxMana: int
+    + level: int
+    + strength: int
+    + dexterity: int
+    + exp: int
+    + next_exp: int
+    + coin: int
+    + weaponTypeId: int
+    + shieldTypeId: int
+    + inventory: java.util.List<ItemSaveData>
+    + savedAt: java.time.LocalDateTime
+    + SaveData(id: int, x: int, y: int, mapId: int,
+               hp: int, maxHp: int, mana: int, maxMana: int,
+               level: int, strength: int, dexterity: int, exp: int, next_exp: int, coin: int,
+               weaponTypeId: int, shieldTypeId: int,
+               inventory: java.util.List<ItemSaveData>, savedAt: java.time.LocalDateTime)
+  }
+
+  record ItemSaveData {
+    + slot: int
+    + typeId: int
+    + count: int
+    + ItemSaveData(slot: int, typeId: int, count: int)
+  }
+
+  class EntityStateConverter {
+    + toSaveData(slot: int, entity: entity.Entity, savedAt: java.time.LocalDateTime): SaveData
+  }
+
+  class LoadManager {
+    + loadPlayer(slotNumber: int, gameWindow: window.GameWindow): entity.Entity
+    + hasSaveData(slot: int): boolean
+  }
+
+  class SaveManager {
+    + loadMeta(index: int): SaveMeta
+  }
+
+  class SaveMeta {
+    + exists(): boolean
+    + getPlayTimeSeconds(): long
+  }
+}
+
+package entity {
+  class Entity {
+    + getInventory(): java.util.List<Entity>
+    + getType(): entity.type.EntityType
+    + isStackable(): boolean
+    + setMaxStack(int): void
+    + setAmount(int): void
+    + getAmount(): int
+    + getName(): String
+  }
+
+  class Player extends Entity {
+    + setLoaded(boolean): void
+    + setWorldX(int): void
+    + setWorldY(int): void
+    + setMapId(int): void
+    + setLife(int): void
+    + setMaxLife(int): void
+    + setMana(int): void
+    + setMaxMana(int): void
+    + setLevel(int): void
+    + setStrength(int): void
+    + setDexterity(int): void
+    + setExp(int): void
+    + setNextLevelExp(int): void
+    + setCoin(int): void
+    + setPlayTimeSeconds(long): void
+    + setCurrentWeapon(Entity): void
+    + setCurrentShield(Entity): void
+  }
+}
+
+package factory {
+  class EntityFactory {
+    + EntityFactory(gameWindow: window.GameWindow)
+    + create(type: entity.type.EntityType): entity.Entity
+  }
+}
+
+package db {
+  class DbManager {
+    + getConnection(): java.sql.Connection
+  }
+}
+
+package entity.type {
+  class EntityType {
+    + typeId(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getKeyHandler(): Object
+  }
+}
+
+' 関係
+SaveData "1" *-- "0..*" ItemSaveData : contains
+EntityStateConverter ..> SaveData : creates
+EntityStateConverter ..> ItemSaveData : creates
+LoadManager ..> db.DbManager : uses
+LoadManager ..> factory.EntityFactory : uses
+LoadManager ..> SaveManager : uses
+LoadManager ..> entity.Player : creates/initializes
+LoadManager ..> entity.Entity : reads/writes
+LoadManager ..> entity.type.EntityType : resolves
+
+note right of SaveData
+**Notes**
+- SaveData は保存スナップショットを表す Java の record としてモデル化されています。
+- プレイヤーの位置、ステータス、装備のタイプID、インベントリ一覧、タイムスタンプを含みます。
+
+- SaveData is modeled as a Java record representing a saved snapshot.
+- Contains player position, stats, equipment type IDs, inventory list, and timestamp.
+end note
+
+note left of ItemSaveData
+**Notes**
+- ItemSaveData はインベントリスロットのエントリ（slot、typeId、count）を表す Java の record です。
+
+- ItemSaveData is a Java record representing an inventory slot entry (slot, typeId, count).
+end note
+
+@enduml
