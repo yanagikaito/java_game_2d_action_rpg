@@ -1,0 +1,33 @@
+@startuml path_manager
+package db {
+  class PathManager {
+    + loadPath(mapId: int, pathId: int): java.util.List<java.awt.Point>
+  }
+
+  class DbManager {
+    + initSchema(): void
+    + getConnection(): java.sql.Connection
+  }
+}
+
+PathManager ..> DbManager : uses
+
+note right of PathManager
+**Notes**
+- loadPath(mapId, pathId) は map_path を step 順に問い合わせし、Point の一覧を返します。
+- SQL エラーが発生した場合は空のリストを返します。
+
+- loadPath(mapId, pathId) queries map_path ordered by step and returns a List of Points.
+- Returns an empty list on SQL errors.
+end note
+
+note left of DbManager
+**Notes**
+- getConnection() を通じて JDBC 接続を提供します。
+- PathManager は DB アクセスのため DbManager に依存します。
+
+- Provides JDBC connection via getConnection().
+- PathManager depends on DbManager for DB access.
+end note
+
+@enduml

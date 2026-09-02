@@ -1,0 +1,567 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="1492px" preserveAspectRatio="none"
+     style="width:1091px;height:1492px;background:#FFFFFF;" version="1.1" viewBox="0 0 1091 1492" width="1091px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster db-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L26.6035,6.0137 A3.75,3.75 0 0 1 29.1035,8.5137 L36.1035,30.6348 L443.5,30.6348 A2.5,2.5 0 0 1 446,33.1348 L446,1482.5137 A2.5,2.5 0 0 1 443.5,1485.0137 L8.5,1485.0137 A2.5,2.5 0 0 1 6,1482.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="36.1035" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="17.1035" x="10" y="23.1211">db
+            </text>
+        </g><!--class MapModel-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="383.1797" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="313.1436" x="115.5" y="43.0137"/>
+            <ellipse cx="235.1392" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M237.9048,54.8887 Q238.061,54.6699 238.2485,54.5605 Q238.436,54.4512 238.6548,54.4512 Q239.0298,54.4512 239.2642,54.7168 Q239.4985,54.9668 239.4985,55.5762 L239.4985,57.0293 Q239.4985,57.6387 239.2642,57.9043 Q239.0298,58.1699 238.6548,58.1699 Q238.311,58.1699 238.1079,57.9668 Q237.9048,57.7793 237.7954,57.2637 Q237.7485,56.9043 237.561,56.7168 Q237.2329,56.3418 236.6235,56.123 Q236.0142,55.9043 235.3892,55.9043 Q234.6235,55.9043 233.9829,56.2324 Q233.3579,56.5605 232.8579,57.3105 Q232.3735,58.0605 232.3735,59.0918 L232.3735,60.1855 Q232.3735,61.4199 233.2642,62.248 Q234.1548,63.0605 235.7485,63.0605 Q236.686,63.0605 237.3423,62.8105 Q237.7329,62.6543 238.1548,62.2168 Q238.4204,61.9512 238.561,61.873 Q238.7173,61.7949 238.9204,61.7949 Q239.2485,61.7949 239.4985,62.0605 Q239.7642,62.3105 239.7642,62.6543 Q239.7642,62.998 239.4204,63.4043 Q238.9204,63.9824 238.1235,64.3105 Q237.0454,64.7637 235.7485,64.7637 Q234.2329,64.7637 233.0298,64.1387 Q232.0454,63.6387 231.3579,62.5762 Q230.6704,61.498 230.6704,60.2168 L230.6704,59.0605 Q230.6704,57.7324 231.2798,56.5918 Q231.9048,55.4355 232.9985,54.8262 Q234.0923,54.2012 235.3267,54.2012 Q236.061,54.2012 236.7017,54.373 Q237.3579,54.5293 237.9048,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.3652"
+                  x="255.6392" y="64.8105">MapModel
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="116.5" x2="427.6436" y1="75.0137" y2="75.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="123.5" y="86.8242"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248"
+                  x="135.5" y="94.1211">width: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="123.5" y="105.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.71"
+                  x="135.5" y="112.7422">height: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="123.5" y="124.0664"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="63.0205"
+                  x="135.5" y="131.3633">tiles: int[][]
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="123.5" y="142.6875"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="251.3574"
+                  x="135.5" y="149.9844">events: java.util.Map&lt;String, MapEvent&gt;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="123.5" y="161.3086"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="217.1162"
+                  x="135.5" y="168.6055">allEvents: java.util.List&lt;MapEvent&gt;
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="116.5" x2="427.6436" y1="176.1191" y2="176.1191"/>
+            <g>
+                <ellipse cx="126.5" cy="190.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="198.4268"
+                  x="135.5" y="195.2266">MapModel(width: int, height: int)
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="209.5508" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="224.0889"
+                  x="135.5" y="213.8477">loadEventsFromDb(mapId: int): void
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="228.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="192.1719"
+                  x="135.5" y="232.4688">setTile(x: int, y: int, id: int): void
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="246.793" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="180.5439"
+                  x="135.5" y="251.0898">addEvent(e: MapEvent): void
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="265.4141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="259.1162"
+                  x="135.5" y="269.7109">findEventAt(tileX: int, tileY: int): MapEvent
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="284.0352" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="218.6611"
+                  x="135.5" y="288.332">getEventById(id: String): MapEvent
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="302.6563" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="180.5166"
+                  x="135.5" y="306.9531">removeEvent(id: String): void
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="321.2773" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="215.5371"
+                  x="135.5" y="325.5742">getEventAt(x: int, y: int): MapEvent
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="339.8984" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="287.1436"
+                  x="135.5" y="344.1953">getAllEvents(): java.util.Collection&lt;MapEvent&gt;
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="358.5195" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="115.9307"
+                  x="135.5" y="362.8164">clearEvents(): void
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="377.1406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="140.8203"
+                  x="135.5" y="381.4375">getTile(x: int, y: int): int
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="395.7617" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87.1377"
+                  x="135.5" y="400.0586">getWidth(): int
+            </text>
+            <g>
+                <ellipse cx="126.5" cy="414.3828" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.8203"
+                  x="135.5" y="418.6797">getHeight(): int
+            </text>
+        </g><!--class MapEvent-->
+        <g class="entity" id="ent0004">
+            <rect fill="#F1F1F1" height="736.9805" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="407.2607" x="22.5" y="732.0137"/>
+            <ellipse cx="190.3633" cy="748.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M193.1289,743.8887 Q193.2852,743.6699 193.4727,743.5605 Q193.6602,743.4512 193.8789,743.4512 Q194.2539,743.4512 194.4883,743.7168 Q194.7227,743.9668 194.7227,744.5762 L194.7227,746.0293 Q194.7227,746.6387 194.4883,746.9043 Q194.2539,747.1699 193.8789,747.1699 Q193.5352,747.1699 193.332,746.9668 Q193.1289,746.7793 193.0195,746.2637 Q192.9727,745.9043 192.7852,745.7168 Q192.457,745.3418 191.8477,745.123 Q191.2383,744.9043 190.6133,744.9043 Q189.8477,744.9043 189.207,745.2324 Q188.582,745.5605 188.082,746.3105 Q187.5977,747.0605 187.5977,748.0918 L187.5977,749.1855 Q187.5977,750.4199 188.4883,751.248 Q189.3789,752.0605 190.9727,752.0605 Q191.9102,752.0605 192.5664,751.8105 Q192.957,751.6543 193.3789,751.2168 Q193.6445,750.9512 193.7852,750.873 Q193.9414,750.7949 194.1445,750.7949 Q194.4727,750.7949 194.7227,751.0605 Q194.9883,751.3105 194.9883,751.6543 Q194.9883,751.998 194.6445,752.4043 Q194.1445,752.9824 193.3477,753.3105 Q192.2695,753.7637 190.9727,753.7637 Q189.457,753.7637 188.2539,753.1387 Q187.2695,752.6387 186.582,751.5762 Q185.8945,750.498 185.8945,749.2168 L185.8945,748.0605 Q185.8945,746.7324 186.5039,745.5918 Q187.1289,744.4355 188.2227,743.8262 Q189.3164,743.2012 190.5508,743.2012 Q191.2852,743.2012 191.9258,743.373 Q192.582,743.5293 193.1289,743.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="63.0342"
+                  x="210.8633" y="753.8105">MapEvent
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="428.7607" y1="764.0137" y2="764.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="775.8242"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248"
+                  x="42.5" y="783.1211">id: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="794.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29.5654"
+                  x="42.5" y="801.7422">x: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="813.0664"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29.5654"
+                  x="42.5" y="820.3633">y: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="831.6875"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="79.3721"
+                  x="42.5" y="838.9844">name: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="850.3086"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84.0342"
+                  x="42.5" y="857.6055">trigger: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="868.9297"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61.4756"
+                  x="42.5" y="876.2266">mapId: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="887.5508"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="193.7852"
+                  x="42.5" y="894.8477">dialogues: java.util.List&lt;String&gt;
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="906.1719"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="138.5439"
+                  x="42.5" y="913.4688">questOffered: boolean
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="924.793"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="150.2266"
+                  x="42.5" y="932.0898">questAccepted: boolean
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="943.4141"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="159.5576"
+                  x="42.5" y="950.7109">questCompleted: boolean
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="962.0352"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="218.6611"
+                  x="42.5" y="969.332">meta: java.util.Map&lt;String, Object&gt;
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="428.7607" y1="976.8457" y2="976.8457"/>
+            <g>
+                <ellipse cx="33.5" cy="991.6563" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72.3584"
+                  x="42.5" y="995.9531">MapEvent()
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1010.2773" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="202.2959"
+                  x="42.5" y="1014.5742">MapEvent(id: String, x: int, y: int)
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1028.8984" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="381.2607"
+                  x="42.5" y="1033.1953">MapEvent(id: String, x: int, y: int, name: String, trigger: String)
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1047.5195" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84.8135"
+                  x="42.5" y="1051.8164">getId(): String
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1066.1406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128.3857"
+                  x="42.5" y="1070.4375">setId(id: String): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1084.7617" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.6895"
+                  x="42.5" y="1089.0586">getX(): int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1103.3828" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100.3652"
+                  x="42.5" y="1107.6797">setX(x: int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1122.0039" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60.6895"
+                  x="42.5" y="1126.3008">getY(): int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1140.625" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100.3652"
+                  x="42.5" y="1144.9219">setY(y: int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1159.2461" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110.4824"
+                  x="42.5" y="1163.543">getName(): String
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1177.8672" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="178.1787"
+                  x="42.5" y="1182.1641">setName(name: String): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1196.4883" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="117.4824"
+                  x="42.5" y="1200.7852">getTrigger(): String
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1215.1094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="189.8408"
+                  x="42.5" y="1219.4063">setTrigger(trigger: String): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1233.7305" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="224.8955"
+                  x="42.5" y="1238.0273">getDialogues(): java.util.List&lt;String&gt;
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1252.3516" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="317.5088"
+                  x="42.5" y="1256.6484">setDialogues(dialogues: java.util.List&lt;String&gt;): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1270.9727" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="161.082"
+                  x="42.5" y="1275.2695">isQuestOffered(): boolean
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1289.5938" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="284.0469"
+                  x="42.5" y="1293.8906">setQuestOffered(questOffered: boolean): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1308.2148" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="172.7646"
+                  x="42.5" y="1312.5117">isQuestAccepted(): boolean
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1326.8359" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="307.4121"
+                  x="42.5" y="1331.1328">setQuestAccepted(questAccepted: boolean): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1345.457" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="182.0957"
+                  x="42.5" y="1349.7539">isQuestCompleted(): boolean
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1364.0781" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="326.0742"
+                  x="42.5" y="1368.375">setQuestCompleted(questCompleted: boolean): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1382.6992" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="247.4473"
+                  x="42.5" y="1386.9961">getMeta(): java.util.Map&lt;String, Object&gt;
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1401.3203" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="311.2471"
+                  x="42.5" y="1405.6172">setMeta(meta: java.util.Map&lt;String, Object&gt;): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1419.9414" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="90.2617"
+                  x="42.5" y="1424.2383">getMapId(): int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1438.5625" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="161.8477"
+                  x="42.5" y="1442.8594">setMapId(mapId: int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="1457.1836" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="101.9238"
+                  x="42.5" y="1461.4805">toString(): String
+            </text>
+        </g><!--class DbManager-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="141.1055" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="255.5781" x="173" y="508.5137"/>
+            <ellipse cx="259.9634" cy="524.5137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M262.729,520.3887 Q262.8853,520.1699 263.0728,520.0605 Q263.2603,519.9512 263.479,519.9512 Q263.854,519.9512 264.0884,520.2168 Q264.3228,520.4668 264.3228,521.0762 L264.3228,522.5293 Q264.3228,523.1387 264.0884,523.4043 Q263.854,523.6699 263.479,523.6699 Q263.1353,523.6699 262.9321,523.4668 Q262.729,523.2793 262.6196,522.7637 Q262.5728,522.4043 262.3853,522.2168 Q262.0571,521.8418 261.4478,521.623 Q260.8384,521.4043 260.2134,521.4043 Q259.4478,521.4043 258.8071,521.7324 Q258.1821,522.0605 257.6821,522.8105 Q257.1978,523.5605 257.1978,524.5918 L257.1978,525.6855 Q257.1978,526.9199 258.0884,527.748 Q258.979,528.5605 260.5728,528.5605 Q261.5103,528.5605 262.1665,528.3105 Q262.5571,528.1543 262.979,527.7168 Q263.2446,527.4512 263.3853,527.373 Q263.5415,527.2949 263.7446,527.2949 Q264.0728,527.2949 264.3228,527.5605 Q264.5884,527.8105 264.5884,528.1543 Q264.5884,528.498 264.2446,528.9043 Q263.7446,529.4824 262.9478,529.8105 Q261.8696,530.2637 260.5728,530.2637 Q259.0571,530.2637 257.854,529.6387 Q256.8696,529.1387 256.1821,528.0762 Q255.4946,526.998 255.4946,525.7168 L255.4946,524.5605 Q255.4946,523.2324 256.104,522.0918 Q256.729,520.9355 257.8228,520.3262 Q258.9165,519.7012 260.1509,519.7012 Q260.8853,519.7012 261.5259,519.873 Q262.1821,520.0293 262.729,520.3887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="73.1514"
+                  x="280.4634" y="530.3105">DbManager
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="174" x2="427.5781" y1="540.5137" y2="540.5137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="181" y="552.3242"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="116.7031"
+                  x="193" y="559.6211">JDBC_URL: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="181" y="570.9453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="127.5928"
+                  x="193" y="578.2422">JDBC_USER: String
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="181" y="589.5664"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="126.0479"
+                  x="193" y="596.8633">JDBC_PASS: String
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="174" x2="427.5781" y1="604.377" y2="604.377"/>
+            <g>
+                <ellipse cx="184" cy="619.1875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.041"
+                  x="193" y="623.4844">initSchema(): void
+            </text>
+            <g>
+                <ellipse cx="184" cy="637.8086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="229.5781"
+                  x="193" y="642.1055">getConnection(): java.sql.Connection
+            </text>
+        </g>
+        <g class="entity" id="ent0010">
+            <path d="M463.5,134.5137 L463.5,230.5137 L428.88,234.5137 L463.5,238.5137 L463.5,334.7148 A0,0 0 0 0 463.5,334.7148 L1084.2393,334.7148 A0,0 0 0 0 1084.2393,334.7148 L1084.2393,144.5137 L1074.2393,134.5137 L463.5,134.5137 A0,0 0 0 0 463.5,134.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1074.2393,134.5137 L1074.2393,144.5137 L1084.2393,144.5137 L1074.2393,134.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="469.5" y="153.542">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="124.2935"
+                  x="469.5" y="170.833">Implementation notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="277.7734"
+                  x="469.5" y="188.124">- events &#12399; id -&gt; MapEvent &#12398;&#39640;&#36895;&#26908;&#32034;&#29992;
+                Map&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="335.1436"
+                  x="469.5" y="205.415">- allEvents &#12399;&#38918;&#24207;&#20445;&#25345;&#65288;&#34920;&#31034;&#12420;&#26908;&#32034;&#38918;&#24207;&#12398;&#20445;&#35388;&#65289;&#29992;
+                List&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="447.1035"
+                  x="469.5" y="222.7061">- loadEventsFromDb &#12399; DB &#12363;&#12425;&#35501;&#12415;&#36796;&#12415;&#12289;&#20001;&#26041;&#12398;&#12467;&#12524;&#12463;&#12471;&#12519;&#12531;&#12434;&#26356;&#26032;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="534.5933"
+                  x="469.5" y="239.9971">- JSON &#12501;&#12451;&#12540;&#12523;&#12489;&#12399; Jackson(ObjectMapper)
+                &#12391; MapEvent &#12398; dialogues/meta &#12434;&#24489;&#20803;&#12377;&#12427;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="469.5" y="257.2881">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="218.937"
+                  x="469.5" y="274.5791">- events is a Map for fast lookup by id.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="397.3887"
+                  x="469.5" y="291.8701">- allEvents is a List that preserves order (for display/search ordering).
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="398.874"
+                  x="469.5" y="309.1611">- loadEventsFromDb loads from the DB and updates both collections.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="599.7393"
+                  x="469.5" y="326.4521">- JSON fields are restored into MapEvent.dialogues and MapEvent.meta using
+                Jackson (ObjectMapper).
+            </text>
+        </g>
+        <g class="entity" id="ent0013">
+            <path d="M465,1009.0137 L465,1096.5137 L429.85,1100.5137 L465,1104.5137 L465,1191.9238 A0,0 0 0 0 465,1191.9238 L966.5493,1191.9238 A0,0 0 0 0 966.5493,1191.9238 L966.5493,1019.0137 L956.5493,1009.0137 L465,1009.0137 A0,0 0 0 0 465,1009.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M956.5493,1009.0137 L956.5493,1019.0137 L966.5493,1019.0137 L956.5493,1009.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="471" y="1028.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="270.8799"
+                  x="471" y="1045.333">- map_event &#12486;&#12540;&#12502;&#12523;&#12398;&#34892;&#12434;&#34920;&#29694;&#12377;&#12427;
+                POJO&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="249.4946"
+                  x="471" y="1062.624">- trigger &#12398;&#20516;&#20363;: "interact", "touch", "auto"&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="428.3335"
+                  x="471" y="1079.915">- dialogues &#12399;&#38918;&#24207;&#20184;&#12365;&#12398;&#21488;&#35422;&#12522;&#12473;&#12488;&#12289;meta
+                &#12399;&#25313;&#24373;&#21487;&#33021;&#12394;&#12461;&#12540;/&#20516;&#12510;&#12483;&#12503;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="401.5527"
+                  x="471" y="1097.2061">- &#24341;&#25968;&#12394;&#12375;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12399;&#12471;&#12522;&#12450;&#12521;&#12452;&#12474;/&#12487;&#12471;&#12522;&#12450;&#12521;&#12452;&#12474;&#29992;&#12395;&#27531;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="471" y="1114.4971">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="315.7705"
+                  x="471" y="1131.7881">- Represents a row in the map_event table as a POJO.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="292.8745"
+                  x="471" y="1149.0791">- Example trigger values: "interact", "touch", "auto".
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="480.5493"
+                  x="471" y="1166.3701">- dialogues is an ordered list of dialogue lines; meta is an extensible
+                key/value map.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="360.5469"
+                  x="471" y="1183.6611">- No-arg constructor is retained for serialization/deserialization.
+            </text>
+        </g>
+        <g class="entity" id="ent0016">
+            <path d="M464,505.0137 L464,575.0137 L429.26,579.0137 L464,583.0137 L464,653.3418 A0,0 0 0 0 464,653.3418 L933.5381,653.3418 A0,0 0 0 0 933.5381,653.3418 L933.5381,515.0137 L923.5381,505.0137 L464,505.0137 A0,0 0 0 0 464,505.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M923.5381,505.0137 L923.5381,515.0137 L933.5381,515.0137 L923.5381,505.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="470" y="524.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="106.228"
+                  x="470" y="541.333">Schema highlights
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="404.644"
+                  x="470" y="558.624">- map_event(id PK, map_id, x, y, name, trigger_type, json, created_at)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="448.5381"
+                  x="470" y="575.915">- initSchema &#12399;&#24517;&#35201;&#12394;&#12486;&#12540;&#12502;&#12523;&#12434;
+                IF NOT EXISTS &#12391;&#20316;&#25104;&#12377;&#12427;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="470" y="593.2061">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="106.228"
+                  x="470" y="610.4971">Schema highlights
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="404.644"
+                  x="470" y="627.7881">- map_event(id PK, map_id, x, y, name, trigger_type, json, created_at)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="424.8359"
+                  x="470" y="645.0791">- initSchema is a utility that creates required tables using IF NOT EXISTS.
+            </text>
+        </g><!--link MapModel to DbManager-->
+        <g class="link"
+           id="lnk6">
+            <path d="M288.15,426.2937 C290.64,455.6337 292.5552,478.2149 294.6052,502.4949" fill="none"
+                  id="MapModel-to-DbManager" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="295.11,508.4737,298.3386,499.1691,294.6893,503.4914,290.367,499.8421,295.11,508.4737"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="150.998"
+                  x="292" y="471.042">uses (loadEventsFromDb)
+            </text>
+        </g><!--reverse link MapModel to MapEvent-->
+        <g class="link"
+           id="lnk7">
+            <path
+                    d="M127.7318,436.79 C114.5718,462.32 108.77,478.2737 101,505.0137 C79.89,577.6837 80.43,656.3137 92.15,731.8637"
+                    fill="none" id="MapModel-backto-MapEvent" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="133.23,426.1237,126.9255,429.6241,127.7318,436.79,134.0363,433.2895,133.23,426.1237"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53.479"
+                  x="102" y="584.542">manages
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="7.23"
+                  x="120.6743" y="447.971">1
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="19.5127"
+                  x="70.2408" y="721.2343">0..*
+            </text>
+        </g><!--link DbManager to MapEvent-->
+        <g class="link"
+           id="lnk8">
+            <path d="M290.96,649.5337 C287.56,673.1037 284.3469,695.3652 279.9269,725.9952" fill="none"
+                  id="DbManager-to-MapEvent" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="279.07,731.9337,284.3144,723.5972,279.7841,726.9849,276.3964,722.4546,279.07,731.9337"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="189.3125"
+                  x="285" y="698.042">persists/reads (map_event table)
+            </text>
+        </g>
+        <?plantuml-src lLPRRnD757xthnZvoKuTktrD4L98WfgK91HJ5OHGDFQExONrhjaPXxXLfTXRA2XKgL2vLAMNq8Xh8KXGjT0q-J4J6_F4N-WvC-kzsEkMfxuatZDdlZdpdU-SEGrQFa-hZ1WbyaMAaB95EIUBjB7e6CnI9a8coKNJ4BKfOjh2DzIOMQs9g4MO5kFASERicRE-aQqoMu3r75sb-IQuv07wK56ufbtDuJ5pw73OzwQMDJUouPZ9nQ6uvtj1W9ami5mqfgplPpdKq917NQS-MyhKQMFUq2vJPDKn3T-HCt4IBf1Pyx5Q_dypoPaQ6ZJ3fe8xn3qgfgrTfaK6YJdbm-7lqmF4mLP_JvK9zNcaDMzay5nDqwYZo-hEAjCHnFmY0Gp0uFpubHBFdHuGdyb6gPznB8kLXUdO8maeMuowuPxuoGbCPaEfA9VFC6-POUj7AeEX-SjKL9Bgk42IuSrzmrfKZQteXqthRCWPVbUhp1soXkhm3OP9BQVQPAEArFi6ohq0BcAvKc4kW_qbnm5wxEZQTBdC6cBCuenJRrWiORNE11rNFCkbSv2RI45eGMI73I5FEJAKatTtpSKup0tJbmrJ2DhDnbXLjJMiwBXUJiM5mD6obb1tu7fwnFLqffNikWGH9yMYxD7hZEfNtovfys1fc81XYDc1SE8LDI8T1Hew_wVUuWUP_9E8yF2eg7uKTimXKQQ9a0EzZiSCF9BrdOWQ27qyREWofZH6g5w48ecpFBvCkE_-3eKrUWusXn7vQUkuPqKu6ZKcfKXNcoqjKXkUNpTeQmkpHsPMFZrnRAWpQNDnxaII_VXqiJWaLTCsHR5SOtKwsfvd7DlMRJsWZL_0RZymgnWXoc0CoESFHqAT8atEECaCFwxPS4FwWpIPc9mawVVp-ObqsBodeCKY24-5S0WUSMWmbuFWUS5br81JWDeLDKOGGKiMowPIjYCOSV6b84ub60LI4nDBiC0d9bBpg9awRA5u6uB-F3KOHeXixy3ZGIOZfyhsqpUFRxzP_xctVUVrYxklltk0QtAzaueC9RZnpI-Nkwys3_P_x5rhlzszqjzwy7hxbUnyfVVfLG03X_w3tRUxLn49orT33HEcGfaz0lysPETg_z4JsTxlx-t2NxdUFlXpgtVp9O39pdFf_IOxExBpX_JkI--vx5pl_V2YT_EPR7ylEniQVA6ul4IaTqDsVfNUhlGUI-yguY_0WCSXrLhMS2qWE0j7tezTFtpf2bWR18xexZtiNlB28q86JKuexYOLnoKLoWNSp3dVR91I2vZDnqXJlaW14JKgICDbdBch81_7DI3v6OGmJDwmQAl0OQOer_GADjLy4cTeuAG27u38a3vg6wJPC2Xa6Pg4g95oCBVm_82PYiais4TTa0xq5GSw89Qh4x2G3nXGW85PqT7a4C-0IXBdCfzYu8yYIv2c7hH2QQePmzUpz2whJDt4PBMVzhUk0UiegSqzpJevlhomhBFhlpUOgkxwzi7UnXH9G_ZCfMMHpf6qS9hb6lwWJU6azPxmGg5o_xejszyWoEQp_iEVfFT8TbvAxmheJQUzlTFRsEhk_jxTtEbxVyish3-180jmgFJ0tvFUBOtUtRtHk_4CFTgtb4IV-r3UGwNLVS1IYWM8kyguBJkl2jBxUjGAPIBRZtjFD_3UMcedc98AIeWIrxa8oLBv7ce7XE8wyeIPdbkZMFe1MwlKKc_flr2LZn65QhMr044V5ieMyZXO1uFD-8TgBFDTsPfWDZSnalEiLL07Oem8k-HCKhSAQhIvS9jbq1nkSc4pm1YgUA0M0DlyN3MgWi5YtoF2ibX5nHFqpeYmTBCdDT2UXVhZKQd1y4MEVvnJ1jE0uGxcEZtI1QFSYcWruEiSw3j7oj1xuSrTeJ0ZJaRU4jH7T_zI_ruRynwLR-SwcJzAbfPFahbJyyMJHMmm1t_VwLtvrcyWtZtbV5crfqVwH-f_Ybhr87pdJT7IRKYxOZ8kD4rCjH8Jz-iyTfD85lu1?>
+    </g>
+</svg>

@@ -15,6 +15,7 @@ import java.util.*;
  * - loadEventsFromDb で events マップにも格納する（内部整合性）
  * - getAllEvents は allEvents を返すように統一
  */
+
 public class MapModel {
 
     private final int width, height;
