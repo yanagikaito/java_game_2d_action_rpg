@@ -1,0 +1,122 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="335px" preserveAspectRatio="none"
+     style="width:1032px;height:335px;background:#FFFFFF;" version="1.1" viewBox="0 0 1032 335" width="1032px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster db-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L26.6035,6.0137 A3.75,3.75 0 0 1 29.1035,8.5137 L36.1035,30.6348 L441.5,30.6348 A2.5,2.5 0 0 1 444,33.1348 L444,325.5137 A2.5,2.5 0 0 1 441.5,328.0137 L8.5,328.0137 A2.5,2.5 0 0 1 6,325.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="36.1035" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="17.1035" x="10" y="23.1211">db
+            </text>
+        </g><!--class PathManager-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="66.6211" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="405.7705" x="22" y="43.0137"/>
+            <ellipse cx="178.6079" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M181.3735,54.8887 Q181.5298,54.6699 181.7173,54.5605 Q181.9048,54.4512 182.1235,54.4512 Q182.4985,54.4512 182.7329,54.7168 Q182.9673,54.9668 182.9673,55.5762 L182.9673,57.0293 Q182.9673,57.6387 182.7329,57.9043 Q182.4985,58.1699 182.1235,58.1699 Q181.7798,58.1699 181.5767,57.9668 Q181.3735,57.7793 181.2642,57.2637 Q181.2173,56.9043 181.0298,56.7168 Q180.7017,56.3418 180.0923,56.123 Q179.4829,55.9043 178.8579,55.9043 Q178.0923,55.9043 177.4517,56.2324 Q176.8267,56.5605 176.3267,57.3105 Q175.8423,58.0605 175.8423,59.0918 L175.8423,60.1855 Q175.8423,61.4199 176.7329,62.248 Q177.6235,63.0605 179.2173,63.0605 Q180.1548,63.0605 180.811,62.8105 Q181.2017,62.6543 181.6235,62.2168 Q181.8892,61.9512 182.0298,61.873 Q182.186,61.7949 182.3892,61.7949 Q182.7173,61.7949 182.9673,62.0605 Q183.2329,62.3105 183.2329,62.6543 Q183.2329,62.998 182.8892,63.4043 Q182.3892,63.9824 181.5923,64.3105 Q180.5142,64.7637 179.2173,64.7637 Q177.7017,64.7637 176.4985,64.1387 Q175.5142,63.6387 174.8267,62.5762 Q174.1392,61.498 174.1392,60.2168 L174.1392,59.0605 Q174.1392,57.7324 174.7485,56.5918 Q175.3735,55.4355 176.4673,54.8262 Q177.561,54.2012 178.7954,54.2012 Q179.5298,54.2012 180.1704,54.373 Q180.8267,54.5293 181.3735,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84.0547"
+                  x="199.1079" y="64.8105">PathManager
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="426.7705" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="426.7705" y1="83.0137" y2="83.0137"/>
+            <g>
+                <ellipse cx="33" cy="97.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="379.7705"
+                  x="42" y="102.1211">loadPath(mapId: int, pathId: int): java.util.List&lt;java.awt.Point&gt;
+            </text>
+        </g><!--class DbManager-->
+        <g class="entity" id="ent0004">
+            <rect fill="#F1F1F1" height="85.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="255.5781" x="151" y="227.0137"/>
+            <ellipse cx="237.9634" cy="243.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M240.729,238.8887 Q240.8853,238.6699 241.0728,238.5605 Q241.2603,238.4512 241.479,238.4512 Q241.854,238.4512 242.0884,238.7168 Q242.3228,238.9668 242.3228,239.5762 L242.3228,241.0293 Q242.3228,241.6387 242.0884,241.9043 Q241.854,242.1699 241.479,242.1699 Q241.1353,242.1699 240.9321,241.9668 Q240.729,241.7793 240.6196,241.2637 Q240.5728,240.9043 240.3853,240.7168 Q240.0571,240.3418 239.4478,240.123 Q238.8384,239.9043 238.2134,239.9043 Q237.4478,239.9043 236.8071,240.2324 Q236.1821,240.5605 235.6821,241.3105 Q235.1978,242.0605 235.1978,243.0918 L235.1978,244.1855 Q235.1978,245.4199 236.0884,246.248 Q236.979,247.0605 238.5728,247.0605 Q239.5103,247.0605 240.1665,246.8105 Q240.5571,246.6543 240.979,246.2168 Q241.2446,245.9512 241.3853,245.873 Q241.5415,245.7949 241.7446,245.7949 Q242.0728,245.7949 242.3228,246.0605 Q242.5884,246.3105 242.5884,246.6543 Q242.5884,246.998 242.2446,247.4043 Q241.7446,247.9824 240.9478,248.3105 Q239.8696,248.7637 238.5728,248.7637 Q237.0571,248.7637 235.854,248.1387 Q234.8696,247.6387 234.1821,246.5762 Q233.4946,245.498 233.4946,244.2168 L233.4946,243.0605 Q233.4946,241.7324 234.104,240.5918 Q234.729,239.4355 235.8228,238.8262 Q236.9165,238.2012 238.1509,238.2012 Q238.8853,238.2012 239.5259,238.373 Q240.1821,238.5293 240.729,238.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="73.1514"
+                  x="258.4634" y="248.8105">DbManager
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="152" x2="405.5781" y1="259.0137" y2="259.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="152" x2="405.5781" y1="267.0137" y2="267.0137"/>
+            <g>
+                <ellipse cx="162" cy="281.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.041"
+                  x="171" y="286.1211">initSchema(): void
+            </text>
+            <g>
+                <ellipse cx="162" cy="300.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="229.5781"
+                  x="171" y="304.7422">getConnection(): java.sql.Connection
+            </text>
+        </g>
+        <g class="entity" id="ent0007">
+            <path d="M463,19.5137 L463,72.5137 L428.24,76.5137 L463,80.5137 L463,133.2598 A0,0 0 0 0 463,133.2598 L1025.1123,133.2598 A0,0 0 0 0 1025.1123,133.2598 L1025.1123,29.5137 L1015.1123,19.5137 L463,19.5137 A0,0 0 0 0 463,19.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1015.1123,19.5137 L1015.1123,29.5137 L1025.1123,29.5137 L1015.1123,19.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="469" y="38.542">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="541.1123"
+                  x="469" y="55.833">- loadPath(mapId, pathId) &#12399; map_path &#12434; step &#38918;&#12395;&#21839;&#12356;&#21512;&#12431;&#12379;&#12375;&#12289;Point
+                &#12398;&#19968;&#35239;&#12434;&#36820;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="323.5654"
+                  x="469" y="73.124">- SQL &#12456;&#12521;&#12540;&#12364;&#30330;&#29983;&#12375;&#12383;&#22580;&#21512;&#12399;&#31354;&#12398;&#12522;&#12473;&#12488;&#12434;&#36820;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="469" y="90.415">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="510.9102"
+                  x="469" y="107.7061">- loadPath(mapId, pathId) queries map_path ordered by step and returns a List of
+                Points.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="218.9116"
+                  x="469" y="124.9971">- Returns an empty list on SQL errors.
+            </text>
+        </g>
+        <g class="entity" id="ent0010">
+            <path d="M460,212.5137 L460,265.5137 L407.25,269.5137 L460,273.5137 L460,326.2598 A0,0 0 0 0 460,326.2598 L866.0361,326.2598 A0,0 0 0 0 866.0361,326.2598 L866.0361,222.5137 L856.0361,212.5137 L460,212.5137 A0,0 0 0 0 460,212.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M856.0361,212.5137 L856.0361,222.5137 L866.0361,222.5137 L856.0361,212.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="466" y="231.542">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="314.2217"
+                  x="466" y="248.833">- getConnection() &#12434;&#36890;&#12376;&#12390; JDBC &#25509;&#32154;&#12434;&#25552;&#20379;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="385.0361"
+                  x="466" y="266.124">- PathManager &#12399; DB &#12450;&#12463;&#12475;&#12473;&#12398;&#12383;&#12417;
+                DbManager &#12395;&#20381;&#23384;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="466" y="283.415">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="282.5215"
+                  x="466" y="300.7061">- Provides JDBC connection via getConnection().
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="317.2305"
+                  x="466" y="317.9971">- PathManager depends on DbManager for DB access.
+            </text>
+        </g><!--link PathManager to DbManager-->
+        <g class="link"
+           id="lnk5">
+            <path d="M234.28,110.3437 C243.39,142.5637 255.6772,186.0301 265.5672,221.0001" fill="none"
+                  id="PathManager-to-DbManager" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="267.2,226.7737,268.5998,217.0248,265.8393,221.9624,260.9017,219.2019,267.2,226.7737"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="254" y="178.542">uses
+            </text>
+        </g>
+        <?plantuml-src VLBBRXCn5DtFLznb6c0-849TjDc02Whq0v0puoQ6YJsrdQ0A8SKJXBf0j495z26K2eb2GP0DGb1G-1WdJViNN9iyXX5YD_VSwtFEFNTI4ZqW3Gfn7Hu50552b88QqSrRX2CkFGfm1H91OeUNMYIz4LU0SNqLKWIcnL85xfCE2TkQ9U4QK_gwByb37TO4zfUHvt4mbwZMYmACCxqUDMcBb92h8rWyRJIeNXMSqqWpmKip7RMPX0lOaoDztdaOBkTaAj1ML0K15vg2P8sc1h6HtpGebszZJvNBmRN2jhD5by2Q0I1qpzLWinUWD4tXylYfDH_7BtUiUJBUtROPVXnPyyfsZTyTdtqUVUjUdBp39nU_zbpB3AqviDqCnTRlh27NUzixjRsVrZoR79nDzlf-g3y-_k8OpM1oUeOijlV1PjzjR_iVHF-nlTccab6ri2vaJ2MDeRxrPmF2Ov1KjoLNGC2TpwVZpAiGYU_EUXneAzLRaFWHxhrJAON4COeaBjvfo0dTy2pp6_oLSE6gBipBxg4r-zQSmCtgoYgSFtyx-Ng8-FdExcXuL0WjVsbtbUeAKhonsS1cFrn4c9NfsypaVW6yqMZuUlnflnXRJOeEYp4VhnlDRK67aQBHiA0TqnJtLYwBXTA6aCuGYIAgyi7y1W00?>
+    </g>
+</svg>

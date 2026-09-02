@@ -1,0 +1,49 @@
+@startuml db_manager
+package db {
+  class DbManager {
+    - JDBC_URL: String = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE"
+    - JDBC_USER: String = "sa"
+    - JDBC_PASS: String = ""
+    + initSchema(): void
+    + getConnection(): java.sql.Connection
+  }
+}
+
+package save {
+  class SaveManager
+  class LoadManager
+}
+
+package other {
+  class Application
+}
+
+SaveManager ..> DbManager : uses
+LoadManager ..> DbManager : uses
+Application ..> DbManager : uses
+
+note right of DbManager
+**Notes**
+- H2 の JDBC 接続とスキーマ初期化ユーティリティを提供します。
+- initSchema は map_tile、map_path、saves、inventory_items、equipment、map_event の各テーブルを存在しない場合に作成します。
+- getConnection は設定された URL／ユーザー／パスワードを使って新しい JDBC Connection を返します。
+- スキーマは SaveManager／LoadManager が期待する MERGE や外部キーを利用します。
+
+- Provides H2 JDBC connection and schema initialization utilities.
+- initSchema creates tables if not exists: map_tile, map_path, saves, inventory_items, equipment, map_event.
+- getConnection returns a new JDBC Connection using configured URL/user/password.
+- Schema uses MERGE/foreign keys expected by SaveManager/LoadManager.
+end note
+
+note left of DbManager
+**Notes**
+Schema overview
+- map_tile(map_id, x, y, tile_id) PK(map_id,x,y)
+- map_path(map_id, path_id, step, x, y) PK(map_id,path_id,step)
+- saves(id PK, x, y, map_id, hp, max_hp, mp, max_mp, level, strength, dexterity, exp, next_exp, coin, weapon_type_id, shield_type_id, saved_at)
+- inventory_items(save_id FK->saves.id, slot, type_id, count)
+- equipment(save_id FK->saves.id, item_type, type_id)
+- map_event(id PK, map_id, x, y, name, trigger_type, json, created_at)
+end note
+
+@enduml

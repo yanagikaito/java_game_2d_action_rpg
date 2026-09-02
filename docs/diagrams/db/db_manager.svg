@@ -1,0 +1,220 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="363px" preserveAspectRatio="none"
+     style="width:2218px;height:363px;background:#FFFFFF;" version="1.1" viewBox="0 0 2218 363" width="2218px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster db-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,158.0137 L26.6035,158.0137 A3.75,3.75 0 0 1 29.1035,160.5137 L36.1035,182.6348 L489.5,182.6348 A2.5,2.5 0 0 1 492,185.1348 L492,349.5137 A2.5,2.5 0 0 1 489.5,352.0137 L8.5,352.0137 A2.5,2.5 0 0 1 6,349.5137 L6,160.5137 A2.5,2.5 0 0 1 8.5,158.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="36.1035" y1="182.6348" y2="182.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="17.1035" x="10" y="175.1211">db
+            </text>
+        </g><!--cluster save-->
+        <g class="cluster" id="ent0004">
+            <path d="M21.5,6.0137 L53.6445,6.0137 A3.75,3.75 0 0 1 56.1445,8.5137 L63.1445,30.6348 L321.5,30.6348 A2.5,2.5 0 0 1 324,33.1348 L324,104.5137 A2.5,2.5 0 0 1 321.5,107.0137 L21.5,107.0137 A2.5,2.5 0 0 1 19,104.5137 L19,8.5137 A2.5,2.5 0 0 1 21.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="19" x2="63.1445" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="31.1445" x="23" y="23.1211">save
+            </text>
+        </g><!--cluster other-->
+        <g class="cluster" id="ent0007">
+            <path d="M350.5,6.0137 L386.5,6.0137 A3.75,3.75 0 0 1 389,8.5137 L396,30.6348 L477.5,30.6348 A2.5,2.5 0 0 1 480,33.1348 L480,104.5137 A2.5,2.5 0 0 1 477.5,107.0137 L350.5,107.0137 A2.5,2.5 0 0 1 348,104.5137 L348,8.5137 A2.5,2.5 0 0 1 350.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="348" x2="396" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="35" x="352" y="23.1211">other
+            </text>
+        </g><!--class DbManager-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="141.1055" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="453.7793" x="22" y="195.0137"/>
+            <ellipse cx="208.064" cy="211.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M210.8296,206.8887 Q210.9858,206.6699 211.1733,206.5605 Q211.3608,206.4512 211.5796,206.4512 Q211.9546,206.4512 212.189,206.7168 Q212.4233,206.9668 212.4233,207.5762 L212.4233,209.0293 Q212.4233,209.6387 212.189,209.9043 Q211.9546,210.1699 211.5796,210.1699 Q211.2358,210.1699 211.0327,209.9668 Q210.8296,209.7793 210.7202,209.2637 Q210.6733,208.9043 210.4858,208.7168 Q210.1577,208.3418 209.5483,208.123 Q208.939,207.9043 208.314,207.9043 Q207.5483,207.9043 206.9077,208.2324 Q206.2827,208.5605 205.7827,209.3105 Q205.2983,210.0605 205.2983,211.0918 L205.2983,212.1855 Q205.2983,213.4199 206.189,214.248 Q207.0796,215.0605 208.6733,215.0605 Q209.6108,215.0605 210.2671,214.8105 Q210.6577,214.6543 211.0796,214.2168 Q211.3452,213.9512 211.4858,213.873 Q211.6421,213.7949 211.8452,213.7949 Q212.1733,213.7949 212.4233,214.0605 Q212.689,214.3105 212.689,214.6543 Q212.689,214.998 212.3452,215.4043 Q211.8452,215.9824 211.0483,216.3105 Q209.9702,216.7637 208.6733,216.7637 Q207.1577,216.7637 205.9546,216.1387 Q204.9702,215.6387 204.2827,214.5762 Q203.5952,213.498 203.5952,212.2168 L203.5952,211.0605 Q203.5952,209.7324 204.2046,208.5918 Q204.8296,207.4355 205.9233,206.8262 Q207.0171,206.2012 208.2515,206.2012 Q208.9858,206.2012 209.6265,206.373 Q210.2827,206.5293 210.8296,206.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="73.1514"
+                  x="228.564" y="216.8105">DbManager
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="474.7793" y1="227.0137" y2="227.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30" y="238.8242"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="427.7793"
+                  x="42" y="246.1211">JDBC_URL: String = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE"
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30" y="257.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="168.2734"
+                  x="42" y="264.7422">JDBC_USER: String = "sa"
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30" y="276.0664"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151.9424"
+                  x="42" y="283.3633">JDBC_PASS: String = ""
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="474.7793" y1="290.877" y2="290.877"/>
+            <g>
+                <ellipse cx="33" cy="305.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.041"
+                  x="42" y="309.9844">initSchema(): void
+            </text>
+            <g>
+                <ellipse cx="33" cy="324.3086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="229.5781"
+                  x="42" y="328.6055">getConnection(): java.sql.Connection
+            </text>
+        </g><!--class SaveManager-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="119.165"
+                  x="35.5" y="43.0137"/>
+            <ellipse cx="50.5" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M53.2656,54.8887 Q53.4219,54.6699 53.6094,54.5605 Q53.7969,54.4512 54.0156,54.4512 Q54.3906,54.4512 54.625,54.7168 Q54.8594,54.9668 54.8594,55.5762 L54.8594,57.0293 Q54.8594,57.6387 54.625,57.9043 Q54.3906,58.1699 54.0156,58.1699 Q53.6719,58.1699 53.4688,57.9668 Q53.2656,57.7793 53.1563,57.2637 Q53.1094,56.9043 52.9219,56.7168 Q52.5938,56.3418 51.9844,56.123 Q51.375,55.9043 50.75,55.9043 Q49.9844,55.9043 49.3438,56.2324 Q48.7188,56.5605 48.2188,57.3105 Q47.7344,58.0605 47.7344,59.0918 L47.7344,60.1855 Q47.7344,61.4199 48.625,62.248 Q49.5156,63.0605 51.1094,63.0605 Q52.0469,63.0605 52.7031,62.8105 Q53.0938,62.6543 53.5156,62.2168 Q53.7813,61.9512 53.9219,61.873 Q54.0781,61.7949 54.2813,61.7949 Q54.6094,61.7949 54.8594,62.0605 Q55.125,62.3105 55.125,62.6543 Q55.125,62.998 54.7813,63.4043 Q54.2813,63.9824 53.4844,64.3105 Q52.4063,64.7637 51.1094,64.7637 Q49.5938,64.7637 48.3906,64.1387 Q47.4063,63.6387 46.7188,62.5762 Q46.0313,61.498 46.0313,60.2168 L46.0313,59.0605 Q46.0313,57.7324 46.6406,56.5918 Q47.2656,55.4355 48.3594,54.8262 Q49.4531,54.2012 50.6875,54.2012 Q51.4219,54.2012 52.0625,54.373 Q52.7188,54.5293 53.2656,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87.165"
+                  x="64.5" y="64.8105">SaveManager
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="36.5" x2="153.665" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="36.5" x2="153.665" y1="83.0137" y2="83.0137"/>
+        </g><!--class LoadManager-->
+        <g class="entity" id="ent0006">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="118.3994"
+                  x="190" y="43.0137"/>
+            <ellipse cx="205" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M207.7656,54.8887 Q207.9219,54.6699 208.1094,54.5605 Q208.2969,54.4512 208.5156,54.4512 Q208.8906,54.4512 209.125,54.7168 Q209.3594,54.9668 209.3594,55.5762 L209.3594,57.0293 Q209.3594,57.6387 209.125,57.9043 Q208.8906,58.1699 208.5156,58.1699 Q208.1719,58.1699 207.9688,57.9668 Q207.7656,57.7793 207.6563,57.2637 Q207.6094,56.9043 207.4219,56.7168 Q207.0938,56.3418 206.4844,56.123 Q205.875,55.9043 205.25,55.9043 Q204.4844,55.9043 203.8438,56.2324 Q203.2188,56.5605 202.7188,57.3105 Q202.2344,58.0605 202.2344,59.0918 L202.2344,60.1855 Q202.2344,61.4199 203.125,62.248 Q204.0156,63.0605 205.6094,63.0605 Q206.5469,63.0605 207.2031,62.8105 Q207.5938,62.6543 208.0156,62.2168 Q208.2813,61.9512 208.4219,61.873 Q208.5781,61.7949 208.7813,61.7949 Q209.1094,61.7949 209.3594,62.0605 Q209.625,62.3105 209.625,62.6543 Q209.625,62.998 209.2813,63.4043 Q208.7813,63.9824 207.9844,64.3105 Q206.9063,64.7637 205.6094,64.7637 Q204.0938,64.7637 202.8906,64.1387 Q201.9063,63.6387 201.2188,62.5762 Q200.5313,61.498 200.5313,60.2168 L200.5313,59.0605 Q200.5313,57.7324 201.1406,56.5918 Q201.7656,55.4355 202.8594,54.8262 Q203.9531,54.2012 205.1875,54.2012 Q205.9219,54.2012 206.5625,54.373 Q207.2188,54.5293 207.7656,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86.3994"
+                  x="219" y="64.8105">LoadManager
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="191" x2="307.3994" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="191" x2="307.3994" y1="83.0137" y2="83.0137"/>
+        </g><!--class Application-->
+        <g class="entity" id="ent0008">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100.4893"
+                  x="364" y="43.0137"/>
+            <ellipse cx="379" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M381.7656,54.8887 Q381.9219,54.6699 382.1094,54.5605 Q382.2969,54.4512 382.5156,54.4512 Q382.8906,54.4512 383.125,54.7168 Q383.3594,54.9668 383.3594,55.5762 L383.3594,57.0293 Q383.3594,57.6387 383.125,57.9043 Q382.8906,58.1699 382.5156,58.1699 Q382.1719,58.1699 381.9688,57.9668 Q381.7656,57.7793 381.6563,57.2637 Q381.6094,56.9043 381.4219,56.7168 Q381.0938,56.3418 380.4844,56.123 Q379.875,55.9043 379.25,55.9043 Q378.4844,55.9043 377.8438,56.2324 Q377.2188,56.5605 376.7188,57.3105 Q376.2344,58.0605 376.2344,59.0918 L376.2344,60.1855 Q376.2344,61.4199 377.125,62.248 Q378.0156,63.0605 379.6094,63.0605 Q380.5469,63.0605 381.2031,62.8105 Q381.5938,62.6543 382.0156,62.2168 Q382.2813,61.9512 382.4219,61.873 Q382.5781,61.7949 382.7813,61.7949 Q383.1094,61.7949 383.3594,62.0605 Q383.625,62.3105 383.625,62.6543 Q383.625,62.998 383.2813,63.4043 Q382.7813,63.9824 381.9844,64.3105 Q380.9063,64.7637 379.6094,64.7637 Q378.0938,64.7637 376.8906,64.1387 Q375.9063,63.6387 375.2188,62.5762 Q374.5313,61.498 374.5313,60.2168 L374.5313,59.0605 Q374.5313,57.7324 375.1406,56.5918 Q375.7656,55.4355 376.8594,54.8262 Q377.9531,54.2012 379.1875,54.2012 Q379.9219,54.2012 380.5625,54.373 Q381.2188,54.5293 381.7656,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="68.4893"
+                  x="393" y="64.8105">Application
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="365" x2="463.4893" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="365" x2="463.4893" y1="83.0137" y2="83.0137"/>
+        </g>
+        <g class="entity" id="ent0013">
+            <path d="M511,174.0137 L511,261.5137 L476.02,265.5137 L511,269.5137 L511,356.9238 A0,0 0 0 0 511,356.9238 L1323.0703,356.9238 A0,0 0 0 0 1323.0703,356.9238 L1323.0703,184.0137 L1313.0703,174.0137 L511,174.0137 A0,0 0 0 0 511,174.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1313.0703,174.0137 L1313.0703,184.0137 L1323.0703,184.0137 L1313.0703,174.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="517" y="193.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="394.3418"
+                  x="517" y="210.333">- H2 &#12398; JDBC &#25509;&#32154;&#12392;&#12473;&#12461;&#12540;&#12510;&#21021;&#26399;&#21270;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12434;&#25552;&#20379;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="791.0703"
+                  x="517" y="227.624">- initSchema &#12399; map_tile&#12289;map_path&#12289;saves&#12289;inventory_items&#12289;equipment&#12289;map_event
+                &#12398;&#21508;&#12486;&#12540;&#12502;&#12523;&#12434;&#23384;&#22312;&#12375;&#12394;&#12356;&#22580;&#21512;&#12395;&#20316;&#25104;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="625.5615"
+                  x="517" y="244.915">- getConnection &#12399;&#35373;&#23450;&#12373;&#12428;&#12383; URL&#65295;&#12518;&#12540;&#12470;&#12540;&#65295;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#20351;&#12387;&#12390;&#26032;&#12375;&#12356;
+                JDBC Connection &#12434;&#36820;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="530.2261"
+                  x="517" y="262.2061">- &#12473;&#12461;&#12540;&#12510;&#12399; SaveManager&#65295;LoadManager
+                &#12364;&#26399;&#24453;&#12377;&#12427; MERGE &#12420;&#22806;&#37096;&#12461;&#12540;&#12434;&#21033;&#29992;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="517" y="279.4971">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="375.0068"
+                  x="517" y="296.7881">- Provides H2 JDBC connection and schema initialization utilities.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="629.3701"
+                  x="517" y="314.0791">- initSchema creates tables if not exists: map_tile, map_path, saves,
+                inventory_items, equipment, map_event.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="501.4839"
+                  x="517" y="331.3701">- getConnection returns a new JDBC Connection using configured URL/user/password.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="457.4058"
+                  x="517" y="348.6611">- Schema uses MERGE/foreign keys expected by SaveManager/LoadManager.
+            </text>
+        </g>
+        <g class="entity" id="ent0016">
+            <path d="M1358.5,191.5137 L1358.5,339.8418 L2211.938,339.8418 L2211.938,201.5137 L2201.938,191.5137 L1358.5,191.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M2201.938,191.5137 L2201.938,201.5137 L2211.938,201.5137 L2201.938,191.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="1364.5" y="210.542">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="102.5972"
+                  x="1364.5" y="227.833">Schema overview
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="269.4834"
+                  x="1364.5" y="245.124">- map_tile(map_id, x, y, tile_id) PK(map_id,x,y)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="372.8677"
+                  x="1364.5" y="262.415">- map_path(map_id, path_id, step, x, y) PK(map_id,path_id,step)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="832.438"
+                  x="1364.5" y="279.7061">- saves(id PK, x, y, map_id, hp, max_hp, mp, max_mp, level, strength,
+                dexterity, exp, next_exp, coin, weapon_type_id, shield_type_id, saved_at)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="347.9023"
+                  x="1364.5" y="296.9971">- inventory_items(save_id FK-&gt;saves.id, slot, type_id, count)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="314.6787"
+                  x="1364.5" y="314.2881">- equipment(save_id FK-&gt;saves.id, item_type, type_id)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="404.644"
+                  x="1364.5" y="331.5791">- map_event(id PK, map_id, x, y, name, trigger_type, json, created_at)
+            </text>
+        </g><!--link SaveManager to DbManager-->
+        <g class="link"
+           id="lnk9">
+            <path d="M113.27,91.3237 C133.19,116.7437 162.3194,153.9008 190.6994,190.1208" fill="none"
+                  id="SaveManager-to-DbManager" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="194.4,194.8437,191.9977,185.2923,191.3162,190.9079,185.7005,190.2264,194.4,194.8437"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="151" y="138.042">uses
+            </text>
+        </g><!--link LoadManager to DbManager-->
+        <g class="link"
+           id="lnk10">
+            <path d="M249,91.3237 C249,116.7437 249,152.6237 249,188.8437" fill="none"
+                  id="LoadManager-to-DbManager" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818" points="249,194.8437,253,185.8437,249,189.8437,245,185.8437,249,194.8437"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="250" y="138.042">uses
+            </text>
+        </g><!--link Application to DbManager-->
+        <g class="link"
+           id="lnk11">
+            <path d="M394.42,91.3237 C373.08,116.7437 341.7681,154.0285 311.3581,190.2485" fill="none"
+                  id="Application-to-DbManager" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="307.5,194.8437,316.3505,190.523,310.715,191.0144,310.2236,185.3789,307.5,194.8437"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="366" y="138.042">uses
+            </text>
+        </g><!--link GMN15 to DbManager-->
+        <g class="link"
+           id="lnk17">
+            <path d="M1574.9,191.5037 C1496.98,167.6437 1407.2,144.3337 1323.5,132.5137 C1234.16,119.8937 599.25,111.5537 511.5,132.5137 C458.83,145.0937 404.77,170.0637 359.5,194.9937"
+                  fill="none" id="GMN15-DbManager" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+        </g>
+        <?plantuml-src TLHTRnD757tVNt75Kv9krXAFha1AmRGgq4OswQirtXtR4zQpoyxOiLiXiUkq2Y8gAQA1jYbKuaCkAD07X8G4uSTCrj2d_eNUcTrrrW5Ul3FttdC_phdZaBYNIOU2ru8VB03N9qB0sTP5mj4Q6Hl0CdnzzeippRNwXIeqPCHu1qx1YNMlvLQx9wjEnIEIL7eaz5gVhwnT-hRPgDM_gzLFNQglrKxC9K17EOCWS-xLbKQZxCwSdm7ZJ3RSBksHXSKg30BcvOuEbMS2pgahMS2rRvqCY2Ek-CwH6KElMbSjAym75MH0IwCsy9eFExDT28XNs4h8G7PpHhAmbJ3qcKjC4GmhPGB7ELqYiGfzGOLLIllnW5B2ZmTOF90K8jRfIWZQHtvhQUaRz8Yb9MiPlZe9Advc68Nfpu_UlVnTnHELl5B9lXg_LkDxwTQVqxtxwVQk6ZysbfzKya2Dd-I7vDRqvixXmHyglgFY0nN_fgubcFP814p_753jfcG-LTTYVGo9xE9Haolmo_Y0SXb4eoQJjASjz4gVXJqqvW2g0tIZwSwcBgpxm8QUOlbq_swwDp7bdwXuC_thHRgpfUAdXs_sfbixnzgQMm7TsVl9VleCH_vL9TiglW-ujF-zlfcFchp4NtFzHJCoVcxgNiUYXs_UglY1YXzFT_yn9JOp1il9arlltzu-LhzChEQbj0LOfoovYhSrxGS_Qcno0oxMwb_M4B-PFjpzTpp9i-3uMt-_kpsPAuDrLgDWm3mgjBocCVUeCS8z49aqMYL6VFPzjaLzb0WDL3Zp2heH9RWl84dBnmzh0suMq24JKbHdsjfGI6kRPoDiE2Qi3JDTis0Zg_E1BX6L_OWB8C3fnWV4zeL-y3XGctNw4VMqPXLS-AWIuZlR229FPynRrmyXuwxI3YBAEXmkqv70vaDCX-3Mg2n2fII1Or5aIh-X_2NvjFt9XvIN2mOq6Z2wWGqKj2pe0_Di6Demia6RyBe8g-SBpz0UBUO0pTuCe2_c82GDCtmPLhYrL-CDvmlCmv2YM96f6-hpi6c--Lb_VHJ0r_aZoZjQDuyE9OsOH2moP2F_Gzaq9pTWt8ODIiA0D-Kef5bdNKPzhtJ77hmcaOjcWUR4Nz0-389pvvTFcruTW_03N8PP0ZVeSuEURSedS3gdgJi35noQfIfuc2UVavwEnxz4L2z7hui01yjMF6jz9ll_?>
+    </g>
+</svg>

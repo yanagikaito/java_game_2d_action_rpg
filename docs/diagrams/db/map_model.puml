@@ -1,0 +1,115 @@
+@startuml map_model
+package db {
+  class MapModel {
+    - width: int
+    - height: int
+    - tiles: int[][]
+    - events: java.util.Map<String, MapEvent>
+    - allEvents: java.util.List<MapEvent>
+    + MapModel(width: int, height: int)
+    + loadEventsFromDb(mapId: int): void
+    + setTile(x: int, y: int, id: int): void
+    + addEvent(e: MapEvent): void
+    + findEventAt(tileX: int, tileY: int): MapEvent
+    + getEventById(id: String): MapEvent
+    + removeEvent(id: String): void
+    + getEventAt(x: int, y: int): MapEvent
+    + getAllEvents(): java.util.Collection<MapEvent>
+    + clearEvents(): void
+    + getTile(x: int, y: int): int
+    + getWidth(): int
+    + getHeight(): int
+  }
+
+  class MapEvent {
+    - id: String
+    - x: int
+    - y: int
+    - name: String
+    - trigger: String
+    - mapId: int
+    - dialogues: java.util.List<String>
+    - questOffered: boolean
+    - questAccepted: boolean
+    - questCompleted: boolean
+    - meta: java.util.Map<String, Object>
+    + MapEvent()
+    + MapEvent(id: String, x: int, y: int)
+    + MapEvent(id: String, x: int, y: int, name: String, trigger: String)
+    + getId(): String
+    + setId(id: String): void
+    + getX(): int
+    + setX(x: int): void
+    + getY(): int
+    + setY(y: int): void
+    + getName(): String
+    + setName(name: String): void
+    + getTrigger(): String
+    + setTrigger(trigger: String): void
+    + getDialogues(): java.util.List<String>
+    + setDialogues(dialogues: java.util.List<String>): void
+    + isQuestOffered(): boolean
+    + setQuestOffered(questOffered: boolean): void
+    + isQuestAccepted(): boolean
+    + setQuestAccepted(questAccepted: boolean): void
+    + isQuestCompleted(): boolean
+    + setQuestCompleted(questCompleted: boolean): void
+    + getMeta(): java.util.Map<String, Object>
+    + setMeta(meta: java.util.Map<String, Object>): void
+    + getMapId(): int
+    + setMapId(mapId: int): void
+    + toString(): String
+  }
+
+  class DbManager {
+    - JDBC_URL: String
+    - JDBC_USER: String
+    - JDBC_PASS: String
+    + initSchema(): void
+    + getConnection(): java.sql.Connection
+  }
+}
+
+MapModel ..> DbManager : uses (loadEventsFromDb)
+MapModel "1" *-- "0..*" MapEvent : manages
+DbManager ..> MapEvent : persists/reads (map_event table)
+
+note right of MapModel
+**Notes**
+Implementation notes
+- events は id -> MapEvent の高速検索用 Map。
+- allEvents は順序保持（表示や検索順序の保証）用 List。
+- loadEventsFromDb は DB から読み込み、両方のコレクションを更新する。
+- JSON フィールドは Jackson(ObjectMapper) で MapEvent の dialogues/meta を復元する。
+
+- events is a Map for fast lookup by id.
+- allEvents is a List that preserves order (for display/search ordering).
+- loadEventsFromDb loads from the DB and updates both collections.
+- JSON fields are restored into MapEvent.dialogues and MapEvent.meta using Jackson (ObjectMapper).
+end note
+
+note right of MapEvent
+**Notes**
+- map_event テーブルの行を表現する POJO。
+- trigger の値例: "interact", "touch", "auto"。
+- dialogues は順序付きの台詞リスト、meta は拡張可能なキー/値マップ。
+- 引数なしコンストラクタはシリアライズ/デシリアライズ用に残す。
+
+- Represents a row in the map_event table as a POJO.
+- Example trigger values: "interact", "touch", "auto".
+- dialogues is an ordered list of dialogue lines; meta is an extensible key/value map.
+- No-arg constructor is retained for serialization/deserialization.
+end note
+
+note left of DbManager
+**Notes**
+Schema highlights
+- map_event(id PK, map_id, x, y, name, trigger_type, json, created_at)
+- initSchema は必要なテーブルを IF NOT EXISTS で作成するユーティリティ
+
+Schema highlights
+- map_event(id PK, map_id, x, y, name, trigger_type, json, created_at)
+- initSchema is a utility that creates required tables using IF NOT EXISTS.
+end note
+
+@enduml

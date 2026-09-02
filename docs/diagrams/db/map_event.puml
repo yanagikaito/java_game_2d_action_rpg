@@ -1,0 +1,79 @@
+@startuml map_event
+package db {
+  class MapEvent {
+    - id: String
+    - x: int
+    - y: int
+    - name: String
+    - trigger: String
+    - mapId: int
+    - dialogues: java.util.List<String>
+    - questOffered: boolean
+    - questAccepted: boolean
+    - questCompleted: boolean
+    - meta: java.util.Map<String, Object>
+    + MapEvent()
+    + MapEvent(id: String, x: int, y: int)
+    + MapEvent(id: String, x: int, y: int, name: String, trigger: String)
+    + getId(): String
+    + setId(id: String): void
+    + getX(): int
+    + setX(x: int): void
+    + getY(): int
+    + setY(y: int): void
+    + getName(): String
+    + setName(name: String): void
+    + getTrigger(): String
+    + setTrigger(trigger: String): void
+    + getDialogues(): java.util.List<String>
+    + setDialogues(dialogues: java.util.List<String>): void
+    + isQuestOffered(): boolean
+    + setQuestOffered(questOffered: boolean): void
+    + isQuestAccepted(): boolean
+    + setQuestAccepted(questAccepted: boolean): void
+    + isQuestCompleted(): boolean
+    + setQuestCompleted(questCompleted: boolean): void
+    + getMeta(): java.util.Map<String, Object>
+    + setMeta(meta: java.util.Map<String, Object>): void
+    + getMapId(): int
+    + setMapId(mapId: int): void
+    + toString(): String
+  }
+}
+
+package db {
+  class DbManager
+}
+
+DbManager ..> MapEvent : persists/reads
+
+note right of MapEvent
+**Notes**
+- map_event テーブルに格納されるゲーム内のマップイベントを表します。
+- trigger の値: "interact", "touch", "auto"。
+- dialogues はイベントの順序付けられた台詞行を保持します。
+- questOffered / questAccepted / questCompleted はイベントに関連するクエストの状態を追跡します。
+- meta は任意のイベントデータを格納できる拡張可能なキー/値マップです。
+- 引数なしコンストラクタは JSON（Jackson/Gson）によるデシリアライズのために残されています。
+
+- Represents an in-game map event stored in map_event table.
+- **trigger** values: "interact", "touch", "auto".
+- **dialogues** holds ordered dialogue lines for the event.
+- **questOffered / questAccepted / questCompleted** track quest state related to the event.
+- **meta** is an extensible key/value map for arbitrary event data.
+- No-arg constructor retained for JSON (Jackson/Gson) deserialization.
+end note
+
+note left of MapEvent
+**Notes**
+Schema mapping (map_event):
+- id VARCHAR(64) PRIMARY KEY
+- map_id INT
+- x INT
+- y INT
+- name VARCHAR(255)
+- trigger_type VARCHAR(32)
+- json CLOB (can contain dialogues/meta)
+- created_at TIMESTAMP
+end note
+@enduml
