@@ -4,6 +4,7 @@ import asset.AssetSetter;
 import collision.CollisionChecker;
 import db.MapModel;
 import entity.Entity;
+import environment.EnvironmentManager;
 import event.EventHandler;
 import frame.FrameApp;
 import game.GameState;
@@ -58,6 +59,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private EventHandler eventHandler = new EventHandler(this);
     private SoundManager soundManager = new SoundManager(this);
     private GameMap currentMap = new GameMap(this);
+    private EnvironmentManager environmentManager = new EnvironmentManager(this);
     private final MapModel model = new MapModel(50, 50);
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[50];
@@ -113,6 +115,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
+        environmentManager.setUp();
         assetSetter.setObjAxe();
         assetSetter.setObjChest();
         assetSetter.setObjPot();
@@ -740,6 +743,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 // 通常のワールド描画
                 tileManager.draw(g2);
                 renderEntitiesAndObjects(g2);
+                environmentManager.draw(g2);
                 ui.draw(g2);
             }
 
