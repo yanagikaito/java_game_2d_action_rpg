@@ -1,0 +1,55 @@
+@startuml environment_manager
+package environment {
+  class EnvironmentManager {
+    - gameWindow: window.GameWindow
+    - lighting: Lighting
+    + EnvironmentManager(gameWindow: window.GameWindow)
+    + setUp(): void
+    + draw(g2: java.awt.Graphics2D): void
+  }
+
+  class Lighting {
+    - gameWindow: window.GameWindow
+    - darknessFilter: java.awt.image.BufferedImage
+    + Lighting(gameWindow: window.GameWindow, circleSize: int)
+    + draw(g2: java.awt.Graphics2D): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + otherWindowMethods(): void
+  }
+
+  class Player {
+    + getScreenX(): int
+    + getScreenY(): int
+    + otherPlayerMethods(): void
+  }
+}
+
+EnvironmentManager "1" *-- "0..1" Lighting : manages
+EnvironmentManager ..> GameWindow : uses
+Lighting ..> GameWindow : reads player position
+GameWindow "1" o-- "0..1" Player : has
+
+note right of EnvironmentManager
+**Notes**
+- setUp() で Lighting を初期化する。
+- draw() は Lighting.draw を呼び出してオーバーレイを描画する。
+
+- setUp() initializes the Lighting instance.
+- draw() delegates to Lighting.draw to render the overlay.
+end note
+
+note right of Lighting
+**Notes**
+- 暗闇フィルタ（BufferedImage）を保持し、プレイヤー中心を円形に明るくする。
+- フィルタは画面サイズやプレイヤー移動時に再生成する設計が望ましい。
+
+- Holds a darkness filter (BufferedImage) and makes the area around the player circularly bright.
+- The filter should be regenerated when the screen size or player position changes.
+end note
+
+@enduml

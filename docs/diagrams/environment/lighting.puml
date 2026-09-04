@@ -1,0 +1,64 @@
+@startuml lighting
+package environment {
+  class Lighting {
+    - gameWindow: window.GameWindow
+    - darknessFilter: java.awt.image.BufferedImage
+    + Lighting(gameWindow: window.GameWindow, circleSize: int)
+    + draw(g2: java.awt.Graphics2D): void
+  }
+
+  class EnvironmentManager {
+    - gameWindow: window.GameWindow
+    - lighting: Lighting
+    + EnvironmentManager(gameWindow: window.GameWindow)
+    + setUp(): void
+    + draw(g2: java.awt.Graphics2D): void
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getScreenWidth(): int
+    + getScreenHeight(): int
+    + getTileSize(): int
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+
+  class Player {
+    + getScreenX(): int
+    + getScreenY(): int
+  }
+}
+
+EnvironmentManager "1" *-- "0..1" Lighting : manages
+Lighting ..> FrameApp : uses (static methods)
+Lighting ..> GameWindow : reads player position
+Lighting ..> Player : calls getScreenX/Y
+GameWindow "1" o-- "0..1" Player : has
+
+note right of Lighting
+**Notes**
+- 画面全体を暗くする BufferedImage を保持し、プレイヤー周囲を円形に透明化して明るくする。
+- 中心座標は player.getScreenX() / getScreenY() に tileSize/2 を加えて計算する。
+- AlphaComposite.Clear で円をくり抜く実装。画面サイズやプレイヤー移動時に再生成が必要。
+
+- Holds a BufferedImage darkness filter that darkens the entire screen and makes the area around the player circularly bright.
+- The center coordinates are calculated by adding tileSize/2 to player.getScreenX() and player.getScreenY().
+- Implements the circle cutout using AlphaComposite.Clear; the filter should be regenerated when screen size or player position changes.
+end note
+
+note right of EnvironmentManager
+**Notes**
+- setUp() は Lighting インスタンスを初期化します。
+- draw() はオーバーレイを描画するために Lighting.draw を呼び出します。
+
+- setUp() initializes the Lighting instance.
+- draw() calls Lighting.draw to render the overlay.
+end note
+
+@enduml
