@@ -497,6 +497,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 return;
             }
 
+            environmentManager.update(deltaSeconds);
             player.update();
 
             for (Entity entity : npc) {
