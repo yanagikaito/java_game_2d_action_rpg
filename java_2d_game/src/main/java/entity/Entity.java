@@ -58,6 +58,7 @@ public abstract class Entity {
 
     // 内部で向きを管理するフィールド
     protected Direction facing = Direction.DOWN;
+
     private String[] dialogue = new String[20];
     private static final int SPRITE_COUNT = 3;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -80,6 +81,7 @@ public abstract class Entity {
     private int invincibleCounter = 0;
     private EntityType type;
     private int value = 1;
+    private int lightRadius;
     private boolean attacking = false;
     private boolean guarding = false;
     private boolean alive = true;
@@ -97,6 +99,7 @@ public abstract class Entity {
     private int coin;
     private Entity currentWeapon;
     private Entity currentShield;
+    private Entity currentLight;
     private Entity attacker;
     private String knockBackDirection;
     private Projectile projectile;
@@ -129,7 +132,6 @@ public abstract class Entity {
 
     private Color targetColor;
     protected boolean targetColorOn;
-    protected BufferedImage[] animationFrames;
 
     /**
      * Entity を初期化。
@@ -1339,6 +1341,14 @@ public abstract class Entity {
         this.currentShield = currentShield;
     }
 
+    public Entity getCurrentLight() {
+        return currentLight;
+    }
+
+    public void setCurrentLight(Entity currentLight) {
+        this.currentLight = currentLight;
+    }
+
     /**
      * リスポーン中かどうかを返す。
      *
@@ -2131,5 +2141,20 @@ public abstract class Entity {
 
     public void setBlocking(boolean blocking) {
         this.blocking = blocking;
+    }
+
+    // デフォルトは光源ではない
+    public boolean isLightSource() {
+        return false;
+    }
+
+    // 光源であれば半径を返す。デフォルトは 0
+    public int getLightRadius() {
+        return 0;
+    }
+
+    // 光源であれば強度を返す（0.0f〜1.0f）。デフォルトは 0f
+    public float getLightIntensity() {
+        return 0f;
     }
 }

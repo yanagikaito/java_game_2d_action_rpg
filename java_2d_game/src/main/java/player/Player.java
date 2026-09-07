@@ -77,6 +77,7 @@ public class Player extends Entity {
 
     private boolean blockingLeft = false;
     private boolean lastThrowKey = false;
+    private boolean lightUpdated = false;
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
@@ -99,6 +100,7 @@ public class Player extends Entity {
 
     // aura 用キャッシュ画像（事前レンダリング）
     private ObjAura aura;
+    private Entity currentLight;
 
     // 保存・表示する秒単位のプレイ時間
     private long playTimeSeconds = 0L;
@@ -3325,6 +3327,15 @@ public class Player extends Entity {
 
                 setCurrentShield(selectedItem);
                 setDefense(calculateTotalDefense());
+            }
+            if (selectedItem.getType() instanceof LanternType) {
+
+                if (getCurrentLight() == selectedItem) {
+                    setCurrentLight(null);
+                } else {
+                    setCurrentLight(selectedItem);
+                }
+                lightUpdated = true;
             }
             if (selectedItem.getType() instanceof RedPotionType) {
                 useRedPotion(index);

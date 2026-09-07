@@ -302,6 +302,21 @@ public class AssetSetter {
         obj[i] = createObjBluePotion(FrameApp.getTileSize() * 41, FrameApp.getTileSize() * 31);
     }
 
+    public void setObjLantern() {
+
+        Entity[] obj = gameWindow.getObj();
+        int i = 20;
+
+        obj[i] = createObjLantern(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 21);
+    }
+
+    private ObjLantern createObjLantern(int worldX, int worldY) {
+        ObjLantern lantern = new ObjLantern(gameWindow);
+        lantern.setWorldX(worldX);
+        lantern.setWorldY(worldY);
+        return lantern;
+    }
+
     private ObjRedPotion createObjRedPotion(int worldX, int worldY) {
         ObjRedPotion red = new ObjRedPotion(gameWindow);
         red.setWorldX(worldX);

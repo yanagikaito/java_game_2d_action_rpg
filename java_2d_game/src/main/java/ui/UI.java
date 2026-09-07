@@ -769,7 +769,6 @@ public class UI {
             savedText = "保存データ: なし";
         }
 
-
         g2.drawString(gameWindow.getPlayer().getCurrentWeapon().getName(), textX + 100, textY - tileSize - 25);
         textY += lineHeight;
         g2.drawString(gameWindow.getPlayer().getCurrentShield().getName(), textX + 100, textY - tileSize - 25);
@@ -882,10 +881,12 @@ public class UI {
         // ハイライト用ID取得
         EntityType wId = entity.getCurrentWeapon() != null ? entity.getCurrentWeapon().getType() : null;
         EntityType sId = entity.getCurrentShield() != null ? entity.getCurrentShield().getType() : null;
+        EntityType lId = entity.getCurrentLight() != null ? entity.getCurrentLight().getType() : null;
 
         // “先頭だけ”ハイライト済みフラグ
         boolean weaponHighlighted = false;
         boolean shieldHighlighted = false;
+        boolean lanternHighlighted = false;
 
         if (cursor) {
             g2.setColor(Color.WHITE);
@@ -920,6 +921,10 @@ public class UI {
                 g2.setColor(new Color(240, 190, 90));
                 g2.fillRoundRect(slotX, slotY, tileSize, tileSize, 10, 10);
                 shieldHighlighted = true;
+            } else if (!lanternHighlighted && lId != null && type != null && type == lId) {
+                g2.setColor(new Color(240, 190, 90));
+                g2.fillRoundRect(slotX, slotY, tileSize, tileSize, 10, 10);
+                lanternHighlighted = true;
             }
 
             // 画像描画は例外保護。例外時はプレースホルダを描画する

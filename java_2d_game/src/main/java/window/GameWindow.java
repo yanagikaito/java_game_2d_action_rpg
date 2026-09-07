@@ -63,7 +63,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final MapModel model = new MapModel(50, 50);
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[50];
-    private Entity[] obj = new Entity[20];
+    private Entity[] obj = new Entity[30];
     private InteractiveTile[] iTile = new InteractiveTile[50];
     private UI ui = new UI(this);
     private ArrayList<Projectile> projectileList = new ArrayList<>();
@@ -117,6 +117,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setInteractiveTile();
         environmentManager.setUp();
         assetSetter.setObjAxe();
+        assetSetter.setObjLantern();
         assetSetter.setObjChest();
         assetSetter.setObjPot();
         assetSetter.setObjRock();
