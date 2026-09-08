@@ -24,6 +24,7 @@ package entity.type {
   class ChestType
   class PotType
   class RockType
+  class LanternType
 }
 
 PlayerType ..|> EntityType
@@ -42,6 +43,7 @@ BossMonsterType ..|> EntityType
 ChestType ..|> EntityType
 PotType ..|> EntityType
 RockType ..|> EntityType
+LanternType ..|> EntityType
 
 note right of EntityType
 **Notes**

@@ -1,0 +1,72 @@
+@startuml obj_lantern
+
+package object {
+  class ObjLantern {
+    -- Constants --
+    + DEFAULT_RADIUS: int = 250
+    + DEFAULT_INTENSITY: float = 1.0f
+
+    -- Fields --
+    - gameWindow: GameWindow
+
+    -- Constructors --
+    + ObjLantern(gameWindow: GameWindow)
+
+    -- Methods --
+    + draw(g2: Graphics2D): void
+    + isLightSource(): boolean
+    + getLightRadius(): int
+    + getLightIntensity(): float
+  }
+}
+
+package entity {
+  class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + setType(type: EntityType): void
+    + setName(name: String): void
+    + setDescription(desc: String): void
+    + setImage(img: BufferedImage, tileSize: int): void
+  }
+}
+
+package "entity.type" {
+  class LanternType {
+    + typeId(): int
+    + name(): String
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+object.ObjLantern --|> entity.Entity : extends
+object.ObjLantern ..> "entity.type.LanternType" : uses / setType(new LanternType())
+object.ObjLantern ..> window.GameWindow : holds reference
+object.ObjLantern ..> frame.FrameApp : uses (tile size)
+object.ObjLantern ..> "java.awt.image.BufferedImage" : loads image
+object.ObjLantern ..> "javax.imageio.ImageIO" : reads resource
+
+note right of object.ObjLantern
+**Notes**
+- 光源としての振る舞いを実装しています：isLightSource() は true を返します。
+- デフォルトの光パラメータ（半径と強度）を定数で提供します。
+- リソース object/lantern.gif からスプライトを読み込み、FrameApp.getTileSize() で画像サイズを設定します。
+
+- Implements a light source: isLightSource() returns true.
+- Provides default light parameters: radius and intensity constants.
+- Loads sprite from resource "object/lantern.gif" and sets image with FrameApp.getTileSize().
+- Draws relative to player screen position.
+end note
+
+@enduml

@@ -1,0 +1,181 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="637px" preserveAspectRatio="none"
+     style="width:895px;height:637px;background:#FFFFFF;" version="1.1" viewBox="0 0 895 637" width="895px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster window-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,191.0137 L60.8242,191.0137 A3.75,3.75 0 0 1 63.3242,193.5137 L70.3242,215.6348 L235.5,215.6348 A2.5,2.5 0 0 1 238,218.1348 L238,419.5137 A2.5,2.5 0 0 1 235.5,422.0137 L8.5,422.0137 A2.5,2.5 0 0 1 6,419.5137 L6,193.5137 A2.5,2.5 0 0 1 8.5,191.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="70.3242" y1="215.6348" y2="215.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="51.3242" x="10" y="208.1211">window
+            </text>
+        </g><!--cluster asset-->
+        <g class="cluster" id="ent0004">
+            <path d="M29.5,6.0137 L66.3066,6.0137 A3.75,3.75 0 0 1 68.8066,8.5137 L75.8066,30.6348 L214.5,30.6348 A2.5,2.5 0 0 1 217,33.1348 L217,137.5137 A2.5,2.5 0 0 1 214.5,140.0137 L29.5,140.0137 A2.5,2.5 0 0 1 27,137.5137 L27,8.5137 A2.5,2.5 0 0 1 29.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="27" x2="75.8066" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="35.8066" x="31" y="23.1211">asset
+            </text>
+        </g><!--cluster entity-->
+        <g class="cluster" id="ent0006">
+            <path d="M19.5,473.0137 L57.8379,473.0137 A3.75,3.75 0 0 1 60.3379,475.5137 L67.3379,497.6348 L224.5,497.6348 A2.5,2.5 0 0 1 227,500.1348 L227,627.5137 A2.5,2.5 0 0 1 224.5,630.0137 L19.5,630.0137 A2.5,2.5 0 0 1 17,627.5137 L17,475.5137 A2.5,2.5 0 0 1 19.5,473.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="17" x2="67.3379" y1="497.6348" y2="497.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="21" y="490.1211">entity
+            </text>
+        </g><!--class GameWindow-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="178.3477" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="199.1475" x="22.5" y="228.0137"/>
+            <ellipse cx="73.8652" cy="244.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M76.6309,239.8887 Q76.7871,239.6699 76.9746,239.5605 Q77.1621,239.4512 77.3809,239.4512 Q77.7559,239.4512 77.9902,239.7168 Q78.2246,239.9668 78.2246,240.5762 L78.2246,242.0293 Q78.2246,242.6387 77.9902,242.9043 Q77.7559,243.1699 77.3809,243.1699 Q77.0371,243.1699 76.834,242.9668 Q76.6309,242.7793 76.5215,242.2637 Q76.4746,241.9043 76.2871,241.7168 Q75.959,241.3418 75.3496,241.123 Q74.7402,240.9043 74.1152,240.9043 Q73.3496,240.9043 72.709,241.2324 Q72.084,241.5605 71.584,242.3105 Q71.0996,243.0605 71.0996,244.0918 L71.0996,245.1855 Q71.0996,246.4199 71.9902,247.248 Q72.8809,248.0605 74.4746,248.0605 Q75.4121,248.0605 76.0684,247.8105 Q76.459,247.6543 76.8809,247.2168 Q77.1465,246.9512 77.2871,246.873 Q77.4434,246.7949 77.6465,246.7949 Q77.9746,246.7949 78.2246,247.0605 Q78.4902,247.3105 78.4902,247.6543 Q78.4902,247.998 78.1465,248.4043 Q77.6465,248.9824 76.8496,249.3105 Q75.7715,249.7637 74.4746,249.7637 Q72.959,249.7637 71.7559,249.1387 Q70.7715,248.6387 70.084,247.5762 Q69.3965,246.498 69.3965,245.2168 L69.3965,244.0605 Q69.3965,242.7324 70.0059,241.5918 Q70.6309,240.4355 71.7246,239.8262 Q72.8184,239.2012 74.0527,239.2012 Q74.7871,239.2012 75.4277,239.373 Q76.084,239.5293 76.6309,239.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87.917"
+                  x="94.3652" y="249.8105">GameWindow
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="220.6475" y1="260.0137" y2="260.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="294.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.1475"
+                  x="42.5" y="301.7422">obj: Entity[] = new Entity[30]
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="320.3633">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="81.2153" y1="277.3242" y2="277.3242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81.7168"
+                  x="81.2153" y="282.6211">Added Fields
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="162.9321" x2="220.6475" y1="277.3242" y2="277.3242"/>
+            <g>
+                <ellipse cx="33.5" cy="357.3086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="115.9307"
+                  x="42.5" y="361.6055">getPlayer(): Player
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="375.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="101.1445"
+                  x="42.5" y="380.2266">getObj(): Entity[]
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="394.5508" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85.5928"
+                  x="42.5" y="398.8477">repaint(): void
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="65.6533" y1="337.1875" y2="337.1875"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.8408"
+                  x="65.6533" y="342.4844">Relevant Methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="178.4941" x2="220.6475" y1="337.1875" y2="337.1875"/>
+        </g><!--class AssetSetter-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="81.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="156.7305" x="43.5" y="43.0137"/>
+            <ellipse cx="82.0644" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M84.83,54.8887 Q84.9862,54.6699 85.1737,54.5605 Q85.3612,54.4512 85.58,54.4512 Q85.955,54.4512 86.1894,54.7168 Q86.4237,54.9668 86.4237,55.5762 L86.4237,57.0293 Q86.4237,57.6387 86.1894,57.9043 Q85.955,58.1699 85.58,58.1699 Q85.2362,58.1699 85.0331,57.9668 Q84.83,57.7793 84.7206,57.2637 Q84.6737,56.9043 84.4862,56.7168 Q84.1581,56.3418 83.5487,56.123 Q82.9394,55.9043 82.3144,55.9043 Q81.5487,55.9043 80.9081,56.2324 Q80.2831,56.5605 79.7831,57.3105 Q79.2987,58.0605 79.2987,59.0918 L79.2987,60.1855 Q79.2987,61.4199 80.1894,62.248 Q81.08,63.0605 82.6737,63.0605 Q83.6112,63.0605 84.2675,62.8105 Q84.6581,62.6543 85.08,62.2168 Q85.3456,61.9512 85.4862,61.873 Q85.6425,61.7949 85.8456,61.7949 Q86.1737,61.7949 86.4237,62.0605 Q86.6894,62.3105 86.6894,62.6543 Q86.6894,62.998 86.3456,63.4043 Q85.8456,63.9824 85.0487,64.3105 Q83.9706,64.7637 82.6737,64.7637 Q81.1581,64.7637 79.955,64.1387 Q78.9706,63.6387 78.2831,62.5762 Q77.5956,61.498 77.5956,60.2168 L77.5956,59.0605 Q77.5956,57.7324 78.205,56.5918 Q78.83,55.4355 79.9237,54.8262 Q81.0175,54.2012 82.2519,54.2012 Q82.9862,54.2012 83.6269,54.373 Q84.2831,54.5293 84.83,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72.3652"
+                  x="101.3009" y="64.8105">AssetSetter
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="44.5" x2="199.2305" y1="75.0137" y2="75.0137"/>
+            <g>
+                <ellipse cx="54.5" cy="112.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="130.7305"
+                  x="63.5" y="116.7422">setObjLantern(): void
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="44.5" x2="72.8311" y1="92.3242" y2="92.3242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98.0684"
+                  x="72.8311" y="97.6211">Added Methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="170.8994" x2="199.2305" y1="92.3242" y2="92.3242"/>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0007">
+            <rect fill="#F1F1F1" height="103.8633" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="177.7578" x="33" y="510.0137"/>
+            <ellipse cx="100.1221" cy="526.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M102.8877,521.8887 Q103.0439,521.6699 103.2314,521.5605 Q103.4189,521.4512 103.6377,521.4512 Q104.0127,521.4512 104.2471,521.7168 Q104.4814,521.9668 104.4814,522.5762 L104.4814,524.0293 Q104.4814,524.6387 104.2471,524.9043 Q104.0127,525.1699 103.6377,525.1699 Q103.2939,525.1699 103.0908,524.9668 Q102.8877,524.7793 102.7783,524.2637 Q102.7314,523.9043 102.5439,523.7168 Q102.2158,523.3418 101.6064,523.123 Q100.9971,522.9043 100.3721,522.9043 Q99.6064,522.9043 98.9658,523.2324 Q98.3408,523.5605 97.8408,524.3105 Q97.3564,525.0605 97.3564,526.0918 L97.3564,527.1855 Q97.3564,528.4199 98.2471,529.248 Q99.1377,530.0605 100.7314,530.0605 Q101.6689,530.0605 102.3252,529.8105 Q102.7158,529.6543 103.1377,529.2168 Q103.4033,528.9512 103.5439,528.873 Q103.7002,528.7949 103.9033,528.7949 Q104.2314,528.7949 104.4814,529.0605 Q104.7471,529.3105 104.7471,529.6543 Q104.7471,529.998 104.4033,530.4043 Q103.9033,530.9824 103.1064,531.3105 Q102.0283,531.7637 100.7314,531.7637 Q99.2158,531.7637 98.0127,531.1387 Q97.0283,530.6387 96.3408,529.5762 Q95.6533,528.498 95.6533,527.2168 L95.6533,526.0605 Q95.6533,524.7324 96.2627,523.5918 Q96.8877,522.4355 97.9814,521.8262 Q99.0752,521.2012 100.3096,521.2012 Q101.0439,521.2012 101.6846,521.373 Q102.3408,521.5293 102.8877,521.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35.0137"
+                  x="120.6221" y="531.8105">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="34" x2="209.7578" y1="542.0137" y2="542.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="34" x2="209.7578" y1="550.0137" y2="550.0137"/>
+            <g>
+                <ellipse cx="44" cy="564.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="97.248"
+                  x="53" y="569.1211">getWorldX(): int
+            </text>
+            <g>
+                <ellipse cx="44" cy="583.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="97.248"
+                  x="53" y="587.7422">getWorldY(): int
+            </text>
+            <g>
+                <ellipse cx="44" cy="602.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151.7578"
+                  x="53" y="606.3633">isLightSource(): boolean
+            </text>
+        </g>
+        <g class="entity" id="ent0011">
+            <path d="M257,260.0137 L257,313.0137 L221.54,317.0137 L257,321.0137 L257,373.7598 A0,0 0 0 0 257,373.7598 L888.562,373.7598 A0,0 0 0 0 888.562,373.7598 L888.562,270.0137 L878.562,260.0137 L257,260.0137 A0,0 0 0 0 257,260.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M878.562,260.0137 L878.562,270.0137 L888.562,270.0137 L878.562,260.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="263" y="279.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="587.1963"
+                  x="263" y="296.333">- &#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#37197;&#21015;&#12501;&#12451;&#12540;&#12523;&#12489;
+                obj &#12434;&#12469;&#12452;&#12474; 30 &#12391;&#36861;&#21152;&#12375;&#12289;&#12527;&#12540;&#12523;&#12489;&#20869;&#12398;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12434;&#20445;&#25345;&#12375;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="601.0469"
+                  x="263" y="313.624">- AssetSetter.setObjLantern() &#12399; ObjLantern &#12434;&#29983;&#25104;&#12375;&#12390;
+                GameWindow.obj &#12395;&#37197;&#32622;&#12377;&#12427;&#36012;&#21209;&#12434;&#25345;&#12385;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="263" y="330.915">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="384.4331"
+                  x="263" y="348.2061">- Added an object array field `obj` sized to 30 to hold world objects.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="610.562"
+                  x="263" y="365.4971">- `AssetSetter.setObjLantern()` is responsible for creating and placing
+                ObjLantern into `GameWindow.obj`.
+            </text>
+        </g><!--link AssetSetter to GameWindow-->
+        <g class="link"
+           id="lnk8">
+            <path d="M122,124.0437 C122,152.4537 122,185.8937 122,221.6437" fill="none"
+                  id="AssetSetter-to-GameWindow" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818" points="122,227.6437,126,218.6437,122,222.6437,118,218.6437,122,227.6437"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="148.8652"
+                  x="123" y="171.042">uses / populates obj array
+            </text>
+        </g><!--link GameWindow to Entity-->
+        <g class="link"
+           id="lnk9">
+            <path d="M122,406.0837 C122,440.9937 122,473.8937 122,503.9837" fill="none"
+                  id="GameWindow-to-Entity" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818" points="122,509.9837,126,500.9837,122,504.9837,118,500.9837,122,509.9837"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="116.3271"
+                  x="123" y="453.042">manages (obj array)
+            </text>
+        </g>
+        <?plantuml-src VLDFQnD15B_FftZ7DfArq5j0eOVgfVx17gf8OIVPbsJhTcRPcJH4ANHtgQHMGOfQF8YAOi5A2u8WOks76TFMR-6RpQQxJT1BcFczDxy_-rv2tdZ0MmXTNtYo2uyOG2FWIi5rlefB1GXGhSASvw47rtmCF4Nt8GoolbA3UQ5ztRk_35T0O7TqdPrPPgF7Tp30DIuqt43TbWN19MYXlXtm7aPJqpKOdehAhVgAXKVyUI72aFj2sygQz3r2rzawOs6UXWAWBeMPi_T5r1gZyJGJRbIckK1ECHB_4i3CJabXlW1ouqio2hoxbe2CZi7tBiA-Ml1RRRqeEr43RQakPO1SZ5IpE4uvHBLwDH-PKnfK3JeA5Lo6K8QTW6iwqt20Hn7liSbsIp8CukJsQx3A1ULJC7N-S9en8JL2P2s2R4xgiahb9dMeIeLLmIIVJVhA9DzDicUIGvFs_sm-6_HtJVhI91zC-jEa-oRToeoPPCSatqpoqIG_O7O6JBntTdmqUFBEnBjc8pRfuNd_uF6cYGycoOdYz_6RawUnVHB_Cl5hiv6GZTB7SiOcIZA7K03MnUcBjoVzvnd5fzBcEvd9U9yId1uTMEva--phby4s7NOopVU59Xjj51Ss73RqyFj1q_vVm2NC1UK_f0ujRLhwRKkgTEr6v4-KGpJkVyoxj2oq_IgKGldr0A4f8sX4oBKlMYJjGHZmXZsN4jAcIN0lvd8TXjHjHyl-0W00?>
+    </g>
+</svg>

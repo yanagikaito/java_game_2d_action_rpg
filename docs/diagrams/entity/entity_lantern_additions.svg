@@ -1,0 +1,379 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="767px" preserveAspectRatio="none"
+     style="width:1300px;height:767px;background:#FFFFFF;" version="1.1" viewBox="0 0 1300 767" width="1300px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster entity-->
+        <g class="cluster" id="ent0002">
+            <path d="M273.5,473.0137 L311.8379,473.0137 A3.75,3.75 0 0 1 314.3379,475.5137 L321.3379,497.6348 L582.5,497.6348 A2.5,2.5 0 0 1 585,500.1348 L585,757.5137 A2.5,2.5 0 0 1 582.5,760.0137 L273.5,760.0137 A2.5,2.5 0 0 1 271,757.5137 L271,475.5137 A2.5,2.5 0 0 1 273.5,473.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="271" x2="321.3379" y1="497.6348" y2="497.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="275" y="490.1211">entity
+            </text>
+        </g><!--cluster object-->
+        <g class="cluster" id="ent0004">
+            <path d="M8.5,195.0137 L50.7275,195.0137 A3.75,3.75 0 0 1 53.2275,197.5137 L60.2275,219.6348 L321.5,219.6348 A2.5,2.5 0 0 1 324,222.1348 L324,419.5137 A2.5,2.5 0 0 1 321.5,422.0137 L8.5,422.0137 A2.5,2.5 0 0 1 6,419.5137 L6,197.5137 A2.5,2.5 0 0 1 8.5,195.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="60.2275" y1="219.6348" y2="219.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.2275" x="10" y="212.1211">object
+            </text>
+        </g><!--cluster player-->
+        <g class="cluster" id="ent0006">
+            <path d="M534.5,213.5137 L576.748,213.5137 A3.75,3.75 0 0 1 579.248,216.0137 L586.248,238.1348 L751.5,238.1348 A2.5,2.5 0 0 1 754,240.6348 L754,401.0137 A2.5,2.5 0 0 1 751.5,403.5137 L534.5,403.5137 A2.5,2.5 0 0 1 532,401.0137 L532,216.0137 A2.5,2.5 0 0 1 534.5,213.5137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="532" x2="586.248" y1="238.1348" y2="238.1348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.248" x="536" y="230.6211">player
+            </text>
+        </g><!--cluster asset-->
+        <g class="cluster" id="ent0008">
+            <path d="M22.5,6.0137 L59.3066,6.0137 A3.75,3.75 0 0 1 61.8066,8.5137 L68.8066,30.6348 L409.5,30.6348 A2.5,2.5 0 0 1 412,33.1348 L412,141.5137 A2.5,2.5 0 0 1 409.5,144.0137 L22.5,144.0137 A2.5,2.5 0 0 1 20,141.5137 L20,8.5137 A2.5,2.5 0 0 1 22.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="20" x2="68.8066" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="35.8066" x="24" y="23.1211">asset
+            </text>
+        </g><!--cluster window-->
+        <g class="cluster" id="ent0010">
+            <path d="M350.5,239.5137 L402.8242,239.5137 A3.75,3.75 0 0 1 405.3242,242.0137 L412.3242,264.1348 L505.5,264.1348 A2.5,2.5 0 0 1 508,266.6348 L508,375.0137 A2.5,2.5 0 0 1 505.5,377.5137 L350.5,377.5137 A2.5,2.5 0 0 1 348,375.0137 L348,242.0137 A2.5,2.5 0 0 1 350.5,239.5137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="348" x2="412.3242" y1="264.1348" y2="264.1348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="51.3242" x="352" y="256.6211">window
+            </text>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="234.2109" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="281.2266" x="287.5" y="510.0137"/>
+            <ellipse cx="406.3564" cy="526.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M409.1221,521.8887 Q409.2783,521.6699 409.4658,521.5605 Q409.6533,521.4512 409.8721,521.4512 Q410.2471,521.4512 410.4814,521.7168 Q410.7158,521.9668 410.7158,522.5762 L410.7158,524.0293 Q410.7158,524.6387 410.4814,524.9043 Q410.2471,525.1699 409.8721,525.1699 Q409.5283,525.1699 409.3252,524.9668 Q409.1221,524.7793 409.0127,524.2637 Q408.9658,523.9043 408.7783,523.7168 Q408.4502,523.3418 407.8408,523.123 Q407.2314,522.9043 406.6064,522.9043 Q405.8408,522.9043 405.2002,523.2324 Q404.5752,523.5605 404.0752,524.3105 Q403.5908,525.0605 403.5908,526.0918 L403.5908,527.1855 Q403.5908,528.4199 404.4814,529.248 Q405.3721,530.0605 406.9658,530.0605 Q407.9033,530.0605 408.5596,529.8105 Q408.9502,529.6543 409.3721,529.2168 Q409.6377,528.9512 409.7783,528.873 Q409.9346,528.7949 410.1377,528.7949 Q410.4658,528.7949 410.7158,529.0605 Q410.9814,529.3105 410.9814,529.6543 Q410.9814,529.998 410.6377,530.4043 Q410.1377,530.9824 409.3408,531.3105 Q408.2627,531.7637 406.9658,531.7637 Q405.4502,531.7637 404.2471,531.1387 Q403.2627,530.6387 402.5752,529.5762 Q401.8877,528.498 401.8877,527.2168 L401.8877,526.0605 Q401.8877,524.7324 402.4971,523.5918 Q403.1221,522.4355 404.2158,521.8262 Q405.3096,521.2012 406.5439,521.2012 Q407.2783,521.2012 407.9189,521.373 Q408.5752,521.5293 409.1221,521.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35.0137"
+                  x="426.8564" y="531.8105">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="288.5" x2="567.7266" y1="542.0137" y2="542.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="295.5" y="576.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.8271"
+                  x="307.5" y="583.7422">lightRadius: int
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="295.5" y="595.0664"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="116.7236"
+                  x="307.5" y="602.3633">currentLight: Entity
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="307.5" y="620.9844">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="288.5" x2="387.2549" y1="559.3242" y2="559.3242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81.7168"
+                  x="387.2549" y="564.6211">Added Fields
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="468.9717" x2="567.7266" y1="559.3242" y2="559.3242"/>
+            <g>
+                <ellipse cx="298.5" cy="657.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="148.6201"
+                  x="307.5" y="662.2266">getCurrentLight(): Entity
+            </text>
+            <g>
+                <ellipse cx="298.5" cy="676.5508" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="255.2266"
+                  x="307.5" y="680.8477">setCurrentLight(currentLight: Entity): void
+            </text>
+            <g>
+                <ellipse cx="298.5" cy="695.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151.7578"
+                  x="307.5" y="699.4688">isLightSource(): boolean
+            </text>
+            <g>
+                <ellipse cx="298.5" cy="713.793" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="125.2891"
+                  x="307.5" y="718.0898">getLightRadius(): int
+            </text>
+            <g>
+                <ellipse cx="298.5" cy="732.4141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="145.5234"
+                  x="307.5" y="736.7109">getLightIntensity(): float
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="288.5" x2="379.0791" y1="637.8086" y2="637.8086"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98.0684"
+                  x="379.0791" y="643.1055">Added Methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="477.1475" x2="567.7266" y1="637.8086" y2="637.8086"/>
+        </g><!--class ObjLantern-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="174.3477" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="285.1025" x="22.5" y="232.0137"/>
+            <ellipse cx="126.167" cy="248.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M128.9326,243.8887 Q129.0889,243.6699 129.2764,243.5605 Q129.4639,243.4512 129.6826,243.4512 Q130.0576,243.4512 130.292,243.7168 Q130.5264,243.9668 130.5264,244.5762 L130.5264,246.0293 Q130.5264,246.6387 130.292,246.9043 Q130.0576,247.1699 129.6826,247.1699 Q129.3389,247.1699 129.1357,246.9668 Q128.9326,246.7793 128.8232,246.2637 Q128.7764,245.9043 128.5889,245.7168 Q128.2607,245.3418 127.6514,245.123 Q127.042,244.9043 126.417,244.9043 Q125.6514,244.9043 125.0107,245.2324 Q124.3857,245.5605 123.8857,246.3105 Q123.4014,247.0605 123.4014,248.0918 L123.4014,249.1855 Q123.4014,250.4199 124.292,251.248 Q125.1826,252.0605 126.7764,252.0605 Q127.7139,252.0605 128.3701,251.8105 Q128.7607,251.6543 129.1826,251.2168 Q129.4482,250.9512 129.5889,250.873 Q129.7451,250.7949 129.9482,250.7949 Q130.2764,250.7949 130.5264,251.0605 Q130.792,251.3105 130.792,251.6543 Q130.792,251.998 130.4482,252.4043 Q129.9482,252.9824 129.1514,253.3105 Q128.0732,253.7637 126.7764,253.7637 Q125.2607,253.7637 124.0576,253.1387 Q123.0732,252.6387 122.3857,251.5762 Q121.6982,250.498 121.6982,249.2168 L121.6982,248.0605 Q121.6982,246.7324 122.3076,245.5918 Q122.9326,244.4355 124.0264,243.8262 Q125.1201,243.2012 126.3545,243.2012 Q127.0889,243.2012 127.7295,243.373 Q128.3857,243.5293 128.9326,243.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="69.2686"
+                  x="146.667" y="253.8105">ObjLantern
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="306.6025" y1="264.0137" y2="264.0137"/>
+            <g>
+                <ellipse cx="33.5" cy="301.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="259.1025"
+                  x="42.5" y="305.7422">ObjLantern(gameWindow: GameWindow)
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="320.0664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.9238"
+                  x="42.5" y="324.3633">setWorldX(x: int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="338.6875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.9238"
+                  x="42.5" y="342.9844">setWorldY(y: int): void
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="357.3086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151.7578"
+                  x="42.5" y="361.6055">isLightSource(): boolean
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="375.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="125.2891"
+                  x="42.5" y="380.2266">getLightRadius(): int
+            </text>
+            <g>
+                <ellipse cx="33.5" cy="394.5508" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="145.5234"
+                  x="42.5" y="398.8477">getLightIntensity(): float
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="115.6377" y1="281.3242" y2="281.3242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98.8271"
+                  x="115.6377" y="286.6211">Lantern-specific
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="214.4648" x2="306.6025" y1="281.3242" y2="281.3242"/>
+        </g><!--class Player-->
+        <g class="entity" id="ent0007">
+            <rect fill="#F1F1F1" height="137.1055" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="188.6475" x="548.5" y="250.5137"/>
+            <ellipse cx="618.7324" cy="266.5137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M621.498,262.3887 Q621.6543,262.1699 621.8418,262.0605 Q622.0293,261.9512 622.248,261.9512 Q622.623,261.9512 622.8574,262.2168 Q623.0918,262.4668 623.0918,263.0762 L623.0918,264.5293 Q623.0918,265.1387 622.8574,265.4043 Q622.623,265.6699 622.248,265.6699 Q621.9043,265.6699 621.7012,265.4668 Q621.498,265.2793 621.3887,264.7637 Q621.3418,264.4043 621.1543,264.2168 Q620.8262,263.8418 620.2168,263.623 Q619.6074,263.4043 618.9824,263.4043 Q618.2168,263.4043 617.5762,263.7324 Q616.9512,264.0605 616.4512,264.8105 Q615.9668,265.5605 615.9668,266.5918 L615.9668,267.6855 Q615.9668,268.9199 616.8574,269.748 Q617.748,270.5605 619.3418,270.5605 Q620.2793,270.5605 620.9355,270.3105 Q621.3262,270.1543 621.748,269.7168 Q622.0137,269.4512 622.1543,269.373 Q622.3105,269.2949 622.5137,269.2949 Q622.8418,269.2949 623.0918,269.5605 Q623.3574,269.8105 623.3574,270.1543 Q623.3574,270.498 623.0137,270.9043 Q622.5137,271.4824 621.7168,271.8105 Q620.6387,272.2637 619.3418,272.2637 Q617.8262,272.2637 616.623,271.6387 Q615.6387,271.1387 614.9512,270.0762 Q614.2637,268.998 614.2637,267.7168 L614.2637,266.5605 Q614.2637,265.2324 614.873,264.0918 Q615.498,262.9355 616.5918,262.3262 Q617.6855,261.7012 618.9199,261.7012 Q619.6543,261.7012 620.2949,261.873 Q620.9512,262.0293 621.498,262.3887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="39.6826"
+                  x="639.2324" y="272.3105">Player
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="549.5" x2="736.1475" y1="282.5137" y2="282.5137"/>
+            <g>
+                <ellipse cx="559.5" cy="319.9453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="148.6201"
+                  x="568.5" y="324.2422">getCurrentLight(): Entity
+            </text>
+            <g>
+                <ellipse cx="559.5" cy="338.5664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.9854"
+                  x="568.5" y="342.8633">hasLantern(): boolean
+            </text>
+            <g>
+                <ellipse cx="559.5" cy="357.1875" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="142.4131"
+                  x="568.5" y="361.4844">getLanternRadius(): int
+            </text>
+            <g>
+                <ellipse cx="559.5" cy="375.8086" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="162.6475"
+                  x="568.5" y="380.1055">getLanternIntensity(): float
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="549.5" x2="573.1689" y1="299.8242" y2="299.8242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="139.3096"
+                  x="573.1689" y="305.1211">Convenience methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="712.4785" x2="736.1475" y1="299.8242" y2="299.8242"/>
+        </g><!--class AssetSetter-->
+        <g class="entity" id="ent0009">
+            <rect fill="#F1F1F1" height="85.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="359.0469" x="36.5" y="43.0137"/>
+            <ellipse cx="175.5908" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M178.3564,54.8887 Q178.5127,54.6699 178.7002,54.5605 Q178.8877,54.4512 179.1064,54.4512 Q179.4814,54.4512 179.7158,54.7168 Q179.9502,54.9668 179.9502,55.5762 L179.9502,57.0293 Q179.9502,57.6387 179.7158,57.9043 Q179.4814,58.1699 179.1064,58.1699 Q178.7627,58.1699 178.5596,57.9668 Q178.3564,57.7793 178.2471,57.2637 Q178.2002,56.9043 178.0127,56.7168 Q177.6846,56.3418 177.0752,56.123 Q176.4658,55.9043 175.8408,55.9043 Q175.0752,55.9043 174.4346,56.2324 Q173.8096,56.5605 173.3096,57.3105 Q172.8252,58.0605 172.8252,59.0918 L172.8252,60.1855 Q172.8252,61.4199 173.7158,62.248 Q174.6064,63.0605 176.2002,63.0605 Q177.1377,63.0605 177.7939,62.8105 Q178.1846,62.6543 178.6064,62.2168 Q178.8721,61.9512 179.0127,61.873 Q179.1689,61.7949 179.3721,61.7949 Q179.7002,61.7949 179.9502,62.0605 Q180.2158,62.3105 180.2158,62.6543 Q180.2158,62.998 179.8721,63.4043 Q179.3721,63.9824 178.5752,64.3105 Q177.4971,64.7637 176.2002,64.7637 Q174.6846,64.7637 173.4814,64.1387 Q172.4971,63.6387 171.8096,62.5762 Q171.1221,61.498 171.1221,60.2168 L171.1221,59.0605 Q171.1221,57.7324 171.7314,56.5918 Q172.3564,55.4355 173.4502,54.8262 Q174.5439,54.2012 175.7783,54.2012 Q176.5127,54.2012 177.1533,54.373 Q177.8096,54.5293 178.3564,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72.3652"
+                  x="196.0908" y="64.8105">AssetSetter
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="37.5" x2="394.5469" y1="75.0137" y2="75.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="37.5" x2="394.5469" y1="83.0137" y2="83.0137"/>
+            <g>
+                <ellipse cx="47.5" cy="97.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="130.7305"
+                  x="56.5" y="102.1211">setObjLantern(): void
+            </text>
+            <g>
+                <rect fill="#F24D5C" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="44.5" y="113.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="333.0469"
+                  x="56.5" y="120.7422">createObjLantern(worldX: int, worldY: int): ObjLantern
+            </text>
+        </g><!--class GameWindow-->
+        <g class="entity" id="ent0011">
+            <rect fill="#F1F1F1" height="85.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="127.1445" x="364.5" y="276.5137"/>
+            <ellipse cx="382.7524" cy="292.5137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M385.518,288.3887 Q385.6743,288.1699 385.8618,288.0605 Q386.0493,287.9512 386.268,287.9512 Q386.643,287.9512 386.8774,288.2168 Q387.1118,288.4668 387.1118,289.0762 L387.1118,290.5293 Q387.1118,291.1387 386.8774,291.4043 Q386.643,291.6699 386.268,291.6699 Q385.9243,291.6699 385.7211,291.4668 Q385.518,291.2793 385.4086,290.7637 Q385.3618,290.4043 385.1743,290.2168 Q384.8461,289.8418 384.2368,289.623 Q383.6274,289.4043 383.0024,289.4043 Q382.2368,289.4043 381.5961,289.7324 Q380.9711,290.0605 380.4711,290.8105 Q379.9868,291.5605 379.9868,292.5918 L379.9868,293.6855 Q379.9868,294.9199 380.8774,295.748 Q381.768,296.5605 383.3618,296.5605 Q384.2993,296.5605 384.9555,296.3105 Q385.3461,296.1543 385.768,295.7168 Q386.0336,295.4512 386.1743,295.373 Q386.3305,295.2949 386.5336,295.2949 Q386.8618,295.2949 387.1118,295.5605 Q387.3774,295.8105 387.3774,296.1543 Q387.3774,296.498 387.0336,296.9043 Q386.5336,297.4824 385.7368,297.8105 Q384.6586,298.2637 383.3618,298.2637 Q381.8461,298.2637 380.643,297.6387 Q379.6586,297.1387 378.9711,296.0762 Q378.2836,294.998 378.2836,293.7168 L378.2836,292.5605 Q378.2836,291.2324 378.893,290.0918 Q379.518,288.9355 380.6118,288.3262 Q381.7055,287.7012 382.9399,287.7012 Q383.6743,287.7012 384.3149,287.873 Q384.9711,288.0293 385.518,288.3887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87.917"
+                  x="397.4751" y="298.3105">GameWindow
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="365.5" x2="490.6445" y1="308.5137" y2="308.5137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="365.5" x2="490.6445" y1="316.5137" y2="316.5137"/>
+            <g>
+                <ellipse cx="375.5" cy="331.3242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="101.1445"
+                  x="384.5" y="335.6211">getObj(): Entity[]
+            </text>
+            <g>
+                <ellipse cx="375.5" cy="349.9453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85.5928"
+                  x="384.5" y="354.2422">repaint(): void
+            </text>
+        </g>
+        <g class="entity" id="ent0018">
+            <path d="M604,544.0137 L604,623.0137 L568.82,627.0137 L604,631.0137 L604,709.6328 A0,0 0 0 0 604,709.6328 L1076.4961,709.6328 A0,0 0 0 0 1076.4961,709.6328 L1076.4961,554.0137 L1066.4961,544.0137 L604,544.0137 A0,0 0 0 0 604,544.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1066.4961,544.0137 L1066.4961,554.0137 L1076.4961,554.0137 L1066.4961,544.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="610" y="563.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="150.3188"
+                  x="610" y="580.333">Added for lantern support:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="271.5908"
+                  x="610" y="597.624">- &#35013;&#20633;&#20013;&#12398;&#20809;&#28304;&#21442;&#29031;&#12434;&#20445;&#25345;&#12377;&#12427;&#65288;currentLight&#65289;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="432.6626"
+                  x="610" y="614.915">- &#12487;&#12501;&#12457;&#12523;&#12488;&#12391;&#12399;&#20809;&#28304;&#12391;&#12399;&#12394;&#12356;&#25391;&#12427;&#33310;&#12356;&#65288;isLightSource()
+                &#12399; false &#12434;&#36820;&#12377;&#65289;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="451.4961"
+                  x="610" y="632.2061">- &#20809;&#12398;&#21322;&#24452;&#12392;&#24375;&#24230;&#12434;&#21462;&#24471;&#12377;&#12427;&#12450;&#12463;&#12475;&#12469;&#65288;getLightRadius()
+                / getLightIntensity()&#65289;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="610" y="649.4971">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="317.9478"
+                  x="610" y="666.7881">- store reference to equipped light source (currentLight)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="295.1851"
+                  x="610" y="684.0791">- default non-light behavior: isLightSource() -&gt; false
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="228.3252"
+                  x="610" y="701.3701">- accessors for light radius and intensity
+            </text>
+        </g>
+        <g class="entity" id="ent0021">
+            <path d="M772.5,253.5137 L772.5,384.5508 L1293.3906,384.5508 L1293.3906,263.5137 L1283.3906,253.5137 L772.5,253.5137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1283.3906,253.5137 L1283.3906,263.5137 L1293.3906,263.5137 L1283.3906,253.5137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="778.5" y="272.542">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="262.2979"
+                  x="778.5" y="289.833">ObjLantern implements light-source behavior:
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="453.6987"
+                  x="778.5" y="307.124">- isLightSource()&#12289;getLightRadius()&#12289;getLightIntensity() &#12434;&#12458;&#12540;&#12496;&#12540;&#12521;&#12452;&#12489;&#12377;&#12427;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="499.8906"
+                  x="778.5" y="324.415">- AssetSetter.setObjLantern() &#12395;&#12424;&#12387;&#12390;&#29983;&#25104;&#12373;&#12428;&#12289;GameWindow.obj
+                &#37197;&#21015;&#12395;&#37197;&#32622;&#12373;&#12428;&#12427;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="778.5" y="341.7061">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="365.6123"
+                  x="778.5" y="358.9971">- overrides isLightSource(), getLightRadius(), getLightIntensity()
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="434.2749"
+                  x="778.5" y="376.2881">- created and placed into GameWindow.obj via AssetSetter.setObjLantern()
+            </text>
+        </g><!--link ObjLantern to Entity-->
+        <g class="link"
+           id="lnk12">
+            <path d="M238.96,406.0637 C266.61,438.2337 286.7572,461.683 316.3672,496.133" fill="none"
+                  id="ObjLantern-to-Entity" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="none" points="328.1,509.7837,320.9174,492.2221,311.8169,500.044,328.1,509.7837"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="45.5317"
+                  x="281" y="453.042">extends
+            </text>
+        </g><!--link Player to Entity-->
+        <g class="link"
+           id="lnk13">
+            <path
+                    d="M600.17,387.8337 C585.8,410.0737 569.48,434.7837 554,457.0137 C541.97,474.2837 532.5383,487.4753 519.6383,505.0653"
+                    fill="none" id="Player-to-Entity" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="516.09,509.9037,524.638,505.0117,519.0469,505.8717,518.1869,500.2806,516.09,509.9037"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="125.7344"
+                  x="567" y="453.042">currentLight (nullable)
+            </text>
+        </g><!--link AssetSetter to ObjLantern-->
+        <g class="link"
+           id="lnk14">
+            <path d="M206.82,128.1637 C200.49,156.9337 193.1218,190.3844 185.3218,225.7644" fill="none"
+                  id="AssetSetter-to-ObjLantern" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="184.03,231.6237,189.8738,223.6959,185.1065,226.7409,182.0614,221.9736,184.03,231.6237"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="42.6309"
+                  x="200" y="175.042">creates
+            </text>
+        </g><!--link AssetSetter to GameWindow-->
+        <g class="link"
+           id="lnk15">
+            <path
+                    d="M263.73,128.0837 C283.07,145.6437 305.22,166.7037 324,187.0137 C350.32,215.4837 373.8515,245.0976 393.8115,271.4976"
+                    fill="none" id="AssetSetter-to-GameWindow" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="397.43,276.2837,395.1929,266.6923,394.4146,272.2953,388.8115,271.517,397.43,276.2837"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.46"
+                  x="316" y="175.042">uses
+            </text>
+        </g><!--link GameWindow to Entity-->
+        <g class="link"
+           id="lnk16">
+            <path d="M428,361.6037 C428,399.6737 428,451.8537 428,503.9537" fill="none"
+                  id="GameWindow-to-Entity" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818" points="428,509.9537,432,500.9537,428,504.9537,424,500.9537,428,509.9537"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="116.3271"
+                  x="429" y="453.042">manages (obj array)
+            </text>
+        </g><!--link ObjLantern to GMN20-->
+        <g class="link"
+           id="lnk22">
+            <path d="M255.95,232.0037 C288.05,206.8137 326.04,182.6037 365.5,169.5137 C443.75,143.5537 656.29,150.4337 736.5,169.5137 C805.62,185.9537 876.91,221.2137 932.26,253.3637"
+                  fill="none" id="ObjLantern-GMN20" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+        </g>
+        <?plantuml-src lLNFZzD65BxxhtZ7P5cxznoG4A9LfQLKvG2ewc5YlsGDZiUTSRAi2X9sM95j5u4gMiG1a5Yq_5WLJbKhki0VCtXtEV4lz7d6YMUTb8eBbsWyxzVtlk-zISByIwoFW74QfklmamFWHqnAE5LV0BWkd0W23E3B4AD0qhUvXYZihwRViI0SoWw4SLfT-qCXAEDAQUrKgPoZcKvZkihhLCUWZ-b9AwpLdWKQkspO5zMWc14FWoeYbDfubW-5ZsM-BkSHihWkk5B3B-tJ1chRrt6AiQJCfRaNSLOwN7MkEavI4SUx5z5FBUBET2-kC0eJSKrUTU7A1Fsm5_frrxLtgyy6U2wC0xxMWQzcvtRT_Zakek1ywx86UhJLgVL2Qts1zRCGaKHi7OL5nBVrXIRX98z768SO-mY3JrL_bSafJmln6zj_TM2i_zy3mKPRonFbzrbCqraVccfBD9jecdk1B4NBlAObqt2MGNzScEfJUpLHh6dXBHZrDCnGz3MAcgRlVwWC0XD61InWEhSPKyyQJjUzShnQUwzQzWxWPQ8ea8uHqwiaTDrvJtlze1KFeuXr8smxcaBF9ixpZiDy-Kv5bbmGKTOp97XMwnqOIdAVDoo2Ds0nKIcXHPM12S7MsuuJynH1QCIyTpJ4MLhwXgnoQSanxrEF2uWgh7AO95oa7SU5m-sD8h_txky_LFQYsDZSVtMxk9KVR3nH-Q_ltjxVtyfKTa_bltpOczW4VTZRf5Wrlg76lwdycHhlgl54PKzKzj8aCMULFLVPzVsjbvJXSFA0pfIdiRn0Vj1ZaKIWceTlxr11avuobQ1k_boykQwofyNUNyMh7V8fRlrUlBbhSAdyaSef_Jyg_vDoDpSVlbYqy6LwoYzJBeW-xA7GEvnom1-7OP8GM_f_0AJ624UUvZP51jXZmoY5cCUkyUpYAXk5N7IQRnEGbhex2cE-Zr9o8OqOEb1efC3Ye5mZWz2XaOLIswR2SrDdgMoDOZX88XmGO6cAk5KVCv24fG5JNSkQt5bN5dUbI2f_hiPxQdnR_pvJ-MCrtZHwK6PhyBt6sq9QxwgS1cLRPJi7TnxkJsXGQ82sg5Oz_ruvukytRXOJ4dcN3WUlNrHkL80gy14A4GQq3OqkbkUU_kL5-ZlJXotGlDFRuAEcdqC3nIXa7-kd5kfV?>
+    </g>
+</svg>

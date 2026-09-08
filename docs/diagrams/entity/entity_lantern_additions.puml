@@ -1,0 +1,82 @@
+@startuml entity_lantern_additions
+
+package entity {
+  class Entity {
+    -- Added Fields --
+    - lightRadius: int
+    - currentLight: Entity
+
+    -- Added Methods --
+    + getCurrentLight(): Entity
+    + setCurrentLight(currentLight: Entity): void
+    + isLightSource(): boolean
+    + getLightRadius(): int
+    + getLightIntensity(): float
+  }
+}
+
+package object {
+  class ObjLantern {
+    -- Lantern-specific --
+    + ObjLantern(gameWindow: GameWindow)
+    + setWorldX(x: int): void
+    + setWorldY(y: int): void
+    + isLightSource(): boolean
+    + getLightRadius(): int
+    + getLightIntensity(): float
+  }
+}
+
+package player {
+  class Player {
+    -- Convenience methods --
+    + getCurrentLight(): Entity
+    + hasLantern(): boolean
+    + getLanternRadius(): int
+    + getLanternIntensity(): float
+  }
+}
+
+package asset {
+  class AssetSetter {
+    + setObjLantern(): void
+    - createObjLantern(worldX: int, worldY: int): ObjLantern
+  }
+}
+
+package window {
+  class GameWindow {
+    + getObj(): Entity[]
+    + repaint(): void
+  }
+}
+
+object.ObjLantern --|> entity.Entity : extends
+player.Player --> entity.Entity : currentLight (nullable)
+asset.AssetSetter ..> object.ObjLantern : creates
+asset.AssetSetter --> window.GameWindow : uses
+window.GameWindow --> entity.Entity : manages (obj array)
+
+note right of entity.Entity
+**Notes**
+Added for lantern support:
+- 装備中の光源参照を保持する（currentLight）
+- デフォルトでは光源ではない振る舞い（isLightSource() は false を返す）
+- 光の半径と強度を取得するアクセサ（getLightRadius() / getLightIntensity()）
+
+- store reference to equipped light source (currentLight)
+- default non-light behavior: isLightSource() -> false
+- accessors for light radius and intensity
+end note
+
+note right of object.ObjLantern
+**Notes**
+ObjLantern implements light-source behavior:
+- isLightSource()、getLightRadius()、getLightIntensity() をオーバーライドする
+- AssetSetter.setObjLantern() によって生成され、GameWindow.obj 配列に配置される
+
+- overrides isLightSource(), getLightRadius(), getLightIntensity()
+- created and placed into GameWindow.obj via AssetSetter.setObjLantern()
+end note
+
+@enduml

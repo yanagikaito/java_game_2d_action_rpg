@@ -1,0 +1,76 @@
+@startuml environment_lighting_additions
+
+package environment {
+  class Lighting {
+    -- Added Fields --
+    - lastHasLantern: boolean = false
+    - lastLanternRadius: int = -1
+    - lastLanternIntensity: float = -1.0f
+
+    -- Existing Fields (context) --
+    - darknessFilter: BufferedImage
+    - lastCenterX: int
+    - lastCenterY: int
+    - lastCircleSize: int
+    - lastBrightness: float
+    - lastWidth: int
+    - lastHeight: int
+
+    -- Added Methods --
+    + updateAndMaybeRecreate(circleSize: int, brightness: float, hasLantern: boolean, lanternRadius: int, lanternIntensity: float): void
+    - createFilter(circleSize: int, brightness: float, hasLantern: boolean, lanternRadius: int, lanternIntensity: float): void
+
+    -- Existing Methods (context) --
+    + Lighting(gameWindow: GameWindow, circleSize: int)
+    + updateAndMaybeRecreate(circleSize: int, brightness: float): void
+    + draw(g2: Graphics2D): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getObj(): Entity[]
+  }
+}
+
+package player {
+  class Player {
+    + getCurrentLight(): Entity
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package entity {
+  class Entity {
+    + isLightSource(): boolean
+    + getLightRadius(): int
+    + getLightIntensity(): float
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getScreenWidth(): int
+    + getScreenHeight(): int
+  }
+}
+
+environment.Lighting --> window.GameWindow : reads player position
+environment.Lighting ..> frame.FrameApp : reads screen size
+player.Player --> entity.Entity : currentLight (nullable)
+environment.Lighting ..> java.awt.geom.Point2D : uses (for radial center)
+
+note right of environment.Lighting
+**Notes**
+- 新しいキャッシュ用フィールドはランタンの有無とそのパラメータを追跡し、不要なフィルタ再生成を回避します。
+- updateAndMaybeRecreate(...) はランタンパラメータを受け取り、関連する状態変化があれば createFilter(...) を呼び出します。
+- createFilter(...) は暗転レイヤーを合成し、ランタン装備時には RadialGradientPaint と DstOut 合成を使ってソフトな光の穴を切り抜き、中心に小さな楕円をクリアして確実に視界を確保します。
+
+- New cached state fields track last lantern presence and parameters to avoid unnecessary filter recreation.
+- updateAndMaybeRecreate(...) now accepts lantern parameters and triggers createFilter(...) when relevant state changes.
+- createFilter(...) composes a darkness layer and, when a lantern is present, uses a RadialGradientPaint and DstOut composite to carve a soft light hole; it also clears a small central ellipse for guaranteed visibility.
+end note
+
+@enduml

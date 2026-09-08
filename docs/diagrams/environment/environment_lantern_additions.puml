@@ -1,0 +1,100 @@
+@startuml environment_lantern_additions
+
+' EnvironmentManager に追加したランタン関連の差分図
+
+package environment {
+  class EnvironmentManager {
+    -- Fields --
+    - gameWindow: GameWindow
+    - timeCycle: WorldTimeCycle
+    - lighting: Lighting
+    - lightCircleSize: int
+
+    -- Methods --
+    + EnvironmentManager(gameWindow: GameWindow)
+    + setUp(): void
+    + update(delta: double): void
+    + draw(g2: Graphics2D): void
+  }
+
+  class WorldTimeCycle {
+    -- Fields --
+    - timeSeconds: double
+    - periodSeconds: double
+
+    -- Methods --
+    + WorldTimeCycle(periodSeconds: double)
+    + update(delta: double): void
+    + getBrightness(): float
+  }
+
+  class Lighting {
+    -- Fields --
+    - darknessFilter: BufferedImage
+    - lastCenterX: int
+    - lastCenterY: int
+    - lastCircleSize: int
+    - lastBrightness: float
+
+    -- Methods --
+    + Lighting(gameWindow: GameWindow, circleSize: int)
+    + updateAndMaybeRecreate(circleSize: int, brightness: float): void
+    + updateAndMaybeRecreate(circleSize: int, brightness: float, hasLantern: boolean, lanternRadius: int, lanternIntensity: float): void
+    + draw(g2: Graphics2D): void
+  }
+}
+
+package window {
+  class GameWindow {
+    + getPlayer(): Player
+    + getObj(): Entity[]
+    + repaint(): void
+  }
+}
+
+package player {
+  class Player {
+    + getCurrentLight(): Entity
+    + getWorldX(): int
+    + getWorldY(): int
+  }
+}
+
+package entity {
+  class Entity {
+    + isLightSource(): boolean
+    + getLightRadius(): int
+    + getLightIntensity(): float
+  }
+}
+
+environment.EnvironmentManager --> window.GameWindow : uses
+environment.EnvironmentManager --> environment.WorldTimeCycle : owns/updates
+environment.EnvironmentManager --> environment.Lighting : owns/updates
+environment.EnvironmentManager ..> player.Player : reads currentLight
+player.Player --> entity.Entity : currentLight (nullable)
+environment.Lighting ..> window.GameWindow : reads player position for filter center
+
+note right of environment.EnvironmentManager
+**Notes**
+- update(delta) で WorldTimeCycle を更新し brightness を取得する。
+- Player の currentLight を参照して hasLantern, lanternRadius, lanternIntensity を算出する。
+- Lighting.updateAndMaybeRecreate(...) に昼夜明るさとランタンパラメータを渡してフィルタ再生成を判定する。
+
+- Update(delta) updates the WorldTimeCycle and obtains the current brightness.
+- It reads the Player's currentLight to determine hasLantern, lanternRadius, and lanternIntensity.
+- It passes day/night brightness and lantern parameters to Lighting.updateAndMaybeRecreate(...) to decide whether to recreate the filter.
+end note
+
+note right of environment.Lighting
+**Notes**
+- 全画面暗転フィルタを生成・キャッシュする責務。
+- ランタン装備時は追加パラメータ（radius, intensity）を受け取り、光の描画を調整する。
+- 再生成は画面サイズ・中心位置・明るさ・ランタン状態の変化で行う。
+
+- Responsible for generating and caching the full-screen darkness filter.
+- When a lantern is equipped, it accepts additional parameters (radius, intensity) and adjusts the light rendering accordingly.
+- Re-creation occurs when screen size, center position, brightness, or lantern state changes.
+end note
+
+@enduml

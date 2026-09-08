@@ -1,0 +1,206 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="447px" preserveAspectRatio="none"
+     style="width:1466px;height:447px;background:#FFFFFF;" version="1.1" viewBox="0 0 1466 447" width="1466px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster ui-->
+        <g class="cluster" id="ent0002">
+            <path d="M8.5,6.0137 L21.9414,6.0137 A3.75,3.75 0 0 1 24.4414,8.5137 L31.4414,30.6348 L705.5,30.6348 A2.5,2.5 0 0 1 708,33.1348 L708,216.5137 A2.5,2.5 0 0 1 705.5,219.0137 L8.5,219.0137 A2.5,2.5 0 0 1 6,216.5137 L6,8.5137 A2.5,2.5 0 0 1 8.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="31.4414" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="12.4414" x="10" y="23.1211">ui
+            </text>
+        </g><!--cluster entity-->
+        <g class="cluster" id="ent0004">
+            <path d="M83.5,270.0137 L121.8379,270.0137 A3.75,3.75 0 0 1 124.3379,272.5137 L131.3379,294.6348 L443.5,294.6348 A2.5,2.5 0 0 1 446,297.1348 L446,437.5137 A2.5,2.5 0 0 1 443.5,440.0137 L83.5,440.0137 A2.5,2.5 0 0 1 81,437.5137 L81,272.5137 A2.5,2.5 0 0 1 83.5,270.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="81" x2="131.3379" y1="294.6348" y2="294.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="85" y="287.1211">entity
+            </text>
+        </g><!--cluster type-->
+        <g class="cluster" id="ent0006">
+            <path d="M294.5,315.0137 L324.2861,315.0137 A3.75,3.75 0 0 1 326.7861,317.5137 L333.7861,339.6348 L419.5,339.6348 A2.5,2.5 0 0 1 422,342.1348 L422,413.5137 A2.5,2.5 0 0 1 419.5,416.0137 L294.5,416.0137 A2.5,2.5 0 0 1 292,413.5137 L292,317.5137 A2.5,2.5 0 0 1 294.5,315.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="292" x2="333.7861" y1="339.6348" y2="339.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="28.7861" x="296" y="332.1211">type
+            </text>
+        </g><!--cluster player-->
+        <g class="cluster" id="ent0008">
+            <path d="M472.5,305.5137 L514.748,305.5137 A3.75,3.75 0 0 1 517.248,308.0137 L524.248,330.1348 L675.5,330.1348 A2.5,2.5 0 0 1 678,332.6348 L678,423.0137 A2.5,2.5 0 0 1 675.5,425.5137 L472.5,425.5137 A2.5,2.5 0 0 1 470,423.0137 L470,308.0137 A2.5,2.5 0 0 1 472.5,305.5137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="470" x2="524.248" y1="330.1348" y2="330.1348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.248" x="474" y="322.6211">player
+            </text>
+        </g><!--class UI-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="159.7266" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="668.7148" x="22.5" y="43.0137"/>
+            <ellipse cx="345.6074" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M348.373,54.8887 Q348.5293,54.6699 348.7168,54.5605 Q348.9043,54.4512 349.123,54.4512 Q349.498,54.4512 349.7324,54.7168 Q349.9668,54.9668 349.9668,55.5762 L349.9668,57.0293 Q349.9668,57.6387 349.7324,57.9043 Q349.498,58.1699 349.123,58.1699 Q348.7793,58.1699 348.5762,57.9668 Q348.373,57.7793 348.2637,57.2637 Q348.2168,56.9043 348.0293,56.7168 Q347.7012,56.3418 347.0918,56.123 Q346.4824,55.9043 345.8574,55.9043 Q345.0918,55.9043 344.4512,56.2324 Q343.8262,56.5605 343.3262,57.3105 Q342.8418,58.0605 342.8418,59.0918 L342.8418,60.1855 Q342.8418,61.4199 343.7324,62.248 Q344.623,63.0605 346.2168,63.0605 Q347.1543,63.0605 347.8105,62.8105 Q348.2012,62.6543 348.623,62.2168 Q348.8887,61.9512 349.0293,61.873 Q349.1855,61.7949 349.3887,61.7949 Q349.7168,61.7949 349.9668,62.0605 Q350.2324,62.3105 350.2324,62.6543 Q350.2324,62.998 349.8887,63.4043 Q349.3887,63.9824 348.5918,64.3105 Q347.5137,64.7637 346.2168,64.7637 Q344.7012,64.7637 343.498,64.1387 Q342.5137,63.6387 341.8262,62.5762 Q341.1387,61.498 341.1387,60.2168 L341.1387,59.0605 Q341.1387,57.7324 341.748,56.5918 Q342.373,55.4355 343.4668,54.8262 Q344.5605,54.2012 345.7949,54.2012 Q346.5293,54.2012 347.1699,54.373 Q347.8262,54.5293 348.373,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="14"
+                  x="366.1074" y="64.8105">UI
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="690.2148" y1="75.0137" y2="75.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="109.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88.7031"
+                  x="42.5" y="116.7422">lId: EntityType
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="30.5" y="128.0664"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="215.9883"
+                  x="42.5" y="135.3633">lanternHighlighted: boolean = false
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="42.5" y="153.9844">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="315.999" y1="92.3242" y2="92.3242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81.7168"
+                  x="315.999" y="97.6211">Added Fields
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="397.7158" x2="690.2148" y1="92.3242" y2="92.3242"/>
+            <g>
+                <ellipse cx="33.5" cy="190.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="642.7148"
+                  x="42.5" y="195.2266">drawInventorySlot(g2: Graphics2D, slotX: int, slotY: int, tileSize: int, entity:
+                Entity, type: EntityType): void
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="23.5" x2="300.437" y1="170.8086" y2="170.8086"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.8408"
+                  x="300.437" y="176.1055">Relevant Methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="413.2778" x2="690.2148" y1="170.8086" y2="170.8086"/>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="85.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="174.6201" x="97.5" y="333.5137"/>
+            <ellipse cx="163.0532" cy="349.5137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M165.8188,345.3887 Q165.9751,345.1699 166.1626,345.0605 Q166.3501,344.9512 166.5688,344.9512 Q166.9438,344.9512 167.1782,345.2168 Q167.4126,345.4668 167.4126,346.0762 L167.4126,347.5293 Q167.4126,348.1387 167.1782,348.4043 Q166.9438,348.6699 166.5688,348.6699 Q166.2251,348.6699 166.022,348.4668 Q165.8188,348.2793 165.7095,347.7637 Q165.6626,347.4043 165.4751,347.2168 Q165.147,346.8418 164.5376,346.623 Q163.9282,346.4043 163.3032,346.4043 Q162.5376,346.4043 161.897,346.7324 Q161.272,347.0605 160.772,347.8105 Q160.2876,348.5605 160.2876,349.5918 L160.2876,350.6855 Q160.2876,351.9199 161.1782,352.748 Q162.0688,353.5605 163.6626,353.5605 Q164.6001,353.5605 165.2563,353.3105 Q165.647,353.1543 166.0688,352.7168 Q166.3345,352.4512 166.4751,352.373 Q166.6313,352.2949 166.8345,352.2949 Q167.1626,352.2949 167.4126,352.5605 Q167.6782,352.8105 167.6782,353.1543 Q167.6782,353.498 167.3345,353.9043 Q166.8345,354.4824 166.0376,354.8105 Q164.9595,355.2637 163.6626,355.2637 Q162.147,355.2637 160.9438,354.6387 Q159.9595,354.1387 159.272,353.0762 Q158.5845,351.998 158.5845,350.7168 L158.5845,349.5605 Q158.5845,348.2324 159.1938,347.0918 Q159.8188,345.9355 160.9126,345.3262 Q162.0063,344.7012 163.2407,344.7012 Q163.9751,344.7012 164.6157,344.873 Q165.272,345.0293 165.8188,345.3887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35.0137"
+                  x="183.5532" y="355.3105">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="98.5" x2="271.1201" y1="365.5137" y2="365.5137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="98.5" x2="271.1201" y1="373.5137" y2="373.5137"/>
+            <g>
+                <ellipse cx="108.5" cy="388.3242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="148.6201"
+                  x="117.5" y="392.6211">getCurrentLight(): Entity
+            </text>
+            <g>
+                <ellipse cx="108.5" cy="406.9453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="133.8271"
+                  x="117.5" y="411.2422">getType(): EntityType
+            </text>
+        </g><!--class EntityType-->
+        <g class="entity" id="ent0007">
+            <rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="98.1377"
+                  x="308" y="352.0137"/>
+            <ellipse cx="323" cy="368.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M325.7656,363.8887 Q325.9219,363.6699 326.1094,363.5605 Q326.2969,363.4512 326.5156,363.4512 Q326.8906,363.4512 327.125,363.7168 Q327.3594,363.9668 327.3594,364.5762 L327.3594,366.0293 Q327.3594,366.6387 327.125,366.9043 Q326.8906,367.1699 326.5156,367.1699 Q326.1719,367.1699 325.9688,366.9668 Q325.7656,366.7793 325.6563,366.2637 Q325.6094,365.9043 325.4219,365.7168 Q325.0938,365.3418 324.4844,365.123 Q323.875,364.9043 323.25,364.9043 Q322.4844,364.9043 321.8438,365.2324 Q321.2188,365.5605 320.7188,366.3105 Q320.2344,367.0605 320.2344,368.0918 L320.2344,369.1855 Q320.2344,370.4199 321.125,371.248 Q322.0156,372.0605 323.6094,372.0605 Q324.5469,372.0605 325.2031,371.8105 Q325.5938,371.6543 326.0156,371.2168 Q326.2813,370.9512 326.4219,370.873 Q326.5781,370.7949 326.7813,370.7949 Q327.1094,370.7949 327.3594,371.0605 Q327.625,371.3105 327.625,371.6543 Q327.625,371.998 327.2813,372.4043 Q326.7813,372.9824 325.9844,373.3105 Q324.9063,373.7637 323.6094,373.7637 Q322.0938,373.7637 320.8906,373.1387 Q319.9063,372.6387 319.2188,371.5762 Q318.5313,370.498 318.5313,369.2168 L318.5313,368.0605 Q318.5313,366.7324 319.1406,365.5918 Q319.7656,364.4355 320.8594,363.8262 Q321.9531,363.2012 323.1875,363.2012 Q323.9219,363.2012 324.5625,363.373 Q325.2188,363.5293 325.7656,363.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="66.1377"
+                  x="337" y="373.8105">EntityType
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="309" x2="405.1377" y1="384.0137" y2="384.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="309" x2="405.1377" y1="392.0137" y2="392.0137"/>
+        </g><!--class Player-->
+        <g class="entity" id="ent0009">
+            <rect fill="#F1F1F1" height="66.6211" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="174.6201" x="486.5" y="342.5137"/>
+            <ellipse cx="549.7188" cy="358.5137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M552.4844,354.3887 Q552.6406,354.1699 552.8281,354.0605 Q553.0156,353.9512 553.2344,353.9512 Q553.6094,353.9512 553.8438,354.2168 Q554.0781,354.4668 554.0781,355.0762 L554.0781,356.5293 Q554.0781,357.1387 553.8438,357.4043 Q553.6094,357.6699 553.2344,357.6699 Q552.8906,357.6699 552.6875,357.4668 Q552.4844,357.2793 552.375,356.7637 Q552.3281,356.4043 552.1406,356.2168 Q551.8125,355.8418 551.2031,355.623 Q550.5938,355.4043 549.9688,355.4043 Q549.2031,355.4043 548.5625,355.7324 Q547.9375,356.0605 547.4375,356.8105 Q546.9531,357.5605 546.9531,358.5918 L546.9531,359.6855 Q546.9531,360.9199 547.8438,361.748 Q548.7344,362.5605 550.3281,362.5605 Q551.2656,362.5605 551.9219,362.3105 Q552.3125,362.1543 552.7344,361.7168 Q553,361.4512 553.1406,361.373 Q553.2969,361.2949 553.5,361.2949 Q553.8281,361.2949 554.0781,361.5605 Q554.3438,361.8105 554.3438,362.1543 Q554.3438,362.498 554,362.9043 Q553.5,363.4824 552.7031,363.8105 Q551.625,364.2637 550.3281,364.2637 Q548.8125,364.2637 547.6094,363.6387 Q546.625,363.1387 545.9375,362.0762 Q545.25,360.998 545.25,359.7168 L545.25,358.5605 Q545.25,357.2324 545.8594,356.0918 Q546.4844,354.9355 547.5781,354.3262 Q548.6719,353.7012 549.9063,353.7012 Q550.6406,353.7012 551.2813,353.873 Q551.9375,354.0293 552.4844,354.3887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="39.6826"
+                  x="570.2188" y="364.3105">Player
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="487.5" x2="660.1201" y1="374.5137" y2="374.5137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="487.5" x2="660.1201" y1="382.5137" y2="382.5137"/>
+            <g>
+                <ellipse cx="497.5" cy="397.3242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="148.6201"
+                  x="506.5" y="401.6211">getCurrentLight(): Entity
+            </text>
+        </g>
+        <g class="entity" id="ent0014">
+            <path d="M727,49.0137 L727,119.0137 L691.58,123.0137 L727,127.0137 L727,197.3418 A0,0 0 0 0 727,197.3418 L1459.458,197.3418 A0,0 0 0 0 1459.458,197.3418 L1459.458,59.0137 L1449.458,49.0137 L727,49.0137 A0,0 0 0 0 727,49.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1449.458,49.0137 L1449.458,59.0137 L1459.458,59.0137 L1449.458,49.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="733" y="68.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="711.458"
+                  x="733" y="85.333">- lId &#12399; entity.getCurrentLight() &#12364;&#23384;&#22312;&#12377;&#12427;&#22580;&#21512;&#12395;&#12381;&#12371;&#12363;&#12425;&#35373;&#23450;&#12373;&#12428;&#12289;&#12452;&#12531;&#12505;&#12531;&#12488;&#12522;&#12473;&#12525;&#12483;&#12488;&#12398;&#12479;&#12452;&#12503;&#29031;&#21512;&#12395;&#20351;&#29992;&#12373;&#12428;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="493.3462"
+                  x="733" y="102.624">- lanternHighlighted &#12399;&#21516;&#19968;&#12501;&#12524;&#12540;&#12512;&#20869;&#12391;&#35079;&#25968;&#22238;&#12495;&#12452;&#12521;&#12452;&#12488;&#25551;&#30011;&#12373;&#12428;&#12427;&#12398;&#12434;&#38450;&#12366;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="669.5571"
+                  x="733" y="119.915">- drawInventorySlot &#12399;&#12473;&#12525;&#12483;&#12488;&#12398;&#12479;&#12452;&#12503;&#12364;
+                lId &#12392;&#19968;&#33268;&#12377;&#12427;&#22580;&#21512;&#12395;&#12495;&#12452;&#12521;&#12452;&#12488;&#30697;&#24418;&#12434;&#22615;&#12426;&#12388;&#12406;&#12377;&#12525;&#12472;&#12483;&#12463;&#12434;&#21547;&#12415;&#12414;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="733" y="137.2061">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="510.8403"
+                  x="733" y="154.4971">- lId is set from entity.getCurrentLight() when present; used to match inventory
+                slot types.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="421.2622"
+                  x="733" y="171.7881">- lanternHighlighted prevents multiple highlight draws for the same frame.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="462.4648"
+                  x="733" y="189.0791">- drawInventorySlot contains logic to fill a highlight rect when slot type equals
+                lId.
+            </text>
+        </g><!--link UI to Entity-->
+        <g class="link"
+           id="lnk10">
+            <path
+                    d="M268.26,203.0337 C259.1,213.2737 250.44,224.0337 243,235.0137 C222.41,265.3937 208.9332,298.5435 199.2132,327.6035"
+                    fill="none" id="UI-to-Entity" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="197.31,333.2937,203.9583,326.0273,198.896,328.5519,196.3714,323.4896,197.31,333.2937"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="104.7808"
+                  x="244" y="250.042">reads currentLight
+            </text>
+        </g><!--link UI to EntityType-->
+        <g class="link"
+           id="lnk11">
+            <path d="M357,203.0837 C357,254.6737 357,312.4437 357,345.9537" fill="none"
+                  id="UI-to-EntityType" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818" points="357,351.9537,361,342.9537,357,346.9537,353,342.9537,357,351.9537"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91.7617"
+                  x="358" y="250.042">compares types
+            </text>
+        </g><!--link UI to Player-->
+        <g class="link"
+           id="lnk12">
+            <path
+                    d="M429.73,203.0437 C439.31,213.7237 448.95,224.5837 458,235.0137 C489.46,271.2437 520.6652,309.148 543.9152,337.748"
+                    fill="none" id="UI-to-Player" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="547.7,342.4037,545.1266,332.897,544.546,338.5239,538.919,337.9433,547.7,342.4037"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="190.0425"
+                  x="475" y="250.042">reads player inventory / selection
+            </text>
+        </g>
+        <?plantuml-src XLHTJzH057tlhxZX2LQf2OzhD36AIgB6Y2RwEBQpsucpdTgPXQo6XBP1K8WGXG1-eY5XKG6Zn60K-J53MVmNplJ35e7uq4ddphtdd7lcjXwoxg4wXYQ1XmQ0HH7dS6iWsG3qzi8vsyOsN2IOsbpjqp3G0RiA_QuWedMpvU4yYbo1VVSogJjKFGAhfBkCKOnSE0CrH3asSjmRcE8XbGzNiN1OWNq2R1yD3xX3s1NCRmrI9hhhVLMuv2FF8HRlkt0Ik0hUhW9nHVf-9tiNXE91yW1dMvpeotMgOwMqhBgd2aECs8fsn1Wn32-p8YqhsT5V1BI-EXRdcxwlqgxe9hjxSipYNACNySoX0oHTAOkfDNKTuaegIjaUHItibzAk5u7_IKfecyHKbsgQPxFkpAodAlWOAVEjKdKfkQpIBAHrgJgBDJpaOvwuoairgLOpKvWJP1sG_5xX570r0POWp3KCbmaClYO7LeC4owXKhgaehrICPDn01Xkv-4FjgiEfU6qXVjMMmQ8C9-EbpNXcGWOVPV1Q1izbC2d3n_ljjNZzXGpcP3WbHmCPBilegumMatL2HXza-5r6QpAAz3POb-5EaZFV6Lj9qNQtTpgpxGmX-AMvHaFZgBdNQkEPgTsjKHdDoUYJZ7xAQ2b-D2Q3bVtbyRsvp_7BDpAQJWXMatLYRtgwC_iZGmyd4mNFVYzyaS7JCjcXpqDp7ITT-PAPrrPQziSt__Nde8JEszLu-xsYZT_Do_2939Pby4sNAEnmIyE76_fqHXcxKuZAReXmTQS2QZvh77zJmmvsmLE3esAdeScLLu910mdBAKs7_ghJoJAFzbSXw5mEZIOLnACOdFmqSOX3ZVaW70mSDR3If5RpIFSivWf4N0wKrOcbnTG8fO1AWBwQqrJuNrs0xpVL_qptRHhOjK6FiF47?>
+    </g>
+</svg>

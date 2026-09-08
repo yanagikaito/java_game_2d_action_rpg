@@ -1,0 +1,46 @@
+@startuml ui_lantern_additions
+
+package ui {
+  class UI {
+    -- Added Fields --
+    - lId: EntityType
+    - lanternHighlighted: boolean = false
+
+    -- Relevant Methods --
+    + drawInventorySlot(g2: Graphics2D, slotX: int, slotY: int, tileSize: int, entity: Entity, type: EntityType): void
+  }
+}
+
+package entity {
+  class Entity {
+    + getCurrentLight(): Entity
+    + getType(): EntityType
+  }
+}
+
+package "entity.type" {
+  class EntityType
+}
+
+package player {
+  class Player {
+    + getCurrentLight(): Entity
+  }
+}
+
+ui.UI ..> entity.Entity : reads currentLight
+ui.UI ..> "entity.type.EntityType" : compares types
+ui.UI ..> player.Player : reads player inventory / selection
+
+note right of ui.UI
+**Notes**
+- lId は entity.getCurrentLight() が存在する場合にそこから設定され、インベントリスロットのタイプ照合に使用されます。
+- lanternHighlighted は同一フレーム内で複数回ハイライト描画されるのを防ぎます。
+- drawInventorySlot はスロットのタイプが lId と一致する場合にハイライト矩形を塗りつぶすロジックを含みます。
+
+- lId is set from entity.getCurrentLight() when present; used to match inventory slot types.
+- lanternHighlighted prevents multiple highlight draws for the same frame.
+- drawInventorySlot contains logic to fill a highlight rect when slot type equals lId.
+end note
+
+@enduml
