@@ -1,0 +1,42 @@
+@startuml game_window_lantern_additions
+
+package window {
+  class GameWindow {
+    -- Added Fields --
+    - obj: Entity[] = new Entity[30]
+
+    -- Relevant Methods --
+    + getPlayer(): Player
+    + getObj(): Entity[]
+    + repaint(): void
+  }
+}
+
+package asset {
+  class AssetSetter {
+    -- Added Methods --
+    + setObjLantern(): void
+  }
+}
+
+package entity {
+  class Entity {
+    + getWorldX(): int
+    + getWorldY(): int
+    + isLightSource(): boolean
+  }
+}
+
+asset.AssetSetter --> window.GameWindow : uses / populates obj array
+window.GameWindow --> entity.Entity : manages (obj array)
+
+note right of window.GameWindow
+**Notes**
+- オブジェクト配列フィールド obj をサイズ 30 で追加し、ワールド内のオブジェクトを保持します。
+- AssetSetter.setObjLantern() は ObjLantern を生成して GameWindow.obj に配置する責務を持ちます。
+
+- Added an object array field `obj` sized to 30 to hold world objects.
+- `AssetSetter.setObjLantern()` is responsible for creating and placing ObjLantern into `GameWindow.obj`.
+end note
+
+@enduml

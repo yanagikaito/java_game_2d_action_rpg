@@ -1,0 +1,209 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="CLASS" height="521px" preserveAspectRatio="none"
+     style="width:1038px;height:521px;background:#FFFFFF;" version="1.1" viewBox="0 0 1038 521" width="1038px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster player-->
+        <g class="cluster" id="ent0002">
+            <path d="M30.5,6.0137 L72.748,6.0137 A3.75,3.75 0 0 1 75.248,8.5137 L82.248,30.6348 L339.5,30.6348 A2.5,2.5 0 0 1 342,33.1348 L342,253.5137 A2.5,2.5 0 0 1 339.5,256.0137 L30.5,256.0137 A2.5,2.5 0 0 1 28,253.5137 L28,8.5137 A2.5,2.5 0 0 1 30.5,6.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="28" x2="82.248" y1="30.6348" y2="30.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.248" x="32" y="23.1211">player
+            </text>
+        </g><!--cluster entity-->
+        <g class="cluster" id="ent0004">
+            <path d="M8.5,307.0137 L46.8379,307.0137 A3.75,3.75 0 0 1 49.3379,309.5137 L56.3379,331.6348 L388.5,331.6348 A2.5,2.5 0 0 1 391,334.1348 L391,511.5137 A2.5,2.5 0 0 1 388.5,514.0137 L8.5,514.0137 A2.5,2.5 0 0 1 6,511.5137 L6,309.5137 A2.5,2.5 0 0 1 8.5,307.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="56.3379" y1="331.6348" y2="331.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="37.3379" x="10" y="324.1211">entity
+            </text>
+        </g><!--cluster type-->
+        <g class="cluster" id="ent0006">
+            <path d="M221.5,352.0137 L251.2861,352.0137 A3.75,3.75 0 0 1 253.7861,354.5137 L260.7861,376.6348 L364.5,376.6348 A2.5,2.5 0 0 1 367,379.1348 L367,487.5137 A2.5,2.5 0 0 1 364.5,490.0137 L221.5,490.0137 A2.5,2.5 0 0 1 219,487.5137 L219,354.5137 A2.5,2.5 0 0 1 221.5,352.0137"
+                  fill="none" style="stroke:#000000;stroke-width:1.5;"/>
+            <line style="stroke:#000000;stroke-width:1.5;" x1="219" x2="260.7861" y1="376.6348" y2="376.6348"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+                  textLength="28.7861" x="223" y="369.1211">type
+            </text>
+        </g><!--class Player-->
+        <g class="entity" id="ent0003">
+            <rect fill="#F1F1F1" height="196.9688" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="281.2266" x="44.5" y="43.0137"/>
+            <ellipse cx="161.022" cy="59.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M163.7876,54.8887 Q163.9438,54.6699 164.1313,54.5605 Q164.3188,54.4512 164.5376,54.4512 Q164.9126,54.4512 165.147,54.7168 Q165.3813,54.9668 165.3813,55.5762 L165.3813,57.0293 Q165.3813,57.6387 165.147,57.9043 Q164.9126,58.1699 164.5376,58.1699 Q164.1938,58.1699 163.9907,57.9668 Q163.7876,57.7793 163.6782,57.2637 Q163.6313,56.9043 163.4438,56.7168 Q163.1157,56.3418 162.5063,56.123 Q161.897,55.9043 161.272,55.9043 Q160.5063,55.9043 159.8657,56.2324 Q159.2407,56.5605 158.7407,57.3105 Q158.2563,58.0605 158.2563,59.0918 L158.2563,60.1855 Q158.2563,61.4199 159.147,62.248 Q160.0376,63.0605 161.6313,63.0605 Q162.5688,63.0605 163.2251,62.8105 Q163.6157,62.6543 164.0376,62.2168 Q164.3032,61.9512 164.4438,61.873 Q164.6001,61.7949 164.8032,61.7949 Q165.1313,61.7949 165.3813,62.0605 Q165.647,62.3105 165.647,62.6543 Q165.647,62.998 165.3032,63.4043 Q164.8032,63.9824 164.0063,64.3105 Q162.9282,64.7637 161.6313,64.7637 Q160.1157,64.7637 158.9126,64.1387 Q157.9282,63.6387 157.2407,62.5762 Q156.5532,61.498 156.5532,60.2168 L156.5532,59.0605 Q156.5532,57.7324 157.1626,56.5918 Q157.7876,55.4355 158.8813,54.8262 Q159.9751,54.2012 161.2095,54.2012 Q161.9438,54.2012 162.5845,54.373 Q163.2407,54.5293 163.7876,54.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="39.6826"
+                  x="181.522" y="64.8105">Player
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="45.5" x2="324.7266" y1="75.0137" y2="75.0137"/>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="52.5" y="109.4453"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="181.7471"
+                  x="64.5" y="116.7422">lightUpdated: boolean = false
+            </text>
+            <g>
+                <rect fill="none" height="6" style="stroke:#C82930;stroke-width:1;" width="6" x="52.5" y="128.0664"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="116.7236"
+                  x="64.5" y="135.3633">currentLight: Entity
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="3.8896"
+                  x="64.5" y="153.9844">&#160;
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="45.5" x2="144.2549" y1="92.3242" y2="92.3242"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81.7168"
+                  x="144.2549" y="97.6211">Added Fields
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="225.9717" x2="324.7266" y1="92.3242" y2="92.3242"/>
+            <g>
+                <ellipse cx="55.5" cy="190.9297" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="148.6201"
+                  x="64.5" y="195.2266">getCurrentLight(): Entity
+            </text>
+            <g>
+                <ellipse cx="55.5" cy="209.5508" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="255.2266"
+                  x="64.5" y="213.8477">setCurrentLight(currentLight: Entity): void
+            </text>
+            <g>
+                <ellipse cx="55.5" cy="228.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="228.751"
+                  x="64.5" y="232.4688">selectItem(selectedItem: Entity): void
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="45.5" x2="128.6929" y1="170.8086" y2="170.8086"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.8408"
+                  x="128.6929" y="176.1055">Relevant Methods
+            </text>
+            <line style="stroke:#181818;stroke-width:1;" x1="241.5337" x2="324.7266" y1="170.8086" y2="170.8086"/>
+        </g><!--class Entity-->
+        <g class="entity" id="ent0005">
+            <rect fill="#F1F1F1" height="103.8633" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="177.7578" x="22" y="379.5137"/>
+            <ellipse cx="89.1221" cy="395.5137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M91.8877,391.3887 Q92.0439,391.1699 92.2314,391.0605 Q92.4189,390.9512 92.6377,390.9512 Q93.0127,390.9512 93.2471,391.2168 Q93.4814,391.4668 93.4814,392.0762 L93.4814,393.5293 Q93.4814,394.1387 93.2471,394.4043 Q93.0127,394.6699 92.6377,394.6699 Q92.2939,394.6699 92.0908,394.4668 Q91.8877,394.2793 91.7783,393.7637 Q91.7314,393.4043 91.5439,393.2168 Q91.2158,392.8418 90.6064,392.623 Q89.9971,392.4043 89.3721,392.4043 Q88.6064,392.4043 87.9658,392.7324 Q87.3408,393.0605 86.8408,393.8105 Q86.3564,394.5605 86.3564,395.5918 L86.3564,396.6855 Q86.3564,397.9199 87.2471,398.748 Q88.1377,399.5605 89.7314,399.5605 Q90.6689,399.5605 91.3252,399.3105 Q91.7158,399.1543 92.1377,398.7168 Q92.4033,398.4512 92.5439,398.373 Q92.7002,398.2949 92.9033,398.2949 Q93.2314,398.2949 93.4814,398.5605 Q93.7471,398.8105 93.7471,399.1543 Q93.7471,399.498 93.4033,399.9043 Q92.9033,400.4824 92.1064,400.8105 Q91.0283,401.2637 89.7314,401.2637 Q88.2158,401.2637 87.0127,400.6387 Q86.0283,400.1387 85.3408,399.0762 Q84.6533,397.998 84.6533,396.7168 L84.6533,395.5605 Q84.6533,394.2324 85.2627,393.0918 Q85.8877,391.9355 86.9814,391.3262 Q88.0752,390.7012 89.3096,390.7012 Q90.0439,390.7012 90.6846,390.873 Q91.3408,391.0293 91.8877,391.3887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35.0137"
+                  x="109.6221" y="401.3105">Entity
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="198.7578" y1="411.5137" y2="411.5137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="23" x2="198.7578" y1="419.5137" y2="419.5137"/>
+            <g>
+                <ellipse cx="33" cy="434.3242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151.7578"
+                  x="42" y="438.6211">isLightSource(): boolean
+            </text>
+            <g>
+                <ellipse cx="33" cy="452.9453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="125.2891"
+                  x="42" y="457.2422">getLightRadius(): int
+            </text>
+            <g>
+                <ellipse cx="33" cy="471.5664" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="145.5234"
+                  x="42" y="475.8633">getLightIntensity(): float
+            </text>
+        </g><!--class LanternType-->
+        <g class="entity" id="ent0007">
+            <rect fill="#F1F1F1" height="85.2422" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="114.6963" x="235.5" y="389.0137"/>
+            <ellipse cx="252.3404" cy="405.0137" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/>
+            <path d="M255.1061,400.8887 Q255.2623,400.6699 255.4498,400.5605 Q255.6373,400.4512 255.8561,400.4512 Q256.2311,400.4512 256.4654,400.7168 Q256.6998,400.9668 256.6998,401.5762 L256.6998,403.0293 Q256.6998,403.6387 256.4654,403.9043 Q256.2311,404.1699 255.8561,404.1699 Q255.5123,404.1699 255.3092,403.9668 Q255.1061,403.7793 254.9967,403.2637 Q254.9498,402.9043 254.7623,402.7168 Q254.4342,402.3418 253.8248,402.123 Q253.2154,401.9043 252.5904,401.9043 Q251.8248,401.9043 251.1842,402.2324 Q250.5592,402.5605 250.0592,403.3105 Q249.5748,404.0605 249.5748,405.0918 L249.5748,406.1855 Q249.5748,407.4199 250.4654,408.248 Q251.3561,409.0605 252.9498,409.0605 Q253.8873,409.0605 254.5436,408.8105 Q254.9342,408.6543 255.3561,408.2168 Q255.6217,407.9512 255.7623,407.873 Q255.9186,407.7949 256.1217,407.7949 Q256.4498,407.7949 256.6998,408.0605 Q256.9654,408.3105 256.9654,408.6543 Q256.9654,408.998 256.6217,409.4043 Q256.1217,409.9824 255.3248,410.3105 Q254.2467,410.7637 252.9498,410.7637 Q251.4342,410.7637 250.2311,410.1387 Q249.2467,409.6387 248.5592,408.5762 Q247.8717,407.498 247.8717,406.2168 L247.8717,405.0605 Q247.8717,403.7324 248.4811,402.5918 Q249.1061,401.4355 250.1998,400.8262 Q251.2936,400.2012 252.5279,400.2012 Q253.2623,400.2012 253.9029,400.373 Q254.5592,400.5293 255.1061,400.8887 Z "
+                  fill="#000000"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="78.6064"
+                  x="266.7494" y="410.8105">LanternType
+            </text>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="236.5" x2="349.1963" y1="421.0137" y2="421.0137"/>
+            <line style="stroke:#181818;stroke-width:0.5;" x1="236.5" x2="349.1963" y1="429.0137" y2="429.0137"/>
+            <g>
+                <ellipse cx="246.5" cy="443.8242" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70.0273"
+                  x="255.5" y="448.1211">typeId(): int
+            </text>
+            <g>
+                <ellipse cx="246.5" cy="462.4453" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1;"/>
+            </g>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88.6963"
+                  x="255.5" y="466.7422">name(): String
+            </text>
+        </g>
+        <g class="entity" id="ent0011">
+            <path d="M360.5,50.0137 L360.5,137.5137 L325.72,141.5137 L360.5,145.5137 L360.5,232.9238 A0,0 0 0 0 360.5,232.9238 L1031.8364,232.9238 A0,0 0 0 0 1031.8364,232.9238 L1031.8364,60.0137 L1021.8364,50.0137 L360.5,50.0137 A0,0 0 0 0 360.5,50.0137"
+                  fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M1021.8364,50.0137 L1021.8364,60.0137 L1031.8364,60.0137 L1021.8364,50.0137" fill="#FEFFDD"
+                  style="stroke:#181818;stroke-width:0.5;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+                  textLength="36.1182" x="366.5" y="69.042">Notes
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="551.8208"
+                  x="366.5" y="86.333">- `lightUpdated` &#12501;&#12521;&#12464;&#12434;&#36861;&#21152;&#12375;&#12289;&#36984;&#25246;&#12450;&#12452;&#12486;&#12512;&#12391;&#12521;&#12531;&#12479;&#12531;&#12398;&#35013;&#20633;/&#35299;&#38500;&#12364;&#34892;&#12431;&#12428;&#12383;&#12371;&#12392;&#12434;&#31034;&#12377;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="411.709"
+                  x="366.5" y="103.624">- `currentLight` &#12395;&#36984;&#25246;&#20013;&#12398;&#20809;&#28304;&#12456;&#12531;&#12486;&#12451;&#12486;&#12451;&#12434;&#20445;&#25345;&#65288;null
+                &#12391;&#26410;&#35013;&#20633;&#65289;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="572.8125"
+                  x="366.5" y="120.915">- &#36984;&#25246;&#20966;&#29702;: &#36984;&#25246;&#12450;&#12452;&#12486;&#12512;&#12364;
+                `LanternType` &#12398;&#22580;&#21512;&#12289;&#26082;&#12395;&#35013;&#20633;&#20013;&#12394;&#12425;&#35299;&#38500;&#65288;setCurrentLight(null)&#65289;&#12289;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="539.2778"
+                  x="366.5" y="138.2061">- &#26410;&#35013;&#20633;&#12394;&#12425;&#35013;&#20633;&#65288;setCurrentLight(selectedItem)&#65289;&#12290;&#20966;&#29702;&#24460;&#12395;
+                `lightUpdated = true` &#12434;&#35373;&#23450;&#12290;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="3.6118"
+                  x="366.5" y="155.4971">&#160;
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="523.9609"
+                  x="366.5" y="172.7881">- Added `lightUpdated` flag to indicate that the selected item toggled lantern
+                equip/unequip.
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="494.9839"
+                  x="366.5" y="190.0791">- `currentLight` holds the currently selected light-source entity (null when
+                unequipped).
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="650.3364"
+                  x="366.5" y="207.3701">- Selection logic: if the selected item is a `LanternType`, unequip when
+                already equipped (`setCurrentLight(null)`),
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="527.833"
+                  x="366.5" y="224.6611">- otherwise equip (`setCurrentLight(selectedItem)`); after handling, set
+                `lightUpdated = true`.
+            </text>
+        </g><!--link Player to Entity-->
+        <g class="link"
+           id="lnk8">
+            <path
+                    d="M129.92,240.1437 C125.61,250.6637 121.83,261.4037 119,272.0137 C109.65,307.0237 107.7218,341.8842 108.1318,373.3542"
+                    fill="none" id="Player-to-Entity" style="stroke:#181818;stroke-width:1;"/>
+            <polygon fill="#181818"
+                     points="108.21,379.3537,112.0924,370.3023,108.1449,374.3541,104.0931,370.4065,108.21,379.3537"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="125.7344"
+                  x="120" y="287.042">currentLight (nullable)
+            </text>
+        </g><!--link Player to LanternType-->
+        <g class="link"
+           id="lnk9">
+            <path
+                    d="M236.61,240.2237 C241.43,250.8237 246,261.5537 250,272.0137 C264.76,310.6337 275.2382,350.5079 282.7282,382.8979"
+                    fill="none" id="Player-to-LanternType" style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;"/>
+            <polygon fill="#181818"
+                     points="284.08,388.7437,285.9495,379.0739,282.9535,383.8722,278.1552,380.8763,284.08,388.7437"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="106.2153"
+                  x="258" y="287.042">checks instanceOf
+            </text>
+        </g>
+        <?plantuml-src RLHRInj157xVNt7mAKdD-fvIeHGBWhsWxNl6tPFTnN4stPqeeGZk1grAe68fOkd5gbIhA8NsGSJM7pDkZ4_-XSxiRf9DpCiaSoxVzvrpzaoL67F4GgXIKaSFtce01YM-3ozx1e1Y4HwR9fhmr45g-lAUc84wbirVLqt2qIp1hEjI90mUGOLG7zCOe-PvoFYK2Yt11ECEhsiTs6cak40OXsV8RRS7_G0iv4yocRbyDpVn-mF-OJGoPy5rp6u6HODFSfpF9N_HL9VxmKlQagPLqyvWxCnqPg9dKAYE7rFEk3NFGAKoxKAlZDW_JKodvYk_m_Y0Rv9nPBu4LUuATGaV536IgD1vlOeZ6IrJidNeiLVIt1MaOYRDVYP6vcDjCznpcDL5ZsUifwCk5iVJOlMqn5BVx237QfIIMOhvWKnT7-zJg6TaZIWK6uqvNyhnEM46lgXe6dCvWXV3kXNeWzCAXUVIwnSAMX7AsI-i3ABnKJH-Yl2N2BVQLt-ZZLqHR8lbu3OuRsry5U6U20z4OrKqfFrGHJP-Y_1AdS5PUtyb2dV6seVxjpi78cYslpT5-5w4JH5y4y474Hn9q9k32n7iYELGSMUhbzp1IK9pVNuguQALzTR5fWYF5Bga3FVJCzowllhIQWPtbskgOJBliFNvE66_krnFi1EawDsFcytL4WoJtuHofesA_YpQ_HDjhiboMzjxKaq26Qiv5k5wKfXa7TmCfI8VCmUIkQibpKfrtSlAhaYI7IPoet-oOoVzav4hpxsQKYddSdGQdNrIPMgTPsDWYXLABE2k_21Cnv0cu3RXya3ea88ZMMM8PL5veKaV0D_KdEfOZSM_-lq9sQvwd1HEQgVr7c8ieUZ7QzfPwhWri6WZWnIrYcPU8S_4QOxBWBgMOyXTgWmHwFX0-iSqsW5AK0dra9Xrw613hZnqEkNyg2Hr9OEtwFYOn0y9xXjAEVyGI4LIWqsOIULYZwfNSVXaT0sP2MhjjFy0?>
+    </g>
+</svg>

@@ -1,0 +1,47 @@
+@startuml player_lantern_additions
+
+package player {
+  class Player {
+    -- Added Fields --
+    - lightUpdated: boolean = false
+    - currentLight: Entity
+
+    -- Relevant Methods --
+    + getCurrentLight(): Entity
+    + setCurrentLight(currentLight: Entity): void
+    + selectItem(selectedItem: Entity): void
+  }
+}
+
+package entity {
+  class Entity {
+    + isLightSource(): boolean
+    + getLightRadius(): int
+    + getLightIntensity(): float
+  }
+}
+
+package "entity.type" {
+  class LanternType {
+    + typeId(): int
+    + name(): String
+  }
+}
+
+player.Player --> entity.Entity : currentLight (nullable)
+player.Player ..> "entity.type.LanternType" : checks instanceOf
+
+note right of player.Player
+**Notes**
+- `lightUpdated` フラグを追加し、選択アイテムでランタンの装備/解除が行われたことを示す。
+- `currentLight` に選択中の光源エンティティを保持（null で未装備）。
+- 選択処理: 選択アイテムが `LanternType` の場合、既に装備中なら解除（setCurrentLight(null)）、
+- 未装備なら装備（setCurrentLight(selectedItem)）。処理後に `lightUpdated = true` を設定。
+
+- Added `lightUpdated` flag to indicate that the selected item toggled lantern equip/unequip.
+- `currentLight` holds the currently selected light-source entity (null when unequipped).
+- Selection logic: if the selected item is a `LanternType`, unequip when already equipped (`setCurrentLight(null)`),
+- otherwise equip (`setCurrentLight(selectedItem)`); after handling, set `lightUpdated = true`.
+end note
+
+@enduml

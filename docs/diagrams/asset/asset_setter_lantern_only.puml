@@ -1,0 +1,55 @@
+@startuml asset_setter_lantern_only
+
+package asset {
+  class AssetSetter {
+    -- Fields --
+    - gameWindow: GameWindow
+
+    -- Added Methods --
+    + setObjLantern(): void
+    - createObjLantern(worldX: int, worldY: int): ObjLantern
+  }
+}
+
+package window {
+  class GameWindow {
+    + getObj(): Entity[]
+    + repaint(): void
+    + getPlayer(): Player
+  }
+}
+
+package frame {
+  class FrameApp {
+    + getTileSize(): int
+  }
+}
+
+package object {
+  class ObjLantern {
+    + ObjLantern(gameWindow: GameWindow)
+    + setWorldX(x: int): void
+    + setWorldY(y: int): void
+    + draw(g2: Graphics2D): void
+  }
+}
+
+package entity {
+  class Entity
+}
+
+asset.AssetSetter --> window.GameWindow : uses
+asset.AssetSetter ..> frame.FrameApp : uses getTileSize()
+asset.AssetSetter ..> object.ObjLantern : creates
+window.GameWindow --> entity.Entity : manages (obj array)
+
+note right of asset.AssetSetter
+*Notes**
+- setObjLantern() は GameWindow.getObj() の配列に ObjLantern を配置する。
+- createObjLantern(worldX, worldY) は ObjLantern を生成して座標を設定して返す。
+
+- setObjLantern() places an ObjLantern into the GameWindow.getObj() array.
+- createObjLantern(worldX, worldY) creates an ObjLantern, sets its world coordinates, and returns it.
+end note
+
+@enduml
