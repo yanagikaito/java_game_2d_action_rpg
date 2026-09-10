@@ -1,0 +1,371 @@
+<?plantuml 1.2026.2?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css"
+     data-diagram-type="ACTIVITY" height="1306px" preserveAspectRatio="none"
+     style="width:693px;height:1306px;background:#FFFFFF;" version="1.1" viewBox="0 0 693 1306" width="693px"
+     zoomAndPan="magnify">
+    <defs/>
+    <g>
+        <ellipse cx="392.4443" cy="20" fill="#222222" rx="10" ry="10" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="339.4004" x="222.7441" y="50"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="319.4004"
+              x="232.7441" y="72.9492">&#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#12510;&#12525;&#12491;&#12540;&#12395;&#36817;&#12389;&#12367;(Player
+            approaches Marony)
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="338.7031" x="223.0928" y="105.9609"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="318.7031"
+              x="233.0928" y="128.9102">&#12503;&#12524;&#12452;&#12516;&#12540;&#12364;&#12510;&#12525;&#12491;&#12540;&#12395;&#35441;&#12375;&#12363;&#12369;&#12427;(Player
+            talks to Marony)
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="350.8748,161.9219,434.0139,161.9219,446.0139,173.9219,434.0139,185.9219,350.8748,185.9219,338.8748,173.9219,350.8748,161.9219"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="83.1392"
+              x="350.8748" y="178.4766">&#22812;&#12363;&#65311;Is it night?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="39.1177"
+              x="299.7571" y="171.1611">&#12399;&#12356;yes
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="50.1177"
+              x="446.0139" y="171.1611">&#12356;&#12356;&#12360; No
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="177.1777,195.9219,309.1777,195.9219,321.1777,207.9219,309.1777,219.9219,177.1777,219.9219,165.1777,207.9219,177.1777,195.9219"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="132"
+              x="177.1777" y="212.4766">&#12452;&#12505;&#12531;&#12488;&#12399;&#26082;&#12395;&#36914;&#34892;&#20013;&#12363;&#65311;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="143.1777"
+              y="205.1611">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="50.1177"
+              x="321.1777" y="205.1611">&#12356;&#12356;&#12360; No
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="224"
+              x="11" y="229.9219"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="204" x="21"
+              y="252.8711">&#12300;&#12452;&#12505;&#12531;&#12488;&#12399;&#26082;&#12395;&#36914;&#34892;&#20013;&#12391;&#12377;&#12301;&#12434;&#34920;&#31034;
+        </text>
+        <ellipse cx="123" cy="311.8828" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="123" cy="311.8828" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="216.7109" x="255" y="229.9219"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="196.7109"
+              x="265" y="252.8711">MaronyNightEvent.start() &#12434;&#12488;&#12522;&#12460;&#12540;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="140"
+              x="293.3555" y="300.8828"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="120"
+              x="303.3555" y="323.832">&#12452;&#12505;&#12531;&#12488;&#29366;&#24907;&#12434;&#21021;&#26399;&#21270;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="108.3711" x="309.1699" y="356.8438"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="88.3711"
+              x="319.1699" y="379.793">currentWave = 1
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="205.0977" x="260.8066" y="412.8047"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="185.0977"
+              x="270.8066" y="435.7539">protectedChickens = totalChickens
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="80"
+              x="501.7109" y="195.9219"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="60" x="511.7109"
+              y="218.8711">&#36890;&#24120;&#12398;&#20250;&#35441;
+        </text>
+        <ellipse cx="541.7109" cy="277.8828" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="541.7109" cy="277.8828" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="233.4102" x="275.7393" y="468.7656"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="213.4102"
+              x="285.7393" y="491.7148">NpcSpawner.spawnWave(currentWave)
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="152"
+              x="316.4443" y="524.7266"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="132"
+              x="326.4443" y="547.6758">&#12454;&#12455;&#12540;&#12502;&#12479;&#12452;&#12510;&#12540;&#12434;&#38283;&#22987;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="140"
+              x="322.4443" y="580.6875"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="120"
+              x="332.4443" y="603.6367">&#25973;&#12364;&#12479;&#12540;&#12466;&#12483;&#12488;&#12434;&#25506;&#32034;
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="320.9443,636.6484,463.9443,636.6484,475.9443,648.6484,463.9443,660.6484,320.9443,660.6484,308.9443,648.6484,320.9443,636.6484"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="143"
+              x="320.9443" y="653.2031">&#25973;&#12364;&#12491;&#12527;&#12488;&#12522;&#12434;&#25915;&#25731;&#12375;&#12383;&#12363;&#65311;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="286.9443"
+              y="645.8877">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="33" x="475.9443"
+              y="645.8877">&#12356;&#12356;&#12360;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="142.7188" x="227.585" y="670.6484"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="122.7188"
+              x="237.585" y="693.5977">Chicken.takeDamage()
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="240.2651,726.6094,357.6235,726.6094,369.6235,738.6094,357.6235,750.6094,240.2651,750.6094,228.2651,738.6094,240.2651,726.6094"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="117.3584"
+              x="240.2651" y="743.1641">&#12491;&#12527;&#12488;&#12522;&#12398;HP &lt;= 0&#12363;&#65311;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="206.2651"
+              y="735.8486">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="33" x="369.6235"
+              y="735.8486">&#12356;&#12356;&#12360;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="127.3789" x="151.0713" y="760.6094"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="107.3789"
+              x="161.0713" y="783.5586">protectedChickens--
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="128.3936,816.5703,301.1279,816.5703,313.1279,828.5703,301.1279,840.5703,128.3936,840.5703,116.3936,828.5703,128.3936,816.5703"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="172.7344"
+              x="128.3936" y="833.125">protectedChickens &lt; failThreshold?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="94.3936"
+              y="825.8096">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="33" x="313.1279"
+              y="825.8096">&#12356;&#12356;&#12360;
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="309.9443,870.5703,474.9443,870.5703,486.9443,882.5703,474.9443,894.5703,309.9443,894.5703,297.9443,882.5703,309.9443,870.5703"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="165"
+              x="309.9443" y="887.125">&#12381;&#12398;&#12454;&#12455;&#12540;&#12502;&#12398;&#20840;&#25973;&#12434;&#20498;&#12375;&#12383;&#12363;&#65311;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="275.9443"
+              y="879.8096">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="33" x="486.9443"
+              y="879.8096">&#12356;&#12356;&#12360;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="128"
+              x="160.9871" y="904.5703"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="108"
+              x="170.9871" y="927.5195">&#12454;&#12455;&#12540;&#12502;&#12463;&#12522;&#12450;&#20966;&#29702;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="190.0684" x="129.9529" y="975.5313"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="170.0684"
+              x="139.9529" y="998.4805">currentWave = currentWave + 1
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="154.0725,1031.4922,295.9016,1031.4922,307.9016,1043.4922,295.9016,1055.4922,154.0725,1055.4922,142.0725,1043.4922,154.0725,1031.4922"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="141.8291"
+              x="154.0725" y="1048.0469">currentWave &lt;= maxWaves?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="120.0725"
+              y="1040.7314">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="33" x="307.9016"
+              y="1040.7314">&#12356;&#12356;&#12360;
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="482.9016,904.5703,636.9016,904.5703,648.9016,916.5703,636.9016,928.5703,482.9016,928.5703,470.9016,916.5703,482.9016,904.5703"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="154"
+              x="482.9016" y="921.125">&#12454;&#12455;&#12540;&#12502;&#12479;&#12452;&#12510;&#12540;&#12364;&#20999;&#12428;&#12383;&#12363;&#65311;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="448.9016"
+              y="913.8096">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="33" x="648.9016"
+              y="913.8096">&#12356;&#12356;&#12360;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="176"
+              x="372.9016" y="938.5703"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="156"
+              x="382.9016" y="961.5195">&#22679;&#25588;&#12434;&#20986;&#12377;&#12363;&#22833;&#25943;&#26465;&#20214;&#12434;&#36969;&#29992;
+        </text>
+        <line style="stroke:#181818;stroke-width:1;" x1="460.9016" x2="392.4443" y1="1009.5313" y2="1009.5313"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="565.6875" y2="1009.5313"/>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="200"
+              x="292.4443" y="1085.4922"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="180"
+              x="302.4443" y="1108.4414">&#12452;&#12505;&#12531;&#12488;&#22833;&#25943;&#20966;&#29702;&#65288;&#36890;&#30693;&#12539;&#28436;&#20986;&#65289;
+        </text>
+        <ellipse cx="392.4443" cy="1152.4531" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="392.4443" cy="1152.4531" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <polygon fill="#F1F1F1"
+                 points="290.0283,1183.4531,494.8604,1183.4531,506.8604,1195.4531,494.8604,1207.4531,290.0283,1207.4531,278.0283,1195.4531,290.0283,1183.4531"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="204.832"
+              x="290.0283" y="1200.0078">protectedChickens &gt;= successThreshold?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="22" x="256.0283"
+              y="1192.6924">&#12399;&#12356;
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="33" x="506.8604"
+              y="1192.6924">&#12356;&#12356;&#12360;
+        </text>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="224"
+              x="149.4443" y="1217.4531"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="204"
+              x="159.4443" y="1240.4023">&#12452;&#12505;&#12531;&#12488;&#25104;&#21151;&#20966;&#29702;&#65288;&#22577;&#37228;&#20184;&#19982;&#12539;&#28436;&#20986;&#65289;
+        </text>
+        <ellipse cx="261.4443" cy="1284.4141" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="261.4443" cy="1284.4141" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="35.9609" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="260"
+              x="393.4443" y="1217.4531"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="240"
+              x="403.4443" y="1240.4023">&#12452;&#12505;&#12531;&#12488;&#22833;&#25943;&#20966;&#29702;&#65288;&#37096;&#20998;&#22577;&#37228;&#65295;&#12506;&#12490;&#12523;&#12486;&#12451;&#65289;
+        </text>
+        <ellipse cx="523.4443" cy="1284.4141" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="523.4443" cy="1284.4141" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="30" y2="50"/>
+        <polygon fill="#181818" points="388.4443,40,392.4443,50,396.4443,40,392.4443,44"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="85.9609" y2="105.9609"/>
+        <polygon fill="#181818" points="388.4443,95.9609,392.4443,105.9609,396.4443,95.9609,392.4443,99.9609"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="123" x2="123" y1="265.8828" y2="300.8828"/>
+        <polygon fill="#181818" points="119,290.8828,123,300.8828,127,290.8828,123,294.8828"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="363.3555" x2="363.3555" y1="265.8828" y2="300.8828"/>
+        <polygon fill="#181818" points="359.3555,290.8828,363.3555,300.8828,367.3555,290.8828,363.3555,294.8828"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="363.3555" x2="363.3555" y1="336.8438" y2="356.8438"/>
+        <polygon fill="#181818" points="359.3555,346.8438,363.3555,356.8438,367.3555,346.8438,363.3555,350.8438"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="363.3555" x2="363.3555" y1="392.8047" y2="412.8047"/>
+        <polygon fill="#181818" points="359.3555,402.8047,363.3555,412.8047,367.3555,402.8047,363.3555,406.8047"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="165.1777" x2="123" y1="207.9219" y2="207.9219"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="123" x2="123" y1="207.9219" y2="229.9219"/>
+        <polygon fill="#181818" points="119,219.9219,123,229.9219,127,219.9219,123,223.9219"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="321.1777" x2="363.3555" y1="207.9219" y2="207.9219"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="363.3555" x2="363.3555" y1="207.9219" y2="229.9219"/>
+        <polygon fill="#181818" points="359.3555,219.9219,363.3555,229.9219,367.3555,219.9219,363.3555,223.9219"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="363.3555" x2="363.3555" y1="448.7656" y2="453.7656"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="363.3555" x2="392.4443" y1="453.7656" y2="453.7656"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="453.7656" y2="468.7656"/>
+        <polygon fill="#181818" points="388.4443,458.7656,392.4443,468.7656,396.4443,458.7656,392.4443,462.7656"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="541.7109" x2="541.7109" y1="231.8828" y2="266.8828"/>
+        <polygon fill="#181818" points="537.7109,256.8828,541.7109,266.8828,545.7109,256.8828,541.7109,260.8828"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="338.8748" x2="243.1777" y1="173.9219" y2="173.9219"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="243.1777" x2="243.1777" y1="173.9219" y2="195.9219"/>
+        <polygon fill="#181818" points="239.1777,185.9219,243.1777,195.9219,247.1777,185.9219,243.1777,189.9219"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="446.0139" x2="541.7109" y1="173.9219" y2="173.9219"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="541.7109" x2="541.7109" y1="173.9219" y2="195.9219"/>
+        <polygon fill="#181818" points="537.7109,185.9219,541.7109,195.9219,545.7109,185.9219,541.7109,189.9219"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="141.9219" y2="161.9219"/>
+        <polygon fill="#181818" points="388.4443,151.9219,392.4443,161.9219,396.4443,151.9219,392.4443,155.9219"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="504.7266" y2="524.7266"/>
+        <polygon fill="#181818" points="388.4443,514.7266,392.4443,524.7266,396.4443,514.7266,392.4443,518.7266"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="560.6875" y2="580.6875"/>
+        <polygon fill="#181818" points="388.4443,570.6875,392.4443,580.6875,396.4443,570.6875,392.4443,574.6875"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="116.3936" x2="106.3936" y1="828.5703" y2="828.5703"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="106.3936" x2="106.3936" y1="828.5703" y2="850.5703"/>
+        <polygon fill="#181818" points="102.3936,840.5703,106.3936,850.5703,110.3936,840.5703,106.3936,844.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="313.1279" x2="323.1279" y1="828.5703" y2="828.5703"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="323.1279" x2="323.1279" y1="828.5703" y2="850.5703"/>
+        <polygon fill="#181818" points="319.1279,840.5703,323.1279,850.5703,327.1279,840.5703,323.1279,844.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="214.7607" x2="214.7607" y1="796.5703" y2="816.5703"/>
+        <polygon fill="#181818" points="210.7607,806.5703,214.7607,816.5703,218.7607,806.5703,214.7607,810.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="228.2651" x2="214.7607" y1="738.6094" y2="738.6094"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="214.7607" x2="214.7607" y1="738.6094" y2="760.6094"/>
+        <polygon fill="#181818" points="210.7607,750.6094,214.7607,760.6094,218.7607,750.6094,214.7607,754.6094"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="369.6235" x2="383.1279" y1="738.6094" y2="738.6094"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="383.1279" x2="383.1279" y1="738.6094" y2="760.6094"/>
+        <polygon fill="#181818" points="379.1279,750.6094,383.1279,760.6094,387.1279,750.6094,383.1279,754.6094"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="298.9443" x2="298.9443" y1="706.6094" y2="726.6094"/>
+        <polygon fill="#181818" points="294.9443,716.6094,298.9443,726.6094,302.9443,716.6094,298.9443,720.6094"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="308.9443" x2="298.9443" y1="648.6484" y2="648.6484"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="298.9443" x2="298.9443" y1="648.6484" y2="670.6484"/>
+        <polygon fill="#181818" points="294.9443,660.6484,298.9443,670.6484,302.9443,660.6484,298.9443,664.6484"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="475.9443" x2="485.9443" y1="648.6484" y2="648.6484"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="485.9443" x2="485.9443" y1="648.6484" y2="670.6484"/>
+        <polygon fill="#181818" points="481.9443,660.6484,485.9443,670.6484,489.9443,660.6484,485.9443,664.6484"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="616.6484" y2="636.6484"/>
+        <polygon fill="#181818" points="388.4443,626.6484,392.4443,636.6484,396.4443,626.6484,392.4443,630.6484"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="224.9871" x2="224.9871" y1="940.5313" y2="975.5313"/>
+        <polygon fill="#181818" points="220.9871,965.5313,224.9871,975.5313,228.9871,965.5313,224.9871,969.5313"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="142.0725" x2="132.0725" y1="1043.4922" y2="1043.4922"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="132.0725" x2="132.0725" y1="1043.4922" y2="1065.4922"/>
+        <polygon fill="#181818" points="128.0725,1055.4922,132.0725,1065.4922,136.0725,1055.4922,132.0725,1059.4922"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="307.9016" x2="317.9016" y1="1043.4922" y2="1043.4922"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="317.9016" x2="317.9016" y1="1043.4922" y2="1065.4922"/>
+        <polygon fill="#181818" points="313.9016,1055.4922,317.9016,1065.4922,321.9016,1055.4922,317.9016,1059.4922"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="224.9871" x2="224.9871" y1="1011.4922" y2="1031.4922"/>
+        <polygon fill="#181818" points="220.9871,1021.4922,224.9871,1031.4922,228.9871,1021.4922,224.9871,1025.4922"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="460.9016" x2="460.9016" y1="974.5313" y2="1009.5313"/>
+        <polygon fill="#181818" points="456.9016,999.5313,460.9016,1009.5313,464.9016,999.5313,460.9016,1003.5313"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="470.9016" x2="460.9016" y1="916.5703" y2="916.5703"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="460.9016" x2="460.9016" y1="916.5703" y2="938.5703"/>
+        <polygon fill="#181818" points="456.9016,928.5703,460.9016,938.5703,464.9016,928.5703,460.9016,932.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="648.9016" x2="658.9016" y1="916.5703" y2="916.5703"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="658.9016" x2="658.9016" y1="916.5703" y2="938.5703"/>
+        <polygon fill="#181818" points="654.9016,928.5703,658.9016,938.5703,662.9016,928.5703,658.9016,932.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="297.9443" x2="224.9871" y1="882.5703" y2="882.5703"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="224.9871" x2="224.9871" y1="882.5703" y2="904.5703"/>
+        <polygon fill="#181818" points="220.9871,894.5703,224.9871,904.5703,228.9871,894.5703,224.9871,898.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="486.9443" x2="559.9016" y1="882.5703" y2="882.5703"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="559.9016" x2="559.9016" y1="882.5703" y2="904.5703"/>
+        <polygon fill="#181818" points="555.9016,894.5703,559.9016,904.5703,563.9016,894.5703,559.9016,898.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="855.5703" y2="870.5703"/>
+        <polygon fill="#181818" points="388.4443,860.5703,392.4443,870.5703,396.4443,860.5703,392.4443,864.5703"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="1070.4922" y2="1085.4922"/>
+        <polygon fill="#181818" points="388.4443,1075.4922,392.4443,1085.4922,396.4443,1075.4922,392.4443,1079.4922"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="1121.4531" y2="1141.4531"/>
+        <polygon fill="#181818" points="388.4443,1131.4531,392.4443,1141.4531,396.4443,1131.4531,392.4443,1135.4531"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="261.4443" x2="261.4443" y1="1253.4141" y2="1273.4141"/>
+        <polygon fill="#181818" points="257.4443,1263.4141,261.4443,1273.4141,265.4443,1263.4141,261.4443,1267.4141"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="523.4443" x2="523.4443" y1="1253.4141" y2="1273.4141"/>
+        <polygon fill="#181818" points="519.4443,1263.4141,523.4443,1273.4141,527.4443,1263.4141,523.4443,1267.4141"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="278.0283" x2="261.4443" y1="1195.4531" y2="1195.4531"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="261.4443" x2="261.4443" y1="1195.4531" y2="1217.4531"/>
+        <polygon fill="#181818" points="257.4443,1207.4531,261.4443,1217.4531,265.4443,1207.4531,261.4443,1211.4531"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="506.8604" x2="523.4443" y1="1195.4531" y2="1195.4531"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="523.4443" x2="523.4443" y1="1195.4531" y2="1217.4531"/>
+        <polygon fill="#181818" points="519.4443,1207.4531,523.4443,1217.4531,527.4443,1207.4531,523.4443,1211.4531"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="392.4443" x2="392.4443" y1="1168.4531" y2="1183.4531"/>
+        <polygon fill="#181818" points="388.4443,1173.4531,392.4443,1183.4531,396.4443,1173.4531,392.4443,1177.4531"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <?plantuml-src ZLHRJnf167tVNp6Fa4RJleBM4AJHr2AfHX_95aSX8X1sjVMDtV52XNeXAjMeL8gAzHQjDKH8_34VkyYJVw4pir1P1MoooUxCdZdpVUUS6KaMex8Ws82aWPo2cWD2dn8eII1xGCw09FZmvFvk3PG3K5Oidg0uYwD8Z4IYOT7dnnBw84R3eLch_NzeZYz1IOEI06KDr4ITJ1Q3anAImuzKGc0SMRJS3eK-b3Bz4Wh8A1IOyCizLYJxSGXPGBa0PMuMIrO18ORcssu1-GqaJd_gwIpTi1gxkjzFbWjd1f5vCLk9a0rYoPVM7e6o1R5leARkz_ELtAsThvJaS8H-uA246UKSV-B87QuH6zsuMTck6HoIEoKcjyMAA0_RYFm2zPGAOw_LqL14PUb6dqzGd1RVrNSoMdAp1l9DHwEKQbISmQWRlQdDKYzax9FncDCVy4tYa4J_oM4gQttCS3Wq5XWNcbThgyQsjK81bFDoQPkwnF2yFMEH41G_uI0QyZX6tTvHnuXBiBaZlg68-3c4evqIUxEAB0tLyJoeXw0UCUl99gXtlC4zDbHJrSs4TfImrvaPftTWSD0ZsFIDFomu5Cw0Lq08qqfDwSlPodMs5eqQYENgeYvbIbylwYd20vPfvRUjfaYdB4xYNd5AdC0MgxqUeKO-vRpFWxgwqUisqNccUqU7uGXZUsvA5neN0y5XVnHB_d1mhASP9q8JONeIN2Ckzx3tdQD_mDNBvv_uPW8_giUHtB8MApZUsUTollSw1roEZvozQJ8OlWdQ50ZpBowXiakLCncld6lpUMOOJNCizO8zviXSS6Epsk9XPNM1AVia_usZLyPfO4KqJbC7fyGlx5DggZTliI7OxNGpJ76vUxsyyNRA6JTIY_WhIIs-26goZH2qLIsRrbUkcMgBj-p-KH9QxbBVIEkx--NY3Jj3od5bFMyNckQWTHScb55_ewUcv9ak9MDxmuo7KfnU6PNC0P2YNbgd9JwKlje5VcUOY1xLQductdOZQThdmvBKxboOwj3ZgzfIvbyTse_BwlnfkVYzN5WsLrE_mvvBqROlajVY2mRhGsa5o3QG9I0dG1P0_MaYvhhz1G00?>
+    </g>
+</svg>

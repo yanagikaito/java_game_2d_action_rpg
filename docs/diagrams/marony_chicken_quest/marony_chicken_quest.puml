@@ -1,5 +1,5 @@
-@startuml
-' Bilingual sample (UTF-8)
+@startuml marony_chicken_quest
+
 skinparam defaultFontName "Noto Sans JP"
 skinparam defaultFontSize 12
 

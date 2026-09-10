@@ -1,0 +1,76 @@
+@startuml marony_night_event_flow
+start
+
+:プレイヤーがマロニーに近づく(Player approaches Marony);
+:プレイヤーがマロニーに話しかける(Player talks to Marony);
+
+if (夜か？Is it night?) then (はいyes)
+  if (イベントは既に進行中か？) then (はい)
+    :「イベントは既に進行中です」を表示;
+    stop
+  else (いいえ No)
+    :MaronyNightEvent.start() をトリガー;
+    :イベント状態を初期化;
+    :currentWave = 1;
+    :protectedChickens = totalChickens;
+  endif
+else (いいえ No)
+  :通常の会話;
+  stop
+endif
+
+label SPAWN_WAVE
+:NpcSpawner.spawnWave(currentWave);
+:ウェーブタイマーを開始;
+
+label WAVE_LOOP
+:敵がターゲットを探索;
+
+if (敵がニワトリを攻撃したか？) then (はい)
+  :Chicken.takeDamage();
+  if (ニワトリのHP <= 0か？) then (はい)
+    :protectedChickens--;
+    if (protectedChickens < failThreshold?) then (はい)
+      goto EVENT_FAILED
+    else (いいえ)
+      goto WAVE_LOOP
+    endif
+  else (いいえ)
+    goto CHECK_CLEARED
+  endif
+else (いいえ)
+  goto CHECK_CLEARED
+endif
+
+label CHECK_CLEARED
+if (そのウェーブの全敵を倒したか？) then (はい)
+  :ウェーブクリア処理;
+  :currentWave = currentWave + 1;
+  if (currentWave <= maxWaves?) then (はい)
+    goto SPAWN_WAVE
+  else (いいえ)
+    goto EVENT_END_CHECK
+  endif
+else (いいえ)
+  if (ウェーブタイマーが切れたか？) then (はい)
+    :増援を出すか失敗条件を適用;
+    goto WAVE_LOOP
+  else (いいえ)
+    goto WAVE_LOOP
+  endif
+endif
+
+label EVENT_FAILED
+:イベント失敗処理（通知・演出）;
+stop
+
+label EVENT_END_CHECK
+if (protectedChickens >= successThreshold?) then (はい)
+  :イベント成功処理（報酬付与・演出）;
+  stop
+else (いいえ)
+  :イベント失敗処理（部分報酬／ペナルティ）;
+  stop
+endif
+
+@enduml
