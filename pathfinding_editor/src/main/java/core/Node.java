@@ -1,63 +1,45 @@
 package core;
 
-/**
- * フロー・フィールドやパスファインディングで使用される、マップ上の1つのセル（ノード）を表すクラス。
- * <p>
- * 各セルは座標 (x, y)、通行可否、およびゴールまでのコスト（距離）を持つ。
- * フロー・フィールドの計算やNPCの移動判定に使用。
- * </p>
- */
-
 public class Node {
-
-
-    /**
-     * このノードのX座標（横方向）。
-     * マップ配列の列番号に対応。
-     */
-
     public final int x;
-
-    /**
-     * このノードのY座標（縦方向）。
-     * マップ配列の行番号に対応。
-     */
-
     public final int y;
+    public boolean walkable = true;
 
-    /**
-     * このノードからゴールまでの累積コスト（距離）。
-     * <p>
-     * 初期値は {@link Double#MAX_VALUE}（到達不能)。
-     * 統合フィールドの計算中に、最短距離が設定。
-     * </p>
-     */
+    // A* 用フィールド
+    public double g = Double.POSITIVE_INFINITY; // start からのコスト
+    public double h = 0.0;                      // ヒューリスティック
+    public double f = Double.POSITIVE_INFINITY; // g + h
+    public Node parent = null;
 
-    public double cost;
-
-    /**
-     * このノードが通行可能かどうかを示すフラグ。
-     * <p>
-     * {@code true}：通行可能（道）<br>
-     * {@code false}：通行不能（壁）
-     * </p>
-     */
-
-    public boolean walkable;
-
-    /**
-     * Nodeを初期化します。
-     *
-     * @param x このノードのX座標
-     * @param y このノードのY座標
-     * @see #cost
-     * @see #walkable
-     */
+    public double cost = Double.MAX_VALUE;
 
     public Node(int x, int y) {
         this.x = x;
         this.y = y;
-        this.cost = Double.MAX_VALUE;
-        this.walkable = true;
+    }
+
+    public void resetAStar() {
+        g = Double.POSITIVE_INFINITY;
+        h = 0.0;
+        f = Double.POSITIVE_INFINITY;
+        parent = null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Node)) return false;
+        Node n = (Node) o;
+        return x == n.x && y == n.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * x + y;
+    }
+
+    @Override
+    public String toString() {
+        return "Node(" + x + "," + y + ")";
     }
 }
