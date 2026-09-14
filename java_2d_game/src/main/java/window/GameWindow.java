@@ -991,13 +991,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
         this.monster = monster;
     }
 
-    public List<Entity> getMonstersList() {
-        if (this.monster == null) return Collections.emptyList();
-        List<Entity> list = new ArrayList<>();
-        for (Entity m : this.monster) if (m != null) list.add(m);
-        return Collections.unmodifiableList(list);
-    }
-
     /**
      * UI 管理オブジェクトを返す。
      *

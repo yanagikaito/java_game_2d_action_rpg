@@ -11,9 +11,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.IntPredicate;
 
 public class PathfindingCanvas extends JPanel implements Scrollable {
 
@@ -43,6 +45,64 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
     }
 
     /**
+     * 指定した mapId のタイル情報を DB から読み込み、blocks 配列に反映する。
+     * デフォルトの判定は「tile_id == 0 => 通行可、それ以外 => 障害物」。
+     */
+    public void loadMap(int mapId) {
+        // デフォルトの判定を渡す
+        loadMap(mapId, tileId -> tileId != 0);
+    }
+
+    /**
+     * 指定した mapId のタイル情報を DB から読み込み、与えた predicate で
+     * tile_id を障害物かどうか判定して blocks を更新する。
+     *
+     * @param mapId     マップID
+     * @param isBlocked tile_id を受け取り障害物なら true を返す判定
+     */
+    public void loadMap(int mapId, IntPredicate isBlocked) {
+        // まず全セルを通行可にリセット
+        for (int r = 0; r < numRows; r++) {
+            for (int c = 0; c < numCols; c++) {
+                blocks[r][c] = false;
+            }
+        }
+
+        // DB からタイル情報を読み込んで blocks を設定
+        String sql = "SELECT x,y,tile_id FROM map_tile WHERE map_id=?";
+        try (Connection conn = DbManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, mapId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int x = rs.getInt("x");
+                    int y = rs.getInt("y");
+                    int tileId = rs.getInt("tile_id");
+
+                    // 範囲チェック（DB に不正な座標が入っている可能性に備える）
+                    if (y >= 0 && y < numRows && x >= 0 && x < numCols) {
+                        blocks[y][x] = isBlocked.test(tileId);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        // 読み込み後は start/goal がブロックになっていないか確認（必要ならクリア）
+        if (start != null && blocks[start.y][start.x]) {
+            // start がブロックなら解除するか null にする。ここでは解除（通行可にする）
+            blocks[start.y][start.x] = false;
+        }
+        if (goal != null && blocks[goal.y][goal.x]) {
+            blocks[goal.y][goal.x] = false;
+        }
+
+        repaint();
+    }
+
+    /**
      * デフォルトのタイルサイズ 32px を使う場合
      */
 
@@ -65,10 +125,19 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
     public void runPath() {
         if (start == null || goal == null) return;
 
-        Node[][] grid = buildGrid();
-        Node s = grid[start.y][start.x];
-        Node g = grid[goal.y][goal.x];
+        Node[][] grid = buildGrid(); // grid[y][x] 規約
+        Node startNode = grid[start.y][start.x];
+        Node goalNode = grid[goal.y][goal.x];
 
+        // start/goal が通行不可なら終了
+        if (!startNode.walkable || !goalNode.walkable) {
+            this.path = Collections.emptyList();
+            repaint();
+            return;
+        }
+
+        List<Node> result = core.AStar.findPath(grid, startNode, goalNode);
+        this.path = (result == null ? Collections.emptyList() : result);
         repaint();
     }
 
@@ -80,8 +149,16 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         Node[][] grid = new Node[numRows][numCols];
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
-                boolean walkable = !blocks[r][c];
-                grid[r][c] = new Node(c, r);
+                Node n = new Node(c, r);
+                // blocks[row][col] が true のときは障害物（通行不可）
+                n.walkable = !blocks[r][c];
+                // A* 用フィールドがあるなら初期化（Node.resetAStar() があれば呼ぶ）
+                try {
+                    n.resetAStar();
+                } catch (Throwable ignored) {
+                    // resetAStar が無ければ無視
+                }
+                grid[r][c] = n;
             }
         }
         return grid;
