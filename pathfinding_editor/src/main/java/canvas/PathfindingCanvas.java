@@ -27,6 +27,10 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
     private Point goal;
     private List<Node> path = Collections.emptyList();
     private final boolean[][] blocks;
+    private Timer movementTimer;
+    private int pathIndex = 0;
+    private Point movingPos = null;
+    private static final int MOVE_DELAY_MS = 150;
 
     /**
      * @param numRows  行数
@@ -48,6 +52,7 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
      * 指定した mapId のタイル情報を DB から読み込み、blocks 配列に反映する。
      * デフォルトの判定は「tile_id == 0 => 通行可、それ以外 => 障害物」。
      */
+
     public void loadMap(int mapId) {
         // デフォルトの判定を渡す
         loadMap(mapId, tileId -> tileId != 0);
@@ -60,6 +65,7 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
      * @param mapId     マップID
      * @param isBlocked tile_id を受け取り障害物なら true を返す判定
      */
+
     public void loadMap(int mapId, IntPredicate isBlocked) {
         // まず全セルを通行可にリセット
         for (int r = 0; r < numRows; r++) {
@@ -129,8 +135,8 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         Node startNode = grid[start.y][start.x];
         Node goalNode = grid[goal.y][goal.x];
 
-        // start/goal が通行不可なら終了
         if (!startNode.walkable || !goalNode.walkable) {
+            stopMovement();
             this.path = Collections.emptyList();
             repaint();
             return;
@@ -138,7 +144,38 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
 
         List<Node> result = core.AStar.findPath(grid, startNode, goalNode);
         this.path = (result == null ? Collections.emptyList() : result);
+        // 移動開始
+        if (!this.path.isEmpty()) {
+            startMovement();
+        } else {
+            stopMovement();
+        }
         repaint();
+    }
+
+    private void startMovement() {
+        stopMovement();
+        pathIndex = 0;
+        movingPos = new Point(start.x, start.y);
+
+        movementTimer = new Timer(MOVE_DELAY_MS, e -> {
+            if (pathIndex >= path.size()) {
+                stopMovement();
+                return;
+            }
+            Node n = path.get(pathIndex++);
+            movingPos = new Point(n.x, n.y);
+            repaint();
+        });
+        movementTimer.start();
+    }
+
+    private void stopMovement() {
+        if (movementTimer != null) {
+            movementTimer.stop();
+            movementTimer = null;
+        }
+        pathIndex = 0;
     }
 
     /**
@@ -173,6 +210,15 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         drawCoordinates(g2);
         drawStartGoal(g2);
         drawPath(g2);
+        drawMovingRect(g2);
+    }
+
+    private void drawMovingRect(Graphics g) {
+        if (movingPos == null) return;
+        g.setColor(Color.MAGENTA);
+        int s = tileSize / 4;
+        int d = tileSize / 2;
+        g.fillRect(movingPos.x * tileSize + s, movingPos.y * tileSize + s, d, d);
     }
 
     private void drawGrid(Graphics g) {
@@ -233,8 +279,10 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
      */
 
     private class CanvasMouseListener extends MouseAdapter {
+
         @Override
         public void mousePressed(MouseEvent e) {
+            stopMovement();
             int col = e.getX() / tileSize;
             int row = e.getY() / tileSize;
             if (col < 0 || col >= numCols || row < 0 || row >= numRows) return;

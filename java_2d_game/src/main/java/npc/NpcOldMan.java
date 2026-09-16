@@ -9,6 +9,8 @@ import db.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class NpcOldMan extends Entity {
     private static final int THRESHOLD_LEFT = 75;
     private Random random = new Random();
     private int actionLockCounter = 0;
-    private List<Point> route = List.of();
+    private List<Point> route = Collections.emptyList();
     private int routeIndex = 0;
     private boolean following = false;
     private final CollisionChecker collisionChecker;
@@ -124,76 +126,90 @@ public class NpcOldMan extends Entity {
         actionLockCounter = 0;
     }
 
-    private void followRouteStep() {
-        if (routeIndex >= route.size()) {
-            following = false;
-            return;
-        }
-
-        Point currentTargetTile = route.get(routeIndex);
-        int tileSize = FrameApp.getTileSize();
-        int targetX = currentTargetTile.x * tileSize;
-        int targetY = currentTargetTile.y * tileSize;
-
-        int npcPosX = getWorldX();
-        int npcPosY = getWorldY();
-        int diffX = targetX - npcPosX;
-        int diffY = targetY - npcPosY;
-
-        int speed = getSpeed();
-
-        // 到達判定をspeed以内に緩和
-        if (Math.abs(diffX) <= speed && Math.abs(diffY) <= speed) {
-            setWorldX(targetX);
-            setWorldY(targetY);
-            routeIndex++;
-            return;
-        }
-
-        int stepX = Math.abs(diffX) > 0 ? Math.min(Math.abs(diffX), speed) : 0;
-        int stepY = Math.abs(diffY) > 0 ? Math.min(Math.abs(diffY), speed) : 0;
-        int newX = npcPosX + (diffX > 0 ? stepX : (diffX < 0 ? -stepX : 0));
-        int newY = npcPosY + (diffY > 0 ? stepY : (diffY < 0 ? -stepY : 0));
-
-        setWorldX(newX);
-        setWorldY(newY);
-
-        if (Math.abs(diffX) >= Math.abs(diffY)) {
-            setDirection(diffX > 0 ? "right" : "left");
-        } else {
-            setDirection(diffY > 0 ? "down" : "up");
-        }
-    }
-
     public void startRouteFollow(int mapId, int pathId) {
+
         List<Point> loadedRoutePoints = PathManager.loadPath(mapId, pathId);
-        System.out.println("Loaded raw path: " + loadedRoutePoints);
         if (loadedRoutePoints.isEmpty()) {
             following = false;
             return;
         }
 
-        // 今いる場所から一番近いポイントを探す
+        int tileSize = FrameApp.getTileSize();
         int npcPosX = getWorldX();
         int npcPosY = getWorldY();
-        int tileSize = FrameApp.getTileSize();
+
+        // 最も近いポイントのインデックスを探す
         int minIndex = 0;
         int minDist = Integer.MAX_VALUE;
         for (int i = 0; i < loadedRoutePoints.size(); i++) {
-            Point routePoint = loadedRoutePoints.get(i);
-            int routePointWorldX = routePoint.x * tileSize;
-            int routePointWorldY = routePoint.y * tileSize;
-            int dist = Math.abs(npcPosX - routePointWorldX) + Math.abs(npcPosY - routePointWorldY);
+            Point p = loadedRoutePoints.get(i);
+            int wx = p.x * tileSize;
+            int wy = p.y * tileSize;
+            int dist = Math.abs(npcPosX - wx) + Math.abs(npcPosY - wy);
             if (dist < minDist) {
                 minDist = dist;
                 minIndex = i;
             }
         }
 
-        // そのポイントからルートを開始
-        this.route = loadedRoutePoints.subList(minIndex, loadedRoutePoints.size());
+        // タイル座標 -> ワールド座標に変換して新しいリストにコピー
+        List<Point> worldRoute = new ArrayList<>();
+        for (int i = minIndex; i < loadedRoutePoints.size(); i++) {
+            Point p = loadedRoutePoints.get(i);
+            worldRoute.add(new Point(p.x * tileSize, p.y * tileSize));
+        }
+
+        this.route = worldRoute;
         this.routeIndex = 0;
         this.following = true;
+    }
+
+    private void followRouteStep() {
+        if (!following || route == null || route.isEmpty()) return;
+        if (routeIndex >= route.size()) {
+            following = false;
+            return;
+        }
+
+        Point target = route.get(routeIndex);
+        int npcX = getWorldX();
+        int npcY = getWorldY();
+
+        int diffX = target.x - npcX;
+        int diffY = target.y - npcY;
+
+        // 距離
+        double dist = Math.hypot(diffX, diffY);
+        int speed = Math.max(1, getSpeed());
+
+        // 到達判定：距離が speed 以下ならスナップして次へ
+        if (dist <= speed) {
+            setWorldX(target.x);
+            setWorldY(target.y);
+            routeIndex++;
+            if (routeIndex >= route.size()) following = false;
+            return;
+        }
+
+        // 正規化ベクトルで滑らかに移動
+        double nx = diffX / dist;
+        double ny = diffY / dist;
+        int moveX = (int) Math.round(nx * speed);
+        int moveY = (int) Math.round(ny * speed);
+
+        // 最低でも1ピクセルは動くようにする
+        if (moveX == 0 && Math.abs(diffX) >= 1) moveX = diffX > 0 ? 1 : -1;
+        if (moveY == 0 && Math.abs(diffY) >= 1) moveY = diffY > 0 ? 1 : -1;
+
+        setWorldX(npcX + moveX);
+        setWorldY(npcY + moveY);
+
+        // 方向更新
+        if (Math.abs(diffX) >= Math.abs(diffY)) {
+            setDirection(diffX > 0 ? "right" : "left");
+        } else {
+            setDirection(diffY > 0 ? "down" : "up");
+        }
     }
 
     @Override
