@@ -212,6 +212,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
                     assetSetter.setMonster();
                     assetSetter.setInteractiveTile();
+                    assetSetter.setObjLantern();
                 }
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
