@@ -6,6 +6,7 @@ import frame.EditMode;
 
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,7 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 import java.util.function.IntPredicate;
 
@@ -31,6 +32,16 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
     private int pathIndex = 0;
     private Point movingPos = null;
     private static final int MOVE_DELAY_MS = 150;
+
+    // --- 追加フィールド: 複数 Start と Start ごとの経路・タイマー管理 ---
+    private final java.util.List<Point> starts = new ArrayList<>(); // タイル座標で保持、最大10
+    private int selectedStartIndex = -1; // 選択中の Start、未選択は -1
+    private final java.util.Map<Integer, java.util.List<Node>> startPaths = new HashMap<>();
+    private final java.util.Map<Integer, Timer> movementTimers = new HashMap<>();
+    private final java.util.Map<Integer, Integer> pathIndices = new HashMap<>();
+
+    // 表示用の位置を Start ごとに保持する
+    private final java.util.Map<Integer, Point> movingPositions = new java.util.HashMap<>();
 
     /**
      * @param numRows  行数
@@ -129,9 +140,17 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
      */
 
     public void runPath() {
+        // 選択中の Start があればそれを優先して実行
+        if (selectedStartIndex >= 0 && selectedStartIndex < starts.size()) {
+            System.out.println("[PATH] runPath delegating to runPathForStart selectedStart=" + selectedStartIndex);
+            runPathForStart(selectedStartIndex);
+            return;
+        }
+
+        // 従来の単一 start/goal 用（互換性維持）
         if (start == null || goal == null) return;
 
-        Node[][] grid = buildGrid(); // grid[y][x] 規約
+        Node[][] grid = buildGrid();
         Node startNode = grid[start.y][start.x];
         Node goalNode = grid[goal.y][goal.x];
 
@@ -144,7 +163,6 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
 
         List<Node> result = core.AStar.findPath(grid, startNode, goalNode);
         this.path = (result == null ? Collections.emptyList() : result);
-        // 移動開始
         if (!this.path.isEmpty()) {
             startMovement();
         } else {
@@ -152,6 +170,69 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         }
         repaint();
     }
+
+    public void runPathForStart(int startIndex) {
+        if (startIndex < 0 || startIndex >= starts.size()) return;
+        if (goal == null) return;
+
+        Node[][] grid = buildGrid();
+        Point sTile = starts.get(startIndex);
+        Node startNode = grid[sTile.y][sTile.x];
+        Node goalNode = grid[goal.y][goal.x];
+
+        if (!startNode.walkable || !goalNode.walkable) {
+            startPaths.remove(startIndex);
+            repaint();
+            return;
+        }
+
+        List<Node> result = core.AStar.findPath(grid, startNode, goalNode);
+        startPaths.put(startIndex, result == null ? Collections.emptyList() : result);
+
+        if (!startPaths.get(startIndex).isEmpty()) {
+            startMovementForStart(startIndex);
+        }
+        repaint();
+    }
+
+    private void startMovementForStart(int startIndex) {
+        // 既にタイマーがある場合は停止してから再開
+        stopMovementForStart(startIndex);
+
+        java.util.List<Node> pathFor = startPaths.getOrDefault(startIndex, Collections.emptyList());
+        if (pathFor.isEmpty()) return;
+
+        pathIndices.put(startIndex, 0);
+
+        Timer t = new Timer(MOVE_DELAY_MS, e -> {
+            int idx = pathIndices.getOrDefault(startIndex, 0);
+            if (idx >= pathFor.size()) {
+                stopMovementForStart(startIndex);
+                return;
+            }
+            Node n = pathFor.get(idx);
+            pathIndices.put(startIndex, idx + 1);
+
+            // Start ごとの表示位置を更新する（共有しない）
+            movingPositions.put(startIndex, new Point(n.x, n.y));
+            repaint();
+        });
+
+        movementTimers.put(startIndex, t);
+        t.start();
+
+        // デバッグログ（任意）
+        System.out.println("[PATH] startMovementForStart startIndex=" + startIndex + " pathSize=" + pathFor.size());
+    }
+
+
+    // Start ごとの移動を停止するメソッド
+    private void stopMovementForStart(int startIndex) {
+        Timer t = movementTimers.remove(startIndex);
+        if (t != null) t.stop();
+        pathIndices.remove(startIndex);
+    }
+
 
     private void startMovement() {
         stopMovement();
@@ -201,12 +282,24 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         return grid;
     }
 
+    public void runAllStarts() {
+        if (goal == null) {
+            System.out.println("[PATH] runAllStarts: goal is null");
+            return;
+        }
+        for (int i = 0; i < starts.size(); i++) {
+            System.out.println("[PATH] runAllStarts calling runPathForStart for index=" + i);
+            runPathForStart(i);
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         super.paintComponent(g2);
         drawGrid(g2);
         drawBlocks(g2);
+        drawStarts(g2);
         drawCoordinates(g2);
         drawStartGoal(g2);
         drawPath(g2);
@@ -214,12 +307,23 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
     }
 
     private void drawMovingRect(Graphics g) {
-        if (movingPos == null) return;
+        if (movingPositions.isEmpty()) return;
         g.setColor(Color.MAGENTA);
         int s = tileSize / 4;
         int d = tileSize / 2;
-        g.fillRect(movingPos.x * tileSize + s, movingPos.y * tileSize + s, d, d);
+        for (var entry : movingPositions.entrySet()) {
+            int startIndex = entry.getKey();
+            Point pos = entry.getValue();
+            if (pos == null) continue;
+            // 色を Start ごとに変えたい場合は配列やハッシュで色を選ぶ
+            g.fillRect(pos.x * tileSize + s, pos.y * tileSize + s, d, d);
+            // Start 番号を表示する（任意）
+            g.setColor(Color.BLACK);
+            g.drawString(String.valueOf(startIndex + 1), pos.x * tileSize + tileSize / 2 - 4, pos.y * tileSize + tileSize / 2 + 4);
+            g.setColor(Color.MAGENTA);
+        }
     }
+
 
     private void drawGrid(Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
@@ -251,6 +355,27 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         }
     }
 
+    // --- 追加: 複数 Start を番号付きで描画 ---
+    private void drawStarts(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        int s = tileSize / 6;
+        for (int i = 0; i < starts.size(); i++) {
+            Point p = starts.get(i);
+            int x = p.x * tileSize;
+            int y = p.y * tileSize;
+            if (i == selectedStartIndex) {
+                g2.setColor(Color.ORANGE);
+                g2.fillRect(x + s, y + s, tileSize - 2 * s, tileSize - 2 * s);
+            } else {
+                g2.setColor(Color.GREEN);
+                g2.fillOval(x + s, y + s, tileSize - 2 * s, tileSize - 2 * s);
+            }
+            g2.setColor(Color.BLACK);
+            g2.drawString(String.valueOf(i + 1), x + tileSize / 2 - 4, y + tileSize / 2 + 4);
+        }
+        g2.dispose();
+    }
+
     private void drawStartGoal(Graphics g) {
         int s = tileSize / 4;
         int d = tileSize / 2;
@@ -279,22 +404,62 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
      */
 
     private class CanvasMouseListener extends MouseAdapter {
-
         @Override
         public void mousePressed(MouseEvent e) {
+            // 既存の移動を止める
             stopMovement();
             int col = e.getX() / tileSize;
             int row = e.getY() / tileSize;
             if (col < 0 || col >= numCols || row < 0 || row >= numRows) return;
 
             switch (mode) {
-                case SET_START -> start = new Point(col, row);
-                case SET_GOAL -> goal = new Point(col, row);
-                case SET_BLOCK -> blocks[row][col] = !blocks[row][col];
+                case SET_START -> {
+                    // 左クリックで追加（Ctrl 押下で選択切替）
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        if (e.isControlDown()) {
+                            // クリックした Start を選択
+                            for (int i = 0; i < starts.size(); i++) {
+                                Point p = starts.get(i);
+                                if (p.x == col && p.y == row) {
+                                    selectedStartIndex = i;
+                                    repaint();
+                                    return;
+                                }
+                            }
+                        } else {
+                            if (starts.size() < 10) {
+                                starts.add(new Point(col, row));
+                                selectedStartIndex = starts.size() - 1;
+                                repaint();
+                            } else {
+                                System.out.println("最大10個の Start に達しています");
+                            }
+                        }
+                    } else if (SwingUtilities.isRightMouseButton(e)) {
+                        // 右クリックでそのタイルにある Start を削除
+                        for (int i = 0; i < starts.size(); i++) {
+                            Point p = starts.get(i);
+                            if (p.x == col && p.y == row) {
+                                starts.remove(i);
+                                if (selectedStartIndex == i) selectedStartIndex = -1;
+                                else if (selectedStartIndex > i) selectedStartIndex--;
+                                repaint();
+                                return;
+                            }
+                        }
+                    }
+                }
+                case SET_GOAL -> {
+                    goal = new Point(col, row);
+                    repaint();
+                }
+                case SET_BLOCK -> {
+                    blocks[row][col] = !blocks[row][col];
+                    repaint();
+                }
                 default -> {
                 }
             }
-            repaint();
         }
     }
 
@@ -361,9 +526,19 @@ public class PathfindingCanvas extends JPanel implements Scrollable {
         repaint();
     }
 
-    public List<Node> getPath() {
-        return path;
+
+    public Map<Integer, List<Node>> getStartPaths() {
+        return Collections.unmodifiableMap(startPaths);
     }
+
+    public int getSelectedStartIndex() {
+        return selectedStartIndex;
+    }
+
+    public int getStartsCount() {
+        return starts.size();
+    }
+
 
     @Override
     public Dimension getPreferredScrollableViewportSize() {

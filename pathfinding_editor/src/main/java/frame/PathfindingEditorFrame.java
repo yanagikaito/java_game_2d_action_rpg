@@ -1,10 +1,14 @@
 package frame;
 
 import canvas.PathfindingCanvas;
+import core.Node;
 import db.DbManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Collections;
 import java.awt.event.ActionListener;
 
 /**
@@ -69,6 +73,7 @@ public class PathfindingEditorFrame extends JFrame {
         panel.add(createButton("Save", e -> onSavePath()));
         panel.add(createButton("Load", e -> canvas.loadPathFromDb(1, 0)));
         panel.add(createButton("Run", e -> canvas.runPath()));
+        panel.add(createButton("RunAll", e -> canvas.runAllStarts()));
 
         selector.setSelectedItem(currentMapId);
         selector.addActionListener(e -> {
@@ -85,13 +90,36 @@ public class PathfindingEditorFrame extends JFrame {
     }
 
     private void onSavePath() {
-        var path = canvas.getPath();
-        if (path == null || path.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "先にRunで経路を生成してください");
+
+        int sel = canvas.getSelectedStartIndex();
+        if (sel >= 0) {
+            List<core.Node> p = canvas.getStartPaths().getOrDefault(sel, Collections.emptyList());
+            if (p.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "選択中の Start に対する経路がありません。先に Run を実行してください。");
+                return;
+            }
+            int basePathId = 0;
+            int encodedPathId = basePathId * 100 + sel;
+            canvas.savePathToDb(1, encodedPathId, p);
+            JOptionPane.showMessageDialog(this, "Selected path saved to DB. pathId=" + encodedPathId);
             return;
         }
-        canvas.savePathToDb(1, 0, path);
-        JOptionPane.showMessageDialog(this, "Path saved to DB.");
+
+        Map<Integer, List<core.Node>> all = canvas.getStartPaths();
+        boolean anyNonEmpty = all.values().stream().anyMatch(list -> list != null && !list.isEmpty());
+        if (!anyNonEmpty) {
+            JOptionPane.showMessageDialog(this, "先にRunで経路を生成してください（個別または RunAll）。");
+            return;
+        }
+
+        int basePathId = 0;
+        for (int i = 0; i < canvas.getStartsCount(); i++) {
+            List<Node> p = canvas.getStartPaths().getOrDefault(i, Collections.emptyList());
+            int encodedPathId = basePathId * 100 + i;
+            canvas.savePathToDb(1, encodedPathId, p);
+            System.out.println("[DB] saved startIndex=" + i + " encodedPathId=" + encodedPathId + " size=" + p.size());
+        }
+        JOptionPane.showMessageDialog(this, "All start paths saved to DB with basePathId=" + basePathId);
     }
 
     private JButton createButton(String text, ActionListener listener) {
@@ -108,10 +136,8 @@ public class PathfindingEditorFrame extends JFrame {
     public void loadMap(int mapId) {
         this.currentMapId = mapId;
         try {
-            // PathfindingCanvas に loadMap(int) を実装しているならそれを呼ぶ
             canvas.loadMap(mapId);
         } catch (NoSuchMethodError | UnsupportedOperationException ex) {
-            // canvas.loadMap が無い場合は最低限再描画
             System.out.println("PathfindingEditorFrame.loadMap: canvas.loadMap not implemented. mapId=" + mapId);
             canvas.repaint();
         }
