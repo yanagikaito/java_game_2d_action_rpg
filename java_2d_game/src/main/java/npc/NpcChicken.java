@@ -1,6 +1,7 @@
 package npc;
 
 import collision.CollisionChecker;
+import db.PathManager;
 import entity.Entity;
 import entity.type.ChickenType;
 import frame.FrameApp;
@@ -12,10 +13,18 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class NpcChicken extends Entity {
 
+    public static final java.util.Map<Integer, java.util.List<java.awt.Point>> routeCache =
+            new java.util.concurrent.ConcurrentHashMap<>();
+    private static final ExecutorService ROUTE_LOADER = Executors.newSingleThreadExecutor();
+    private int routeMapId = -1;
+    private int routePathId = -1;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private BufferedImage[][] spritesChicken = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private static final int SPRITE_COUNT = 3;
@@ -48,6 +57,11 @@ public class NpcChicken extends Entity {
     private int prevTileY = -1;
     private int lastGroundTileY = -1; // 最後に地上にいた tileY を保持
     private GameMap gameMap;
+
+    private java.util.List<Point> route = null; // ワールド座標（ピクセル）で保持するリスト
+    private int routeIndex = 0;
+    private boolean followingRoute = false;
+    private boolean useAStarOnHit = false; // 攻撃時に A* を実行して経路を作るなら true
 
     // 1体あたりのダメージ
     private int attackDamage = 2;
@@ -134,6 +148,20 @@ public class NpcChicken extends Entity {
 
     @Override
     public void setAction() {
+
+        // 優先: ルート追従
+        if (following && route != null && !route.isEmpty()) {
+            followRouteStep();
+            checkPlayerCollision();
+            return;
+        }
+
+        // 既存の挙動
+        if (playerFollowing || following) {
+            followPlayerStep();
+            checkPlayerCollision();
+            return;
+        }
 
         // 現在のタイル（フレーム開始時の位置）
         prevTileX = worldToTile(getWorldX());
@@ -238,6 +266,106 @@ public class NpcChicken extends Entity {
         getGameWindow().getCollisionChecker().checkPlayer(this);
     }
 
+    public void startRouteFollow(int mapId, int pathId) {
+
+        List<Point> loadedRoutePoints = PathManager.loadPath(mapId, pathId);
+        if (loadedRoutePoints == null || loadedRoutePoints.isEmpty()) {
+            following = false;
+            return;
+        }
+
+        int tileSize = FrameApp.getTileSize();
+        int npcPosX = getWorldX();
+        int npcPosY = getWorldY();
+
+        int minIndex = 0;
+        int minDist = Integer.MAX_VALUE;
+        for (int i = 0; i < loadedRoutePoints.size(); i++) {
+            Point p = loadedRoutePoints.get(i);
+            int wx = p.x * tileSize;
+            int wy = p.y * tileSize;
+            int dist = Math.abs(npcPosX - wx) + Math.abs(npcPosY - wy);
+            if (dist < minDist) {
+                minDist = dist;
+                minIndex = i;
+            }
+        }
+
+        List<Point> worldRoute = new ArrayList<>();
+        for (int i = minIndex; i < loadedRoutePoints.size(); i++) {
+            Point p = loadedRoutePoints.get(i);
+            worldRoute.add(new Point(p.x * tileSize, p.y * tileSize));
+        }
+
+        this.route = worldRoute;
+        this.routeIndex = 0;
+        this.following = true;
+        setSpeed(Math.max(1, getSpeed()));
+    }
+
+    public void startRouteFollow() {
+        if (this.route != null && !this.route.isEmpty()) {
+            this.routeIndex = 0;
+            this.following = true;
+            setSpeed(Math.max(1, getSpeed()));
+            System.out.println("[CHICKEN] startRouteFollow(): using pre-set route, size=" + route.size());
+            return;
+        }
+
+        if (routeMapId >= 0 && routePathId >= 0) {
+            System.out.println("[CHICKEN] startRouteFollow(): loading route map=" + routeMapId + " path=" + routePathId);
+            startRouteFollow(routeMapId, routePathId);
+            return;
+        }
+
+        System.out.println("[CHICKEN] startRouteFollow(): no route set and no routeId available");
+    }
+
+    private void followRouteStep() {
+        if (!following || route == null || route.isEmpty()) return;
+        if (routeIndex >= route.size()) {
+            following = false;
+            return;
+        }
+
+        Point target = route.get(routeIndex);
+        int npcX = getWorldX();
+        int npcY = getWorldY();
+
+        int diffX = target.x - npcX;
+        int diffY = target.y - npcY;
+
+        double dist = Math.hypot(diffX, diffY);
+        int speed = Math.max(1, getSpeed());
+
+        // 到達判定：距離が speed 以下ならスナップして次へ
+        if (dist <= speed) {
+            setWorldX(target.x);
+            setWorldY(target.y);
+            routeIndex++;
+            if (routeIndex >= route.size()) following = false;
+            return;
+        }
+
+        double nx = diffX / dist;
+        double ny = diffY / dist;
+        int moveX = (int) Math.round(nx * speed);
+        int moveY = (int) Math.round(ny * speed);
+
+        if (moveX == 0 && Math.abs(diffX) >= 1) moveX = diffX > 0 ? 1 : -1;
+        if (moveY == 0 && Math.abs(diffY) >= 1) moveY = diffY > 0 ? 1 : -1;
+
+        // 衝突判定を行うならここでチェック（CollisionChecker を利用）
+        setWorldX(npcX + moveX);
+        setWorldY(npcY + moveY);
+
+        if (Math.abs(diffX) >= Math.abs(diffY)) {
+            setDirection(diffX > 0 ? "right" : "left");
+        } else {
+            setDirection(diffY > 0 ? "down" : "up");
+        }
+    }
+
     private void randomWalkStep() {
         actionLockCounter++;
         if (actionLockCounter < ACTION_LOCK_THRESHOLD) return;
@@ -271,8 +399,26 @@ public class NpcChicken extends Entity {
     }
 
     private void onHitPlayer() {
-        this.following = false;
-        getGameWindow().getSoundmanager().damageWAV("sound/damage-sound.wav");
+        try {
+            getGameWindow().getSoundmanager().damageWAV("sound/damage-sound.wav");
+        } catch (Exception ignored) {
+        }
+
+        // 投げられた/所持状態を解除して追従可能にする
+        this.thrown = false;
+        this.beingHeld = false;
+        this.pickable = false;
+        this.setCollision(true);
+        this.setAlive(true);
+
+        // 既に route がセットされていればそれを使って追従開始
+        if (this.route != null && !this.route.isEmpty()) {
+            this.routeIndex = 0;
+            this.following = true;
+            setSpeed(2);
+            System.out.println("[CHICKEN] onHitPlayer: starting existing route, size=" + route.size());
+            return;
+        }
     }
 
     public void setFollowing(boolean f) {
@@ -398,6 +544,36 @@ public class NpcChicken extends Entity {
             lastTriggerTime = now;
             callForHelp();
         }
+
+        // 既存のダメージ処理の後、route を使う分岐
+        if (this.route != null && !this.route.isEmpty()) {
+            this.routeIndex = 0;
+            this.following = true;
+            setSpeed(2);
+            this.thrown = false;
+            this.beingHeld = false;
+            this.pickable = false;
+        } else {
+            // route が無ければ非同期で DB からロードして route をセットする例
+            int mapId = 1;
+            int basePathId = 0;
+            int chosenEncodedPathId = /* choose logic or pass in */ 0; // 実際は damage 発生元で決定
+
+            // 非同期ロード
+            NpcChicken chicken = this; // this が NpcChicken の場合
+            ROUTE_LOADER.submit(() -> {
+                java.util.List<java.awt.Point> tiles = PathManager.loadPath(mapId, chosenEncodedPathId);
+                if (tiles == null || tiles.isEmpty()) return;
+                int tileSize = FrameApp.getTileSize();
+                java.util.List<java.awt.Point> worldRoute = new java.util.ArrayList<>();
+                for (java.awt.Point p : tiles) worldRoute.add(new java.awt.Point(p.x * tileSize, p.y * tileSize));
+
+                // スレッドセーフに route をセット（setter は synchronized 推奨）
+                chicken.setRoute(worldRoute);
+                chicken.setRouteIndex(0);
+                chicken.setFollowing(true);
+            });
+        }
     }
 
     public void resetState() {
@@ -441,6 +617,18 @@ public class NpcChicken extends Entity {
         return null;
     }
 
+    // マップ読み込み時の初期化例
+    public void preloadRoutesForMap(int mapId, int basePathId, int maxStarts) {
+        for (int i = 0; i < maxStarts; i++) {
+            int encodedPathId = basePathId * 100 + i;
+            List<Point> tiles = PathManager.loadPath(mapId, encodedPathId);
+            if (tiles != null && !tiles.isEmpty()) {
+                NpcChicken.routeCache.put(encodedPathId, tiles);
+                System.out.println("[PRELOAD] cached pathId=" + encodedPathId + " size=" + tiles.size());
+            }
+        }
+    }
+
     // 投げるときの向き・フレーム別スプライトを返す（存在しなければ null を返す）
     public BufferedImage getThrowSprite(String dir, int frame) {
         // ここでは sprites の向きインデックスとフレームをそのまま使う例
@@ -468,6 +656,14 @@ public class NpcChicken extends Entity {
         setZ(0);
         setAlive(false);
         setCollision(false);
+    }
+
+    public synchronized void setRoute(List<Point> worldRoute) {
+        this.route = worldRoute;
+    }
+
+    public synchronized void setRouteIndex(int idx) {
+        this.routeIndex = idx;
     }
 
     public void setVelocity(double vx, double vy) {
@@ -574,5 +770,10 @@ public class NpcChicken extends Entity {
 
     public Player getHolder() {
         return holder;
+    }
+
+    public void setRouteIds(int mapId, int pathId) {
+        this.routeMapId = mapId;
+        this.routePathId = pathId;
     }
 }

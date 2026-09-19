@@ -1,5 +1,6 @@
 package player;
 
+import db.PathManager;
 import entity.*;
 import entity.type.*;
 import frame.FrameApp;
@@ -21,7 +22,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
+import javax.swing.*;
 import javax.swing.Timer;
 
 public class Player extends Entity {
@@ -30,6 +34,8 @@ public class Player extends Entity {
     public enum PlayerState {IDLE, WALK, PICKUP, HOLD_WALK, THROW}
 
     private PlayerState state = PlayerState.IDLE;
+
+    private static final ExecutorService ROUTE_LOADER = Executors.newSingleThreadExecutor();
 
     // 持つ処理用
     private boolean holding = false;
@@ -994,7 +1000,6 @@ public class Player extends Entity {
         startPickupMonster(monster);
     }
 
-    // Entity 版 startPickupMonster
     public void startPickupMonster(Entity monster) {
 
         if (monster == null) return;
@@ -3162,7 +3167,52 @@ public class Player extends Entity {
 
         // --- ニワトリならモンスター用の死亡処理を行わず、専用の takeDamage を呼ぶ ---
         if (target instanceof NpcChicken) {
-            ((NpcChicken) target).takeDamage(damage, knockBackPower);
+            NpcChicken chicken = (NpcChicken) target;
+            chicken.takeDamage(damage, knockBackPower);
+
+            int mapId = 1;
+            int basePathId = 0;
+            long t0 = System.nanoTime();
+            int chosenEncodedPathId = chooseNearestSavedRoute(chicken, mapId, basePathId);
+            long t1 = System.nanoTime();
+            System.out.println("[DBG] chooseNearestSavedRoute ms=" + (t1 - t0) / 1_000_000);
+
+            if (chosenEncodedPathId >= 0) {
+                // 非同期でロードして、ロード完了後に route をセットする
+                int encodedIdLocal = chosenEncodedPathId;
+                NpcChicken chickenLocal = chicken;
+                ROUTE_LOADER.submit(() -> {
+                    long t2 = System.nanoTime();
+                    // 重い DB 読み込みはここで行う（別スレッド）
+                    java.util.List<java.awt.Point> tiles = PathManager.loadPath(mapId, encodedIdLocal);
+                    long t3 = System.nanoTime();
+                    System.out.println("[DBG] loadPath ms=" + (t3 - t2) / 1_000_000);
+                    if (tiles == null || tiles.isEmpty()) {
+                        System.out.println("[CHICKEN] no route loaded for " + encodedIdLocal);
+                        return;
+                    }
+                    // タイル -> ワールド座標変換
+                    int tileSize = FrameApp.getTileSize();
+                    java.util.List<java.awt.Point> worldRoute = new java.util.ArrayList<>();
+                    for (java.awt.Point p : tiles) {
+                        worldRoute.add(new java.awt.Point(p.x * tileSize, p.y * tileSize));
+                    }
+
+                    // Swing を使っているなら UI/ゲーム状態の反映は EDT で行う
+                    SwingUtilities.invokeLater(() -> {
+                        chicken.setRoute(worldRoute);
+                        chicken.setRouteIndex(0);
+                        chicken.setFollowing(true);
+                        System.out.println("[CHICKEN] route applied on EDT for " + encodedIdLocal);
+                    });
+
+                    System.out.println("[CHICKEN] async route set for " + encodedIdLocal + " size=" + worldRoute.size());
+                });
+            } else {
+                // キャッシュや既存の同期メソッドを使うフォールバック
+                chicken.startRouteFollow();
+            }
+
             target.setRespawning(false);
             return;
         }
@@ -3257,6 +3307,31 @@ public class Player extends Entity {
             }
         }
     }
+
+    private int chooseNearestSavedRoute(NpcChicken chicken, int mapId, int basePathId) {
+        int tileSize = FrameApp.getTileSize();
+        int npcWx = chicken.getWorldX();
+        int npcWy = chicken.getWorldY();
+
+        int bestPathId = -1;
+        double bestDist = Double.MAX_VALUE;
+
+        for (int startIndex = 0; startIndex < 10; startIndex++) {
+            int encodedPathId = basePathId * 100 + startIndex;
+            java.util.List<java.awt.Point> routeTiles = NpcChicken.routeCache.get(encodedPathId);
+            if (routeTiles == null || routeTiles.isEmpty()) continue;
+            Point first = routeTiles.getFirst();
+            int wx = first.x * tileSize;
+            int wy = first.y * tileSize;
+            double dist = Math.hypot(npcWx - wx, npcWy - wy);
+            if (dist < bestDist) {
+                bestDist = dist;
+                bestPathId = encodedPathId;
+            }
+        }
+        return bestPathId;
+    }
+
 
     /**
      * モンスターのリスポーン処理用タイマーを生成。
