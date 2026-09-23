@@ -500,6 +500,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
 
             environmentManager.update(deltaSeconds);
+
+            if (tileManager != null) {
+                tileManager.update(deltaSeconds);
+            }
+
             player.update();
 
             for (Entity entity : npc) {
