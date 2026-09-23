@@ -20,7 +20,7 @@ public class ItTrunk extends InteractiveTile {
 
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tileInteractive/trunk.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tileInteractive/trunk.png"));
             setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {

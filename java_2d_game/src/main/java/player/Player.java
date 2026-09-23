@@ -137,6 +137,10 @@ public class Player extends Entity {
     private int lastAttemptStepY = 0;
     private boolean attemptedMoveThisFrame = false;
 
+    private boolean wasInWater = false;
+    private double lastSplashTime = 0.0; // 任意のクールダウン用
+    private final double splashCooldown = 0.5; // 秒（歩行中に断続的に出す場合）
+
 
     /**
      * プレイヤーを初期化するコンストラクタ。
@@ -606,9 +610,35 @@ public class Player extends Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
-//        gameWindow.getEventHandler().checkEvent();
+
         int nearbyIndex = findNearbyObjectIndex();
         Entity nearby = getNearbyEntity(this);
+
+        int playerCenterX = getWorldX() + tileSize / 2;
+        int playerCenterY = getWorldY() + tileSize / 2;
+        int col = playerCenterX / tileSize;
+        int row = playerCenterY / tileSize;
+        int tileId = gameWindow.getTileManager().getTileIdAt(col, row);
+        boolean nowInWater = (tileId == TileManager.WATER_TILE_ID);
+
+        // 接触開始で一度だけ発生
+        if (nowInWater && !wasInWater) {
+            double splashX = col * tileSize + tileSize / 2.0;
+            double splashY = row * tileSize + tileSize / 2.0;
+            gameWindow.getTileManager().spawnSplashAt(splashX, splashY, 6); // 6 は標準
+            lastSplashTime = 0.0;
+        }
+
+        // 断続的に出したい場合（歩行中）
+        lastSplashTime += 0.0;
+        if (nowInWater && wasInWater && lastSplashTime >= splashCooldown) {
+            double splashX = col * tileSize + tileSize / 2.0;
+            double splashY = row * tileSize + tileSize / 2.0;
+            gameWindow.getTileManager().spawnSplashAt(splashX, splashY, 3);
+            lastSplashTime = 0.0;
+        }
+
+        wasInWater = nowInWater;
 
         // G の瞬間判定を使う（押しっぱなしで毎フレーム呼ばれない）
         if (isThrowKeyJustPressed()) {

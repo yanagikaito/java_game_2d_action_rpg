@@ -17,7 +17,7 @@ public class ItDryTree extends InteractiveTile {
 
         try {
             var raw = ImageIO.read(
-                    getClass().getResourceAsStream("/tileInteractive/drytree.gif"));
+                    getClass().getResourceAsStream("/tileInteractive/drytree.png"));
             setImage(raw, FrameApp.getTileSize());
         } catch (Exception e) {
             e.printStackTrace();
