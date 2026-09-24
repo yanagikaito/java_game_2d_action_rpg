@@ -4,6 +4,8 @@ import db.PathManager;
 import entity.*;
 import entity.type.*;
 import frame.FrameApp;
+import game.GameOverAnimator;
+import game.GameOverManager;
 import game.GameState;
 import key.KeyHandler;
 import npc.NpcChicken;
@@ -31,7 +33,7 @@ import javax.swing.Timer;
 public class Player extends Entity {
 
     // 状態列挙
-    public enum PlayerState {IDLE, WALK, PICKUP, HOLD_WALK, THROW}
+    public enum PlayerState {IDLE, PICKUP, HOLD_WALK, THROW, GAME_OVER}
 
     private PlayerState state = PlayerState.IDLE;
 
@@ -140,6 +142,16 @@ public class Player extends Entity {
     private boolean wasInWater = false;
     private double lastSplashTime = 0.0; // 任意のクールダウン用
     private final double splashCooldown = 0.5; // 秒（歩行中に断続的に出す場合）
+    private double lastDeltaSeconds = 0.0;
+
+    private GameOverAnimator gameOverAnimator;
+    private boolean isDead = false;
+    private boolean gameOverNotifiedToUI = false;
+    private long lastUpdateTimeNano = System.nanoTime();
+
+    private SpriteManager spriteManager;           // 注入または new でセット
+    private GameOverManager gameOverManager;       // 遅延生成キャッシュ
+    private boolean deathSequenceStarted = false;  // 二重開始防止
 
 
     /**
@@ -188,6 +200,7 @@ public class Player extends Entity {
         loadPickupSprites();
         initHoldOffsets();
         setItems();
+        setSpriteManager(spriteManager);
     }
 
     private void initializeDefaultStats() {
@@ -226,6 +239,24 @@ public class Player extends Entity {
         setAttack(calculateBaseAttack());
         setDefense(calculateBaseDefense());
     }
+
+    public void startDeathSequence() {
+        if (deathSequenceStarted) return;
+        deathSequenceStarted = true;
+
+        setState(PlayerState.GAME_OVER);
+        isDead = true;
+        moving = false;
+        setInvincible(true);
+
+        // animator を取得して開始
+        GameOverManager gom = (gameOverManager != null) ? gameOverManager : ensureGameOverManager();
+        this.gameOverAnimator = gom.getAnimator();
+        if (this.gameOverAnimator != null) {
+            this.gameOverAnimator.start();
+        }
+    }
+
 
     /**
      * プレイヤーのワールド座標・速度・向きをデフォルトにリセットする。
@@ -584,6 +615,26 @@ public class Player extends Entity {
         }
     }
 
+    public void setSpriteManager(SpriteManager sm) {
+        this.spriteManager = sm;
+    }
+
+    // 内部ユーティリティ: 必要なら GameOverManager を生成して返す（スレッドセーフ）
+    private GameOverManager ensureGameOverManager() {
+        if (gameOverManager == null) {
+            synchronized (this) {
+                if (gameOverManager == null) {
+                    // パラメータは好みで調整
+                    this.gameOverManager = new GameOverManager(
+                            spriteManager != null ? spriteManager : new SpriteManager(),
+                            "death_", 9, 0.9, 0.7, Math.PI * 6
+                    );
+                }
+            }
+        }
+        return gameOverManager;
+    }
+
     /**
      * 毎フレーム呼び出される更新処理。
      * 無敵時間のカウントダウン、攻撃クールダウンの減算、攻撃・移動入力の判定、
@@ -592,6 +643,24 @@ public class Player extends Entity {
 
     @Override
     public void update() {
+
+        long now = System.nanoTime();
+        double deltaSeconds = (now - lastUpdateTimeNano) / 1_000_000_000.0;
+        // 安全のため上限を設ける（極端なフレーム落ち対策）
+        if (deltaSeconds > 0.5) deltaSeconds = 0.5;
+        lastUpdateTimeNano = now;
+
+        // 死亡処理（あなたの既存コードをそのまま使える）
+        if (isDead) {
+            if (gameOverAnimator != null) {
+                gameOverAnimator.update(deltaSeconds);
+                if (gameOverAnimator.isFinished() && !gameOverNotifiedToUI) {
+                    gameWindow.getUi().showGameOver();
+                    gameOverNotifiedToUI = true;
+                }
+            }
+            return;
+        }
 
         if (pickupCooldown > 0) pickupCooldown--;
 
@@ -3152,6 +3221,9 @@ public class Player extends Entity {
             if (getLife() <= 0) {
                 setLife(0);
                 gameWindow.setGameState(GameState.GAME_OVER);
+                this.setState(PlayerState.GAME_OVER);
+                gameWindow.getUi().showGameOver();
+                this.startDeathSequence();
             }
 
 //                System.out.println("モンスター衝突: " + i);
@@ -3539,7 +3611,18 @@ public class Player extends Entity {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         }
 
-        // aura の描画（省略せず安全に）
+        if (state == PlayerState.GAME_OVER) {
+            if (gameOverAnimator != null) {
+                gameOverAnimator.draw(g2, screenX, screenY, tileSize, tileSize);
+            }
+            // aura なども消したければここで return して描画を終える
+            g2.setComposite(original);
+            return;
+        }
+
+        g2.setComposite(original);
+
+        // aura の描画
         if (aura != null) {
             if (!(aura.getWorldX() == 0 && aura.getWorldY() == 0)) {
                 Player p = this;
@@ -4287,5 +4370,13 @@ public class Player extends Entity {
 
     public boolean hasLeftShield() {
         return getCurrentShield() != null && getCurrentShield().getType() instanceof ShieldType;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDeltaSeconds(double dt) {
+        this.lastDeltaSeconds = dt;
     }
 }

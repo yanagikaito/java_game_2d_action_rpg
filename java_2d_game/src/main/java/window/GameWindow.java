@@ -20,6 +20,7 @@ import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
 import key.KeyHandler;
+import player.SpriteManager;
 import save.LoadManager;
 import sound.SoundManager;
 import tile.Tile;
@@ -198,12 +199,34 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void retry() {
 
-        // 優先スロット：最後にロードしたスロットがあればそれを使う
-        int slotToTry = (lastLoadedSlot >= 1 && lastLoadedSlot <= 3) ? lastLoadedSlot : keyHandler.getCommandNum();
+        // --- 1) メニュー選択をスロット番号に変換 ---
+        int menuIndex = keyHandler.getCommandNum();
+        int selectedSlotFromMenu = -1;
 
+        // menuIndex が 0..2 の場合（メニュー0→スロット1）
+        if (menuIndex >= 0 && menuIndex <= 2) {
+            selectedSlotFromMenu = menuIndex + 1; // 0->1, 1->2, 2->3
+        }
+
+        // --- 2) 優先順位: ユーザー選択（有効） -> lastLoadedSlot（有効） -> デフォルト（1） ---
+        int slotToTry;
+        if (selectedSlotFromMenu >= 1 && selectedSlotFromMenu <= 3) {
+            slotToTry = selectedSlotFromMenu;
+        } else if (lastLoadedSlot >= 1 && lastLoadedSlot <= 3) {
+            slotToTry = lastLoadedSlot;
+        } else {
+            slotToTry = 1; // 最終フォールバック
+        }
+
+        System.out.println("DEBUG: retry trying slot " + slotToTry + " (menuIndex=" + menuIndex + ", lastLoadedSlot=" + lastLoadedSlot + ")");
+
+        // --- 3) 実際にロードを試みる ---
         if (LoadManager.hasSaveData(slotToTry)) {
             Entity loadedPlayer = LoadManager.loadPlayer(slotToTry, this);
             if (loadedPlayer != null) {
+                // 成功したら lastLoadedSlot を更新して状態を整える
+                lastLoadedSlot = slotToTry;
+
                 // マップやエンティティを再初期化してからプレイヤーを差し替える
                 if (currentMap != null) {
                     currentMap.resetChickensState();
@@ -218,11 +241,19 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 setGameState(GameState.PLAY);
                 System.out.println("Resuming from slot " + slotToTry + " Map" + loadedPlayer.getMapId());
                 return;
+            } else {
+                System.out.println("DEBUG: LoadManager.loadPlayer returned null for slot " + slotToTry);
             }
+        } else {
+            System.out.println("DEBUG: no save data in slot " + slotToTry);
         }
 
         // セーブデータなし or ロード失敗 → 新規ゲーム
         restartSafely();
+
+        // 新規開始時は lastLoadedSlot をクリアしない（必要なら 0 にする）
+        // lastLoadedSlot = 0;
+
         setGameState(GameState.PLAY);
         System.out.println("Starting a new game");
     }
@@ -578,7 +609,15 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 }
             }
             ui.getDamagePopupManager().updateAll();
+            ui.updateGameOver(deltaSeconds);
         }
+
+        if (gameState == GameState.GAME_OVER) {
+            player.setDeltaSeconds(deltaSeconds);
+            player.update(); // 死亡アニメ更新のため
+            ui.updateGameOver(deltaSeconds);
+        }
+
         if (gameState == GameState.PAUSE) {
 
         }

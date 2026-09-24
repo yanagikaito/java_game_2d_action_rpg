@@ -56,6 +56,7 @@ public class SpriteManager {
     /**
      * 画像を指定幅高さに高品質でリサイズするユーティリティ
      */
+
     private static BufferedImage resizeToTile(BufferedImage src, int w, int h) {
         BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = dst.createGraphics();
@@ -68,5 +69,48 @@ public class SpriteManager {
             g2.dispose();
         }
         return dst;
+    }
+
+    /**
+     * 指定ベース名の連番スプライトを読み込み、タイルサイズにリサイズして返す。
+     * 例: resourceBaseName="death_" count=9 -> "/player/death_0.png" ... "/player/death_8.png"
+     */
+
+    public BufferedImage[] getAnimationFrames(String resourceBaseName, int count) {
+        BufferedImage[] frames = new BufferedImage[count];
+        for (int i = 0; i < count; i++) {
+            String cacheKey = "anim_" + resourceBaseName + i;
+            // 既にキャッシュにあれば使う
+            BufferedImage cached = cache.get(cacheKey);
+            if (cached != null) {
+                frames[i] = cached;
+                continue;
+            }
+
+            String fileName = resourceBaseName + i + ".png";
+            String resourcePath = RESOURCE_DIR + fileName;
+            try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+                if (is == null) {
+                    System.err.println("SpriteManager: resource not found: " + resourcePath);
+                    frames[i] = null;
+                    continue;
+                }
+                BufferedImage raw = ImageIO.read(is);
+                if (raw == null) {
+                    System.err.println("SpriteManager: ImageIO.read returned null for " + resourcePath);
+                    frames[i] = null;
+                    continue;
+                }
+                int tile = FrameApp.getTileSize();
+                BufferedImage resized = resizeToTile(raw, tile, tile);
+                cache.put(cacheKey, resized);
+                frames[i] = resized;
+            } catch (Exception e) {
+                System.err.println("SpriteManager: failed to load " + resourcePath);
+                e.printStackTrace();
+                frames[i] = null;
+            }
+        }
+        return frames;
     }
 }
