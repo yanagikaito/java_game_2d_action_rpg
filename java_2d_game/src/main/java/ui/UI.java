@@ -84,6 +84,12 @@ public class UI {
 
     db.MapEvent ev = null;
 
+    private boolean showGameOver = false;
+    private double gameOverTimer = 0.0;
+    private final double gameOverTextDelay = 0.4; // 既存値に合わせる
+    private float redAlpha = 0f;
+    private final double redFadeDuration = 1.2; // 赤が最大になるまでの秒数
+
     public UI(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.tradeCtx = new TradeScreenContext(gameWindow, this);
@@ -565,42 +571,83 @@ public class UI {
         });
     }
 
+    public void showGameOver() {
+        if (showGameOver) return;
+        showGameOver = true;
+        gameOverTimer = 0.0;
+        redAlpha = 0f;
+    }
+
+    public void resetGameOver() {
+        showGameOver = false;
+        gameOverTimer = 0.0;
+        redAlpha = 0f;
+    }
+
+    /**
+     * 毎フレーム呼ぶ（GameWindow.update から deltaSeconds を渡す）
+     */
+    public void updateGameOver(double deltaSeconds) {
+        if (!showGameOver) return;
+
+        // タイマー増加
+        gameOverTimer += deltaSeconds;
+
+        // redAlpha を 0 -> 1 に線形に増やす（redFadeDuration 秒で最大）
+        if (redAlpha < 1.0f) {
+            redAlpha += (float) (deltaSeconds / redFadeDuration);
+            if (redAlpha > 1.0f) redAlpha = 1.0f;
+        }
+
+        // ここでテキスト選択やメニュー入力の更新を行う（必要なら）
+        // 例: if (gameOverTimer >= gameOverTextDelay) { handleMenuInput(); }
+    }
 
     public void drawGameOverScreen(Graphics2D g2) {
 
-        int tileSize = FrameApp.getTileSize();
-        g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRect(0, 0, FrameApp.getScreenWidth(), FrameApp.getScreenHeight());
+        if (!showGameOver) return;
 
-        int x;
-        int y;
-        String text;
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80f));
+        // 赤オーバーレイ
+        Composite oldComp = g2.getComposite();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, redAlpha * 0.6f));
+        g2.setColor(Color.RED);
+        g2.fillRect(0, 0, gameWindow.getWidth(), gameWindow.getHeight());
+        g2.setComposite(oldComp);
 
-        text = "ゲームオーバー";
-        g2.setColor(Color.BLACK);
-        x = getXForCenteredText(g2, text);
-        y = tileSize * 4;
-        g2.drawString(text, x, y);
+        if (gameOverTimer >= gameOverTextDelay) {
 
-        g2.setColor(Color.WHITE);
-        g2.drawString(text, x - 4, y - 4);
+            int tileSize = FrameApp.getTileSize();
 
-        g2.setFont(g2.getFont().deriveFont(50f));
-        text = "リトライ";
-        x = getXForCenteredText(g2, text);
-        y += tileSize * 4;
-        g2.drawString(text, x, y);
-        if (gameWindow.getKeyHandler().getCommandNum() == 0) {
-            g2.drawString(">", x - 40, y);
-        }
+            int x;
+            int y;
+            String text;
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80f));
 
-        text = "タイトルに戻る";
-        x = getXForCenteredText(g2, text);
-        y += 55;
-        g2.drawString(text, x, y);
-        if (gameWindow.getKeyHandler().getCommandNum() == 1) {
-            g2.drawString(">", x - 40, y);
+            text = "ゲームオーバー";
+            g2.setColor(Color.BLACK);
+            x = getXForCenteredText(g2, text);
+            y = tileSize * 4;
+            g2.drawString(text, x, y);
+
+            g2.setColor(Color.WHITE);
+            g2.drawString(text, x - 4, y - 4);
+
+            g2.setFont(g2.getFont().deriveFont(50f));
+            text = "リトライ";
+            x = getXForCenteredText(g2, text);
+            y += tileSize * 4;
+            g2.drawString(text, x, y);
+            if (gameWindow.getKeyHandler().getCommandNum() == 0) {
+                g2.drawString(">", x - 40, y);
+            }
+
+            text = "タイトルに戻る";
+            x = getXForCenteredText(g2, text);
+            y += 55;
+            g2.drawString(text, x, y);
+            if (gameWindow.getKeyHandler().getCommandNum() == 1) {
+                g2.drawString(">", x - 40, y);
+            }
         }
     }
 
