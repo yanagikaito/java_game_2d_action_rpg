@@ -6,7 +6,6 @@ import window.GameWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Connection;
@@ -46,7 +45,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[15];
+        tiles = new Tile[19];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -132,6 +131,22 @@ public class TileManager {
             tiles[14] = new Tile();
             tiles[14].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall.png"));
             tiles[14].collision = true;
+
+            tiles[15] = new Tile();
+            tiles[15].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall-corner-slanted-1.png"));
+            tiles[15].collision = true;
+
+            tiles[16] = new Tile();
+            tiles[16].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall-corner-slanted-2.png"));
+            tiles[16].collision = true;
+
+            tiles[17] = new Tile();
+            tiles[17].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall-corner-slanted-3.png"));
+            tiles[17].collision = true;
+
+            tiles[18] = new Tile();
+            tiles[18].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall-corner-slanted-4.png"));
+            tiles[18].collision = true;
 
         } catch (IOException e) {
             e.printStackTrace();
