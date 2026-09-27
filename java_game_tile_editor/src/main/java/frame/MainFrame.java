@@ -15,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.*;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +70,25 @@ public class MainFrame extends JFrame {
         eventTool.addActionListener(e -> canvas.setTool("event"));
         control.add(eventTool);
 
+        // --- タイルボタン群を横スクロール可能にする ---
+        JPanel tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        List<Integer> sortedIds = new ArrayList<>(tileImages.keySet());
+        Collections.sort(sortedIds);
+        for (int id : sortedIds) {
+            Image img = tileImages.get(id);
+            ImageIcon icon = new ImageIcon(img.getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+            JButton b = new JButton(icon);
+            // ラムダで安全に使うため final にする
+            final int tileId = id;
+            b.addActionListener(e -> canvas.setSelectedTile(tileId));
+            tilePanel.add(b);
+        }
+        JScrollPane tileScroll = new JScrollPane(tilePanel,
+                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        tileScroll.setPreferredSize(new Dimension(600, 60));
+        control.add(tileScroll);
+
         propertyPanel.setPreferredSize(new Dimension(260, 400));
         propertyPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         propertyPanel.setBackground(new Color(0xF7F7F7));
@@ -86,14 +107,6 @@ public class MainFrame extends JFrame {
                 }
             });
         });
-
-
-        for (int id : tileImages.keySet()) {
-            ImageIcon icon = new ImageIcon(tileImages.get(id).getScaledInstance(24, 24, 0));
-            JButton b = new JButton(icon);
-            b.addActionListener(e -> canvas.setSelectedTile(id));
-            control.add(b);
-        }
 
         selector = new JComboBox<>(new Integer[]{1, 2, 3, 4});
         selector.setSelectedItem(currentMapId);
@@ -178,7 +191,7 @@ public class MainFrame extends JFrame {
 
     private void loadTiles() {
 
-        for (int id = 0; id < 19; id++) {
+        for (int id = 0; id < 22; id++) {
 
             try (InputStream is = getClass().getResourceAsStream("/tiles/" + id + ".png")) {
                 if (is == null) {
