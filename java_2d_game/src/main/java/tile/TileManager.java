@@ -45,7 +45,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[19];
+        tiles = new Tile[22];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -129,7 +129,7 @@ public class TileManager {
             tiles[13].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/stairs-up.png"));
 
             tiles[14] = new Tile();
-            tiles[14].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall.png"));
+            tiles[14].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall_down.png"));
             tiles[14].collision = true;
 
             tiles[15] = new Tile();
@@ -147,6 +147,18 @@ public class TileManager {
             tiles[18] = new Tile();
             tiles[18].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall-corner-slanted-4.png"));
             tiles[18].collision = true;
+
+            tiles[19] = new Tile();
+            tiles[19].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall_left.png"));
+            tiles[19].collision = true;
+
+            tiles[20] = new Tile();
+            tiles[20].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall_right.png"));
+            tiles[20].collision = true;
+
+            tiles[21] = new Tile();
+            tiles[21].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall_up.png"));
+            tiles[21].collision = true;
 
         } catch (IOException e) {
             e.printStackTrace();
