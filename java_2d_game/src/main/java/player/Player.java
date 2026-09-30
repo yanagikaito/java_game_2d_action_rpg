@@ -2,6 +2,7 @@ package player;
 
 import db.PathManager;
 import entity.*;
+import entity.particle.WaterEffectManager;
 import entity.type.*;
 import frame.FrameApp;
 import game.GameOverAnimator;
@@ -92,7 +93,6 @@ public class Player extends Entity {
     private final int screenX;
     private final int screenY;
     private boolean moving = false;
-    private int pixelCounter = 0;
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
     private static final int FIREBALL_MANA_COST = 20;
@@ -108,7 +108,6 @@ public class Player extends Entity {
 
     // aura 用キャッシュ画像（事前レンダリング）
     private ObjAura aura;
-    private Entity currentLight;
 
     // 保存・表示する秒単位のプレイ時間
     private long playTimeSeconds = 0L;
@@ -139,9 +138,6 @@ public class Player extends Entity {
     private int lastAttemptStepY = 0;
     private boolean attemptedMoveThisFrame = false;
 
-    private boolean wasInWater = false;
-    private double lastSplashTime = 0.0; // 任意のクールダウン用
-    private final double splashCooldown = 0.5; // 秒（歩行中に断続的に出す場合）
     private double lastDeltaSeconds = 0.0;
 
     private GameOverAnimator gameOverAnimator;
@@ -152,6 +148,14 @@ public class Player extends Entity {
     private SpriteManager spriteManager;           // 注入または new でセット
     private GameOverManager gameOverManager;       // 遅延生成キャッシュ
     private boolean deathSequenceStarted = false;  // 二重開始防止
+
+    private WaterEffectManager waterEffectManager;
+    private boolean wasInWater = false;
+    private double lastSplashTime = 0.0;
+    private final double splashCooldown = 0.5;
+    private double lastStationarySplash = 0.0;
+    private final double stationarySplashCooldown = 0.8;
+    private int pixelCounter;
 
 
     /**
@@ -201,6 +205,7 @@ public class Player extends Entity {
         initHoldOffsets();
         setItems();
         setSpriteManager(spriteManager);
+        setWaterEffectManager(waterEffectManager);
     }
 
     private void initializeDefaultStats() {
@@ -635,6 +640,14 @@ public class Player extends Entity {
         return gameOverManager;
     }
 
+    private void ensureWaterEffectManager() {
+        if (this.waterEffectManager == null && gameWindow != null && gameWindow.getTileManager() != null) {
+            this.waterEffectManager = gameWindow.getTileManager().getWaterEffectManager();
+            System.out.println("Player: recovered waterEffectManager from TileManager -> " + this.waterEffectManager);
+        }
+    }
+
+
     /**
      * 毎フレーム呼び出される更新処理。
      * 無敵時間のカウントダウン、攻撃クールダウンの減算、攻撃・移動入力の判定、
@@ -683,6 +696,9 @@ public class Player extends Entity {
         int nearbyIndex = findNearbyObjectIndex();
         Entity nearby = getNearbyEntity(this);
 
+        // --- water エフェクト ---
+        lastSplashTime += deltaSeconds;
+
         int playerCenterX = getWorldX() + tileSize / 2;
         int playerCenterY = getWorldY() + tileSize / 2;
         int col = playerCenterX / tileSize;
@@ -690,24 +706,65 @@ public class Player extends Entity {
         int tileId = gameWindow.getTileManager().getTileIdAt(col, row);
         boolean nowInWater = (tileId == TileManager.WATER_TILE_ID);
 
-        // 接触開始で一度だけ発生
+        // デバッグログ（実行中は有効にしておく）
+        System.out.println("Player:update nowInWater=" + nowInWater + " wasInWater=" + wasInWater + " moving=" + moving + " lastSplashTime=" + lastSplashTime);
+
+        // 接触開始 一度だけ大きなスプラッシュ
         if (nowInWater && !wasInWater) {
             double splashX = col * tileSize + tileSize / 2.0;
             double splashY = row * tileSize + tileSize / 2.0;
-            gameWindow.getTileManager().spawnSplashAt(splashX, splashY, 6); // 6 は標準
+            System.out.println("Player: entering water at tile(" + col + "," + row + ") world(" + splashX + "," + splashY + ")");
+
+            // 粒子（大）
+            gameWindow.getTileManager().spawnSplashAt(splashX, splashY, 6);
+
+            // 足元アニメ（大）
+            ensureWaterEffectManager();
+            if (waterEffectManager != null) {
+                System.out.println("Player: calling waterEffectManager.spawnFoot (enter)");
+                waterEffectManager.spawnFoot(splashX, row * tileSize + tileSize, 0.8);
+            }
+
             lastSplashTime = 0.0;
+            lastStationarySplash = 0.0;
         }
 
-        // 断続的に出したい場合（歩行中）
-        lastSplashTime += 0.0;
-        if (nowInWater && wasInWater && lastSplashTime >= splashCooldown) {
-            double splashX = col * tileSize + tileSize / 2.0;
-            double splashY = row * tileSize + tileSize / 2.0;
-            gameWindow.getTileManager().spawnSplashAt(splashX, splashY, 3);
-            lastSplashTime = 0.0;
+        // 滞在中の断続的な小スプラッシュ
+        if (nowInWater && wasInWater) {
+            if (lastSplashTime >= splashCooldown) {
+                System.out.println("Player: periodic foot spawn (forced)");
+                double splashX = col * tileSize + tileSize / 2.0;
+                double splashY = row * tileSize + tileSize / 2.0;
+                System.out.println("Player: periodic splash at " + splashX + "," + splashY);
+                gameWindow.getTileManager().spawnSplashAt(splashX, splashY, 3);
+
+                if (waterEffectManager != null) {
+                    double wx = getWorldX() + tileSize / 2.0 + (Math.random() - 0.5) * 6.0;
+                    double wy = getWorldY() + tileSize + (Math.random() - 0.5) * 2.0;
+                    System.out.println("Player: periodic foot spawn while moving");
+                    waterEffectManager.spawnFoot(wx, wy, 0.3);
+                }
+
+                lastSplashTime = 0.0;
+            }
+        }
+
+        // 停止中の足元アニメ
+        if (nowInWater && waterEffectManager != null) {
+            lastStationarySplash += deltaSeconds;
+            if (lastStationarySplash >= stationarySplashCooldown) {
+                double wx = getWorldX() + tileSize / 2.0;
+                double wy = getWorldY() + tileSize;
+                System.out.println("Player: stationary foot spawn at " + wx + "," + wy);
+                waterEffectManager.spawnFoot(wx, wy, 0.4);
+                lastStationarySplash = 0.0;
+            }
+        } else if (moving) {
+            lastStationarySplash = 0.0;
         }
 
         wasInWater = nowInWater;
+
 
         // G の瞬間判定を使う（押しっぱなしで毎フレーム呼ばれない）
         if (isThrowKeyJustPressed()) {
@@ -4372,11 +4429,11 @@ public class Player extends Entity {
         return getCurrentShield() != null && getCurrentShield().getType() instanceof ShieldType;
     }
 
-    public boolean isDead() {
-        return isDead;
-    }
-
     public void setDeltaSeconds(double dt) {
         this.lastDeltaSeconds = dt;
+    }
+
+    public void setWaterEffectManager(WaterEffectManager manager) {
+        this.waterEffectManager = manager;
     }
 }

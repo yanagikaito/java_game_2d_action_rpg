@@ -4,6 +4,7 @@ import asset.AssetSetter;
 import collision.CollisionChecker;
 import db.MapModel;
 import entity.Entity;
+import entity.particle.WaterEffectManager;
 import environment.EnvironmentManager;
 import event.EventHandler;
 import frame.FrameApp;
@@ -20,7 +21,7 @@ import player.Player;
 import factory.FrameFactory;
 import frame.GameFrame;
 import key.KeyHandler;
-import player.SpriteManager;
+import player.ResourceLoader;
 import save.LoadManager;
 import sound.SoundManager;
 import tile.Tile;
@@ -31,6 +32,7 @@ import ui.UI;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -55,6 +57,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private KeyHandler keyHandler = new KeyHandler(this);
     private Player player = new Player(this, keyHandler);
     private TileManager tileManager = new TileManager(this);
+    private BufferedImage[] footFrames = ResourceLoader.loadFootFrames();
+    private WaterEffectManager waterEffectManager = new WaterEffectManager(footFrames);
     private CollisionChecker collisionChecker = new CollisionChecker(this);
     private AssetSetter assetSetter = new AssetSetter(this);
     private EventHandler eventHandler = new EventHandler(this);
@@ -88,9 +92,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private int lastLoadedSlot = -1;
     private int frameCounter = 0;
 
-    // デバッグ用フラグ（デフォルト false）
-    private boolean debugCollisionEnabled = false;
-
 
     /**
      * GameWindow のコンストラクタ。
@@ -122,6 +123,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setObjChest();
         assetSetter.setObjPot();
         assetSetter.setObjRock();
+        // TileManager と Player に同じインスタンスを渡す
+        tileManager.setWaterEffectManager(waterEffectManager);
+        player.setWaterEffectManager(waterEffectManager);
         gameState = GameState.TITLE;
         initMapBgm();
         getSoundmanager().stopBGM();
@@ -536,6 +540,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 tileManager.update(deltaSeconds);
             }
 
+            if (tileManager.getWaterEffectManager() != null) {
+                tileManager.getWaterEffectManager().update(deltaSeconds);
+            }
+
             player.update();
 
             for (Entity entity : npc) {
@@ -772,6 +780,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        int viewX = player.getWorldX() - player.getScreenX();
+        int viewY = player.getWorldY() - player.getScreenY();
+
         if (gameState == GameState.TITLE || gameState == GameState.LOAD) {
             getUi().draw(g2);
         } else {
@@ -789,6 +800,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
             if (!onTransition || !fadingOut) {
                 // 通常のワールド描画
                 tileManager.draw(g2);
+                if (tileManager.getWaterEffectManager() != null) {
+                    tileManager.getWaterEffectManager().draw(g2, viewX, viewY);
+                }
                 renderEntitiesAndObjects(g2);
                 environmentManager.draw(g2);
                 ui.draw(g2);

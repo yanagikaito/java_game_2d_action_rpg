@@ -1,6 +1,8 @@
 package tile;
 
 import db.DbManager;
+import entity.particle.WaterEffectManager;
+import entity.particle.WaterSplash;
 import frame.FrameApp;
 import window.GameWindow;
 
@@ -38,6 +40,9 @@ public class TileManager {
     private final double waterFrameTime = 0.12; // 秒
     private double waterOffsetX = 0.0;
     private double waterSpeed = 30.0; // px/sec（調整可）
+
+    private WaterEffectManager waterEffectManager;
+
 
     // パーティクル（しぶき）
     private final List<WaterSplash> waterParticles = new ArrayList<>();
@@ -191,6 +196,7 @@ public class TileManager {
      */
 
     public void update(double deltaSeconds) {
+        // 水アニメ更新
         if (waterFrames != null && waterFrames.length > 0) {
             waterAnimTime += deltaSeconds;
             int frameIndex = (int) (waterAnimTime / waterFrameTime) % waterFrames.length;
@@ -200,17 +206,17 @@ public class TileManager {
             waterOffsetX = (waterOffsetX + waterSpeed * deltaSeconds) % waterTexture.getWidth();
         }
 
-        // パーティクル更新
-        for (int i = 0; i < waterParticles.size(); i++) {
+        // パーティクル更新（後方から削除）
+        for (int i = waterParticles.size() - 1; i >= 0; i--) {
             WaterSplash p = waterParticles.get(i);
             p.update(deltaSeconds);
-            if (!p.isAlive()) {
-                waterParticles.remove(i--);
-            }
+            if (!p.isAlive()) waterParticles.remove(i);
         }
-        // パーティクル上限を維持
-        while (waterParticles.size() > maxParticles) {
-            waterParticles.remove(0);
+        while (waterParticles.size() > maxParticles) waterParticles.remove(0);
+
+        // WaterEffectManager があれば更新（foot エフェクト等）
+        if (waterEffectManager != null) {
+            waterEffectManager.update(deltaSeconds);
         }
     }
 
@@ -241,78 +247,73 @@ public class TileManager {
             }
         }
 
+        int tileSize = FrameApp.getTileSize();
         int viewX = gameWindow.getPlayer().getWorldX() - gameWindow.getPlayer().getScreenX();
         int viewY = gameWindow.getPlayer().getWorldY() - gameWindow.getPlayer().getScreenY();
         int viewW = gameWindow.getWidth();
         int viewH = gameWindow.getHeight();
 
-        // waterTexture が null でなければ、水タイル領域だけに描画する
+
+        // waterTexture があれば水領域だけにテクスチャを敷く
         if (waterTexture != null) {
             int texW = waterTexture.getWidth();
             int texH = waterTexture.getHeight();
-
-            // テクスチャのスクロール基準をワールド座標に合わせる
-            // こうすると隣接タイルで同じ基準が使われ、継ぎ目が出にくい
             double baseOffset = waterOffsetX;
 
-            // 各可視タイルを走査して、水タイルだけクリップして描画する
             Shape oldClip = g2.getClip();
             for (int row = 0; row < FrameApp.getMaxWorldRow(); row++) {
                 for (int col = 0; col < FrameApp.getMaxWorldCol(); col++) {
                     int tileNum = mapTileNum[col][row];
                     if (tileNum != WATER_TILE_ID) continue;
 
-                    int worldX = col * FrameApp.getTileSize();
-                    int worldY = row * FrameApp.getTileSize();
+                    int worldX = col * tileSize;
+                    int worldY = row * tileSize;
 
-                    // 画面外チェック（タイル全体が画面外ならスキップ）
-                    if (worldX + FrameApp.getTileSize() < viewX || worldX > viewX + viewW ||
-                            worldY + FrameApp.getTileSize() < viewY || worldY > viewY + viewH) {
-                        continue;
-                    }
+                    if (worldX + tileSize < viewX || worldX > viewX + viewW ||
+                            worldY + tileSize < viewY || worldY > viewY + viewH) continue;
 
-                    // タイルのスクリーン座標
                     int screenX = worldX - viewX;
                     int screenY = worldY - viewY;
 
-                    // クリップをタイル矩形に設定
-                    g2.setClip(screenX, screenY, FrameApp.getTileSize(), FrameApp.getTileSize());
+                    g2.setClip(screenX, screenY, tileSize, tileSize);
 
-                    // テクスチャをタイル矩形を覆うように繰り返し描画する
-                    // テクスチャの原点をワールド基準で揃えるため、描画開始Xを計算
-                    // world 基準のオフセット = (worldX + baseOffset) % texW を使うと継ぎ目が揃う
-                    int alignedX = (int) ((worldX + baseOffset) % texW);
-                    // 描画ループはスクリーン座標で行う。startX は screenX - alignedX から始める
+                    int alignedX = Math.floorMod((int) Math.round(worldX + baseOffset), texW);
                     int startX = screenX - alignedX - texW;
-                    for (int x = startX; x < screenX + FrameApp.getTileSize(); x += texW) {
-                        for (int y = screenY - texH; y < screenY + FrameApp.getTileSize(); y += texH) {
+                    for (int x = startX; x < screenX + tileSize; x += texW) {
+                        for (int y = screenY - texH; y < screenY + tileSize; y += texH) {
                             g2.drawImage(waterTexture, x, y, null);
                         }
                     }
-
-                    // クリップを元に戻さず次ループで上書きする（最後に復元）
                 }
             }
-            // クリップを元に戻す
             g2.setClip(oldClip);
         }
 
-        // パーティクル描画（しぶき）: ワールド→スクリーン変換して描画
+        // パーティクル描画（しぶき）
         for (WaterSplash p : waterParticles) {
             p.draw(g2, viewX, viewY);
         }
+
+        if (waterEffectManager != null) {
+            waterEffectManager.draw(g2, viewX, viewY);
+        }
     }
 
-    // 水しぶきをワールド座標で発生させる
     public void spawnSplashAt(double worldX, double worldY, int count) {
         for (int i = 0; i < count; i++) {
             double angle = Math.toRadians(60 + Math.random() * 60 - 30);
             double speed = 40 + Math.random() * 120;
             double vx = Math.cos(angle) * speed * (Math.random() < 0.5 ? -1 : 1);
             double vy = -Math.sin(angle) * speed;
-            waterParticles.add(new WaterSplash(worldX + Math.random() * FrameApp.getTileSize(),
-                    worldY + Math.random() * FrameApp.getTileSize(),
-                    vx, vy, 0.4 + Math.random() * 0.6));
+            double px = worldX + (Math.random() - 0.5) * FrameApp.getTileSize() * 0.5;
+            double py = worldY + (Math.random() - 0.5) * FrameApp.getTileSize() * 0.5;
+            double life = 0.4 + Math.random() * 0.6;
+
+            WaterSplash s = new WaterSplash(px, py, vx, vy, life);
+            waterParticles.add(s);
+
+            // デバッグログ
+            System.out.println("TileManager.spawnSplashAt added splash px=" + px + " py=" + py + " vx=" + vx + " vy=" + vy + " life=" + life);
         }
     }
 
@@ -333,41 +334,11 @@ public class TileManager {
         return mapTileNum;
     }
 
-    // WaterSplash 内部クラス
-    public static class WaterSplash {
-        double x, y;
-        double vx, vy;
-        double life, maxLife;
+    public void setWaterEffectManager(WaterEffectManager manager) {
+        this.waterEffectManager = manager;
+    }
 
-        public WaterSplash(double x, double y, double vx, double vy, double life) {
-            this.x = x;
-            this.y = y;
-            this.vx = vx;
-            this.vy = vy;
-            this.life = life;
-            this.maxLife = life;
-        }
-
-        public void update(double dt) {
-            life -= dt;
-            x += vx * dt;
-            y += vy * dt;
-            vy += 300 * dt; // 重力風
-        }
-
-        public void draw(Graphics2D g2, int viewX, int viewY) {
-            if (life <= 0) return;
-            float alpha = (float) Math.max(0, life / maxLife);
-            Composite oldComp = g2.getComposite();
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            int size = (int) (3 + (1 - alpha) * 8);
-            g2.setColor(new Color(180, 220, 255));
-            g2.fillOval((int) (x - viewX) - size / 2, (int) (y - viewY) - size / 2, size, size);
-            g2.setComposite(oldComp);
-        }
-
-        public boolean isAlive() {
-            return life > 0;
-        }
+    public WaterEffectManager getWaterEffectManager() {
+        return this.waterEffectManager;
     }
 }
