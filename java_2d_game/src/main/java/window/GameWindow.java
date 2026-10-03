@@ -35,6 +35,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static frame.FrameApp.*;
@@ -136,6 +138,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         mapBgmMap.put(TileManager.FOREST_TILE_ID, "sound/meadow_G110.wav");
         mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/meadow_G110.wav");
         mapBgmMap.put(TileManager.STAIRS_UP_TILE_ID, "sound/meadow_G110.wav");
+        mapBgmMap.put(TileManager.STAIRS_DOWN_TILE_ID, "sound/Beneath_the_Wet_Stone.wav");
         // 事前ロードしておく
         for (String path : mapBgmMap.values()) {
             getSoundmanager().preload(path);
@@ -183,13 +186,33 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
+
+    /**
+     * ゲームループを実行しているスレッドを安全に停止します。
+     * <p>
+     * 実行フラグの更新、スレッドへの割り込み通知、および最大1秒間の終了待機（join）を
+     * 順に行い、ゲームスレッドの安全かつ確実な停止を試みます。
+     * 複数のスレッドからの同時呼び出しや二重停止を防ぐため、同期化（{@code synchronized}）されています。
+     * </p>
+     *
+     * <p><strong>処理の流れ:</strong></p>
+     * <ol>
+     *   <li>{@code running} フラグを {@code false} に変更し、ゲームループへ終了要求を出します。</li>
+     *   <li>{@code gameThread} の参照をローカル変数へ退避後、フィールドを {@code null} にクリアします。</li>
+     *   <li>スレッドが存在する場合、{@link Thread#interrupt()} を呼び出してスリープやブロック状態を解除します。</li>
+     *   <li>{@link Thread#join(long)} により、最大 1,000 ミリ秒間スレッドの完全終了を待機します。</li>
+     *   <li>待機中に {@link InterruptedException} が発生した場合は、現在のスレッドの割り込みステータスを復元します。</li>
+     * </ol>
+     */
+
     public synchronized void stopGame() {
-        // gameThread を null にすることでループを抜けさせる
+        running = false;
         Thread t = gameThread;
         gameThread = null;
         if (t != null) {
+            t.interrupt();
             try {
-                t.join(1000); // 最大1秒待つ
+                t.join(1000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -644,35 +667,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
         int tileSize = FrameApp.getTileSize();
         currentMapIndex = newMap;
 
-        // BGM 切替（フェードアウト→新BGM再生）
-        String newBgm = getBgmForMap(currentMapIndex);
-        if (newBgm != null) {
-            // 既に同じBGMが流れているなら何もしない
-            if (!newBgm.equals(getSoundmanager().getCurrentBgmName())) {
-                // フェードアウト（非同期に実行される想定）
-                getSoundmanager().fadeOutBGM(500);
-                // SoundManager が非同期なら直接呼べばよい
-                // 少し遅延を置いて新BGMを再生（フェード完了後に再生）
-                try {
-                    Thread.sleep(520);
-                } catch (InterruptedException ignored) {
-                }
-                getSoundmanager().playBGM(newBgm);
-            }
-        }
-
+        changeBGM(currentMapIndex);
 
         if (currentMapIndex == TileManager.HUT_TILE_ID) {
 
-            Arrays.fill(npc, null);
-            Arrays.fill(monster, null);
-            Arrays.fill(obj, null);
-            Arrays.fill(iTile, null);
-            itemList.clear();
-            projectileList.clear();
-            particleList.clear();
-
-            getKeyHandler().clearAllKeys();
+            clearSceneState();
             tileManager.loadMap(2);
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 29);
@@ -684,8 +683,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         } else if (currentMapIndex == TileManager.MEADOW_TILE_ID) {
 
-            Arrays.fill(npc, null);
-            getKeyHandler().clearAllKeys();
+            clearSceneState();
             tileManager.loadMap(1);
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 23);
@@ -699,22 +697,15 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjChest();
             assetSetter.setObjPot();
             assetSetter.setObjRock();
+            assetSetter.setObjLantern();
 
             repaint();
 
         } else if (currentMapIndex == TileManager.FOREST_TILE_ID) {
 
-            Arrays.fill(npc, null);
-            Arrays.fill(monster, null);
-            Arrays.fill(obj, null);
-            Arrays.fill(iTile, null);
-            itemList.clear();
-            projectileList.clear();
-            particleList.clear();
-
-            getKeyHandler().clearAllKeys();
+            clearSceneState();
             tileManager.loadMap(3);
-            startMapTransition(2);
+            startMapTransition(3);
             getPlayer().setWorldX(tileSize * 2);
             getPlayer().setWorldY(tileSize * 48);
 
@@ -724,15 +715,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         } else if (currentMapIndex == TileManager.STAIRS_DOWN_TILE_ID) {
 
-            Arrays.fill(npc, null);
-            Arrays.fill(monster, null);
-            Arrays.fill(obj, null);
-            Arrays.fill(iTile, null);
-            itemList.clear();
-            projectileList.clear();
-            particleList.clear();
-
-            getKeyHandler().clearAllKeys();
+            clearSceneState();
             tileManager.loadMap(4);
             startMapTransition(4);
             getPlayer().setWorldX(tileSize * 48);
@@ -743,8 +726,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         } else if (currentMapIndex == TileManager.STAIRS_UP_TILE_ID) {
 
-            Arrays.fill(npc, null);
-            getKeyHandler().clearAllKeys();
+            clearSceneState();
             tileManager.loadMap(1);
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 10);
@@ -759,6 +741,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjChest();
             assetSetter.setObjPot();
             assetSetter.setObjRock();
+            assetSetter.setObjLantern();
 
             repaint();
         }
@@ -1274,23 +1257,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     /**
-     * モンスター配列にエンティティを登録
-     * 空きスロットがなければ登録せずにログを出力
-     *
-     * @param e 登録するモンスターエンティティ
-     */
-
-    public void registerMonster(Entity e) {
-        for (int i = 0; i < monster.length; i++) {
-            if (monster[i] == null) {
-                monster[i] = e;
-                return;
-            }
-        }
-        System.out.println("registerMonster：空きスロットがありません");
-    }
-
-    /**
      * マップ上の全モンスター参照をクリア
      * 配列内の参照をすべて null に設定
      */
@@ -1327,6 +1293,41 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
         return false;
+    }
+
+    /**
+     * シーン上のすべてのエンティティ、ドロップアイテム、エフェクト、キー入力を一括クリアします。
+     */
+
+    private void clearSceneState() {
+        Arrays.fill(npc, null);
+        Arrays.fill(monster, null);
+        Arrays.fill(obj, null);
+        Arrays.fill(iTile, null);
+
+        if (itemList != null) itemList.clear();
+        if (projectileList != null) projectileList.clear();
+        if (particleList != null) particleList.clear();
+
+        getKeyHandler().clearAllKeys();
+    }
+
+    /**
+     * BGMを非同期でフェードアウトし、指定時間後に新曲を再生します（Thread.sleep回避）。
+     */
+
+    private void changeBGM(int mapIndex) {
+        String newBgm = getBgmForMap(mapIndex);
+        if (newBgm == null || newBgm.equals(getSoundmanager().getCurrentBgmName())) {
+            return;
+        }
+
+        getSoundmanager().fadeOutBGM(500);
+
+        // スレッドを停止させずに 520ms 後に新BGMを開始
+        Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+            getSoundmanager().playBGM(newBgm);
+        }, 520, TimeUnit.MILLISECONDS);
     }
 
     /**
