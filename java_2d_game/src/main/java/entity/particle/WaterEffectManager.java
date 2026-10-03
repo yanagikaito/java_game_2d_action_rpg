@@ -62,9 +62,6 @@ public class WaterEffectManager {
     }
 
     public void draw(Graphics2D g2, int viewX, int viewY) {
-        System.out.println("WaterEffectManager.draw called; activeFeet=" + activeFeet.size() + " activeSplashes=" + activeSplashes.size());
-        g2.setColor(Color.RED);
-        g2.fillRect(10, 10, 6, 6);
         for (WaterSplash s : activeSplashes) s.draw(g2, viewX, viewY);
         for (WaterFootEffect f : activeFeet) f.draw(g2, viewX, viewY);
     }
