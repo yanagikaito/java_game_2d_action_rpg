@@ -1467,7 +1467,7 @@ public class Player extends Entity {
         int tileSize = FrameApp.getTileSize();
         double distance = tiles * tileSize;
 
-        // ObjPot の重力（正の値で扱う）
+        // 重力（正の値で扱う）
         double gPot = Math.abs(heldChicken.getGravity());
 
         // プレイヤーの向き（"left","right","up","down" を返す）
@@ -1484,31 +1484,31 @@ public class Player extends Entity {
             case "left" -> {
                 vx = -baseSpeed;
                 vy = -Math.abs(baseSpeed) * 0.25; // 少し上向きに見せる
-                initialVz = 8.0;
+                initialVz = 3.0;
             }
             case "right" -> {
                 vx = baseSpeed;
                 vy = -Math.abs(baseSpeed) * 0.25;
-                initialVz = 8.0;
+                initialVz = 3.0;
             }
             case "up" -> {
-                // 上投げ：垂直成分を強めに、画面Y速度は小さめ（上方向は負）
+                // 上投げ：垂直成分を強めに、画面Y速度は小さめ
                 vx = 0.0;
                 vy = -baseSpeed * 1.5;
-                initialVz = 12.0;
+                initialVz = 3.0;
             }
             case "down" -> {
-                // 下投げ：画面Y方向に下向きの速度を与え、垂直成分は下向き（地面に叩きつける）
+                // 下投げ
                 vx = 0.0;
                 vy = baseSpeed * 0.6;
-                initialVz = 6.0; // 下向きに押し出す（正は下）
+                initialVz = 3.0;
             }
             default -> {
-                // フェールセーフ：左右どちらかに投げる
+                // フェールセーフ
                 if ("left".equals(getDirection())) vx = -baseSpeed;
                 else vx = baseSpeed;
                 vy = -Math.abs(baseSpeed) * 0.25;
-                initialVz = -8.0;
+                initialVz = 3.0;
             }
         }
 
@@ -1532,25 +1532,26 @@ public class Player extends Entity {
 
         // 垂直成分（z/vz）と影を設定するためのメソッドを呼ぶ
         heldChicken.setHasShadow(true);
-        heldChicken.setVerticalVelocity(tiles);
+
+        // initialVz をセットする
+        heldChicken.setVerticalVelocity(initialVz);
+
         // 水平成分は既存の setVelocity を利用
         heldChicken.setVelocity(vx, vy);
 
-        // ワールドに戻す
-        boolean added = false;
-        try {
-            added = gameWindow.addObject(heldChicken);
-        } catch (Throwable ignored) {
-        }
-        if (!added) {
-            Entity[] arr = gameWindow.getMonster();
-            for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == null) {
-                    arr[i] = heldChicken;
-                    added = true;
-                    break;
-                }
+        // 着地後 monster配列 に戻す！
+        boolean addedToMonster = false;
+        Entity[] monsters = gameWindow.getMonster();
+        for (int i = 0; i < monsters.length; i++) {
+            if (monsters[i] == null) {
+                monsters[i] = heldChicken;
+                addedToMonster = true;
+                break;
             }
+        }
+
+        if (!addedToMonster) {
+            System.out.println("[WARN] Monster array is full, cannot add thrown chicken back!");
         }
 
         // 所持解除と状態更新
@@ -1558,7 +1559,7 @@ public class Player extends Entity {
         holding = false;
         state = PlayerState.THROW;
 
-        // 投げた直後の誤拾い防止（pickupCooldown と入力消費があるなら設定）
+        // 投げた直後の誤拾い防止
         this.pickupCooldown = PICKUP_COOLDOWN_FRAMES;
         gameWindow.getKeyHandler().consumeThrowOnce();
     }
