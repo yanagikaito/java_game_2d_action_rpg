@@ -60,8 +60,6 @@ public class NpcChicken extends Entity {
 
     private java.util.List<Point> route = null; // ワールド座標（ピクセル）で保持するリスト
     private int routeIndex = 0;
-    private boolean followingRoute = false;
-    private boolean useAStarOnHit = false; // 攻撃時に A* を実行して経路を作るなら true
 
     // 1体あたりのダメージ
     private int attackDamage = 2;
@@ -225,6 +223,8 @@ public class NpcChicken extends Entity {
 
                 vx = 0.0;
                 vy = 0.0;
+
+                checkIfInCoop();
 
                 int tileSize = FrameApp.getTileSize();
 
@@ -617,18 +617,6 @@ public class NpcChicken extends Entity {
         return null;
     }
 
-    // マップ読み込み時の初期化例
-    public void preloadRoutesForMap(int mapId, int basePathId, int maxStarts) {
-        for (int i = 0; i < maxStarts; i++) {
-            int encodedPathId = basePathId * 100 + i;
-            List<Point> tiles = PathManager.loadPath(mapId, encodedPathId);
-            if (tiles != null && !tiles.isEmpty()) {
-                NpcChicken.routeCache.put(encodedPathId, tiles);
-                System.out.println("[PRELOAD] cached pathId=" + encodedPathId + " size=" + tiles.size());
-            }
-        }
-    }
-
     // 投げるときの向き・フレーム別スプライトを返す（存在しなければ null を返す）
     public BufferedImage getThrowSprite(String dir, int frame) {
         // ここでは sprites の向きインデックスとフレームをそのまま使う例
@@ -656,6 +644,34 @@ public class NpcChicken extends Entity {
         setZ(0);
         setAlive(false);
         setCollision(false);
+    }
+
+    /**
+     * ニワトリがかごエリアに着地したか判定し、入っていたら自分を消去する
+     */
+
+    private void checkIfInCoop() {
+
+        int tileSize = FrameApp.getTileSize();
+
+        // 現在のニワトリのマス座標（ピクセル座標 ÷ タイルサイズ）
+        int col = getWorldX() / tileSize;
+        int row = getWorldY() / tileSize;
+
+        // かごの内側（床）の範囲
+        int coopMinX = 36;
+        int coopMaxX = 45;
+        int coopMinY = 3;
+        int coopMaxY = 11;
+
+        // ニワトリがかごの範囲内に入ったか？
+        if (col >= coopMinX && col <= coopMaxX && row >= coopMinY && row <= coopMaxY) {
+            if (!inCoop) {
+                inCoop = true;
+                setSpeed(1);
+                setFollowing(false);
+            }
+        }
     }
 
     public synchronized void setRoute(List<Point> worldRoute) {
@@ -768,12 +784,7 @@ public class NpcChicken extends Entity {
         return beingHeld;
     }
 
-    public Player getHolder() {
-        return holder;
-    }
-
-    public void setRouteIds(int mapId, int pathId) {
-        this.routeMapId = mapId;
-        this.routePathId = pathId;
+    public boolean isInCoop() {
+        return inCoop;
     }
 }

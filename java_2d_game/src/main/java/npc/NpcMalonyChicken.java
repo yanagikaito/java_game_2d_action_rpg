@@ -226,10 +226,6 @@ public class NpcMalonyChicken extends Entity {
         getGameWindow().getUi().setCurrentDialogueMessage("そう、またいつでも来てね。");
     }
 
-    private String generateEventId() {
-        return "ev_" + Long.toHexString(System.currentTimeMillis());
-    }
-
     /**
      * クエスト完了判定（外部から呼ぶ想定）または NPC 自身がチェックして呼ぶ
      * 例: マップのかご判定処理が 10 羽を検出したらこのメソッドを呼ぶ

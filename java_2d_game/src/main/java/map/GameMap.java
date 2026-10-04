@@ -1,5 +1,6 @@
 package map;
 
+import db.MapEvent;
 import entity.Entity;
 import npc.NpcChicken;
 import window.GameWindow;
@@ -99,7 +100,17 @@ public class GameMap {
         if (monsters == null) return 0;
         for (Entity e : monsters) {
             if (e == null) continue;
-            if (cls.isInstance(e)) count++;
+
+            if (cls.isInstance(e)) {
+                // もし NpcChicken なら、かごに入っていないものだけカウントする
+                if (e instanceof NpcChicken) {
+                    if (!((NpcChicken) e).isInCoop()) {
+                        count++;
+                    }
+                } else {
+                    count++;
+                }
+            }
         }
         return count;
     }
