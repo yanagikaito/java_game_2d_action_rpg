@@ -562,6 +562,18 @@ public class UI {
 
     public void returnToTitleFromGameOver() {
 
+        // キー入力状態をリセット（エンターキーの持ち越しを防ぐ）
+        if (gameWindow.getKeyHandler() != null) {
+            gameWindow.getKeyHandler().setPlayerEnter(false);
+            gameWindow.getKeyHandler().clearAllKeys();
+        }
+
+        // UIのカーソル位置（commandNum）を初期化（一番上にする）
+        if (gameWindow.getUI() != null) {
+            gameWindow.getKeyHandler().setCommandNum(0);
+            gameWindow.setGameState(GameState.TITLE);
+        }
+
         // ゲーム側の状態をタイトルに切り替え
         gameWindow.setGameState(GameState.TITLE);
 

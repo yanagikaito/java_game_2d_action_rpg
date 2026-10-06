@@ -29,7 +29,6 @@ public class LoadConfirmState implements LoadScreenState {
 
     @Override
     public void handleKey(int code) {
-
     }
 
     @Override
@@ -41,6 +40,7 @@ public class LoadConfirmState implements LoadScreenState {
         if (!started) {
             started = true;
             System.out.println("DEBUG: LoadConfirmState.starting startLoad()");
+            ctx.setState(new LoadMenuState(ctx));
             startLoad();
         }
 
@@ -132,13 +132,25 @@ public class LoadConfirmState implements LoadScreenState {
                             ctx.gw().setLoadedPlayTimeSeconds(-1L);
                         }
 
-                        // プレイヤーをゲームウィンドウにセットしてプレイ状態へ
-                        ctx.gw().setPlayer((Player) finalLoaded);
-                        ctx.gw().setGameState(GameState.PLAY);
+                        if (finalOk && finalLoaded instanceof Player) {
 
-                        try {
+                            // ★ ロード成功時にマップ上のオブジェクトやランタンを再配置・復元する
+                            ctx.gw().resetGameWorld();
+
+                            // プレイヤーデータのセット
+                            ctx.gw().setPlayer((Player) finalLoaded);
+
+                            ctx.gw().setLastLoadedSlot(slot);
+                            if (ctx.gw().getInitialLoadedSlot() < 0) {
+                                ctx.gw().setInitialLoadedSlot(slot);
+                            }
+
+                            if (ctx.kh() != null) {
+                                ctx.kh().setPlayerEnter(false);
+                            }
+
+                            ctx.gw().setGameState(GameState.PLAY);
                             ctx.gw().repaint();
-                        } catch (Throwable ignored) {
                         }
 
                     } else {

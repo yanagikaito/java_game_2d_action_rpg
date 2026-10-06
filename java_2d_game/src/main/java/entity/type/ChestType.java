@@ -4,7 +4,7 @@ public record ChestType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 13;
+        return 14;
     }
 
     @Override

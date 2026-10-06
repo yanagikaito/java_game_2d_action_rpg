@@ -91,7 +91,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private long lastUpdateTimeNano;
     private long loadedPlayTimeSeconds = -1L;
     // 最後にロードしたスロット（未ロードなら -1）
-    private int lastLoadedSlot = -1;
+    private int initialLoadedSlot = -1; // 最初にロードしたスロット（未設定は -1）
+    private int lastLoadedSlot = -1;    // 直前にロード/セーブしたスロット
     private int frameCounter = 0;
 
 
@@ -113,24 +114,45 @@ public class GameWindow extends JPanel implements Window, Runnable {
      */
 
     public void setUpGame() {
-
         lastUpdateTimeNano = System.nanoTime();
-        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
-        assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
-        assetSetter.setMonster();
-        assetSetter.setInteractiveTile();
-        environmentManager.setUp();
-        assetSetter.setObjAxe();
-        assetSetter.setObjLantern();
-        assetSetter.setObjChest();
-        assetSetter.setObjPot();
-        assetSetter.setObjRock();
-        // TileManager と Player に同じインスタンスを渡す
+
+        // オブジェクト類を初期化
+        resetGameWorld();
+
         tileManager.setWaterEffectManager(waterEffectManager);
         player.setWaterEffectManager(waterEffectManager);
         gameState = GameState.TITLE;
         initMapBgm();
         getSoundmanager().stopBGM();
+    }
+
+    /**
+     * マップ上のオブジェクト、NPC、モンスター、環境を再配置・初期化します。
+     */
+
+    public void resetGameWorld() {
+        if (currentMap != null) {
+            currentMap.resetChickensState();
+            currentMap.removeAllChickens();
+        }
+
+        // NPC・モンスター・ギミックの再配置
+        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+        assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
+        assetSetter.setMonster();
+        assetSetter.setInteractiveTile();
+
+        // 拾えるアイテム・オブジェクトの再配置
+        assetSetter.setObjAxe();
+        assetSetter.setObjLantern();
+        assetSetter.setObjChest();
+        assetSetter.setObjPot();
+        assetSetter.setObjRock();
+
+        // 環境・照明のセットアップ
+        if (environmentManager != null) {
+            environmentManager.setUp();
+        }
     }
 
     private void initMapBgm() {
@@ -224,30 +246,29 @@ public class GameWindow extends JPanel implements Window, Runnable {
      * セーブデータがあればそこから再開、なければ新規ゲーム。
      */
 
+    /**
+     * ゲームオーバー後のリトライ処理。
+     * セーブデータがあればそこから再開、なければ新規ゲーム。
+     */
+
     public void retry() {
 
-        // --- 1) メニュー選択をスロット番号に変換 ---
+        // メニュー選択をスロット番号に変換
         int menuIndex = keyHandler.getCommandNum();
-        int selectedSlotFromMenu = -1;
 
-        // menuIndex が 0..2 の場合（メニュー0→スロット1）
-        if (menuIndex >= 0 && menuIndex <= 2) {
-            selectedSlotFromMenu = menuIndex + 1; // 0->1, 1->2, 2->3
-        }
-
-        // --- 2) 優先順位: ユーザー選択（有効） -> lastLoadedSlot（有効） -> デフォルト（1） ---
+        // 優先順位: ユーザー選択（有効: 0..2） -> lastLoadedSlot（有効: 0..2） -> デフォルト（0)
         int slotToTry;
-        if (selectedSlotFromMenu >= 1 && selectedSlotFromMenu <= 3) {
-            slotToTry = selectedSlotFromMenu;
-        } else if (lastLoadedSlot >= 1 && lastLoadedSlot <= 3) {
+        if (lastLoadedSlot >= 0 && lastLoadedSlot <= 2) {
             slotToTry = lastLoadedSlot;
+        } else if (initialLoadedSlot >= 0 && initialLoadedSlot <= 2) {
+            slotToTry = initialLoadedSlot;
         } else {
-            slotToTry = 1; // 最終フォールバック
+            slotToTry = 0;
         }
 
         System.out.println("DEBUG: retry trying slot " + slotToTry + " (menuIndex=" + menuIndex + ", lastLoadedSlot=" + lastLoadedSlot + ")");
 
-        // --- 3) 実際にロードを試みる ---
+        // 実際にロードを試みる
         if (LoadManager.hasSaveData(slotToTry)) {
             Entity loadedPlayer = LoadManager.loadPlayer(slotToTry, this);
             if (loadedPlayer != null) {
@@ -277,9 +298,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         // セーブデータなし or ロード失敗 → 新規ゲーム
         restartSafely();
-
-        // 新規開始時は lastLoadedSlot をクリアしない（必要なら 0 にする）
-        // lastLoadedSlot = 0;
 
         setGameState(GameState.PLAY);
         System.out.println("Starting a new game");
@@ -1348,5 +1366,21 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public int getFrameCounter() {
         return frameCounter;
+    }
+
+    public int getInitialLoadedSlot() {
+        return initialLoadedSlot;
+    }
+
+    public void setInitialLoadedSlot(int initialLoadedSlot) {
+        this.initialLoadedSlot = initialLoadedSlot;
+    }
+
+    public int getLastLoadedSlot() {
+        return lastLoadedSlot;
+    }
+
+    public void setLastLoadedSlot(int lastLoadedSlot) {
+        this.lastLoadedSlot = lastLoadedSlot;
     }
 }
