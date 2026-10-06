@@ -3,11 +3,10 @@ package entity.type;
 public sealed interface EntityType permits PlayerType, NpcType, MonsterType, ChickenType,
         SwordType, AxeType, ShieldType,
         RedPotionType, GreenPotionType,
-        BluePotionType,
-        PickupOnlyType, BombType,
+        BluePotionType, BombType,
+        LanternType, PickupOnlyType,
         BossMonsterType, ChestType,
-        PotType, RockType,
-        LanternType {
+        PotType, RockType {
 
     int typeId();
 

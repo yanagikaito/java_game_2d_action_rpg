@@ -208,6 +208,7 @@ public class LoadManager {
             case 8 -> new GreenPotionType();
             case 9 -> new BluePotionType();
             case 10 -> new BombType();
+            case 11 -> new LanternType();
             default -> null;
         };
     }

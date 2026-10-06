@@ -4,7 +4,7 @@ public record BossMonsterType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 12;
+        return 13;
     }
 
     @Override

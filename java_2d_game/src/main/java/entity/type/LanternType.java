@@ -4,7 +4,7 @@ public record LanternType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 16;
+        return 11;
     }
 
     @Override
