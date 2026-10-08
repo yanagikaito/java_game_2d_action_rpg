@@ -191,7 +191,7 @@ public class MainFrame extends JFrame {
 
     private void loadTiles() {
 
-        for (int id = 0; id < 22; id++) {
+        for (int id = 0; id < 23; id++) {
 
             try (InputStream is = getClass().getResourceAsStream("/tiles/" + id + ".png")) {
                 if (is == null) {

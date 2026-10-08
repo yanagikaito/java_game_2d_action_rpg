@@ -52,6 +52,8 @@ public class Player extends Entity {
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     private static final String[] GUARD_DIRECTIONS = {"guardUp", "guardDown", "guardLeft", "guardRight"};
     private static final String[] AXE_DIRECTIONS = {"axeUp", "axeDown", "axeLeft", "axeRight"};
+    private static final int SLEEP_SPRITE_COUNT = 2;
+    private static final String[] SLEEP_DIRECTIONS = {"down"};
     private static final int SPRITE_COUNT = 3;
     private static final int PICKUP_SPRITE_COUNT = 4;
     private static final int SPRITE_ANIMATION_THRESHOLD = 10;
@@ -64,6 +66,8 @@ public class Player extends Entity {
     private static final int DEFAULT_INVENTORY_CAPACITY = 20;
     private static final int ATTACK_ANIMATION_FRAMES = SPRITE_ATTACKING_THRESHOLD_NUM3;
     private static final int GUARD_ANIMATION_FRAMES = SPRITE_GUARDING_THRESHOLD_NUM3;
+    private static final int KNOCKBACK_FRAMES = 10;
+    private static final double KNOCKBACK_SPEED = 4.0;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] guardSprites = new BufferedImage[GUARD_DIRECTIONS.length][SPRITE_COUNT];
@@ -71,6 +75,8 @@ public class Player extends Entity {
     private BufferedImage[][] pickupSprites = new BufferedImage[DIRECTIONS.length][PICKUP_SPRITE_COUNT];
     private BufferedImage[][] currentAttackSprites;
     private BufferedImage[][] currentGuardSprites;
+    private BufferedImage[][] sleepImage1 = new BufferedImage[SLEEP_DIRECTIONS.length][SLEEP_SPRITE_COUNT];
+    private BufferedImage[][] sleepImage2 = new BufferedImage[SLEEP_DIRECTIONS.length][SLEEP_SPRITE_COUNT];
     private int characterTypeId;
     private static final long FIRE_COOLDOWN_MS = 1000;
     private long lastSnapTime = 0;
@@ -87,24 +93,21 @@ public class Player extends Entity {
     private boolean blockingLeft = false;
     private boolean lastThrowKey = false;
     private boolean lightUpdated = false;
+    private boolean isSleeping = false;
+    private boolean moving = false;
+    private boolean loaded = false;
 
     private GameWindow gameWindow;
     private KeyHandler keyHandler;
     private final int screenX;
     private final int screenY;
-    private boolean moving = false;
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
     private static final int FIREBALL_MANA_COST = 20;
     private int talkNpcIndex = -1;
-    private boolean loaded = false;
-
+    private double sleepTimer = 0.0;
     private int knockbackTimer = 0;
-
     private double knockBackDx, knockBackDy;
-
-    private static final int KNOCKBACK_FRAMES = 10;
-    private static final double KNOCKBACK_SPEED = 4.0;
 
     // aura 用キャッシュ画像（事前レンダリング）
     private ObjAura aura;
@@ -202,6 +205,7 @@ public class Player extends Entity {
         loadAllAttackSprites();
         loadGuardSprites();
         loadPickupSprites();
+        loadSleepSprites();
         initHoldOffsets();
         setItems();
         setSpriteManager(spriteManager);
@@ -436,6 +440,28 @@ public class Player extends Entity {
         }
     }
 
+    public void loadSleepSprites() {
+
+        int tileSize = FrameApp.getTileSize();
+
+        // 睡眠
+        for (int i = 0; i < SLEEP_DIRECTIONS.length; i++) {
+            for (int j = 0; j < SLEEP_SPRITE_COUNT; j++) {
+                String path = "player/image-sleep-" + SLEEP_DIRECTIONS[i] + "-" + (i + 1) + ".gif";
+                try {
+                    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    if (i == 0 || i == 1) {
+                        sleepImage1[i][j] = createImage(img, tileSize, tileSize);
+                    } else {
+                        sleepImage2[i][j] = createImage(img, tileSize, tileSize);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /**
      * 装備中の武器タイプに応じて、攻撃スプライト配列を剣用か斧用に切り替える。
      */
@@ -657,8 +683,16 @@ public class Player extends Entity {
     @Override
     public void update() {
 
+        int tileSize = FrameApp.getTileSize();
+        int playerCenterX = getWorldX() + tileSize / 2;
+        int playerCenterY = getWorldY() + tileSize / 2;
+        int col = playerCenterX / tileSize;
+        int row = playerCenterY / tileSize;
+        int tileId = gameWindow.getTileManager().getTileIdAt(col, row);
+
         long now = System.nanoTime();
         double deltaSeconds = (now - lastUpdateTimeNano) / 1_000_000_000.0;
+
         // 安全のため上限を設ける（極端なフレーム落ち対策）
         if (deltaSeconds > 0.5) deltaSeconds = 0.5;
         lastUpdateTimeNano = now;
@@ -675,6 +709,12 @@ public class Player extends Entity {
             return;
         }
 
+        if (isSleeping) {
+            System.out.println("isSleeping = " + isSleeping);
+            updateSleeping(deltaSeconds);
+            return;
+        }
+
         if (pickupCooldown > 0) pickupCooldown--;
 
         updateAura(500);
@@ -683,15 +723,8 @@ public class Player extends Entity {
         moving = false;
         setCollision(false);
 
-        int tileSize = FrameApp.getTileSize();
         int playerGridX = getWorldX() / tileSize;
         int playerGridY = getWorldY() / tileSize;
-
-        gameWindow.getCollisionChecker().checkTile(this);
-        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
-        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
-        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
-        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
 
         int nearbyIndex = findNearbyObjectIndex();
         Entity nearby = getNearbyEntity(this);
@@ -699,11 +732,6 @@ public class Player extends Entity {
         // --- water エフェクト ---
         lastSplashTime += deltaSeconds;
 
-        int playerCenterX = getWorldX() + tileSize / 2;
-        int playerCenterY = getWorldY() + tileSize / 2;
-        int col = playerCenterX / tileSize;
-        int row = playerCenterY / tileSize;
-        int tileId = gameWindow.getTileManager().getTileIdAt(col, row);
         boolean nowInWater = (tileId == TileManager.WATER_TILE_ID);
 
         // デバッグログ（実行中は有効にしておく）
@@ -893,6 +921,8 @@ public class Player extends Entity {
         // 入力受付
         processInput();
 
+        gameWindow.getEventHandler().checkEvent();
+
         // ここでエンター押下をチェックして近接オブジェクトに対する処理を行う
         handleInteractInput(nearbyIndex);
 
@@ -995,6 +1025,26 @@ public class Player extends Entity {
             updateTileMovement();
         }
         updateInvincibility();
+    }
+
+    public void startSleeping() {
+        this.isSleeping = true;
+        this.sleepTimer = 0.0;
+
+        // 寝始めた瞬間にHP・MPを全回復する
+        this.setLife(getMaxLife());
+        this.setMana(getMaxMana());
+    }
+
+    private void updateSleeping(double deltaSeconds) {
+
+        sleepTimer += deltaSeconds;
+
+        // 約3秒（3.0）経ったら自動的に起きる
+        if (sleepTimer >= 3.0) {
+            isSleeping = false;
+            sleepTimer = 0.0;
+        }
     }
 
     /**
@@ -2529,13 +2579,13 @@ public class Player extends Entity {
                 setInvincible(true);
             } else {
             }
-
-            int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
-            damageInteractiveTile(iTileIndex);
-
-            int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
-            gameWindow.changeMap(collidedTileId);
         }
+
+        int iTileIndex = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+        damageInteractiveTile(iTileIndex);
+
+        int collidedTileId = gameWindow.getTileManager().getTileIdAt(playerGridX, playerGridY);
+        gameWindow.changeMap(collidedTileId);
     }
 
     /**
@@ -3589,6 +3639,36 @@ public class Player extends Entity {
 
         g2.setComposite(original);
 
+        // ★ 睡眠中の描画
+        if (isSleeping) {
+            // 1. 現在の向き（direction）から方向のインデックス（0〜3）を取得
+            int dirIndex = 0;
+            for (int i = 0; i < SLEEP_DIRECTIONS.length; i++) {
+                if (SLEEP_DIRECTIONS[i].equalsIgnoreCase(getDirection())) {
+                    dirIndex = i;
+                    break;
+                }
+            }
+
+            // 2. 0.5秒ごとにアニメーションコマ（0 または 1）を切り替え
+            int spriteIndex = (sleepTimer % 1.0 < 0.5) ? 0 : 1;
+
+            // 3. loadSleepSprites の条件（i == 0 || i == 1）に合わせて画像を取得
+            BufferedImage sleepImg;
+            if (dirIndex == 0 || dirIndex == 1) {
+                sleepImg = sleepImage1[dirIndex][spriteIndex];
+            } else {
+                sleepImg = sleepImage2[dirIndex][spriteIndex];
+            }
+
+            // 4. 描画処理
+            if (sleepImg != null) {
+                g2.drawImage(sleepImg, screenX, screenY, tileSize, tileSize, null);
+            }
+
+            return; // 通常の歩行画像は描画しない
+        }
+
         // aura の描画
         if (aura != null) {
             if (!(aura.getWorldX() == 0 && aura.getWorldY() == 0)) {
@@ -4347,11 +4427,14 @@ public class Player extends Entity {
         this.waterEffectManager = manager;
     }
 
-    // 持ち上げ可能なエンティティかどうかを判定するヘルパーメソッド
-    private boolean canLift(Entity entity) {
-        if (entity == null) return false;
-        String name = entity.getName();
-        // 持ち上げて良いオブジェクトの名前だけを指定する
-        return name.equals("Pot") || name.equals("Rock") || name.equals("Bomb") || name.equals("Chicken");
+    public boolean isSleeping() {
+        return isSleeping;
+    }
+
+    public void setSleeping(boolean sleeping) {
+        this.isSleeping = sleeping;
+        if (sleeping) {
+            this.sleepTimer = 0.0; // 睡眠開始時にタイマーを 0 にリセット
+        }
     }
 }

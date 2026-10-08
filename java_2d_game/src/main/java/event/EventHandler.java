@@ -1,7 +1,9 @@
 package event;
 
 import frame.FrameApp;
+import game.GameState;
 import player.Player;
+import tile.TileManager;
 import window.GameWindow;
 
 import static frame.FrameApp.getMaxWorldCol;
@@ -9,41 +11,28 @@ import static frame.FrameApp.getMaxWorldRow;
 
 public class EventHandler {
 
-    GameWindow gameWindow;
-
-    // 2次元の配列として使用し、コンストラクタの中でインスタンス化します。
-    EventRect eventRect[][];
-
-    boolean canTouchEvent = true;
-
-    // 以前のイベント
-
-    int previousEventX;
-    int previousEventY;
+    private GameWindow gameWindow;
+    private EventRect eventRect[][];
+    private boolean canTouchEvent = true;
+    private int previousEventX;
+    private int previousEventY;
 
     public EventHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
 
-        // マップ上のすべてのタイルにイベント矩形ができる。
-        // このソリッドエリアをeventRect[][]に設定。
         eventRect = new EventRect[getMaxWorldCol()][getMaxWorldRow()];
 
-        int col = 0;
-        int row = 0;
-        while (col < getMaxWorldCol() && row < getMaxWorldRow()) {
-
-            eventRect[col][row] = new EventRect();
-            eventRect[col][row].x = 23;
-            eventRect[col][row].y = 23;
-            eventRect[col][row].width = 2;
-            eventRect[col][row].height = 2;
-            eventRect[col][row].eventRectDefaultX = eventRect[col][row].x;
-            eventRect[col][row].eventRectDefaultY = eventRect[col][row].y;
-
-            col++;
-            if (col == getMaxWorldRow()) {
-                col = 0;
-                row++;
+        // バグを防ぐため for文 で安全に初期化
+        for (int col = 0; col < getMaxWorldCol(); col++) {
+            for (int row = 0; row < getMaxWorldRow(); row++) {
+                eventRect[col][row] = new EventRect();
+                // 当たり判定を少し広めに設定
+                eventRect[col][row].x = 10;
+                eventRect[col][row].y = 10;
+                eventRect[col][row].width = 28;
+                eventRect[col][row].height = 28;
+                eventRect[col][row].eventRectDefaultX = eventRect[col][row].x;
+                eventRect[col][row].eventRectDefaultY = eventRect[col][row].y;
             }
         }
     }
@@ -51,64 +40,56 @@ public class EventHandler {
     public void checkEvent() {
 
         int tileSize = FrameApp.getTileSize();
-        int hitRow = 26;
-        int hitCol = 15;
 
-        // プレイヤーキャラクターが最後のイベントから1タイル以上離れているかチェック。
-        // mass absはこの絶対値を返す
-        // この計算により、たとえ負の数であっても正の数として返される。
+        // イベント発生後の距離チェック
         int xDistance = Math.abs(gameWindow.getPlayer().getWorldX() - previousEventX);
         int yDistance = Math.abs(gameWindow.getPlayer().getWorldY() - previousEventY);
-        int distance = Math.max(xDistance, yDistance);
-        if (distance > tileSize) {
+        if (Math.max(xDistance, yDistance) > tileSize) {
             canTouchEvent = true;
         }
 
-        if (hit(hitRow, hitCol, "どれか") == true) {
-            applyDamageToPlayer(3, hitRow, hitCol);
+        if (canTouchEvent) {
+            if (hit(25, 13, "up")) {
+                gameWindow.getPlayer().startSleeping();
+            }
         }
     }
 
-
-    // イベントの衝突をチェックするメソッドで、オブジェクトと似たような働きをする。
-    public boolean hit(int row, int col, String reqDirection) {
-
+    public boolean hit(int col, int row, String reqDirection) {
         int tileSize = FrameApp.getTileSize();
         boolean hit = false;
+        Player player = gameWindow.getPlayer();
 
-        gameWindow.getPlayer().getSolidArea().x = gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getSolidArea().x;
-        gameWindow.getPlayer().getSolidArea().y = gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getSolidArea().y;
-        eventRect[row][col].x = row * tileSize + eventRect[row][col].x;
-        eventRect[row][col].y = col * tileSize + eventRect[row][col].y;
+        player.getSolidArea().x = player.getWorldX() + player.getSolidArea().x;
+        player.getSolidArea().y = player.getWorldY() + player.getSolidArea().y;
+        eventRect[col][row].x = col * tileSize + eventRect[col][row].x;
+        eventRect[col][row].y = row * tileSize + eventRect[col][row].y;
 
-        // intersexメソッドを使い、プレイヤーが衝突しているかどうかをチェック。
-        if (gameWindow.getPlayer().getSolidArea().intersects(eventRect[row][col]) && eventRect[row][col].eventDone == false) {
-            // プレーヤーの方向をチェックできて,どちらのイベントが起こるかを選択。
-            if (gameWindow.getPlayer().getDirection().contentEquals(reqDirection) || reqDirection.contentEquals("どれか")) {
+        if (player.getSolidArea().intersects(eventRect[col][row]) && !eventRect[col][row].eventDone) {
+            if (player.getDirection().contentEquals(reqDirection) || reqDirection.contentEquals("どれか")) {
                 hit = true;
-                // プレイヤーキャラクターがイベントの矩形から1タイル分離れるまで
-                // 二度と起きないようにすれば、イベントが繰り返し起きるのを防げる
-                previousEventX = gameWindow.getPlayer().getWorldX();
-                previousEventY = gameWindow.getPlayer().getWorldY();
+                previousEventX = player.getWorldX();
+                previousEventY = player.getWorldY();
             }
         }
-        // 最後に、プレーヤーとイベント矩形をリセット。
-        gameWindow.getPlayer().getSolidArea().x = gameWindow.getPlayer().getSolidAreaDefaultX();
-        gameWindow.getPlayer().getSolidArea().y = gameWindow.getPlayer().getSolidAreaDefaultY();
-        eventRect[row][col].x = eventRect[row][col].eventRectDefaultX;
-        eventRect[row][col].y = eventRect[row][col].eventRectDefaultY;
-        // 衝突している場合はtrueを返す。
+
+        player.getSolidArea().x = player.getSolidAreaDefaultX();
+        player.getSolidArea().y = player.getSolidAreaDefaultY();
+        eventRect[col][row].x = eventRect[col][row].eventRectDefaultX;
+        eventRect[col][row].y = eventRect[col][row].eventRectDefaultY;
+
         return hit;
     }
 
-    private void applyDamageToPlayer(int dmg, int col, int row) {
-        Player p = gameWindow.getPlayer();
-        if (!p.getInvincible()) {
-            p.takeDamage(dmg);
-            gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
-            p.setInvincible(true);
-        }
-        eventRect[row][col].eventDone = true;
-        canTouchEvent = false;
+    public void setPreviousEventX(int previousEventX) {
+        this.previousEventX = previousEventX;
+    }
+
+    public void setPreviousEventY(int previousEventY) {
+        this.previousEventY = previousEventY;
+    }
+
+    public void setCanTouchEvent(boolean canTouchEvent) {
+        this.canTouchEvent = canTouchEvent;
     }
 }
