@@ -26,12 +26,13 @@ public class TileManager {
     private int[][] mapTileNum;
 
     public static final int MEADOW_TILE_ID = 1;
+    public static final int WATER_TILE_ID = 2;
     public static final int TREE_TILE_ID = 4;
     public static final int HUT_TILE_ID = 6;
     public static final int FOREST_TILE_ID = 9;
     public static final int STAIRS_DOWN_TILE_ID = 12;
     public static final int STAIRS_UP_TILE_ID = 13;
-    public static final int WATER_TILE_ID = 2;
+    public static final int BED_TILE_ID = 22;
 
     // 水アニメ関連
     private BufferedImage[] waterFrames;
@@ -50,7 +51,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[22];
+        tiles = new Tile[23];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -164,6 +165,10 @@ public class TileManager {
             tiles[21] = new Tile();
             tiles[21].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/cave-wall_up.png"));
             tiles[21].collision = true;
+
+            tiles[22] = new Tile();
+            tiles[22].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/bed.gif"));
+            tiles[22].collision = true;
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -692,8 +692,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
             clearSceneState();
             tileManager.loadMap(2);
             startMapTransition(2);
-            getPlayer().setWorldX(tileSize * 29);
-            getPlayer().setWorldY(tileSize * 14);
+            getPlayer().setWorldX(tileSize * 25);
+            getPlayer().setWorldY(tileSize * 13);
+            getEventHandler().checkEvent();
             assetSetter.setNpcMerChant("ev_19f0c26ecd8_a4d0", 29, 11);
             assetSetter.setNpcSave("ev_19f0c26d9f2_a82a", 27, 11);
 
@@ -762,6 +763,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjLantern();
 
             repaint();
+        }
+
+        if (getEventHandler() != null) {
+            getEventHandler().setCanTouchEvent(true);
+            getEventHandler().setPreviousEventX(getPlayer().getWorldX());
+            getEventHandler().setPreviousEventY(getPlayer().getWorldY());
         }
     }
 
@@ -1382,5 +1389,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void setLastLoadedSlot(int lastLoadedSlot) {
         this.lastLoadedSlot = lastLoadedSlot;
+    }
+
+    public int getCurrentMapIndex() {
+        return currentMapIndex;
     }
 }

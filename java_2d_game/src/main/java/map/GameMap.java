@@ -1,6 +1,5 @@
 package map;
 
-import db.MapEvent;
 import entity.Entity;
 import npc.NpcChicken;
 import window.GameWindow;

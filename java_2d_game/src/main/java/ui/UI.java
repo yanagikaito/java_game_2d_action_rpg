@@ -45,6 +45,7 @@ public class UI {
     private GreenHexPanel greenHexPanel = new GreenHexPanel();
     private SpriteManager spriteManager = new SpriteManager();
     private PopupManager popupManager = new PopupManager(64);
+    private boolean bedDialogueActive = false;
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -167,7 +168,6 @@ public class UI {
         } else if (gameState == GameState.SAVE) {
             drawSaveScreen(g2);
         }
-
 
         if (messageOn) {
             drawMessage(g2);
@@ -590,15 +590,10 @@ public class UI {
         redAlpha = 0f;
     }
 
-    public void resetGameOver() {
-        showGameOver = false;
-        gameOverTimer = 0.0;
-        redAlpha = 0f;
-    }
-
     /**
      * 毎フレーム呼ぶ（GameWindow.update から deltaSeconds を渡す）
      */
+
     public void updateGameOver(double deltaSeconds) {
         if (!showGameOver) return;
 
@@ -610,9 +605,6 @@ public class UI {
             redAlpha += (float) (deltaSeconds / redFadeDuration);
             if (redAlpha > 1.0f) redAlpha = 1.0f;
         }
-
-        // ここでテキスト選択やメニュー入力の更新を行う（必要なら）
-        // 例: if (gameOverTimer >= gameOverTextDelay) { handleMenuInput(); }
     }
 
     public void drawGameOverScreen(Graphics2D g2) {
@@ -1165,24 +1157,12 @@ public class UI {
         this.npcSlotCol = npcSlotCol;
     }
 
-    public boolean isDialogueOn() {
-        return dialogueOn;
-    }
-
-    public void setDialogueOn(boolean dialogueOn) {
-        this.dialogueOn = dialogueOn;
-    }
-
     public Entity getNpc() {
         return npc;
     }
 
     public void setNpc(Entity npc) {
         this.npc = npc;
-    }
-
-    public int getSubState() {
-        return subState;
     }
 
     public void setSubState(int subState) {
@@ -1197,10 +1177,6 @@ public class UI {
         this.coin = coin;
     }
 
-    public GreenHexPanel getTriforcePanel() {
-        return greenHexPanel;
-    }
-
     public boolean getSaveInProgress() {
         return saveInProgress;
     }
@@ -1211,20 +1187,6 @@ public class UI {
 
     public void setSaveInProgress(boolean inProgress) {
         this.saveInProgress = inProgress;
-    }
-
-    /**
-     * 指定スロットのメタを再読み込みして反映する（slot は 0-based 想定）
-     */
-
-    public void reloadSaveMeta(int slotZeroBased) {
-        if (slotZeroBased < 0 || slotZeroBased >= SLOT_COUNT) return;
-        // SaveManager の仕様に合わせて引数を調整（下は 0-based 想定）
-        SaveMeta meta = SaveManager.loadMeta(slotZeroBased); // もし SaveManager が 1-based なら slotZeroBased+1
-        if (saveMetas == null || saveMetas.length != SLOT_COUNT) {
-            saveMetas = new SaveMeta[SLOT_COUNT];
-        }
-        saveMetas[slotZeroBased] = (meta != null) ? meta : new SaveMeta();
     }
 
     /**
@@ -1346,5 +1308,13 @@ public class UI {
 
     public int getSelectedOption() {
         return selectedOption;
+    }
+
+    public boolean isBedDialogueActive() {
+        return bedDialogueActive;
+    }
+
+    public void setBedDialogueActive(boolean bedDialogueActive) {
+        this.bedDialogueActive = bedDialogueActive;
     }
 }
