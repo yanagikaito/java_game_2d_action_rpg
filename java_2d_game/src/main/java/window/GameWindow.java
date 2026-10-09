@@ -659,6 +659,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
             ui.getDamagePopupManager().updateAll();
             ui.updateGameOver(deltaSeconds);
+
+        } else if (gameState == GameState.SLEEP) { // または GameState.DIALOGUE など設定している状態
+            if (ui.getSleepCtx() != null) {
+                ui.getSleepCtx().update(deltaSeconds);
+            }
         }
 
         if (gameState == GameState.GAME_OVER) {
@@ -694,9 +699,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 25);
             getPlayer().setWorldY(tileSize * 13);
-            getEventHandler().checkEvent();
             assetSetter.setNpcMerChant("ev_19f0c26ecd8_a4d0", 29, 11);
             assetSetter.setNpcSave("ev_19f0c26d9f2_a82a", 27, 11);
+            assetSetter.setNpcInnkeeper("event_ev_1a11ff70f58_2a6a", 25, 11);
 
             repaint();
 

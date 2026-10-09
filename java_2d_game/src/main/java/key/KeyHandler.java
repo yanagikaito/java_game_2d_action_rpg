@@ -2,6 +2,7 @@ package key;
 
 import entity.Entity;
 import game.GameState;
+import npc.NpcInnkeeper;
 import npc.NpcMalonyChicken;
 import npc.NpcMerChant;
 import npc.NpcSave;
@@ -231,11 +232,16 @@ public class KeyHandler implements KeyListener {
                 } else if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcSave) {
                     startSaveConversation(npcIdx);
                     gameWindow.setGameState(GameState.SAVE);
+                } else if (npcIdx != -1 && gameWindow.getNPC()[npcIdx] instanceof NpcInnkeeper) {
+                    startInnkeeperConversation(npcIdx);
+                    gameWindow.setGameState(GameState.SLEEP);
                 } else if (gameWindow.getGameState() == GameState.TRADE) {
                     npcMerChantSpeak();
                     gameWindow.getUi().setSubState(0);
                 } else if (gameWindow.getGameState() == GameState.SAVE) {
                     npcSaveSpeak();
+                } else if (gameWindow.getGameState() == GameState.SLEEP) {
+                    npcInnkeeperSpeak();
                 } else {
                     speakDialogue();
                     clearAllKeys();
@@ -340,6 +346,11 @@ public class KeyHandler implements KeyListener {
 
             gameWindow.getUi().updateSave(code);
         }
+
+        if (gameWindow.getGameState() == GameState.SLEEP) {
+
+            gameWindow.getUi().updateSleep(code);
+        }
     }
 
     public void playerInventory(int code) {
@@ -426,6 +437,21 @@ public class KeyHandler implements KeyListener {
         npcSaveSpeak();
     }
 
+    private void startInnkeeperConversation(int npcIdx) {
+
+        NpcInnkeeper innkeeper = (NpcInnkeeper) gameWindow.getNPC()[npcIdx];
+
+        // インデックスをリセット
+        innkeeper.resetDialogue();
+
+        // 会話状態へ移行
+        gameWindow.getPlayer().setTalkNpcIndex(npcIdx);
+        gameWindow.setGameState(GameState.DIALOGUE);
+
+        // 最初のセリフを出す
+        npcInnkeeperSpeak();
+    }
+
     @Override
     public void keyReleased(KeyEvent e) {
 
@@ -497,6 +523,27 @@ public class KeyHandler implements KeyListener {
 
             // ついでにもう一度リセットしておく
             npcSave.resetDialogue();
+        }
+    }
+
+    public void npcInnkeeperSpeak() {
+
+        int idx = gameWindow.getPlayer().getTalkNpcIndex();
+        if (idx < 0) return;
+
+        NpcInnkeeper npcInnkeeper = (NpcInnkeeper) gameWindow.getNPC()[idx];
+        String text = npcInnkeeper.getNextDialogue();
+
+        // セリフを UI にセット
+        gameWindow.getUi().addDialogue(text);
+
+        if (text == null) {
+            // 会話終了：状態リセット
+            gameWindow.setGameState(GameState.PLAY);
+            gameWindow.getPlayer().setTalkNpcIndex(idx);
+
+            // ついでにもう一度リセットしておく
+            npcInnkeeper.resetDialogue();
         }
     }
 

@@ -13,9 +13,10 @@ import player.SpriteManager;
 import save.SaveManager;
 import save.SaveMeta;
 import hex.GreenHexRenderer;
+import ui.state.load.LoadScreenContext;
+import ui.state.save.SaveScreenContext;
+import ui.state.sleep.SleepScreenContext;
 import ui.state.trade.TradeScreenContext;
-import ui.state.trade.load.LoadScreenContext;
-import ui.state.trade.save.SaveScreenContext;
 import window.GameWindow;
 
 import javax.swing.*;
@@ -69,6 +70,7 @@ public class UI {
     private final TradeScreenContext tradeCtx;
     private final SaveScreenContext saveCtx;
     private final LoadScreenContext loadCtx;
+    private final SleepScreenContext sleepCtx;
 
     // セーブメニュー関連
     private int saveMenuSelected = 0;           // 現在選択中のスロット（0-based）
@@ -96,6 +98,7 @@ public class UI {
         this.tradeCtx = new TradeScreenContext(gameWindow, this);
         this.saveCtx = new SaveScreenContext(gameWindow, this);
         this.loadCtx = new LoadScreenContext(gameWindow, this);
+        this.sleepCtx = new SleepScreenContext(gameWindow, this);
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
@@ -167,6 +170,9 @@ public class UI {
 
         } else if (gameState == GameState.SAVE) {
             drawSaveScreen(g2);
+
+        } else if (gameState == GameState.SLEEP) {
+            drawSleepScreen(g2);
         }
 
         if (messageOn) {
@@ -1077,8 +1083,16 @@ public class UI {
         loadCtx.draw(g2);
     }
 
+    public void drawSleepScreen(Graphics2D g2) {
+        sleepCtx.draw(g2);
+    }
+
     public void updateSave(int keyCode) {
         saveCtx.handleKey(keyCode);
+    }
+
+    public void updateSleep(int keyCode) {
+        sleepCtx.handleKey(keyCode);
     }
 
     public void updateLoad(int keyCode) {
@@ -1310,11 +1324,7 @@ public class UI {
         return selectedOption;
     }
 
-    public boolean isBedDialogueActive() {
-        return bedDialogueActive;
-    }
-
-    public void setBedDialogueActive(boolean bedDialogueActive) {
-        this.bedDialogueActive = bedDialogueActive;
+    public SleepScreenContext getSleepCtx() {
+        return sleepCtx;
     }
 }

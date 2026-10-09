@@ -1,4 +1,4 @@
-package ui.state.trade.load;
+package ui.state.load;
 
 public final class LoadOptionConstants {
 

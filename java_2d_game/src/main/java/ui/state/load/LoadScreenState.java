@@ -1,8 +1,8 @@
-package ui.state.trade.save;
+package ui.state.load;
 
 import java.awt.*;
 
-public interface SaveScreenState {
+public interface LoadScreenState {
 
     void handleKey(int code);
 

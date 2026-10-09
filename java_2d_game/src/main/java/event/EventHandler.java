@@ -50,7 +50,7 @@ public class EventHandler {
 
         if (canTouchEvent) {
             if (hit(25, 13, "up")) {
-                gameWindow.getPlayer().startSleeping();
+//                gameWindow.getPlayer().startSleeping();
             }
         }
     }

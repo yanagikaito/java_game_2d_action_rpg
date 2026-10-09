@@ -1,4 +1,4 @@
-package ui.state.trade.load;
+package ui.state.sleep;
 
 import key.KeyHandler;
 import ui.UI;
@@ -6,31 +6,37 @@ import window.GameWindow;
 
 import java.awt.*;
 
-public class LoadScreenContext {
+public final class SleepScreenContext {
 
-    private LoadScreenState loadCurrentState;
+    private SleepScreenState currentState;
     private final GameWindow gameWindow;
     private final UI ui;
     private final KeyHandler kh;
 
-    public LoadScreenContext(GameWindow gw, UI ui) {
+    public SleepScreenContext(GameWindow gw, UI ui) {
         this.gameWindow = gw;
         this.ui = ui;
         this.kh = gw.getKeyHandler();
-        this.loadCurrentState = new LoadMenuState(this);
+        this.currentState = new SleepMenuState(this);
     }
 
-    public void setState(LoadScreenState next) {
-        this.loadCurrentState = next;
+    public void setState(SleepScreenState next) {
+        this.currentState = next;
+    }
+
+    public void update(double deltaSeconds) {
+        if (currentState != null) {
+            currentState.update(deltaSeconds);
+        }
     }
 
     public void handleKey(int code) {
         // State にキー処理を集約し、必要に応じて内部で遷移
-        loadCurrentState.handleKey(code);
+        currentState.handleKey(code);
     }
 
     public void draw(Graphics2D g2) {
-        loadCurrentState.draw(g2);
+        currentState.draw(g2);
         // ENTER フラグは描画後に必ずクリア
         kh.setPlayerEnter(false);
     }

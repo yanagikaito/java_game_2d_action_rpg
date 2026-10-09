@@ -1,4 +1,4 @@
-package ui.state.trade.save;
+package ui.state.save;
 
 import frame.FrameApp;
 import save.SaveManager;

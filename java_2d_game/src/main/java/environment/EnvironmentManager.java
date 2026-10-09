@@ -14,7 +14,7 @@ public class EnvironmentManager {
 
     public EnvironmentManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        this.timeCycle = new WorldTimeCycle(60.0);
+        this.timeCycle = new WorldTimeCycle(180.0);
     }
 
     public void setUp() {

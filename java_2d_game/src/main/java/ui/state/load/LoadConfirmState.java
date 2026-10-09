@@ -1,4 +1,4 @@
-package ui.state.trade.load;
+package ui.state.load;
 
 import entity.Entity;
 import frame.FrameApp;

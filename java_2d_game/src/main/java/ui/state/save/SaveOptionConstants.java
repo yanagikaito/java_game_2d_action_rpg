@@ -1,4 +1,4 @@
-package ui.state.trade.save;
+package ui.state.save;
 
 public final class SaveOptionConstants {
 
