@@ -21,6 +21,7 @@ public class AssetSetter {
     }
 
     public void setNpcOldMan(String eventId, int tileX, int tileY) {
+
         db.MapModel model = gameWindow.getModel();
         if (model == null) {
             System.err.println("Model is null in setNpcMalonyChicken");
@@ -56,6 +57,7 @@ public class AssetSetter {
     }
 
     public void setNpcMalonyChicken(String eventId, int tileX, int tileY) {
+
         db.MapModel model = gameWindow.getModel();
         if (model == null) {
             System.err.println("Model is null in setNpcMalonyChicken");
@@ -92,6 +94,7 @@ public class AssetSetter {
 
 
     public void setNpcMerChant(String eventId, int tileX, int tileY) {
+
         db.MapModel model = gameWindow.getModel();
         if (model == null) {
             System.err.println("Model is null in setNpcMalonyChicken");
@@ -127,6 +130,7 @@ public class AssetSetter {
     }
 
     public void setNpcSave(String eventId, int tileX, int tileY) {
+
         db.MapModel model = gameWindow.getModel();
         if (model == null) {
             System.err.println("Model is null in setNpcMalonyChicken");
@@ -156,6 +160,42 @@ public class AssetSetter {
             npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
         }
         npcArray[1] = npc;
+        gameWindow.setNPC(npcArray);
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
+    }
+
+    public void setNpcInnkeeper(String eventId, int tileX, int tileY) {
+
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setNpcMalonyChicken");
+            return;
+        }
+
+        model.loadEventsFromDb(2);
+
+        db.MapEvent ev = null;
+
+        if (eventId != null) {
+            ev = model.getEventById(eventId);
+        }
+
+        if (ev == null) {
+            ev = model.findEventAt(tileX, tileY);
+        }
+
+        NpcInnkeeper npc = new NpcInnkeeper(gameWindow, ev);
+        npc.applyMapEvent(ev);
+
+        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+
+        Entity[] npcArray = gameWindow.getNPC();
+        if (npcArray == null || npcArray.length <= 1) {
+            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+        }
+        npcArray[2] = npc;
         gameWindow.setNPC(npcArray);
 
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());

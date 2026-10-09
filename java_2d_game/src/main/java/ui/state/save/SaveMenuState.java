@@ -1,4 +1,4 @@
-package ui.state.trade.save;
+package ui.state.save;
 
 import game.GameState;
 import key.KeyHandler;
@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-import static ui.state.trade.save.SaveOptionConstants.*;
+import static ui.state.save.SaveOptionConstants.*;
 
 public class SaveMenuState implements SaveScreenState {
     private final SaveScreenContext saveScreenContext;

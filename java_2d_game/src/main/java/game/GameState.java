@@ -10,5 +10,6 @@ public enum GameState {
     DEBUG,
     GAME_OVER,
     TRADE,
-    SAVE;
+    SAVE,
+    SLEEP;
 }

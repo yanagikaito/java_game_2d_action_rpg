@@ -697,7 +697,7 @@ public class Player extends Entity {
         if (deltaSeconds > 0.5) deltaSeconds = 0.5;
         lastUpdateTimeNano = now;
 
-        // 死亡処理（あなたの既存コードをそのまま使える）
+        // 死亡処理
         if (isDead) {
             if (gameOverAnimator != null) {
                 gameOverAnimator.update(deltaSeconds);
@@ -706,12 +706,6 @@ public class Player extends Entity {
                     gameOverNotifiedToUI = true;
                 }
             }
-            return;
-        }
-
-        if (isSleeping) {
-            System.out.println("isSleeping = " + isSleeping);
-            updateSleeping(deltaSeconds);
             return;
         }
 
@@ -1028,23 +1022,13 @@ public class Player extends Entity {
     }
 
     public void startSleeping() {
+
         this.isSleeping = true;
         this.sleepTimer = 0.0;
 
         // 寝始めた瞬間にHP・MPを全回復する
         this.setLife(getMaxLife());
         this.setMana(getMaxMana());
-    }
-
-    private void updateSleeping(double deltaSeconds) {
-
-        sleepTimer += deltaSeconds;
-
-        // 約3秒（3.0）経ったら自動的に起きる
-        if (sleepTimer >= 3.0) {
-            isSleeping = false;
-            sleepTimer = 0.0;
-        }
     }
 
     /**

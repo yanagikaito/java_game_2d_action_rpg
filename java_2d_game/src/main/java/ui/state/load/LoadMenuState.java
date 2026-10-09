@@ -1,4 +1,4 @@
-package ui.state.trade.load;
+package ui.state.load;
 
 import game.GameState;
 import key.KeyHandler;
@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-import static ui.state.trade.load.LoadOptionConstants.*;
+import static ui.state.load.LoadOptionConstants.*;
 
 public class LoadMenuState implements LoadScreenState {
 

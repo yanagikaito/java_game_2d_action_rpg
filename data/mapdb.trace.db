@@ -56,7 +56,7 @@ SELECT slot_index, type_id, count FROM inventory_items WHERE save_id = ? ORDER B
 	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:316)
 	at save.LoadManager.loadInventory(LoadManager.java:100)
 	at save.LoadManager.loadPlayer(LoadManager.java:49)
-	at ui.state.trade.load.LoadConfirmState.lambda$startLoad$0(LoadConfirmState.java:88)
+	at load.ui.state.LoadConfirmState.lambda$startLoad$0(LoadConfirmState.java:88)
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-07-11 21:07:16.077592+09:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: 列 "SLOT_INDEX" が見つかりません
@@ -79,7 +79,7 @@ SELECT slot_index, type_id, count FROM inventory_items WHERE save_id = ? ORDER B
 	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:316)
 	at save.LoadManager.loadInventory(LoadManager.java:100)
 	at save.LoadManager.loadPlayer(LoadManager.java:49)
-	at ui.state.trade.load.LoadConfirmState.lambda$startLoad$0(LoadConfirmState.java:88)
+	at load.ui.state.LoadConfirmState.lambda$startLoad$0(LoadConfirmState.java:88)
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-09-19 22:54:30.168573+09:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: 列 "START_INDEX" が見つかりません
