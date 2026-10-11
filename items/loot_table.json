@@ -1,19 +1,44 @@
 [
   {
-    "type": "pickup",
-    "weight": 40,
+    "type": "vert_bronze",
+    "weight": 30,
+    "amount": 1
+  },
+  {
+    "type": "vert_green",
+    "weight": 20,
+    "amount": 3
+  },
+  {
+    "type": "vert_blue",
+    "weight": 15,
+    "amount": 5
+  },
+  {
+    "type": "vert_red",
+    "weight": 8,
     "amount": 10
   },
   {
+    "type": "vert_silver",
+    "weight": 4,
+    "amount": 100
+  },
+  {
+    "type": "vert_gold",
+    "weight": 1,
+    "amount": 500
+  },
+  {
     "type": "red_potion",
-    "weight": 25
+    "weight": 10
   },
   {
     "type": "green_potion",
-    "weight": 20
+    "weight": 8
   },
   {
     "type": "blue_potion",
-    "weight": 15
+    "weight": 5
   }
 ]

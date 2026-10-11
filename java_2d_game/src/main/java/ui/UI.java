@@ -110,7 +110,7 @@ public class UI {
         heartHalf = heart.getImage2();
         heartBlank = heart.getImage3();
 
-        Entity bronzeCoin = new ObjCoinBronze(gameWindow);
+        Entity bronzeCoin = new ObjVertBronze(gameWindow);
         coin = bronzeCoin.getImage();
     }
 

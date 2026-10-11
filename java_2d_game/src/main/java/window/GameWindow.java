@@ -7,14 +7,12 @@ import entity.Entity;
 import entity.particle.WaterEffectManager;
 import environment.EnvironmentManager;
 import event.EventHandler;
+import factory.EntityFactory;
 import frame.FrameApp;
 import game.GameState;
 import map.GameMap;
 import npc.NpcOldMan;
-import object.ObjCoinBronze;
-import object.ObjGreenPotion;
-import object.ObjRedPotion;
-import object.Projectile;
+import object.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import player.Player;
@@ -55,6 +53,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private volatile boolean running = false;
     private Thread gameThread;
     private static final Logger logger = LoggerFactory.getLogger(GameWindow.class);
+    private EntityFactory entityFactory = new EntityFactory(this);
     private final AtomicBoolean repaintPending = new AtomicBoolean(false);
     private KeyHandler keyHandler = new KeyHandler(this);
     private Player player = new Player(this, keyHandler);
@@ -613,8 +612,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 if (item == null) continue;
 
                 if (item.getAlive() && collisionChecker.checkPlayer(item)) {
-                    if (item instanceof ObjCoinBronze) {
-                        player.addCoin(((ObjCoinBronze) item));
+                    if (item instanceof ObjVertBronze) {
+                        player.addCoin(((ObjVertBronze) item));
+                    } else if (item instanceof ObjVertGreen coin) {
+                        player.addCoin(coin);
+                    } else if (item instanceof ObjVertBlue coin) {
+                        player.addCoin(coin);
+                    } else if (item instanceof ObjVertRed coin) {
+                        player.addCoin(coin);
+                    } else if (item instanceof ObjVertSilver coin) {
+                        player.addCoin(coin);
+                    } else if (item instanceof ObjVertGold coin) {
+                        player.addCoin(coin);
                     } else if (item instanceof ObjRedPotion) {
                         player.healRedPotion((ObjRedPotion) item);
                     } else if (item instanceof ObjGreenPotion) {
@@ -1398,5 +1407,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public int getCurrentMapIndex() {
         return currentMapIndex;
+    }
+
+    public EntityFactory getEntityFactory() {
+        return entityFactory;
     }
 }

@@ -2,6 +2,8 @@ package player;
 
 import db.PathManager;
 import entity.*;
+import entity.loot.LootEntry;
+import entity.loot.LootTableLoader;
 import entity.particle.WaterEffectManager;
 import entity.type.*;
 import frame.FrameApp;
@@ -3346,17 +3348,14 @@ public class Player extends Entity {
             getSolidArea().height = 40;
             recordSafePosition();
 
-            List<Supplier<Entity>> drops = Arrays.asList(
-                    () -> new ObjCoinBronze(gameWindow),
-                    () -> new ObjRedPotion(gameWindow),
-                    () -> new ObjGreenPotion(gameWindow)
-            );
+            // モンスター撃破時のドロップ処理
+            List<LootEntry> tempTable = LootTableLoader.loadTable(gameWindow, "items/loot_table.json");
+            Entity dropped = LootTableLoader.rollRandomLoot(tempTable);
 
-            Collections.shuffle(drops);
-            Entity dropped = drops.get(0).get();
-
-            gameWindow.dropItem(dropped, monster);
-            System.out.println("drops = " + drops);
+            if (dropped != null) {
+                gameWindow.dropItem(dropped, monster);
+            }
+            System.out.println("dropped = " + dropped);
 
             int gainedExp = target.getExp();
             this.setExp(getExp() + gainedExp);
@@ -4237,13 +4236,38 @@ public class Player extends Entity {
     }
 
     /**
-     * ブロンズコインを拾ったときの処理を行う。
+     * ヴェールを拾ったときの処理を行う。
      * 所持ゴールドに値を加算し、UIにメッセージを表示。
      *
      * @param coin 拾ったブロンズコインオブジェクト
      */
 
-    public void addCoin(ObjCoinBronze coin) {
+    public void addCoin(ObjVertBronze coin) {
+        int value = coin.getValue();
+        setCoin(getCoin() + value);
+    }
+
+    public void addCoin(ObjVertGreen coin) {
+        int value = coin.getValue();
+        setCoin(getCoin() + value);
+    }
+
+    public void addCoin(ObjVertRed coin) {
+        int value = coin.getValue();
+        setCoin(getCoin() + value);
+    }
+
+    public void addCoin(ObjVertBlue coin) {
+        int value = coin.getValue();
+        setCoin(getCoin() + value);
+    }
+
+    public void addCoin(ObjVertSilver coin) {
+        int value = coin.getValue();
+        setCoin(getCoin() + value);
+    }
+
+    public void addCoin(ObjVertGold coin) {
         int value = coin.getValue();
         setCoin(getCoin() + value);
     }
