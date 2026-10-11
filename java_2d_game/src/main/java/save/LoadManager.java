@@ -209,6 +209,17 @@ public class LoadManager {
             case 9 -> new BluePotionType();
             case 10 -> new BombType();
             case 11 -> new LanternType();
+            case 12 -> new PickupOnlyType();
+            case 13 -> new BossMonsterType();
+            case 14 -> new ChestType();
+            case 15 -> new PotType();
+            case 16 -> new RockType();
+            case 17 -> new VertBronzeType();
+            case 18 -> new VertGreenType();
+            case 19 -> new VertBlueType();
+            case 20 -> new VertRedType();
+            case 21 -> new VertSilverType();
+            case 22 -> new VertGoldType();
             default -> null;
         };
     }

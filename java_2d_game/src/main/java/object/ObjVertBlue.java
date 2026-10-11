@@ -10,20 +10,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class ObjCoinBronze extends Entity {
+public class ObjVertBlue extends Entity {
 
     private GameWindow gameWindow;
 
-    public ObjCoinBronze(GameWindow gameWindow) {
+    public ObjVertBlue(GameWindow gameWindow) {
         super(gameWindow);
         this.gameWindow = gameWindow;
-        setValue(1);
+        setValue(5);
         setType(new PickupOnlyType());
-        setName("ブロンズコイン");
+        setName("ブルーヴェール");
 
         try {
 
-            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/coin-bronze.gif"));
+            BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/vert_blue.gif"));
             setImage(raw, FrameApp.getTileSize());
 
         } catch (IOException e) {

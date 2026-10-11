@@ -3,6 +3,7 @@ package object;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import entity.Entity;
+import entity.loot.LootTableLoader;
 import entity.type.PotType;
 import entity.loot.LootConfigEntry;
 import entity.loot.LootEntry;
@@ -212,75 +213,12 @@ public class ObjPot extends Projectile {
     }
 
     private void loadLootTableFromJson(String resourcePath) {
-        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
-            if (is == null) {
-                // リソースが見つからない場合はデフォルトテーブルを使う
-                buildDefaultLootTable();
-                return;
-            }
-            InputStreamReader reader = new InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8);
-            Type listType = new TypeToken<List<LootConfigEntry>>() {
-            }.getType();
-            List<LootConfigEntry> configs = new Gson().fromJson(reader, listType);
-            buildLootTableFromConfig(configs);
-        } catch (Exception e) {
-            e.printStackTrace();
-            buildDefaultLootTable();
-        }
-    }
-
-    private void buildLootTableFromConfig(List<LootConfigEntry> configs) {
         lootTable.clear();
-        if (configs == null || configs.isEmpty()) {
-            buildDefaultLootTable();
-            return;
-        }
-        for (LootConfigEntry c : configs) {
-            if (c == null || c.weight <= 0 || c.type == null) continue;
-            Supplier<Entity> factory = switch (c.type) {
-                case "coin" -> () -> entityFactory.createCoinEntity();
-                case "red_potion" -> () -> entityFactory.createRedPotionEntity();
-                case "green_potion" -> () -> entityFactory.createGreenPotionEntity();
-                case "blue_potion" -> () -> entityFactory.createBluePotionEntity();
-                default -> () -> null;
-            };
-            lootTable.add(new LootEntry(factory, c.weight));
-        }
-    }
-
-    private void buildDefaultLootTable() {
-        lootTable.clear();
-        lootTable.add(new LootEntry(() -> entityFactory.createCoinEntity(), 40));
-        lootTable.add(new LootEntry(() -> entityFactory.createRedPotionEntity(), 25));
-        lootTable.add(new LootEntry(() -> entityFactory.createGreenPotionEntity(), 20));
-        lootTable.add(new LootEntry(() -> entityFactory.createBluePotionEntity(), 15));
+        lootTable.addAll(LootTableLoader.loadTable(gameWindow, resourcePath));
     }
 
     private Entity createRandomLoot() {
-        if (lootTable.isEmpty()) return null;
-        int total = lootTable.stream().mapToInt(LootEntry::weight).sum();
-        if (total <= 0) return null;
-        int pick = random.nextInt(total);
-        int acc = 0;
-        for (LootEntry e : lootTable) {
-            acc += e.weight();
-            if (pick < acc) {
-                try {
-                    Entity result = e.factory().get();
-                    // デバッグ出力
-                    if (result == null) {
-                        System.out.println("DEBUG loot factory returned null for entry weight=" + e.weight());
-                    } else {
-                        System.out.println("DEBUG loot factory returned: " + result.getClass().getName());
-                    }
-                    return result;
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    return null;
-                }
-            }
-        }
-        return null;
+        return LootTableLoader.rollRandomLoot(lootTable);
     }
 
     private void updateAnimation() {
@@ -307,6 +245,7 @@ public class ObjPot extends Projectile {
     }
 
     private void giveShatterDamageAndSpawnFragments(Player player) {
+        shattering = true;
 
         // ダメージ判定
         int monsterHit = gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
@@ -321,13 +260,40 @@ public class ObjPot extends Projectile {
             this.getSolidArea().height = 0;
         }
 
-        Entity dropped = createRandomLoot();
-        if (dropped != null) {
-            if (dropped instanceof ObjCoinBronze) {
-                // コインはインベントリに入れず所持金に加算
-                ObjCoinBronze coin = (ObjCoinBronze) dropped;
-                player.addCoin(coin);
-                return;
+        if (shattering) {
+            Entity dropped = createRandomLoot();
+            if (dropped != null) {
+
+                int tileSize = FrameApp.getTileSize();
+                int screenX = this.getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
+                int screenY = this.getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
+                int sx = screenX;
+                int sy = screenY;
+
+                sx += tileSize / 2;
+                sy -= tileSize / 2;
+                PopupVariant variant = PopupVariant.DROP;
+                gameWindow.getUi().getDamagePopupManager().popItem(dropped, sx, sy, variant, 60);
+                // 6色のヴェール（通貨）を個別に指定して所持金に加算
+                if (dropped instanceof ObjVertBronze coin) {
+                    player.addCoin(coin);
+                    return;
+                } else if (dropped instanceof ObjVertGreen coin) {
+                    player.addCoin(coin);
+                    return;
+                } else if (dropped instanceof ObjVertBlue coin) {
+                    player.addCoin(coin);
+                    return;
+                } else if (dropped instanceof ObjVertRed coin) {
+                    player.addCoin(coin);
+                    return;
+                } else if (dropped instanceof ObjVertSilver coin) {
+                    player.addCoin(coin);
+                    return;
+                } else if (dropped instanceof ObjVertGold coin) {
+                    player.addCoin(coin);
+                    return;
+                }
             }
             // --- 爆弾はインベントリに入れず地面に落とす（pickable にする） ---
             if (dropped instanceof object.ObjBomb) {
