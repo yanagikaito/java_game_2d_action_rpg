@@ -50,6 +50,8 @@ public abstract class Entity {
     private boolean stackable = false;
     private boolean thrown = false;
     private boolean blocking = false;
+    private Entity user;
+    private boolean pickable = false;
     private int amount = 1;
     private int maxStack = 1;
     protected String trigger;
@@ -283,7 +285,7 @@ public abstract class Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
-        if (getType() instanceof MonsterType && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
+        if (getType() instanceof GreenSlimeType && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
             if (!getInvincible()) {
                 damagePlayer(attack, knockBackPower);
                 gameWindow.getPlayer().setInvincible(true);
@@ -1896,7 +1898,7 @@ public abstract class Entity {
             g2.setColor(new Color(200, 50, 100));
             g2.fillRect(x + 1, y + 1, Math.max(0, Math.min(tile - 2, hpBarValue)), 10);
 
-        } else if (getType() instanceof MonsterType) {
+        } else if (getType() instanceof GreenSlimeType) {
             int x = screenX + 4;
             int y = screenY - 21;
             g2.setColor(new Color(35, 35, 35));
@@ -2128,6 +2130,18 @@ public abstract class Entity {
                 getSolidArea().height
         );
         return r;
+    }
+
+    public void setUser(Entity user) {
+        this.user = user;
+    }
+
+    public boolean isPickable() {
+        return pickable;
+    }
+
+    public void setPickable(boolean pickable) {
+        this.pickable = pickable;
     }
 
     public boolean isThrown() {

@@ -4,7 +4,7 @@ public record AxeType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 5;
+        return 8;
     }
 
     @Override

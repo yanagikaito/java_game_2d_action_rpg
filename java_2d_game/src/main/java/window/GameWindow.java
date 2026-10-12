@@ -61,7 +61,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private BufferedImage[] footFrames = ResourceLoader.loadFootFrames();
     private WaterEffectManager waterEffectManager = new WaterEffectManager(footFrames);
     private CollisionChecker collisionChecker = new CollisionChecker(this);
-    private AssetSetter assetSetter = new AssetSetter(this);
+    private AssetSetter assetSetter = new AssetSetter(this,entityFactory);
     private EventHandler eventHandler = new EventHandler(this);
     private SoundManager soundManager = new SoundManager(this);
     private GameMap currentMap = new GameMap(this);
