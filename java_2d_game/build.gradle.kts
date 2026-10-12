@@ -41,6 +41,14 @@ dependencies {
 
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("ch.qos.logback:logback-classic:1.5.25")
+
+    // --- 追加: JUnit 5 の依存関係 ---
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<JavaExec>().configureEach {
