@@ -3,7 +3,9 @@ package factory;
 import db.MapEvent;
 import entity.*;
 import entity.type.*;
+import monster.MonGreenGoblin;
 import monster.MonGreenSlime;
+import monster.MonMintSoldier;
 import npc.NpcChicken;
 import npc.NpcOldMan;
 import object.*;
@@ -26,7 +28,9 @@ public class EntityFactory {
             // キャラクター・モンスター系
             case PlayerType player -> new Player(gameWindow, gameWindow.getKeyHandler());
             case NpcType npc -> new NpcOldMan(gameWindow, ev);
-            case MonsterType monster -> new MonGreenSlime(gameWindow);
+            case GreenSlimeType greenSlimeType -> new MonGreenSlime(gameWindow);
+            case MintSoldierType mintSoldierType -> new MonMintSoldier(gameWindow);
+            case BossMonsterType bossMonsterType -> new MonGreenGoblin(gameWindow);
             case ChickenType chicken -> new NpcChicken(gameWindow);
 
             // 装備・通常アイテム系（変数名の重複を解消）

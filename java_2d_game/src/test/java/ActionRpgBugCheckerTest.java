@@ -38,6 +38,7 @@ public class ActionRpgBugCheckerTest {
     }
 
     private boolean checkClass(Path classFile) {
+
         try {
             ClassModel classModel = ClassFile.of().parse(classFile);
             String className = classModel.thisClass().name().stringValue();
@@ -48,7 +49,6 @@ public class ActionRpgBugCheckerTest {
                 String methodName = method.methodName().stringValue();
 
                 method.code().ifPresent(code -> {
-                    // ★ ここを Instruction から CodeElement（または var）に変更
                     for (CodeElement element : code) {
                         if (element instanceof InvokeInstruction invoke) {
                             String owner = invoke.owner().name().stringValue();
@@ -58,6 +58,40 @@ public class ActionRpgBugCheckerTest {
                             if (owner.contains("OldLoadManager") && name.equals("deprecatedLoad")) {
                                 System.err.println("[検出: 廃止メソッド] クラス: " + className + " # " + methodName);
                                 classHasError[0] = true;
+                            }
+
+                            // owner がモンスター系クラスであり、かつメソッド名がコンストラクタ（"<init>"）の場合
+                            if (owner.contains("MonGreenSlime") && name.equals("<init>")) {
+
+                                // 例外: EntityFactory 自身の中での new は許可する
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("MonMintSoldier") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("MonGreenGoblin") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("NpcChicken") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    classHasError[0] = true;
+                                }
                             }
                         }
                     }

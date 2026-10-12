@@ -2,7 +2,7 @@ package monster;
 
 import entity.type.AxeType;
 import entity.Entity;
-import entity.type.MonsterType;
+import entity.type.GreenSlimeType;
 import frame.FrameApp;
 import object.ObjAxe;
 import window.GameWindow;
@@ -44,7 +44,7 @@ public class MonMintSoldier extends Entity {
     public MonMintSoldier(GameWindow gameWindow) {
 
         super(gameWindow);
-        setType(new MonsterType());
+        setType(new GreenSlimeType());
         setName("Mint Soldier");
         setDirection("down");
         setDefaultSpeed(1);
@@ -343,7 +343,7 @@ public class MonMintSoldier extends Entity {
         getSolidArea().width = FrameApp.getTileSize();
         getSolidArea().height = FrameApp.getTileSize();
 
-        if (getType() instanceof MonsterType) {
+        if (getType() instanceof GreenSlimeType) {
 
             int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
             getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack(), getCurrentWeapon().getKnockBackPower());

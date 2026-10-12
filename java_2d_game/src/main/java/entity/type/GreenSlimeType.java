@@ -1,6 +1,6 @@
 package entity.type;
 
-public record MonsterType() implements EntityType {
+public record GreenSlimeType() implements EntityType {
 
     @Override
     public int typeId() {

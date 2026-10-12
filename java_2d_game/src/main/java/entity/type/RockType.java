@@ -4,7 +4,7 @@ public record RockType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 16;
+        return 17;
     }
 
     @Override

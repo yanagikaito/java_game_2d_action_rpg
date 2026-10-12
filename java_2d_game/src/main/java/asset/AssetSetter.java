@@ -1,11 +1,12 @@
 package asset;
 
 import entity.Entity;
+import entity.type.BossMonsterType;
+import entity.type.ChickenType;
+import entity.type.GreenSlimeType;
+import entity.type.MintSoldierType;
 import factory.EntityFactory;
 import frame.FrameApp;
-import monster.MonGreenGoblin;
-import monster.MonGreenSlime;
-import monster.MonMintSoldier;
 import npc.*;
 import object.*;
 import tileInteractive.InteractiveTile;
@@ -15,9 +16,11 @@ import window.GameWindow;
 public class AssetSetter {
 
     private GameWindow gameWindow;
+    private EntityFactory entityFactory;
 
-    public AssetSetter(GameWindow gameWindow) {
+    public AssetSetter(GameWindow gameWindow, EntityFactory entityFactory) {
         this.gameWindow = gameWindow;
+        this.entityFactory = entityFactory;
     }
 
     public void setNpcOldMan(String eventId, int tileX, int tileY) {
@@ -206,46 +209,22 @@ public class AssetSetter {
         Entity[] monsters = gameWindow.getMonster();
         int i = 0;
 
-        monsters[i] = createMonMintSoldier(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 3);
-        i++;
+        monsters[i++] = createMonMintSoldier(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 3);
 
-        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 26);
-        i++;
+        monsters[i++] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 26);
+        monsters[i++] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 38);
+        monsters[i++] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 39);
 
-        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 38);
-        i++;
-
-        monsters[i] = createMonGreenSlime(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 39);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 31);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 33);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 35);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 37);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 39);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 32);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 32);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 34);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 35);
-        i++;
-
-        monsters[i] = createNpcChicken(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 39);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 31);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 33);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 35);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 37);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 39);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 32);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 32);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 34);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 35);
+        monsters[i++] = createNpcChicken(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 39);
 
         gameWindow.setMonster(monsters);
     }
@@ -351,6 +330,7 @@ public class AssetSetter {
     }
 
     private ObjLantern createObjLantern(int worldX, int worldY) {
+
         ObjLantern lantern = new ObjLantern(gameWindow);
         lantern.setWorldX(worldX);
         lantern.setWorldY(worldY);
@@ -358,6 +338,7 @@ public class AssetSetter {
     }
 
     private ObjRedPotion createObjRedPotion(int worldX, int worldY) {
+
         ObjRedPotion red = new ObjRedPotion(gameWindow);
         red.setWorldX(worldX);
         red.setWorldY(worldY);
@@ -365,6 +346,7 @@ public class AssetSetter {
     }
 
     private ObjGreenPotion createObjGreenPotion(int worldX, int worldY) {
+
         ObjGreenPotion green = new ObjGreenPotion(gameWindow);
         green.setWorldX(worldX);
         green.setWorldY(worldY);
@@ -372,31 +354,64 @@ public class AssetSetter {
     }
 
     private ObjBluePotion createObjBluePotion(int worldX, int worldY) {
+
         ObjBluePotion blue = new ObjBluePotion(gameWindow);
         blue.setWorldX(worldX);
         blue.setWorldY(worldY);
         return blue;
     }
 
-    private MonGreenSlime createMonGreenSlime(int worldX, int worldY) {
-        MonGreenSlime monster = new MonGreenSlime(gameWindow);
-        monster.setWorldX(worldX);
-        monster.setWorldY(worldY);
+    private Entity createMonGreenSlime(int worldX, int worldY) {
+
+        Entity monster = entityFactory.create(new GreenSlimeType());
+        if (monster != null) {
+            monster.setWorldX(worldX);
+            monster.setWorldY(worldY);
+        }
         return monster;
     }
 
-    private MonMintSoldier createMonMintSoldier(int worldX, int worldY) {
-        MonMintSoldier monster = new MonMintSoldier(gameWindow);
-        monster.setWorldX(worldX);
-        monster.setWorldY(worldY);
+    private Entity createMonMintSoldier(int worldX, int worldY) {
+
+        Entity monster = entityFactory.create(new MintSoldierType());
+        if (monster != null) {
+            monster.setWorldX(worldX);
+            monster.setWorldY(worldY);
+        }
         return monster;
     }
 
-    private MonGreenGoblin createMonGreenGoblin(int worldX, int worldY) {
-        MonGreenGoblin monster = new MonGreenGoblin(gameWindow);
-        monster.setWorldX(worldX);
-        monster.setWorldY(worldY);
+    private Entity createMonGreenGoblin(int worldX, int worldY) {
+
+        Entity monster = entityFactory.create(new BossMonsterType());
+        if (monster != null) {
+            monster.setWorldX(worldX);
+            monster.setWorldY(worldY);
+        }
         return monster;
+    }
+
+    public Entity createNpcChicken(int worldX, int worldY) {
+
+        Entity npcChicken = entityFactory.create(new ChickenType());
+        if (npcChicken != null) {
+            npcChicken.getSolidArea().x = 16;
+            npcChicken.getSolidArea().y = 16;
+
+            npcChicken.setSolidAreaDefaultX(npcChicken.getSolidArea().x);
+            npcChicken.setSolidAreaDefaultY(npcChicken.getSolidArea().y);
+
+            npcChicken.getSolidArea().width = (FrameApp.getTileSize() + 12);
+            npcChicken.getSolidArea().height = (FrameApp.getTileSize() + 12);
+            npcChicken.setWorldX(worldX);
+            npcChicken.setWorldY(worldY);
+            npcChicken.setPickable(true);
+            npcChicken.setUser(gameWindow.getPlayer());
+            npcChicken.setThrown(false);
+            npcChicken.setAlive(true);
+            npcChicken.setCollision(true);
+        }
+        return npcChicken;
     }
 
     private ObjAxe createObjAxe(int worldX, int worldY) {
@@ -452,26 +467,6 @@ public class AssetSetter {
         objRock.setThrown(false);
         objRock.setAlive(true);
         return objRock;
-    }
-
-    public NpcChicken createNpcChicken(int worldX, int worldY) {
-        NpcChicken npcChicken = new NpcChicken(gameWindow);
-        npcChicken.getSolidArea().x = 16;
-        npcChicken.getSolidArea().y = 16;
-
-        npcChicken.setSolidAreaDefaultX(npcChicken.getSolidArea().x);
-        npcChicken.setSolidAreaDefaultY(npcChicken.getSolidArea().y);
-
-        npcChicken.getSolidArea().width = (FrameApp.getTileSize() + 12);
-        npcChicken.getSolidArea().height = (FrameApp.getTileSize() + 12);
-        npcChicken.setWorldX(worldX);
-        npcChicken.setWorldY(worldY);
-        npcChicken.setPickable(true);
-        npcChicken.setUser(gameWindow.getPlayer());
-        npcChicken.setThrown(false);
-        npcChicken.setAlive(true);
-        npcChicken.setCollision(true);
-        return npcChicken;
     }
 
     public void setInteractiveTile() {

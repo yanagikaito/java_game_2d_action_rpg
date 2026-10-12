@@ -456,7 +456,14 @@ public class NpcChicken extends Entity {
         int playerY = getGameWindow().getPlayer().getWorldY();
 
         for (int i = 0; i < toSpawn; i++) {
-            NpcChicken baby = new NpcChicken(getGameWindow());
+
+            Entity entity = getGameWindow().getEntityFactory().create(new ChickenType());
+
+            // 型が NpcChicken であることを安全にキャスト
+            if (!(entity instanceof NpcChicken baby)) {
+                continue;
+            }
+
             int offsetY = (random.nextInt(7) - 3) * tileSize;
             int spawnY = playerY + offsetY;
             int spawnPosX = spawnX + i * (tileSize / 2);
