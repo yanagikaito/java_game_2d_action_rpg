@@ -4,7 +4,7 @@ public record RedPotionType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 10;
+        return 14;
     }
 
     @Override

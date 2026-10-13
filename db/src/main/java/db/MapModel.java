@@ -72,6 +72,9 @@ public class MapModel {
                         }
                     }
 
+                    // ★ 【ここに追加】JSONのパースが完了した後に、確実に mapId を合わせる
+                    ev.setMapId(mapId);
+
                     // 両方のコレクションに格納して内部整合性を保つ
                     events.put(ev.getId(), ev);
                     allEvents.add(ev);

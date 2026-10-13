@@ -54,42 +54,82 @@ public class ActionRpgBugCheckerTest {
                             String owner = invoke.owner().name().stringValue();
                             String name = invoke.name().stringValue();
 
-                            // 例: 廃止した古いロード処理を誤って呼び出していないかチェック
+                            // 廃止した古いロード処理を誤って呼び出していないかチェック
                             if (owner.contains("OldLoadManager") && name.equals("deprecatedLoad")) {
                                 System.err.println("[検出: 廃止メソッド] クラス: " + className + " # " + methodName);
                                 classHasError[0] = true;
                             }
 
                             // owner がモンスター系クラスであり、かつメソッド名がコンストラクタ（"<init>"）の場合
-                            if (owner.contains("MonGreenSlime") && name.equals("<init>")) {
+                            if (owner.contains("monster/MonGreenSlime") && name.equals("<init>")) {
 
                                 // 例外: EntityFactory 自身の中での new は許可する
                                 if (!className.contains("EntityFactory")) {
-                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接MonGreenSlimeを生成しています！");
                                     classHasError[0] = true;
                                 }
                             }
 
-                            if (owner.contains("MonMintSoldier") && name.equals("<init>")) {
+                            if (owner.contains("monster/MonMintSoldier") && name.equals("<init>")) {
 
                                 if (!className.contains("EntityFactory")) {
-                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接MonMintSoldierを生成しています！");
                                     classHasError[0] = true;
                                 }
                             }
 
-                            if (owner.contains("MonGreenGoblin") && name.equals("<init>")) {
+                            if (owner.contains("monster/MonGreenGoblin") && name.equals("<init>")) {
 
                                 if (!className.contains("EntityFactory")) {
-                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接MonGreenGoblinを生成しています！");
                                     classHasError[0] = true;
                                 }
                             }
 
-                            if (owner.contains("NpcChicken") && name.equals("<init>")) {
+                            if (owner.contains("npc/NpcChicken") && name.equals("<init>")) {
 
                                 if (!className.contains("EntityFactory")) {
-                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接モンスターを生成しています！");
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接NpcChickenを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("npc/NpcOldMan") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接NpcOldManを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("npc/NpcMerChant") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接NpcMerChantを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("npc/NpcSave") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接NpcSaveを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("npc/NpcInnkeeper") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接NpcInnkeeperを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("npc/NpcMalonyChicken") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接NpcMalonyChickenを生成しています！");
                                     classHasError[0] = true;
                                 }
                             }

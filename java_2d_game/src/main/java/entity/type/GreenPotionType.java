@@ -4,7 +4,7 @@ public record GreenPotionType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 11;
+        return 15;
     }
 
     @Override

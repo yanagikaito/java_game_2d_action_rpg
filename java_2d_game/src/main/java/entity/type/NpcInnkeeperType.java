@@ -1,14 +1,14 @@
 package entity.type;
 
-public record NpcType() implements EntityType {
+public record NpcInnkeeperType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 1;
+        return 4;
     }
 
     @Override
     public String name() {
-        return "npc";
+        return "npc_innkeeper";
     }
 }

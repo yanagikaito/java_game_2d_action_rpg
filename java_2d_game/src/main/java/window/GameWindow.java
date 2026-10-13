@@ -61,7 +61,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private BufferedImage[] footFrames = ResourceLoader.loadFootFrames();
     private WaterEffectManager waterEffectManager = new WaterEffectManager(footFrames);
     private CollisionChecker collisionChecker = new CollisionChecker(this);
-    private AssetSetter assetSetter = new AssetSetter(this,entityFactory);
+    private AssetSetter assetSetter = new AssetSetter(this, entityFactory);
     private EventHandler eventHandler = new EventHandler(this);
     private SoundManager soundManager = new SoundManager(this);
     private GameMap currentMap = new GameMap(this);
@@ -71,7 +71,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private Entity[] monster = new Entity[50];
     private Entity[] obj = new Entity[30];
     private InteractiveTile[] iTile = new InteractiveTile[50];
-    private UI ui = new UI(this);
+    private UI ui = new UI(this, entityFactory);
     private ArrayList<Projectile> projectileList = new ArrayList<>();
     private ArrayList<Entity> particleList = new ArrayList<>();
     public ArrayList<Entity> itemList = new ArrayList<>();
@@ -137,7 +137,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         // NPC・モンスター・ギミックの再配置
         assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
-        assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
+        assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
 
@@ -279,7 +279,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     currentMap.resetChickensState();
                     currentMap.removeAllChickens();
                     assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
-                    assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
+                    assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
                     assetSetter.setMonster();
                     assetSetter.setInteractiveTile();
                     assetSetter.setObjLantern();
@@ -354,7 +354,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().setItems();
         getPlayer().setCoin(500);
         assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
-        assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
+        assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();

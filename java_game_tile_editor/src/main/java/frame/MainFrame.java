@@ -373,20 +373,35 @@ public class MainFrame extends JFrame {
             conn.setAutoCommit(false);
 
             // --- タイル保存（既存処理） ---
-            try (Statement st = conn.createStatement()) {
-                st.execute("DELETE FROM map_tile WHERE map_id=" + mapId);
-            }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO map_tile(map_id,x,y,tile_id) VALUES(?,?,?,?)")) {
-                for (int y = 0; y < model.getHeight(); y++) {
-                    for (int x = 0; x < model.getWidth(); x++) {
-                        ps.setInt(1, mapId);
-                        ps.setInt(2, x);
-                        ps.setInt(3, y);
-                        ps.setInt(4, model.getTile(x, y));
-                        ps.addBatch();
+            try (PreparedStatement psEv = conn.prepareStatement(
+                    "MERGE INTO map_event(id,map_id,x,y,name,trigger_type,json) KEY(id) VALUES(?,?,?,?,?,?,?)")) {
+                for (db.MapEvent ev : model.getAllEvents()) {
+
+                    // ★ JSONに変換する前に、現在の mapId を MapEvent インスタンスに確実に反映させる！
+                    ev.setMapId(mapId);
+
+                    psEv.setString(1, ev.getId());
+                    psEv.setInt(2, mapId);
+                    psEv.setInt(3, ev.getX());
+                    psEv.setInt(4, ev.getY());
+                    psEv.setString(5, ev.getName());
+                    psEv.setString(6, ev.getTrigger());
+
+                    String json = null;
+                    try {
+                        json = om.writeValueAsString(ev); // ここで mapId が正しくJSONに含まれるようになる
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        json = null;
                     }
+                    if (json == null) {
+                        psEv.setNull(7, java.sql.Types.VARCHAR);
+                    } else {
+                        psEv.setBytes(7, json.getBytes(StandardCharsets.UTF_8));
+                    }
+                    psEv.addBatch();
                 }
-                ps.executeBatch();
+                psEv.executeBatch();
             }
 
             // --- イベント保存 ---
@@ -395,8 +410,9 @@ public class MainFrame extends JFrame {
                 del.executeUpdate();
             }
 
+            // INSERT INTO を MERGE INTO に変更し、KEY(id) で重複を検知したら上書きするようにする
             try (PreparedStatement psEv = conn.prepareStatement(
-                    "INSERT INTO map_event(id,map_id,x,y,name,trigger_type,json) VALUES(?,?,?,?,?,?,?)")) {
+                    "MERGE INTO map_event(id,map_id,x,y,name,trigger_type,json) KEY(id) VALUES(?,?,?,?,?,?,?)")) {
                 for (db.MapEvent ev : model.getAllEvents()) {
                     psEv.setString(1, ev.getId());
                     psEv.setInt(2, mapId);
@@ -489,6 +505,9 @@ public class MainFrame extends JFrame {
                             ev.setName(rs.getString("name"));
                             ev.setTrigger(rs.getString("trigger_type"));
                         }
+
+                        // ★ 【ここに追加】JSONから読んだ後もフォールバックの時も、確実に mapId を合わせる
+                        ev.setMapId(mapId);
 
                         model.addEvent(ev);
                     }

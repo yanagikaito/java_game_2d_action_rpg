@@ -4,7 +4,7 @@ public record VertGoldType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 23;
+        return 27;
     }
 
     @Override

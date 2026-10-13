@@ -4,7 +4,7 @@ public record BluePotionType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 12;
+        return 16;
     }
 
     @Override

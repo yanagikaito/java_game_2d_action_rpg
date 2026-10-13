@@ -4,7 +4,7 @@ public record VertRedType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 21;
+        return 25;
     }
 
     @Override

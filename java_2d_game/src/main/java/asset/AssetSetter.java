@@ -1,10 +1,7 @@
 package asset;
 
 import entity.Entity;
-import entity.type.BossMonsterType;
-import entity.type.ChickenType;
-import entity.type.GreenSlimeType;
-import entity.type.MintSoldierType;
+import entity.type.*;
 import factory.EntityFactory;
 import frame.FrameApp;
 import npc.*;
@@ -43,18 +40,24 @@ public class AssetSetter {
             ev = model.findEventAt(tileX, tileY);
         }
 
-        NpcOldMan npc = new NpcOldMan(gameWindow, ev);
-        npc.applyMapEvent(ev);
+        Entity entity = entityFactory.create(new NpcOldManType());
 
-        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
-        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+        if (entity instanceof NpcOldMan npc) {
 
-        Entity[] npcArray = gameWindow.getNPC();
-        if (npcArray == null || npcArray.length <= 1) {
-            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            npc.applyMapEvent(ev);
+
+            if (ev != null) {
+                npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+                npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+            }
+
+            Entity[] npcArray = gameWindow.getNPC();
+            if (npcArray == null || npcArray.length <= 1) {
+                npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            }
+            npcArray[0] = npc;
+            gameWindow.setNPC(npcArray);
         }
-        npcArray[0] = npc;
-        gameWindow.setNPC(npcArray);
 
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
@@ -79,18 +82,26 @@ public class AssetSetter {
             ev = model.findEventAt(tileX, tileY);
         }
 
-        NpcMalonyChicken npc = new NpcMalonyChicken(gameWindow, ev);
-        npc.applyMapEvent(ev);
+        entityFactory.setMapEvent(ev);
 
-        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
-        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+        Entity entity = entityFactory.create(new NpcMalonyChickenType());
 
-        Entity[] npcArray = gameWindow.getNPC();
-        if (npcArray == null || npcArray.length <= 1) {
-            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+        if (entity instanceof NpcMalonyChicken npc) {
+
+            npc.applyMapEvent(ev);
+
+            if (ev != null) {
+                npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+                npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+            }
+
+            Entity[] npcArray = gameWindow.getNPC();
+            if (npcArray == null || npcArray.length <= 1) {
+                npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            }
+            npcArray[1] = npc;
+            gameWindow.setNPC(npcArray);
         }
-        npcArray[1] = npc;
-        gameWindow.setNPC(npcArray);
 
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
@@ -116,18 +127,24 @@ public class AssetSetter {
             ev = model.findEventAt(tileX, tileY);
         }
 
-        NpcMerChant npc = new NpcMerChant(gameWindow, ev);
-        npc.applyMapEvent(ev);
+        Entity entity = entityFactory.create(new NpcMerChantType());
 
-        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
-        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+        if (entity instanceof NpcMerChant npc) {
 
-        Entity[] npcArray = gameWindow.getNPC();
-        if (npcArray == null || npcArray.length <= 1) {
-            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            npc.applyMapEvent(ev);
+
+            if (ev != null) {
+                npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+                npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+            }
+
+            Entity[] npcArray = gameWindow.getNPC();
+            if (npcArray == null || npcArray.length <= 1) {
+                npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            }
+            npcArray[0] = npc;
+            gameWindow.setNPC(npcArray);
         }
-        npcArray[0] = npc;
-        gameWindow.setNPC(npcArray);
 
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
@@ -152,18 +169,24 @@ public class AssetSetter {
             ev = model.findEventAt(tileX, tileY);
         }
 
-        NpcSave npc = new NpcSave(gameWindow, ev);
-        npc.applyMapEvent(ev);
+        Entity entity = entityFactory.create(new NpcSaveType());
 
-        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
-        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+        if (entity instanceof NpcSave npc) {
 
-        Entity[] npcArray = gameWindow.getNPC();
-        if (npcArray == null || npcArray.length <= 1) {
-            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            npc.applyMapEvent(ev);
+
+            if (ev != null) {
+                npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+                npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+            }
+
+            Entity[] npcArray = gameWindow.getNPC();
+            if (npcArray == null || npcArray.length <= 1) {
+                npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            }
+            npcArray[1] = npc;
+            gameWindow.setNPC(npcArray);
         }
-        npcArray[1] = npc;
-        gameWindow.setNPC(npcArray);
 
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
@@ -188,18 +211,24 @@ public class AssetSetter {
             ev = model.findEventAt(tileX, tileY);
         }
 
-        NpcInnkeeper npc = new NpcInnkeeper(gameWindow, ev);
-        npc.applyMapEvent(ev);
+        Entity entity = entityFactory.create(new NpcInnkeeperType());
 
-        npc.setWorldX(FrameApp.getTileSize() * ev.getX());
-        npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+        if (entity instanceof NpcInnkeeper npc) {
 
-        Entity[] npcArray = gameWindow.getNPC();
-        if (npcArray == null || npcArray.length <= 1) {
-            npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            npc.applyMapEvent(ev);
+
+            if (ev != null) {
+                npc.setWorldX(FrameApp.getTileSize() * ev.getX());
+                npc.setWorldY(FrameApp.getTileSize() * ev.getY());
+            }
+
+            Entity[] npcArray = gameWindow.getNPC();
+            if (npcArray == null || npcArray.length <= 1) {
+                npcArray = new Entity[Math.max(10, (npcArray == null ? 0 : npcArray.length))];
+            }
+            npcArray[2] = npc;
+            gameWindow.setNPC(npcArray);
         }
-        npcArray[2] = npc;
-        gameWindow.setNPC(npcArray);
 
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }

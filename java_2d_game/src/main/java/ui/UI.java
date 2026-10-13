@@ -1,5 +1,7 @@
 package ui;
 
+import entity.type.NpcMerChantType;
+import factory.EntityFactory;
 import popup.PopupManager;
 import entity.Entity;
 import entity.type.EntityType;
@@ -28,6 +30,7 @@ import java.util.List;
 public class UI {
 
     private final GameWindow gameWindow;
+    private EntityFactory entityFactory;
 
     // 使用するフォント
     private final Font arial40;
@@ -93,7 +96,7 @@ public class UI {
     private float redAlpha = 0f;
     private final double redFadeDuration = 1.2; // 赤が最大になるまでの秒数
 
-    public UI(GameWindow gameWindow) {
+    public UI(GameWindow gameWindow, EntityFactory entityFactory) {
         this.gameWindow = gameWindow;
         this.tradeCtx = new TradeScreenContext(gameWindow, this);
         this.saveCtx = new SaveScreenContext(gameWindow, this);
@@ -103,8 +106,7 @@ public class UI {
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
         this.currentDialogueMessage = "";
-        this.npc = new NpcMerChant(gameWindow, ev);
-
+        this.npc = entityFactory.create(new NpcMerChantType());
         Entity heart = new ObjHeart(gameWindow);
         heartFull = heart.getImage();
         heartHalf = heart.getImage2();
