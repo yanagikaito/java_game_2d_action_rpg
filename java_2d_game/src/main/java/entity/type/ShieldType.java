@@ -4,7 +4,7 @@ public record ShieldType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 9;
+        return 13;
     }
 
     @Override

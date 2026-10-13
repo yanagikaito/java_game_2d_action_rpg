@@ -6,8 +6,7 @@ import entity.type.*;
 import monster.MonGreenGoblin;
 import monster.MonGreenSlime;
 import monster.MonMintSoldier;
-import npc.NpcChicken;
-import npc.NpcOldMan;
+import npc.*;
 import object.*;
 import player.Player;
 import window.GameWindow;
@@ -22,12 +21,20 @@ public class EntityFactory {
     }
 
     public Entity create(EntityType type) {
+        return create(type, null);
+    }
+
+    public Entity create(EntityType type, MapEvent ev) {
 
         return switch (type) {
 
             // キャラクター・モンスター系
             case PlayerType player -> new Player(gameWindow, gameWindow.getKeyHandler());
-            case NpcType npc -> new NpcOldMan(gameWindow, ev);
+            case NpcOldManType npc -> new NpcOldMan(gameWindow, ev);
+            case NpcMerChantType npcMerChantType -> new NpcMerChant(gameWindow, ev);
+            case NpcSaveType npcSaveType -> new NpcSave(gameWindow, ev);
+            case NpcInnkeeperType npcInnkeeperType -> new NpcInnkeeper(gameWindow, ev);
+            case NpcMalonyChickenType npcMalonyChickenType -> new NpcMalonyChicken(gameWindow, ev);
             case GreenSlimeType greenSlimeType -> new MonGreenSlime(gameWindow);
             case MintSoldierType mintSoldierType -> new MonMintSoldier(gameWindow);
             case BossMonsterType bossMonsterType -> new MonGreenGoblin(gameWindow);
@@ -89,5 +96,9 @@ public class EntityFactory {
 
     public Entity createBluePotionEntity() {
         return new ObjBluePotion(gameWindow);
+    }
+
+    public void setMapEvent(MapEvent ev) {
+        this.ev = ev;
     }
 }

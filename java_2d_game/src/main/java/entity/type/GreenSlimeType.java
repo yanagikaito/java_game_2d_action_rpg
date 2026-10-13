@@ -4,11 +4,11 @@ public record GreenSlimeType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 2;
+        return 6;
     }
 
     @Override
     public String name() {
-        return "monster";
+        return "green_slime";
     }
 }

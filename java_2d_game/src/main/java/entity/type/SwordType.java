@@ -4,7 +4,7 @@ public record SwordType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 7;
+        return 11;
     }
 
     @Override

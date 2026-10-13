@@ -4,7 +4,7 @@ public record PotType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 16;
+        return 20;
     }
 
     @Override

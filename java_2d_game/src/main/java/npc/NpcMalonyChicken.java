@@ -28,8 +28,11 @@ public class NpcMalonyChicken extends Entity {
 
     private String eventId;
 
+    private db.MapEvent ev;
+
     public NpcMalonyChicken(GameWindow gameWindow, db.MapEvent ev) {
         super(gameWindow);
+        this.ev = ev;
         if (ev != null) {
             this.eventId = String.valueOf(ev.getId());
             applyMapEvent(ev);
@@ -112,33 +115,32 @@ public class NpcMalonyChicken extends Entity {
 
     @Override
     public void speak() {
-        // プレイヤー参照を安全に取得
         if (getGameWindow() == null || getGameWindow().getPlayer() == null) {
             showDialogueAndAdvance();
             return;
         }
 
-        // プレイヤーの向きに合わせて NPC を振り向かせる（プレイヤーの向きの逆を向く）
+        // プレイヤーの方を向く
         String playerDir = getGameWindow().getPlayer().getDirection();
         setDirection(getOppositeDirection(playerDir));
 
-        // もしクエスト受注済みかつ未完了なら、かごの達成をチェックして完了処理を呼ぶ
-        if (questAccepted && !questCompleted) {
-
-            checkCoopObjective();
-        }
-
-        // 既に完了済みなら報酬は渡している想定。会話を変える。
+        // 1. クエスト完了済みの場合
         if (questCompleted) {
             getGameWindow().getUi().setCurrentDialogueMessage("本当に助かったわ。ありがとう！");
             return;
         }
 
-        // 通常の会話フロー
+        // 2. クエスト進行中の場合（かごの達成チェック＆報告）
+        if (questAccepted) {
+            checkCoopObjective(); // この中で完了判定やメッセージ変更を行う
+            return;
+        }
+
+        // 3. クエスト未受注（受託前）の場合：会話を表示・進める
         showDialogueAndAdvance();
 
-        // 会話が最後まで行っていて、まだ選択肢を出していないなら選択肢を出す
-        if (!questOffered && isDialogueFinished()) {
+        // ダイアログが最後まで進み、かつまだ選択肢待ちでない場合のみ選択肢を出す
+        if (isDialogueFinished() && !awaitingChoice) {
             offerQuest();
         }
     }
@@ -193,11 +195,22 @@ public class NpcMalonyChicken extends Entity {
     }
 
     private void offerQuest() {
-        questOffered = true;
-        awaitingChoice = true;
+        this.awaitingChoice = true;
         String title = "クエストを受けますか？";
         String[] options = new String[]{"受ける", "断る"};
-        getGameWindow().getUi().showChoice(title, options, this);
+
+        if (getGameWindow() != null && getGameWindow().getUi() != null) {
+            getGameWindow().getUi().showChoice(title, options, this);
+        }
+    }
+
+    // 断られた時の処理（次回話しかけた時にまた選択肢が出せるようにする）
+    private void declineQuest() {
+        this.awaitingChoice = false;
+        this.questOffered = false; // フラグを戻す
+        if (getGameWindow() != null && getGameWindow().getUi() != null) {
+            getGameWindow().getUi().setCurrentDialogueMessage("気が変わったらまた話しかけてね。");
+        }
     }
 
     /**
@@ -217,13 +230,16 @@ public class NpcMalonyChicken extends Entity {
     }
 
     private void acceptQuest() {
-        questAccepted = true;
-        getGameWindow().getUi().setCurrentDialogueMessage("クエストを受けた！");
-    }
+        this.questAccepted = true;
+        if (this.ev != null) {
+            this.ev.setQuestAccepted(true); // MapEvent側のフラグもON
 
-    private void declineQuest() {
-        questAccepted = false;
-        getGameWindow().getUi().setCurrentDialogueMessage("そう、またいつでも来てね。");
+            // マップモデル（またはデータベース）に最新のイベント状態を反映する
+            if (getGameWindow() != null && getGameWindow().getModel() != null) {
+                getGameWindow().getModel().addEvent(this.ev); // モデル内のデータを更新
+                getGameWindow().getUi().setCurrentDialogueMessage("クエストを受けた！");
+            }
+        }
     }
 
     /**
@@ -243,7 +259,7 @@ public class NpcMalonyChicken extends Entity {
 
         questCompleted = true;
         questAccepted = false;
-        getGameWindow().getUi().setCurrentDialogueMessage("クエスト完了！ " + questRewardCoins + "コインを受け取ったよ。");
+        getGameWindow().getUi().setCurrentDialogueMessage("クエスト完了！ " + questRewardCoins + "ヴェールを受け取ったよ。");
         getGameWindow().getSoundmanager().questChickenCompleteWAV("sound/chicken-quest-completed.wav");
 
     }
