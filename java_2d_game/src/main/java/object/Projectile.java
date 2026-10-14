@@ -38,6 +38,13 @@ public abstract class Projectile extends Entity {
 
         if (!getAlive()) return;
 
+        // 発射物のライフを減らす
+        setLife(getLife() - 1);
+        if (getLife() <= 0) {
+            setAlive(false);
+            return;
+        }
+
         move();
 
         if (user == getGameWindow().getPlayer()) {
@@ -61,7 +68,6 @@ public abstract class Projectile extends Entity {
             if (getGameWindow().getPlayer().getInvincible() == false && hit == true) {
 
                 damagePlayer(getAttack(), getKnockBackPower());
-                // 衝突判定を起こした時の Projectile インスタンスを渡す
                 generateParticle(this, getGameWindow().getPlayer());
                 System.out.println("プレイヤ-に石ころの衝突判定がありダメージを与えた!");
                 setAlive(false);

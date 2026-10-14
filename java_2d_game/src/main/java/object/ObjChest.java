@@ -1,9 +1,6 @@
 package object;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import entity.Entity;
-import entity.loot.LootConfigEntry;
 import entity.loot.LootEntry;
 import entity.loot.LootTableLoader;
 import factory.EntityFactory;
@@ -16,19 +13,12 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.function.Supplier;
 
 public class ObjChest extends Entity {
 
-    private final Random random = new Random();
     private GameWindow gameWindow;
-    private Entity loot;
     private final EntityFactory entityFactory;
     private boolean opened = false;
     private BufferedImage[] chestFrames;
@@ -40,11 +30,10 @@ public class ObjChest extends Entity {
 
     private final List<LootEntry> lootTable = new ArrayList<>();
 
-    public ObjChest(GameWindow gameWindow, Entity loot, EntityFactory entityFactory) {
+    public ObjChest(GameWindow gameWindow, EntityFactory entityFactory) {
         super(gameWindow);
         this.gameWindow = gameWindow;
         this.entityFactory = entityFactory;
-        this.loot = loot;
         setName("宝箱");
         setBlocking(true);
 

@@ -21,7 +21,7 @@ public class EntityFactory {
     }
 
     public Entity create(EntityType type) {
-        return create(type, null);
+        return create(type, (MapEvent) null);
     }
 
     public Entity create(EntityType type, MapEvent ev) {
@@ -29,7 +29,7 @@ public class EntityFactory {
         return switch (type) {
 
             // キャラクター・モンスター系
-            case PlayerType player -> new Player(gameWindow, gameWindow.getKeyHandler());
+            case PlayerType player -> new Player(gameWindow, gameWindow.getKeyHandler(), this);
             case NpcOldManType npc -> new NpcOldMan(gameWindow, ev);
             case NpcMerChantType npcMerChantType -> new NpcMerChant(gameWindow, ev);
             case NpcSaveType npcSaveType -> new NpcSave(gameWindow, ev);
@@ -40,7 +40,7 @@ public class EntityFactory {
             case BossMonsterType bossMonsterType -> new MonGreenGoblin(gameWindow);
             case ChickenType chicken -> new NpcChicken(gameWindow);
 
-            // 装備・通常アイテム系（変数名の重複を解消）
+            // 装備・通常アイテム系
             case SwordType sword -> new ObjSwordNormal(gameWindow);
             case AxeType axe -> new ObjAxe(gameWindow);
             case ShieldType shield -> new ObjShieldWood(gameWindow);
@@ -49,6 +49,13 @@ public class EntityFactory {
             case BluePotionType bluePotion -> new ObjBluePotion(gameWindow);
             case BombType bomb -> new ObjBomb(gameWindow);
             case LanternType lantern -> new ObjLantern(gameWindow);
+            case AuraType auraType -> new ObjAura(gameWindow);
+            case HeartType heartType -> new ObjHeart(gameWindow);
+
+            // 発射・弾系
+            case StoneType stone -> new ObjStone(gameWindow);
+            case FireballType fireball -> new ObjFireball(gameWindow);
+            case SwordProjectileType swordProjectile -> new ObjSwordProjectile(gameWindow);
 
             // 6色の通貨（ヴェール）系
             case VertBronzeType bronzeVert -> new ObjVertBronze(gameWindow);
@@ -58,6 +65,14 @@ public class EntityFactory {
             case VertSilverType silverVert -> new ObjVertSilver(gameWindow);
             case VertGoldType goldVert -> new ObjVertGold(gameWindow);
 
+            default -> null;
+        };
+    }
+
+    public Entity create(EntityType type, EntityFactory entityFactory) {
+        return switch (type) {
+            case ChestType chestType -> new ObjChest(gameWindow, entityFactory);
+            case PotType potType -> new ObjPot(gameWindow, entityFactory);
             default -> null;
         };
     }

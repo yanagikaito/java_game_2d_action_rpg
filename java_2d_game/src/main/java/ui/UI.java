@@ -1,6 +1,8 @@
 package ui;
 
+import entity.type.HeartType;
 import entity.type.NpcMerChantType;
+import entity.type.VertBronzeType;
 import factory.EntityFactory;
 import popup.PopupManager;
 import entity.Entity;
@@ -107,12 +109,12 @@ public class UI {
         this.messageOn = false;
         this.currentDialogueMessage = "";
         this.npc = entityFactory.create(new NpcMerChantType());
-        Entity heart = new ObjHeart(gameWindow);
+        Entity heart = entityFactory.create(new HeartType());
         heartFull = heart.getImage();
         heartHalf = heart.getImage2();
         heartBlank = heart.getImage3();
 
-        Entity bronzeCoin = new ObjVertBronze(gameWindow);
+        Entity bronzeCoin = entityFactory.create(new VertBronzeType());
         coin = bronzeCoin.getImage();
     }
 

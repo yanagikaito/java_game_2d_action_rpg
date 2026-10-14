@@ -5,7 +5,6 @@ import entity.type.*;
 import factory.EntityFactory;
 import frame.FrameApp;
 import npc.*;
-import object.*;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
@@ -358,35 +357,43 @@ public class AssetSetter {
         obj[i] = createObjLantern(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 21);
     }
 
-    private ObjLantern createObjLantern(int worldX, int worldY) {
+    private Entity createObjLantern(int worldX, int worldY) {
 
-        ObjLantern lantern = new ObjLantern(gameWindow);
-        lantern.setWorldX(worldX);
-        lantern.setWorldY(worldY);
+        Entity lantern = entityFactory.create(new LanternType());
+        if (lantern != null) {
+            lantern.setWorldX(worldX);
+            lantern.setWorldY(worldY);
+        }
         return lantern;
     }
 
-    private ObjRedPotion createObjRedPotion(int worldX, int worldY) {
+    private Entity createObjRedPotion(int worldX, int worldY) {
 
-        ObjRedPotion red = new ObjRedPotion(gameWindow);
-        red.setWorldX(worldX);
-        red.setWorldY(worldY);
+        Entity red = entityFactory.create(new RedPotionType());
+        if (red != null) {
+            red.setWorldX(worldX);
+            red.setWorldY(worldY);
+        }
         return red;
     }
 
-    private ObjGreenPotion createObjGreenPotion(int worldX, int worldY) {
+    private Entity createObjGreenPotion(int worldX, int worldY) {
 
-        ObjGreenPotion green = new ObjGreenPotion(gameWindow);
-        green.setWorldX(worldX);
-        green.setWorldY(worldY);
+        Entity green = entityFactory.create(new GreenPotionType());
+        if (green != null) {
+            green.setWorldX(worldX);
+            green.setWorldY(worldY);
+        }
         return green;
     }
 
-    private ObjBluePotion createObjBluePotion(int worldX, int worldY) {
+    private Entity createObjBluePotion(int worldX, int worldY) {
 
-        ObjBluePotion blue = new ObjBluePotion(gameWindow);
-        blue.setWorldX(worldX);
-        blue.setWorldY(worldY);
+        Entity blue = entityFactory.create(new BluePotionType());
+        if (blue != null) {
+            blue.setWorldX(worldX);
+            blue.setWorldY(worldY);
+        }
         return blue;
     }
 
@@ -443,58 +450,66 @@ public class AssetSetter {
         return npcChicken;
     }
 
-    private ObjAxe createObjAxe(int worldX, int worldY) {
-        ObjAxe objAxe = new ObjAxe(gameWindow);
-        objAxe.setWorldX(worldX);
-        objAxe.setWorldY(worldY);
+    private Entity createObjAxe(int worldX, int worldY) {
+        Entity objAxe = entityFactory.create(new AxeType());
+        if (objAxe != null) {
+            objAxe.setWorldX(worldX);
+            objAxe.setWorldY(worldY);
+        }
         return objAxe;
     }
 
-    private ObjChest createObjChest(int worldX, int worldY) {
+    private Entity createObjChest(int worldX, int worldY) {
         Entity lootPrototype = null;
         EntityFactory factory = new EntityFactory(gameWindow);
-        ObjChest objChest = new ObjChest(gameWindow, lootPrototype, factory);
-        objChest.setWorldX(worldX);
-        objChest.setWorldY(worldY);
+        Entity objChest = entityFactory.create(new ChestType(), factory);
+        if (objChest != null) {
+            objChest.setWorldX(worldX);
+            objChest.setWorldY(worldY);
+        }
         return objChest;
     }
 
-    private ObjPot createObjPot(int worldX, int worldY) {
+    private Entity createObjPot(int worldX, int worldY) {
         EntityFactory factory = new EntityFactory(gameWindow);
-        ObjPot objPot = new ObjPot(gameWindow, factory);
-        objPot.getSolidArea().x = 1;
-        objPot.getSolidArea().y = 1;
+        Entity objPot = entityFactory.create(new PotType(), factory);
+        if (objPot != null) {
+            objPot.getSolidArea().x = 1;
+            objPot.getSolidArea().y = 1;
 
-        objPot.setSolidAreaDefaultX(objPot.getSolidArea().x);
-        objPot.setSolidAreaDefaultY(objPot.getSolidArea().y);
+            objPot.setSolidAreaDefaultX(objPot.getSolidArea().x);
+            objPot.setSolidAreaDefaultY(objPot.getSolidArea().y);
 
-        objPot.getSolidArea().width = (FrameApp.getTileSize() - 8);
-        objPot.getSolidArea().height = (FrameApp.getTileSize() - 8);
-        objPot.setWorldX(worldX);
-        objPot.setWorldY(worldY);
-        objPot.setPickable(true);
-        objPot.setUser(gameWindow.getPlayer());
-        objPot.setThrown(false);
-        objPot.setAlive(true);
+            objPot.getSolidArea().width = (FrameApp.getTileSize() - 8);
+            objPot.getSolidArea().height = (FrameApp.getTileSize() - 8);
+            objPot.setWorldX(worldX);
+            objPot.setWorldY(worldY);
+            objPot.setPickable(true);
+            objPot.setUser(gameWindow.getPlayer());
+            objPot.setThrown(false);
+            objPot.setAlive(true);
+        }
         return objPot;
     }
 
-    private ObjRock createObjRock(int worldX, int worldY) {
-        ObjRock objRock = new ObjRock(gameWindow);
-        objRock.getSolidArea().x = 1;
-        objRock.getSolidArea().y = 1;
+    private Entity createObjRock(int worldX, int worldY) {
+        Entity objRock = entityFactory.create(new RockType());
+        if (objRock != null) {
+            objRock.getSolidArea().x = 1;
+            objRock.getSolidArea().y = 1;
 
-        objRock.setSolidAreaDefaultX(objRock.getSolidArea().x);
-        objRock.setSolidAreaDefaultY(objRock.getSolidArea().y);
+            objRock.setSolidAreaDefaultX(objRock.getSolidArea().x);
+            objRock.setSolidAreaDefaultY(objRock.getSolidArea().y);
 
-        objRock.getSolidArea().width = (FrameApp.getTileSize() - 8);
-        objRock.getSolidArea().height = (FrameApp.getTileSize() - 8);
-        objRock.setWorldX(worldX);
-        objRock.setWorldY(worldY);
-        objRock.setPickable(true);
-        objRock.setUser(gameWindow.getPlayer());
-        objRock.setThrown(false);
-        objRock.setAlive(true);
+            objRock.getSolidArea().width = (FrameApp.getTileSize() - 8);
+            objRock.getSolidArea().height = (FrameApp.getTileSize() - 8);
+            objRock.setWorldX(worldX);
+            objRock.setWorldY(worldY);
+            objRock.setPickable(true);
+            objRock.setUser(gameWindow.getPlayer());
+            objRock.setThrown(false);
+            objRock.setAlive(true);
+        }
         return objRock;
     }
 

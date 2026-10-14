@@ -1,9 +1,9 @@
 package npc;
 
 import entity.Entity;
+import entity.type.*;
 import frame.FrameApp;
 import game.GameState;
-import object.*;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -83,11 +83,14 @@ public class NpcMerChant extends Entity {
 
         System.out.println("gameWindow = " + gameWindow);
 
-        items.add(new ObjSwordNormal(gameWindow));
-        items.add(new ObjShieldWood(gameWindow));
-        items.add(new ObjRedPotion(gameWindow));
-        items.add(new ObjGreenPotion(gameWindow));
-        items.add(new ObjBluePotion(gameWindow));
+        // EntityFactory を取得して経由させる
+        var factory = gameWindow.getEntityFactory();
+
+        items.add(factory.create(new SwordType()));
+        items.add(factory.create(new ShieldType()));
+        items.add(factory.create(new RedPotionType()));
+        items.add(factory.create(new GreenPotionType()));
+        items.add(factory.create(new BluePotionType()));
 
         System.out.println("Items created: " + items.size());
         for (Entity item : items) {
@@ -120,11 +123,12 @@ public class NpcMerChant extends Entity {
     @Override
     public ArrayList<Entity> getShopItems() {
         ArrayList<Entity> items = new ArrayList<>();
-        items.add(new ObjSwordNormal(gameWindow));
-        items.add(new ObjShieldWood(gameWindow));
-        items.add(new ObjRedPotion(gameWindow));
-        items.add(new ObjGreenPotion(gameWindow));
-        items.add(new ObjBluePotion(gameWindow));
+        var factory = gameWindow.getEntityFactory();
+        items.add(factory.create(new SwordType()));
+        items.add(factory.create(new ShieldType()));
+        items.add(factory.create(new RedPotionType()));
+        items.add(factory.create(new GreenPotionType()));
+        items.add(factory.create(new BluePotionType()));
         return items;
     }
 
@@ -138,13 +142,5 @@ public class NpcMerChant extends Entity {
         g2.drawImage(original, 0, 0, width, height, null);
         g2.dispose();
         return result;
-    }
-
-    public String getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
     }
 }

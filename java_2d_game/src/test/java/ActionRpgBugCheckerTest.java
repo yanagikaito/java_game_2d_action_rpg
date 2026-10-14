@@ -133,6 +133,182 @@ public class ActionRpgBugCheckerTest {
                                     classHasError[0] = true;
                                 }
                             }
+
+                            if (owner.contains("object/ObjAura") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjAuraを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjAxe") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjAxeを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjBluePotion") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjBluePotionを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjBomb") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjBombを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjChest") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjChestを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjFireball") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjFireballを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjGreenPotion") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjGreenPotionを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjHeart") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjHeartを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjLantern") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjLanternを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjPot") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjPotを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjRedPotion") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjRedPotionを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjRock") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjRockを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjShieldWood") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjShieldWoodを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjStone") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjStoneを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjSwordNormal") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjSwordNormalを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjSwordProjectile") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjSwordProjectileを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjVertBlue") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjVertBlueを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjVertBronze") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjVertBronzeを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjVertGold") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjVertGoldを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjVertGreen") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjVertGreenを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjVertRed") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjVertRedを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
+
+                            if (owner.contains("object/ObjVertSilver") && name.equals("<init>")) {
+
+                                if (!className.contains("EntityFactory")) {
+                                    System.err.println("[アーキテクチャ違反] " + className + " がファクトリーを経由せずに直接ObjVertSilverを生成しています！");
+                                    classHasError[0] = true;
+                                }
+                            }
                         }
                     }
                 });

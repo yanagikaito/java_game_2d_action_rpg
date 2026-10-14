@@ -4,7 +4,6 @@ import entity.type.AxeType;
 import entity.Entity;
 import entity.type.GreenSlimeType;
 import frame.FrameApp;
-import object.ObjAxe;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -54,7 +53,7 @@ public class MonMintSoldier extends Entity {
         setAttack(5);
         setDefense(0);
         setExp(5);
-        setCurrentWeapon(new ObjAxe(gameWindow));
+        setAxe();
         getSolidArea().x = 1;
         getSolidArea().y = 1;
         getSolidArea().width = 46;
@@ -186,6 +185,11 @@ public class MonMintSoldier extends Entity {
         }
 
         return resized;
+    }
+
+    private void setAxe() {
+        Entity axe = (Entity) getGameWindow().getEntityFactory().create(new AxeType());
+        setCurrentWeapon(axe);
     }
 
     @Override

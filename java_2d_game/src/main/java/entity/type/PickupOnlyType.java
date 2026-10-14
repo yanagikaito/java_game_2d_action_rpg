@@ -4,7 +4,7 @@ public record PickupOnlyType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 19;
+        return 22;
     }
 
     @Override

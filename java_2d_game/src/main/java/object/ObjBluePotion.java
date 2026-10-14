@@ -43,11 +43,6 @@ public class ObjBluePotion extends Entity {
         g2.drawImage(this.getImage(), screenX, screenY, null);
     }
 
-    @Override
-    public Entity copy() {
-        return new ObjBluePotion(gameWindow);
-    }
-
     public int getHealAmount() {
         return healAmount;
     }

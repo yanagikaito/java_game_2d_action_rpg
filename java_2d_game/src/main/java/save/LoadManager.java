@@ -4,6 +4,7 @@ import db.DbManager;
 import entity.*;
 import entity.type.*;
 import factory.EntityFactory;
+import object.ObjAura;
 import player.Player;
 import window.GameWindow;
 
@@ -23,7 +24,7 @@ public class LoadManager {
 
             if (!rs.next()) return null;
 
-            Player player = new Player(gameWindow, gameWindow.getKeyHandler());
+            Player player = new Player(gameWindow, gameWindow.getKeyHandler(), gameWindow.getEntityFactory());
             player.setLoaded(true);
 
             player.getInventory().clear();
@@ -50,6 +51,16 @@ public class LoadManager {
 
             // 3. 装備復元
             loadEquipment(conn, slotNumber, player, gameWindow);
+
+            EntityFactory factory = new EntityFactory(gameWindow);
+            ObjAura playerAura = (ObjAura) factory.create(new AuraType());
+            if (playerAura != null) {
+                if (player.getLife() == player.getMaxLife()) {
+                    // オーラアクティブ持続時間30秒タイマー開始
+                    playerAura.activate(30_000L);
+                }
+                player.setAura(playerAura);
+            }
 
             // 4. メタからプレイ時間を復元（SaveMeta は JSON ファイルに保存されている想定）
             try {
@@ -216,15 +227,20 @@ public class LoadManager {
             case 16 -> new BluePotionType();
             case 17 -> new BombType();
             case 18 -> new LanternType();
-            case 19 -> new PickupOnlyType();
-            case 20 -> new PotType();
-            case 21 -> new RockType();
-            case 22 -> new VertBronzeType();
-            case 23 -> new VertGreenType();
-            case 24 -> new VertBlueType();
-            case 25 -> new VertRedType();
-            case 26 -> new VertSilverType();
-            case 27 -> new VertGoldType();
+            case 19 -> new HeartType();
+            case 20 -> new FireballType();
+            case 21 -> new SwordProjectileType();
+            case 22 -> new PickupOnlyType();
+            case 23 -> new PotType();
+            case 24 -> new RockType();
+            case 25 -> new StoneType();
+            case 26 -> new AuraType();
+            case 27 -> new VertBronzeType();
+            case 28 -> new VertGreenType();
+            case 29 -> new VertBlueType();
+            case 30 -> new VertRedType();
+            case 31 -> new VertSilverType();
+            case 32 -> new VertGoldType();
             default -> null;
         };
     }

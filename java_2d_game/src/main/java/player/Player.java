@@ -6,6 +6,7 @@ import entity.loot.LootEntry;
 import entity.loot.LootTableLoader;
 import entity.particle.WaterEffectManager;
 import entity.type.*;
+import factory.EntityFactory;
 import frame.FrameApp;
 import game.GameOverAnimator;
 import game.GameOverManager;
@@ -29,7 +30,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Supplier;
 import javax.swing.*;
 import javax.swing.Timer;
 
@@ -113,6 +113,7 @@ public class Player extends Entity {
 
     // aura 用キャッシュ画像（事前レンダリング）
     private ObjAura aura;
+    private EntityFactory entityFactory;
 
     // 保存・表示する秒単位のプレイ時間
     private long playTimeSeconds = 0L;
@@ -170,7 +171,7 @@ public class Player extends Entity {
      * @param keyHandler キー入力ハンドラ。プレイヤーの移動や操作を受け付ける。
      */
 
-    public Player(GameWindow gameWindow, KeyHandler keyHandler) {
+    public Player(GameWindow gameWindow, KeyHandler keyHandler, EntityFactory entityFactory) {
         super(gameWindow);
         // inventory が null の可能性があるなら初期化しておく
         if (this.getInventory() == null) {
@@ -178,8 +179,9 @@ public class Player extends Entity {
         }
         this.gameWindow = gameWindow;
         this.keyHandler = keyHandler;
+        this.entityFactory = entityFactory;
         this.spriteKey = "player_basic";
-        this.aura = new ObjAura(gameWindow);
+        this.aura = (ObjAura) entityFactory.create(new AuraType());
         initializeDefaultStats();
 
         screenX = FrameApp.getScreenWidth() / 2 - (FrameApp.getTileSize() / 2);
@@ -243,12 +245,17 @@ public class Player extends Entity {
         setExp(0);
         setNextLevelExp(5);
         setCoin(500);
-        setCurrentWeapon(new ObjSwordNormal(gameWindow));
-        setCurrentShield(new ObjShieldWood(gameWindow));
-        setProjectile(new ObjFireball(gameWindow));
-        setProjectile(new ObjBomb(gameWindow));
+        setCurrentWeapon(entityFactory.create(new SwordType()));
+        setCurrentShield(entityFactory.create(new ShieldType()));
+        setFireball();
+        setBomb();
         setAttack(calculateBaseAttack());
         setDefense(calculateBaseDefense());
+        ObjAura playerAura = (ObjAura) entityFactory.create(new AuraType());
+        if (getLife() == getMaxLife()) {
+            playerAura.activate(30_000L); // 新規開始時も満タンならアクティブ化
+        }
+        setAura(playerAura);
     }
 
     public void startDeathSequence() {
@@ -282,6 +289,17 @@ public class Player extends Entity {
         setDirection("down");
     }
 
+    private void setFireball() {
+        Projectile fireball = (Projectile) getGameWindow().getEntityFactory().create(new FireballType());
+        setProjectile(fireball);
+    }
+
+    private void setBomb() {
+        Projectile bomb = (Projectile) getGameWindow().getEntityFactory().create(new BombType());
+        setProjectile(bomb);
+    }
+
+
     /**
      * プレイヤーのレベル、最大HP/MP、現在HP/MP、無敵状態をリセットする。
      * 主にゲームオーバー後のリスタート時などに全回復させたい場合に呼ぶ。
@@ -304,11 +322,12 @@ public class Player extends Entity {
 
         getInventory().clear();
         ArrayList<Entity> items = new ArrayList<>();
+        var factory = gameWindow.getEntityFactory();
         items.add(getCurrentWeapon());
         items.add(getCurrentShield());
-        items.add(new ObjRedPotion(gameWindow));
-        items.add(new ObjGreenPotion(gameWindow));
-        items.add(new ObjBluePotion(gameWindow));
+        items.add(factory.create(new RedPotionType()));
+        items.add(factory.create(new GreenPotionType()));
+        items.add(factory.create(new BluePotionType()));
 
         setInventory(items);
     }
@@ -2723,7 +2742,13 @@ public class Player extends Entity {
         }
 
         // 剣専用プロジェクタイルを生成
-        ObjSwordProjectile sp = new ObjSwordProjectile(gameWindow);
+        setSwordProjectile();
+    }
+
+    private void setSwordProjectile() {
+
+        ObjSwordProjectile sp =
+                (ObjSwordProjectile) getGameWindow().getEntityFactory().create(new SwordProjectileType());
 
         sp.set(
                 getWorldX(),
@@ -2733,15 +2758,18 @@ public class Player extends Entity {
                 this
         );
 
+        sp.setAlive(true);
         sp.setLife(sp.getMaxLife());
         sp.setSpriteNum(1);
         sp.setSpriteCounter(0);
 
+        setProjectile(sp);
+
         // ここで projectileList に追加
-        gameWindow.getProjectileList().add(sp);
+        getGameWindow().getProjectileList().add(sp);
 
         // 発射時の演出
-        gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
+        getGameWindow().getSoundmanager().explosionWAV("sound/explosion-sound.wav");
 
         // 発射直後にプロジェクタイル側でエフェクトを初期化させる
         sp.onFire(getDirection());
@@ -2777,7 +2805,8 @@ public class Player extends Entity {
 
                 System.out.println("DEBUG: Fキーが押されている");
 
-                ObjFireball fb = new ObjFireball(gameWindow);
+                ObjSwordProjectile fb =
+                        (ObjSwordProjectile) getGameWindow().getEntityFactory().create(new FireballType());
                 fb.set(
                         getWorldX(),
                         getWorldY(),
@@ -2846,7 +2875,8 @@ public class Player extends Entity {
                 int tileTopY = tileY * tileSize;
 
                 // 爆弾オブジェクトを作って world 座標を solidArea に合わせて設定する
-                ObjBomb b = new ObjBomb(gameWindow);
+                ObjSwordProjectile b =
+                        (ObjSwordProjectile) getGameWindow().getEntityFactory().create(new BombType());
                 // b.getSolidArea().x/y はローカル（オブジェクト内のオフセット）を想定
                 b.setWorldX(tileLeftX - b.getSolidArea().x);
                 b.setWorldY(tileTopY - b.getSolidArea().y);
@@ -3131,27 +3161,29 @@ public class Player extends Entity {
      */
 
     public void interactNPC(int i) {
-
         var keyHandler = gameWindow.getKeyHandler();
 
         if (keyHandler.isPlayerEnter()) {
+            System.out.println("Enter pressed! i = " + i); // ★ここで i の値を確認
+
             if (i != 999) {
+                System.out.println("NPCと会話します");
                 gameWindow.setGameState(GameState.DIALOGUE);
                 gameWindow.getNPC()[i].speak();
             } else {
-                // NPC がいない（素振り／攻撃）時の Enter 処理
-                // ここで「オーラが有効かつ剣を装備している」なら剣を発射する
+                System.out.println("NPCはいません（攻撃・剣発射判定へ）");
+
                 boolean hasSwordEquipped = getCurrentWeapon() != null
                         && getCurrentWeapon().getType() instanceof SwordType;
+                boolean auraActive = (aura != null && aura.isActive() && getLife() == getMaxLife());
 
-                Player p = this;
-                boolean auraActive = (aura != null && aura.isActive() && p.getLife() == p.getMaxLife());
+                System.out.println("hasSwordEquipped = " + hasSwordEquipped + ", auraActive = " + auraActive);
 
                 if (auraActive && hasSwordEquipped) {
-                    // オーラ中かつ剣装備なら射出
+                    System.out.println("→ 剣を発射します！");
                     shootSword();
                 } else {
-                    // 通常の近接攻撃（既存処理）
+                    System.out.println("→ 通常の近接攻撃を行います");
                     setAttackDirection("attack" + getDirection().substring(0, 1).toUpperCase()
                             + getDirection().substring(1));
                     setAttacking(true);
@@ -4444,5 +4476,9 @@ public class Player extends Entity {
         if (sleeping) {
             this.sleepTimer = 0.0; // 睡眠開始時にタイマーを 0 にリセット
         }
+    }
+
+    public void setAura(ObjAura aura) {
+        this.aura = aura;
     }
 }

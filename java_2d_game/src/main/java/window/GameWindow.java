@@ -56,7 +56,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private EntityFactory entityFactory = new EntityFactory(this);
     private final AtomicBoolean repaintPending = new AtomicBoolean(false);
     private KeyHandler keyHandler = new KeyHandler(this);
-    private Player player = new Player(this, keyHandler);
+    private Player player = new Player(this, keyHandler, entityFactory);
     private TileManager tileManager = new TileManager(this);
     private BufferedImage[] footFrames = ResourceLoader.loadFootFrames();
     private WaterEffectManager waterEffectManager = new WaterEffectManager(footFrames);

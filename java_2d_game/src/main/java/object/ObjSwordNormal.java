@@ -32,11 +32,6 @@ public class ObjSwordNormal extends Entity {
         }
     }
 
-    @Override
-    public Entity copy() {
-        return new ObjSwordNormal(gameWindow);
-    }
-
     public int getPrice() {
         return 100;
     }

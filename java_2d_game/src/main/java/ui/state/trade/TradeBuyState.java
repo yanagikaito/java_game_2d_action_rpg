@@ -1,6 +1,7 @@
 package ui.state.trade;
 
 import entity.Entity;
+import entity.type.*;
 import frame.FrameApp;
 import key.KeyHandler;
 import npc.NpcMerChant;
@@ -87,11 +88,12 @@ public final class TradeBuyState implements TradeScreenState {
 
         GameWindow gw = tradeScreenContext.gw();
         ArrayList<Entity> items = new ArrayList<>();
-        items.add(new ObjSwordNormal(gw));
-        items.add(new ObjShieldWood(gw));
-        items.add(new ObjRedPotion(gw));
-        items.add(new ObjGreenPotion(gw));
-        items.add(new ObjBluePotion(gw));
+        var factory = gw.getEntityFactory();
+        items.add(factory.create(new SwordType()));
+        items.add(factory.create(new ShieldType()));
+        items.add(factory.create(new RedPotionType()));
+        items.add(factory.create(new GreenPotionType()));
+        items.add(factory.create(new BluePotionType()));
         return items;
     }
 
@@ -144,10 +146,14 @@ public final class TradeBuyState implements TradeScreenState {
             // プレイヤーの所持金を減らす
             player.setCoin(player.getCoin() - price);
 
-            // shop のアイテムはcopy() を作る
-            Entity toGive = item.copy();
+            // 【変更】item から Type を取得し、EntityFactory 経由で新しく生成する
+            EntityType itemType = item.getType(); // または item.getEntityType() などのメソッド名
+            Entity toGive = gameWindow.getEntityFactory().create(itemType);
 
-            // 個数を扱うなら toGive.setAmount(1) 等を設定
+            // もし個数や状態を引き継ぐ必要がある場合はここで設定
+            // toGive.setAmount(1);
+
+            // 取得判定
             boolean obtained = player.canObtainItem(toGive);
 
             if (obtained) {
@@ -158,7 +164,6 @@ public final class TradeBuyState implements TradeScreenState {
                 tradeScreenContext.setState(new TradeDialogueState(tradeScreenContext, "これ以上購入できない!!", this));
             }
         }
-
     }
 
     private void drawMessageWindow(Graphics2D g2, int tileSize) {

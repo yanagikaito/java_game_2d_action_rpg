@@ -1590,10 +1590,6 @@ public abstract class Entity {
         return new ArrayList<>(); // デフォルトは空
     }
 
-    public Entity copy() {
-        return null;
-    }
-
     /**
      * 価格を取得。
      *
