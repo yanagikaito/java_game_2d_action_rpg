@@ -68,47 +68,30 @@ public class ObjSwordProjectile extends Projectile {
 
     @Override
     public void draw(Graphics2D g2) {
+        super.draw(g2);
 
-        // 画面座標変換（共通関数を使うのが理想）
-        int screenX = getWorldX() - getGameWindow().getPlayer().getWorldX()
-                + getGameWindow().getPlayer().getScreenX();
-        int screenY = getWorldY() - getGameWindow().getPlayer().getWorldY()
-                + getGameWindow().getPlayer().getScreenY();
-
-        // 実際の剣描画（既存の描画処理に合わせてください）
-        g2.drawImage(representativeSprite, screenX, screenY, null);
-
-        // エフェクト描画は同じ world->screen 式を使う
+        // エフェクト描画
         if (auraEffect != null) auraEffect.draw(g2);
     }
 
-    // 発射時に呼ぶメソッド（shootSword() から呼ぶ）
     public void onFire(String direction) {
-        // 方向に応じたスプライトを取得
-        representativeSprite = getSprite(direction);
+        // 現在の方向のスプライトをエフェクト用に取得
+        BufferedImage currentSprite = getSprite(direction);
+        if (currentSprite == null) return;
 
-        if (representativeSprite == null) return;
-
-        // glow をスプライトごとにキャッシュ（キーは方向付きの簡易キー）
+        // glow をスプライトごとにキャッシュ
         String key = "sword_glow_" + direction;
         BufferedImage glow = glowCache.get(key);
         if (glow == null) {
-            glow = SpriteGlowUtil.createGlowFromSprite(representativeSprite, new Color(255, 240, 200), 6);
+            glow = SpriteGlowUtil.createGlowFromSprite(currentSprite, new Color(255, 240, 200), 6);
             glowCache.put(key, glow);
         }
 
-        // 白ピクセル座標を取得（キャッシュ付きユーティリティ）
-        List<Point> whiteCenters = SpriteUtil.findWhitePixelCentersCached(representativeSprite);
+        // 白ピクセル座標を取得
+        List<Point> whiteCenters = SpriteUtil.findWhitePixelCentersCached(currentSprite);
 
-        // SwordAuraEffect を生成して保持（update/draw で使う）
-        auraEffect = new SwordAuraEffect(gameWindow, this, representativeSprite, glow, whiteCenters);
-    }
-
-    public static ObjSwordProjectile getPrototype(GameWindow gw) {
-        if (prototype == null) {
-            prototype = new ObjSwordProjectile(gw);
-        }
-        return prototype;
+        // SwordAuraEffect を生成
+        auraEffect = new SwordAuraEffect(gameWindow, this, currentSprite, glow, whiteCenters);
     }
 
     /**

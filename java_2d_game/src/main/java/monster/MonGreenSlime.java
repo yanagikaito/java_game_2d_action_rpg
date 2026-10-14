@@ -2,8 +2,9 @@ package monster;
 
 import entity.Entity;
 import entity.type.GreenSlimeType;
+import entity.type.StoneType;
 import frame.FrameApp;
-import object.ObjStone;
+import object.Projectile;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -44,7 +45,7 @@ public class MonGreenSlime extends Entity {
         setAttack(1);
         setDefense(0);
         setExp(5);
-        setProjectile(new ObjStone(gameWindow));
+        setStone();
         getSolidArea().x = 1;
         getSolidArea().y = 1;
         getSolidArea().width = 46;
@@ -130,6 +131,11 @@ public class MonGreenSlime extends Entity {
         }
     }
 
+    private void setStone() {
+        Projectile stone = (Projectile) getGameWindow().getEntityFactory().create(new StoneType());
+        setProjectile(stone);
+    }
+
     private void initializeFlowField() {
 
         int mapWidth = FrameApp.getMaxWorldRow();
@@ -156,9 +162,9 @@ public class MonGreenSlime extends Entity {
         String[] dirs = {"up", "down", "left", "right"};
         String dir = dirs[random.nextInt(dirs.length)];
 
-        ObjStone rock = new ObjStone(getGameWindow());
-        rock.set(getWorldX(), getWorldY(), dir, true, this);
-        getGameWindow().getProjectileList().add(rock);
+        Projectile stone = (Projectile) getGameWindow().getEntityFactory().create(new StoneType());
+        stone.set(getWorldX(), getWorldY(), dir, true, this);
+        getGameWindow().getProjectileList().add(stone);
     }
 
     public void damageReaction() {

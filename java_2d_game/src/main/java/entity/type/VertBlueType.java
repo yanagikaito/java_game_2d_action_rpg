@@ -4,7 +4,7 @@ public record VertBlueType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 24;
+        return 29;
     }
 
     @Override

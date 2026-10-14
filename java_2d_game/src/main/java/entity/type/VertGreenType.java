@@ -4,7 +4,7 @@ public record VertGreenType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 23;
+        return 28;
     }
 
     @Override

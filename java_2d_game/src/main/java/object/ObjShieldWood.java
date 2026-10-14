@@ -31,11 +31,6 @@ public class ObjShieldWood extends Entity {
         }
     }
 
-    @Override
-    public Entity copy() {
-        return new ObjShieldWood(gameWindow);
-    }
-
     public int getPrice() {
         return 75;
     }
