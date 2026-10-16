@@ -3518,8 +3518,8 @@ public class Player extends Entity {
 
     public void selectItem(int index) {
 
-        int itemIndex = gameWindow.getUi().getItemIndexOnSlot(gameWindow.getUi().getPlayerSlotRow()
-                , gameWindow.getUi().getPlayerSlotCol());
+        int itemIndex = gameWindow.getUi().getItemIndexOnSlot(gameWindow.getUi().getPlayerSlotCol()
+                , gameWindow.getUi().getPlayerSlotRow());
 
         if (itemIndex < getInventory().size()) {
 
@@ -3570,18 +3570,42 @@ public class Player extends Entity {
         return item == getCurrentWeapon() || item == getCurrentShield();
     }
 
-    public int searchItemInInventory(String itemName) {
+    /**
+     * インベントリ内を走査し、指定されたアイテムタイプ（EntityType）と一致する既存アイテムのインデックスを返す。
+     * クラスの型（{@link Class#equals(Object)} 相当の比較）によって同一性を判定。
+     *
+     * @param itemName 検索する対象のアイテムタイプ（{@link EntityType}）
+     * @return 一致するアイテムが見つかった場合はそのインデックス（0以上）、見つからない場合は {@code 999}
+     */
+
+    public int searchItemInInventory(EntityType itemName) {
 
         int itemIndex = 999;
 
         for (int i = 0; i < getInventory().size(); i++) {
-            if (getInventory().get(i).getName().equals(itemName)) {
-                itemIndex = i;
-                break;
+            Entity invItem = getInventory().get(i);
+
+            if (invItem != null && invItem.getType() != null && itemName != null) {
+                Class<?> invClass = invItem.getType().getClass();
+                Class<?> targetClass = itemName.getClass();
+
+                if (invClass == targetClass) {
+                    itemIndex = i;
+                    break;
+                }
+            } else {
             }
         }
         return itemIndex;
     }
+
+    /**
+     * プレイヤーが新しいアイテムを獲得できるかを判定し、インベントリへの追加または既存アイテムへのスタック処理を行う。
+     * 爆弾（{@code object.ObjBomb}）などの特定の除外条件や、インベントリの最大容量制限も考慮される。
+     *
+     * @return 取得（またはスタック）に成功した場合は {@code true}、失敗した場合は {@code false}
+     * @path 取得しようとするアイテムの {@link Entity} インスタンス
+     */
 
     public boolean canObtainItem(Entity item) {
 
@@ -3589,16 +3613,17 @@ public class Player extends Entity {
         if (item == null) return false;
         if (item instanceof object.ObjBomb) return false;
 
-        //スタック可能かチェックする
         if (item.isStackable() == true) {
 
-            int index = searchItemInInventory(item.getName());
+            int index = searchItemInInventory(item.getType());
 
             if (index != 999) {
-                getInventory().get(index).setAmount(getInventory().get(index).getAmount() + 1);
+                Entity existingItem = getInventory().get(index);
+                int oldAmount = existingItem.getAmount();
+                existingItem.setAmount(oldAmount + 1);
+
                 canObtain = true;
 
-                // 新しいアイテムの空きスロットをチェックする
             } else {
                 if (getInventory().size() != getMaxInventorySize()) {
                     getInventory().add(item);
@@ -3606,7 +3631,6 @@ public class Player extends Entity {
                 }
             }
 
-            // スタック不可能なので空きスロットを確認する
         } else {
             if (getInventory().size() != getMaxInventorySize()) {
                 getInventory().add(item);
