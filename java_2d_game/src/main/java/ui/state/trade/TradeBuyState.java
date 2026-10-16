@@ -5,7 +5,6 @@ import entity.type.*;
 import frame.FrameApp;
 import key.KeyHandler;
 import npc.NpcMerChant;
-import object.*;
 import player.Player;
 import ui.UI;
 import window.GameWindow;
@@ -111,9 +110,9 @@ public final class TradeBuyState implements TradeScreenState {
         List<Entity> shopInv = shopEntity.getInventory();
 
         // スロット位置 → インデックス取得
-        int row = ui.getNpcSlotRow();
         int col = ui.getNpcSlotCol();
-        int idx = ui.getItemIndexOnSlot(row, col);
+        int row = ui.getNpcSlotRow();
+        int idx = ui.getItemIndexOnSlot(col, row);
 
         // 範囲外チェック
         if (idx < 0 || idx >= shopInv.size()) {
@@ -141,17 +140,12 @@ public final class TradeBuyState implements TradeScreenState {
                             this
                     )
             );
-            // 既存の購入成功分岐の最後を置き換え
         } else {
             // プレイヤーの所持金を減らす
             player.setCoin(player.getCoin() - price);
 
-            // 【変更】item から Type を取得し、EntityFactory 経由で新しく生成する
-            EntityType itemType = item.getType(); // または item.getEntityType() などのメソッド名
+            EntityType itemType = item.getType();
             Entity toGive = gameWindow.getEntityFactory().create(itemType);
-
-            // もし個数や状態を引き継ぐ必要がある場合はここで設定
-            // toGive.setAmount(1);
 
             // 取得判定
             boolean obtained = player.canObtainItem(toGive);
@@ -188,9 +182,9 @@ public final class TradeBuyState implements TradeScreenState {
 
     private void drawPriceWindow(Graphics2D g2, int tileSize, UI ui, List<Entity> inv) {
 
-        int row = ui.getNpcSlotRow();
         int col = ui.getNpcSlotCol();
-        int idx = ui.getItemIndexOnSlot(row, col);
+        int row = ui.getNpcSlotRow();
+        int idx = ui.getItemIndexOnSlot(col, row);
         if (idx < 0 || idx >= inv.size()) return;
 
         int x = (int) (tileSize * 5.5);

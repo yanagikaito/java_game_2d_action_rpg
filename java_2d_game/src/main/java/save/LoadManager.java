@@ -246,8 +246,9 @@ public class LoadManager {
     }
 
     private static int determineMaxStackForType(int typeId) {
+        //　各消費アイテム
         return switch (typeId) {
-            case 7, 8, 9 -> 99;
+            case 14, 15, 16 -> 99;
             default -> 1;
         };
     }

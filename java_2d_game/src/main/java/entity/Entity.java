@@ -53,7 +53,7 @@ public abstract class Entity {
     private Entity user;
     private boolean pickable = false;
     private int amount = 1;
-    private int maxStack = 1;
+    private int maxStack = 99;
     protected String trigger;
 
     public enum Direction {UP, DOWN, LEFT, RIGHT}

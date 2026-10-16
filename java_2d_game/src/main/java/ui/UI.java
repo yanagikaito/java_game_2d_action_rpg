@@ -10,8 +10,6 @@ import entity.type.EntityType;
 import frame.FrameApp;
 import game.GameState;
 import hex.GreenHexPanel;
-import npc.NpcMerChant;
-import object.*;
 import player.Player;
 import player.SpriteManager;
 import save.SaveManager;
@@ -32,7 +30,6 @@ import java.util.List;
 public class UI {
 
     private final GameWindow gameWindow;
-    private EntityFactory entityFactory;
 
     // 使用するフォント
     private final Font arial40;
@@ -46,12 +43,9 @@ public class UI {
     // メッセージ表示用
     private boolean messageOn;
     private String currentDialogueMessage;
-    private ArrayList<String> message = new ArrayList<>();
-    private ArrayList<Integer> messageCounter = new ArrayList<>();
     private GreenHexPanel greenHexPanel = new GreenHexPanel();
     private SpriteManager spriteManager = new SpriteManager();
     private PopupManager popupManager = new PopupManager(64);
-    private boolean bedDialogueActive = false;
 
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
@@ -915,15 +909,15 @@ public class UI {
             frameY = tileSize;
             frameWidth = (tileSize * 6) + tileSize / 2;
             frameHeight = tileSize * 5;
-            slotRow = playerSlotRow;
             slotCol = playerSlotCol;
+            slotRow = playerSlotRow;
         } else {
             frameX = tileSize * 2;
             frameY = tileSize;
             frameWidth = (tileSize * 6) + tileSize / 2;
             frameHeight = tileSize * 5;
-            slotRow = npcSlotRow;
             slotCol = npcSlotCol;
+            slotRow = npcSlotRow;
         }
 
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
@@ -934,8 +928,8 @@ public class UI {
         int slotY = slotYstart;
 
         int slotSize = tileSize + 3;
-        int cursorX = slotXstart + (slotSize * slotRow);
-        int cursorY = slotYstart + (slotSize * slotCol);
+        int cursorX = slotXstart + (slotSize * slotCol);
+        int cursorY = slotYstart + (slotSize * slotRow);
         int cursorWidth = tileSize;
         int cursorHeight = tileSize;
 
@@ -1052,7 +1046,7 @@ public class UI {
 
         if (cursor) {
 
-            int itemIndex = getItemIndexOnSlot(slotRow, slotCol);
+            int itemIndex = getItemIndexOnSlot(slotCol, slotRow);
 
             if (0 <= itemIndex && itemIndex < inv.size()) {
                 Entity item = inv.get(itemIndex);
@@ -1103,9 +1097,8 @@ public class UI {
         loadCtx.handleKey(keyCode);
     }
 
-    public int getItemIndexOnSlot(int slotRow, int slotCol) {
-        int itemIndex = slotRow + (slotCol * 5);
-        return itemIndex;
+    public int getItemIndexOnSlot(int slotCol, int slotRow) {
+        return slotCol + (slotRow * 5);
     }
 
     public void drawSubWindow(Graphics2D g2, int x, int y, int width, int height) {

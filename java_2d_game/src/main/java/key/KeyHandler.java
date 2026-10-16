@@ -25,8 +25,8 @@ public class KeyHandler implements KeyListener {
     private boolean bombKeyPressed;
     private boolean throwKeyPressed;
     private int commandNum;
-    private static final int MAX_COL = 3;
     private static final int MAX_ROW = 4;
+    private static final int MAX_COL = 5;
     private boolean enterJustPressed = false;
 
     public KeyHandler(GameWindow gameWindow) {
@@ -129,36 +129,24 @@ public class KeyHandler implements KeyListener {
 
         if (gameWindow.getGameState() == GameState.CHARACTER) {
 
-            int playerSlotRow = gameWindow.getUi().getPlayerSlotRow();
-            int playerSlotCol = gameWindow.getUi().getPlayerSlotCol();
-            int maxCol = MAX_COL;
-            int maxRow = (gameWindow.getPlayer().getInventory().size() + maxCol - 1) / maxCol;
+            int col = gameWindow.getUi().getPlayerSlotCol();
+            int row = gameWindow.getUi().getPlayerSlotRow();
+
+            int inventorySize = gameWindow.getPlayer().getInventory().size();
+
+            playerInventory(code);
 
             switch (code) {
-                case KeyEvent.VK_W -> {
-                    if (playerSlotCol > 0) gameWindow.getUi().setPlayerSlotCol(playerSlotCol - 1);
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_S -> {
-                    if (playerSlotCol < MAX_COL) gameWindow.getUi().setPlayerSlotCol(playerSlotCol + 1);
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_A -> {
-                    if (playerSlotRow > 0) gameWindow.getUi().setPlayerSlotRow(playerSlotRow - 1);
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_D -> {
-                    if (playerSlotRow < MAX_ROW) gameWindow.getUi().setPlayerSlotRow(playerSlotRow + 1);
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
+
                 case KeyEvent.VK_C -> {
                     gameWindow.setGameState(GameState.PLAY);
                 }
                 case KeyEvent.VK_ENTER -> {
-                    int index = playerSlotCol * maxRow + playerSlotRow;
-                    System.out.println("useRedPotion index=" + index
-                            + " (playerSlotRow =" + playerSlotRow + ", playerSlotCol =" + playerSlotCol + ")"
-                            + " inventorySize =" + gameWindow.getPlayer().getInventory().size()
+                    // インデックス計算: col + (row * maxCol)
+                    int index = col + (row * MAX_COL);
+                    System.out.println("useItem index=" + index
+                            + " (row =" + row + ", col =" + col + ")"
+                            + " inventorySize =" + inventorySize
                     );
                     gameWindow.getPlayer().selectItem(index);
                 }
@@ -355,54 +343,74 @@ public class KeyHandler implements KeyListener {
 
     public void playerInventory(int code) {
 
-        int playerSlotRow = gameWindow.getUi().getPlayerSlotRow();
-        int playerSlotCol = gameWindow.getUi().getPlayerSlotCol();
-        int maxCol = MAX_COL;
-        int maxRow = (gameWindow.getPlayer().getInventory().size() + maxCol - 1) / maxCol;
+        int playerCol = gameWindow.getUi().getPlayerSlotCol();
+        int playerRow = gameWindow.getUi().getPlayerSlotRow();
 
         switch (code) {
             case KeyEvent.VK_W -> {
-                if (playerSlotCol > 0) gameWindow.getUi().setPlayerSlotCol(playerSlotCol - 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 上移動: 行(Row)を減らす
+                if (playerRow > 0) {
+                    gameWindow.getUi().setPlayerSlotRow(playerRow - 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
             case KeyEvent.VK_S -> {
-                if (playerSlotCol < MAX_COL) gameWindow.getUi().setPlayerSlotCol(playerSlotCol + 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 下移動: 行(Row)を増やす
+                if (playerRow < MAX_ROW - 1) {
+                    gameWindow.getUi().setPlayerSlotRow(playerRow + 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
             case KeyEvent.VK_A -> {
-                if (playerSlotRow > 0) gameWindow.getUi().setPlayerSlotRow(playerSlotRow - 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 左移動: 列(Col)を減らす
+                if (playerCol > 0) {
+                    gameWindow.getUi().setPlayerSlotCol(playerCol - 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
             case KeyEvent.VK_D -> {
-                if (playerSlotRow < MAX_ROW) gameWindow.getUi().setPlayerSlotRow(playerSlotRow + 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 右移動: 列(Col)を増やす
+                if (playerCol < MAX_COL - 1) {
+                    gameWindow.getUi().setPlayerSlotCol(playerCol + 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
         }
     }
 
     public void npcInventory(int code) {
 
-        int npcSlotRow = gameWindow.getUi().getNpcSlotRow();
         int npcSlotCol = gameWindow.getUi().getNpcSlotCol();
-        int maxCol = MAX_COL;
-        int maxRow = (gameWindow.getUi().getNpc().getInventory().size() + maxCol - 1) / maxCol;
+        int npcSlotRow = gameWindow.getUi().getNpcSlotRow();
 
         switch (code) {
             case KeyEvent.VK_W -> {
-                if (npcSlotCol > 0) gameWindow.getUi().setNpcSlotCol(npcSlotCol - 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 上移動: 行(Row)を減らす
+                if (npcSlotRow > 0) {
+                    gameWindow.getUi().setNpcSlotRow(npcSlotRow - 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
             case KeyEvent.VK_S -> {
-                if (npcSlotCol < MAX_COL) gameWindow.getUi().setNpcSlotCol(npcSlotCol + 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 下移動: 行(Row)を増やす
+                if (npcSlotRow < MAX_ROW - 1) {
+                    gameWindow.getUi().setNpcSlotRow(npcSlotRow + 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
             case KeyEvent.VK_A -> {
-                if (npcSlotRow > 0) gameWindow.getUi().setNpcSlotRow(npcSlotRow - 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 左移動: 列(Col)を減らす
+                if (npcSlotCol > 0) {
+                    gameWindow.getUi().setNpcSlotCol(npcSlotCol - 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
             case KeyEvent.VK_D -> {
-                if (npcSlotRow < MAX_ROW) gameWindow.getUi().setNpcSlotRow(npcSlotRow + 1);
-                gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                // 右移動: 列(Col)を増やす
+                if (npcSlotCol < MAX_COL - 1) {
+                    gameWindow.getUi().setNpcSlotCol(npcSlotCol + 1);
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
             }
         }
     }

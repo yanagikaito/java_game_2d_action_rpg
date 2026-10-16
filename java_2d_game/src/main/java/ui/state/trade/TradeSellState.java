@@ -75,9 +75,9 @@ public final class TradeSellState implements TradeScreenState {
         }
 
         // スロット位置 → インデックス取得
-        int row = ui.getPlayerSlotRow();
         int col = ui.getPlayerSlotCol();
-        int idx = ui.getItemIndexOnSlot(row, col);
+        int row = ui.getPlayerSlotRow();
+        int idx = ui.getItemIndexOnSlot(col, row);
 
         // 範囲外チェック
         if (idx < 0 || idx >= playerInv.size()) {
@@ -171,9 +171,9 @@ public final class TradeSellState implements TradeScreenState {
 
     private void drawPriceWindow(Graphics2D g2, int tileSize, UI ui, List<Entity> inv) {
 
-        int row = ui.getPlayerSlotRow();
         int col = ui.getPlayerSlotCol();
-        int idx = ui.getItemIndexOnSlot(row, col);
+        int row = ui.getPlayerSlotRow();
+        int idx = ui.getItemIndexOnSlot(col, row);
         if (idx < 0 || idx >= inv.size()) return;
 
         int x = (int) (tileSize * 12.5);
