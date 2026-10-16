@@ -7,6 +7,7 @@ import player.Player;
 import save.LoadManager;
 import save.SaveManager;
 import save.SaveMeta;
+import tile.TileManager;
 import ui.UI;
 
 import javax.swing.*;
@@ -150,6 +151,7 @@ public class LoadConfirmState implements LoadScreenState {
                             }
 
                             ctx.gw().setGameState(GameState.PLAY);
+                            ctx.gw().changeBGM(TileManager.MEADOW_TILE_ID);
                             ctx.gw().repaint();
                         }
 

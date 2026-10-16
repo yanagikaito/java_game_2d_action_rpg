@@ -155,10 +155,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     private void initMapBgm() {
-        mapBgmMap.put(TileManager.MEADOW_TILE_ID, "sound/meadow_G110.wav");
+        mapBgmMap.put(TileManager.MEADOW_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
         mapBgmMap.put(TileManager.FOREST_TILE_ID, "sound/meadow_G110.wav");
         mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/meadow_G110.wav");
-        mapBgmMap.put(TileManager.STAIRS_UP_TILE_ID, "sound/meadow_G110.wav");
+        mapBgmMap.put(TileManager.STAIRS_UP_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
         mapBgmMap.put(TileManager.STAIRS_DOWN_TILE_ID, "sound/Beneath_the_Wet_Stone.wav");
         // 事前ロードしておく
         for (String path : mapBgmMap.values()) {
@@ -347,7 +347,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void restart() {
         lastLoadedSlot = -1;
-        getSoundmanager().playBGM("sound/meadow_G110.wav");
+        getSoundmanager().playBGM("sound/Over_the_Cresting_Hill.wav");
         getPlayer().setDefaultValues();
         getPlayer().setDefaultPositions();
         getPlayer().restoreLifeAndMan();
@@ -1355,7 +1355,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
      * BGMを非同期でフェードアウトし、指定時間後に新曲を再生します（Thread.sleep回避）。
      */
 
-    private void changeBGM(int mapIndex) {
+    public void changeBGM(int mapIndex) {
         String newBgm = getBgmForMap(mapIndex);
         if (newBgm == null || newBgm.equals(getSoundmanager().getCurrentBgmName())) {
             return;
