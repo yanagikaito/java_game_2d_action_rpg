@@ -39,6 +39,7 @@ public class EntityFactory {
             case MintSoldierType mintSoldierType -> new MonMintSoldier(gameWindow);
             case BossMonsterType bossMonsterType -> new MonGreenGoblin(gameWindow);
             case ChickenType chicken -> new NpcChicken(gameWindow);
+            case RockType rockType -> new ObjRock(gameWindow);
 
             // 装備・通常アイテム系
             case SwordType sword -> new ObjSwordNormal(gameWindow);
