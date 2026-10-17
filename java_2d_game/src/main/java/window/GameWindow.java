@@ -157,7 +157,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private void initMapBgm() {
         mapBgmMap.put(TileManager.MEADOW_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
         mapBgmMap.put(TileManager.FOREST_TILE_ID, "sound/meadow_G110.wav");
-        mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/meadow_G110.wav");
+        mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/Beside_the_Hearth.wav");
         mapBgmMap.put(TileManager.STAIRS_UP_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
         mapBgmMap.put(TileManager.STAIRS_DOWN_TILE_ID, "sound/Beneath_the_Wet_Stone.wav");
         // 事前ロードしておく
