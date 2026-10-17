@@ -42,13 +42,25 @@ public class Player extends Entity {
 
     private static final ExecutorService ROUTE_LOADER = Executors.newSingleThreadExecutor();
 
+    private GameWindow gameWindow;
+    private KeyHandler keyHandler;
+
     // 持つ処理用
-    private boolean holding = false;
     private ObjBomb heldBomb = null;
     private ObjPot heldPot = null;
     private ObjRock heldRock = null;
     private NpcChicken heldChicken = null;
     private Map<String, Point> holdOffset = new HashMap<>();
+
+    // aura 用キャッシュ画像（事前レンダリング）
+    private ObjAura aura;
+    private EntityFactory entityFactory;
+
+    private Entity pendingPickupEntity = null;
+    private GameOverAnimator gameOverAnimator;
+    private SpriteManager spriteManager;           // 注入または new でセット
+    private GameOverManager gameOverManager;       // 遅延生成キャッシュ
+    private WaterEffectManager waterEffectManager;
 
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
@@ -70,6 +82,20 @@ public class Player extends Entity {
     private static final int GUARD_ANIMATION_FRAMES = SPRITE_GUARDING_THRESHOLD_NUM3;
     private static final int KNOCKBACK_FRAMES = 10;
     private static final double KNOCKBACK_SPEED = 4.0;
+    private static final long FIRE_COOLDOWN_MS = 1000;
+    private static final long SNAP_COOLDOWN_MS = 150; // 100ms
+    private static final int COOLDOWN_FRAMES = 60 * 3;
+    private static final int FIREBALL_MANA_COST = 20;
+    public static final int SNAP_PENETRATION_THRESHOLD = 4;
+    private static final int UNSTUCK_PUSH_MAX = 4; // 最大押し出しpx
+    private static final int UNSTUCK_BFS_RADIUS = 6; // BFS 探索半径（タイル単位）
+    private static final int PICKUP_COOLDOWN_FRAMES = 5;
+
+    // 保存・表示する秒単位のプレイ時間
+    // フレームの端数（秒）を保持
+    // 999時間59分59秒 = 3,599,999 秒
+    public static final long MAX_PLAY_SECONDS = 3_599_999L;
+
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] guardSprites = new BufferedImage[GUARD_DIRECTIONS.length][SPRITE_COUNT];
@@ -79,89 +105,59 @@ public class Player extends Entity {
     private BufferedImage[][] currentGuardSprites;
     private BufferedImage[][] sleepImage1 = new BufferedImage[SLEEP_DIRECTIONS.length][SLEEP_SPRITE_COUNT];
     private BufferedImage[][] sleepImage2 = new BufferedImage[SLEEP_DIRECTIONS.length][SLEEP_SPRITE_COUNT];
+
     private int characterTypeId;
-    private static final long FIRE_COOLDOWN_MS = 1000;
-    private long lastSnapTime = 0;
-    private static final long SNAP_COOLDOWN_MS = 150; // 100ms
-    private long lastFireTime = 0;
     private int fireCooldown = 0;
     private int bombCooldown = 0;
-    private static final int COOLDOWN_FRAMES = 60 * 3;
     private int invincibleCounter = 0;
-    private final int INVINCIBLE_DURATION = 60; // 60フレーム無敵
     private int attackCounter;
     private int guardCounter;
+    private int knockbackTimer = 0;
+    private int talkNpcIndex = -1;
+    private int pickupCooldown = 0;
+    private int pendingPickupIndex = -1;
+    public int lastSafeWorldX = 0;
+    public int lastSafeWorldY = 0;
+    public int lastSafeFrame = 0;
+    private int lastSafeSaWidth = 0;
+    private int lastSafeSaHeight = 0;
+    private int lastAttemptStepX = 0;
+    private int lastAttemptStepY = 0;
+    private int pixelCounter;
 
+    private long lastFireTime = 0;
+    private long playTimeSeconds = 0L;
+    public long lastSnapTimeMs = 0;
+    private long lastUpdateTimeNano = System.nanoTime();
+
+    private double sleepTimer = 0.0;
+    private double knockBackDx, knockBackDy;
+    private double playTimeAccumulator = 0;
+    private double lastDeltaSeconds = 0.0;
+    private double lastSplashTime = 0.0;
+    private double lastStationarySplash = 0.0;
+
+    private boolean holding = false;
     private boolean blockingLeft = false;
     private boolean lastThrowKey = false;
     private boolean lightUpdated = false;
     private boolean isSleeping = false;
     private boolean moving = false;
     private boolean loaded = false;
+    private boolean attemptedMoveThisFrame = false;
+    private boolean isDead = false;
+    private boolean gameOverNotifiedToUI = false;
+    private boolean deathSequenceStarted = false;  // 二重開始防止
+    private boolean wasInWater = false;
 
-    private GameWindow gameWindow;
-    private KeyHandler keyHandler;
     private final int screenX;
     private final int screenY;
     private final int playerSolidAreaX = 1;
     private final int playerSolidAreaY = 1;
-    private static final int FIREBALL_MANA_COST = 20;
-    private int talkNpcIndex = -1;
-    private double sleepTimer = 0.0;
-    private int knockbackTimer = 0;
-    private double knockBackDx, knockBackDy;
+    private final int INVINCIBLE_DURATION = 60; // 60フレーム無敵
 
-    // aura 用キャッシュ画像（事前レンダリング）
-    private ObjAura aura;
-    private EntityFactory entityFactory;
-
-    // 保存・表示する秒単位のプレイ時間
-    private long playTimeSeconds = 0L;
-    // フレームの端数（秒）を保持
-    private double playTimeAccumulator = 0;
-    // 999時間59分59秒 = 3,599,999 秒
-    public static final long MAX_PLAY_SECONDS = 3_599_999L;
-
-    private int pickupCooldown = 0;
-    private static final int PICKUP_COOLDOWN_FRAMES = 5;
-
-    private Entity pendingPickupEntity = null;
-    private int pendingPickupIndex = -1;
-
-    public static final int SNAP_PENETRATION_THRESHOLD = 4;
-
-    public long lastSnapTimeMs = 0;
-    public int lastSafeWorldX = 0;
-    public int lastSafeWorldY = 0;
-    public int lastSafeFrame = 0;
-    private int lastSafeSaWidth = 0;
-    private int lastSafeSaHeight = 0;
-    private static final int STUCK_THRESHOLD_FRAMES = 6; // 挟まり判定までのフレーム
-    private static final int UNSTUCK_PUSH_MAX = 4; // 最大押し出しpx
-    private static final int UNSTUCK_BFS_RADIUS = 6; // BFS 探索半径（タイル単位）
-    // クラスフィールド
-    private int lastAttemptStepX = 0;
-    private int lastAttemptStepY = 0;
-    private boolean attemptedMoveThisFrame = false;
-
-    private double lastDeltaSeconds = 0.0;
-
-    private GameOverAnimator gameOverAnimator;
-    private boolean isDead = false;
-    private boolean gameOverNotifiedToUI = false;
-    private long lastUpdateTimeNano = System.nanoTime();
-
-    private SpriteManager spriteManager;           // 注入または new でセット
-    private GameOverManager gameOverManager;       // 遅延生成キャッシュ
-    private boolean deathSequenceStarted = false;  // 二重開始防止
-
-    private WaterEffectManager waterEffectManager;
-    private boolean wasInWater = false;
-    private double lastSplashTime = 0.0;
     private final double splashCooldown = 0.5;
-    private double lastStationarySplash = 0.0;
     private final double stationarySplashCooldown = 0.8;
-    private int pixelCounter;
 
 
     /**
@@ -234,6 +230,18 @@ public class Player extends Entity {
         setSpeed(4);
         setKnockBackPower(2);
         setDirection("down");
+
+        deathSequenceStarted = false;
+        isDead = false;
+        moving = false;
+        setInvincible(false);
+
+        state = PlayerState.IDLE;
+
+        if (this.gameOverAnimator != null) {
+            this.gameOverAnimator.stop();
+            this.gameOverAnimator = null;
+        }
 
         setLevel(1);
         setMaxLife(6);
@@ -4504,5 +4512,29 @@ public class Player extends Entity {
 
     public void setAura(ObjAura aura) {
         this.aura = aura;
+    }
+
+    public boolean getDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean isDead) {
+        this.isDead = isDead;
+    }
+
+    public boolean getDeathSequenceStarted() {
+        return deathSequenceStarted;
+    }
+
+    public void setDeathSequenceStarted(boolean deathSequenceStarted) {
+        this.deathSequenceStarted = deathSequenceStarted;
+    }
+
+    public GameOverAnimator getGameOverAnimator() {
+        return gameOverAnimator;
+    }
+
+    public void setGameOverAnimator(GameOverAnimator gameOverAnimator) {
+        this.gameOverAnimator = gameOverAnimator;
     }
 }

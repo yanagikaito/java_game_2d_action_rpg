@@ -283,6 +283,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 }
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
+                player.setDeathSequenceStarted(false);
+                player.setDead(false);
+                player.setMoving(false);
+                player.setInvincible(false);
+
+                player.setState(Player.PlayerState.IDLE);
+
+                if (player.getGameOverAnimator() != null) {
+                    player.getGameOverAnimator().stop();
+                }
+
+
                 getSoundmanager().playBGM("sound/Over_the_Cresting_Hill.wav");
                 System.out.println("Resuming from slot " + slotToTry + " Map" + loadedPlayer.getMapId());
                 return;
@@ -363,6 +375,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setObjBluePotion();
         assetSetter.setObjPot();
         assetSetter.setObjRock();
+        assetSetter.setObjLantern();
 
         // ニューゲーム時にも既存の各スロット（0〜2）のメタデータをUIに読み込ませる
         for (int i = 0; i < 3; i++) {
