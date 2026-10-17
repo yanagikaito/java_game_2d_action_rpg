@@ -581,6 +581,10 @@ public class UI {
         // ゲーム側の状態をタイトルに切り替え
         gameWindow.setGameState(GameState.TITLE);
 
+        if (gameWindow.getSoundmanager() != null) {
+            gameWindow.getSoundmanager().stopBGM();
+        }
+
         SwingUtilities.invokeLater(() -> {
             greenHexPanel.resetAnimation();
             greenHexPanel.startAnimation();

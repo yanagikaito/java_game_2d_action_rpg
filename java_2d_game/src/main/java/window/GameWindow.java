@@ -247,11 +247,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
      * セーブデータがあればそこから再開、なければ新規ゲーム。
      */
 
-    /**
-     * ゲームオーバー後のリトライ処理。
-     * セーブデータがあればそこから再開、なければ新規ゲーム。
-     */
-
     public void retry() {
 
         // メニュー選択をスロット番号に変換
@@ -288,6 +283,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 }
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
+                getSoundmanager().playBGM("sound/Over_the_Cresting_Hill.wav");
                 System.out.println("Resuming from slot " + slotToTry + " Map" + loadedPlayer.getMapId());
                 return;
             } else {
@@ -301,6 +297,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         restartSafely();
 
         setGameState(GameState.PLAY);
+        getSoundmanager().playBGM("sound/Over_the_Cresting_Hill.wav");
         System.out.println("Starting a new game");
     }
 
@@ -1042,6 +1039,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
     public synchronized void setGameState(GameState newState) {
         if (newState == null) throw new IllegalArgumentException("gameState must not be null");
         this.gameState = newState;
+
+        if (newState == GameState.GAME_OVER) {
+            if (soundManager != null) {
+                soundManager.stopBGM();
+            }
+        }
     }
 
     /**
