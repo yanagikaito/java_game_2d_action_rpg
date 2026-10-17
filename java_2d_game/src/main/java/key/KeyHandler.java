@@ -318,6 +318,7 @@ public class KeyHandler implements KeyListener {
                         gameWindow.retry();
                     }
                     if (getCommandNum() == 1) {
+                        gameWindow.getSoundmanager().stopBGM();
                         gameWindow.setGameState(GameState.TITLE);
                         gameWindow.getUi().returnToTitleFromGameOver();
                     }
