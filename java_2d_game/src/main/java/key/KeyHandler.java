@@ -154,6 +154,40 @@ public class KeyHandler implements KeyListener {
             return;
         }
 
+        if (gameWindow.getGameState() == GameState.GAME_OVER) {
+
+            switch (code) {
+                case KeyEvent.VK_W -> {
+                    setCommandNum(getCommandNum() - 1);
+                    if (getCommandNum() < 0) {
+                        setCommandNum(1);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                }
+                case KeyEvent.VK_S -> {
+                    setCommandNum(getCommandNum() + 1);
+                    if (getCommandNum() > 1) {
+                        setCommandNum(0);
+                    }
+                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
+                    System.out.println("working dir: " + System.getProperty("user.dir"));
+
+                }
+                case KeyEvent.VK_ENTER -> {
+                    if (getCommandNum() == 0) {
+                        gameWindow.setGameState(GameState.PLAY);
+                        gameWindow.retry();
+                    }
+                    if (getCommandNum() == 1) {
+                        gameWindow.getSoundmanager().stopBGM();
+                        gameWindow.setGameState(GameState.TITLE);
+                        gameWindow.getUi().returnToTitleFromGameOver();
+                    }
+                }
+            }
+            return;
+        }
+
         if (gameWindow.isOnTransition()) return;
 
         if (gameWindow.getUi().isAwaitingChoice()) {
@@ -209,8 +243,10 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_T -> debugText();
             case KeyEvent.VK_R -> gameWindow.toggleHitBoxDebug();
             case KeyEvent.VK_C -> {
-                gameWindow.setGameState(GameState.CHARACTER);
-                clearAllKeys();
+                if (gameWindow.getGameState() == GameState.PLAY) {
+                    gameWindow.setGameState(GameState.CHARACTER);
+                    clearAllKeys();
+                }
             }
             case KeyEvent.VK_ENTER -> {
                 int npcIdx = gameWindow.getPlayer().checkNpcInFront(gameWindow.getNPC(), 2);
@@ -291,39 +327,6 @@ public class KeyHandler implements KeyListener {
 
             gameWindow.getUi().updateLoad(code);
 
-        }
-
-        if (gameWindow.getGameState() == GameState.GAME_OVER) {
-
-            switch (code) {
-                case KeyEvent.VK_W -> {
-                    setCommandNum(getCommandNum() - 1);
-                    if (getCommandNum() < 0) {
-                        setCommandNum(1);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                }
-                case KeyEvent.VK_S -> {
-                    setCommandNum(getCommandNum() + 1);
-                    if (getCommandNum() > 1) {
-                        setCommandNum(0);
-                    }
-                    gameWindow.getSoundmanager().cursorWAV("sound/cursor-sound.wav");
-                    System.out.println("working dir: " + System.getProperty("user.dir"));
-
-                }
-                case KeyEvent.VK_ENTER -> {
-                    if (getCommandNum() == 0) {
-                        gameWindow.setGameState(GameState.PLAY);
-                        gameWindow.retry();
-                    }
-                    if (getCommandNum() == 1) {
-                        gameWindow.getSoundmanager().stopBGM();
-                        gameWindow.setGameState(GameState.TITLE);
-                        gameWindow.getUi().returnToTitleFromGameOver();
-                    }
-                }
-            }
         }
 
         if (gameWindow.getGameState() == GameState.TRADE) {
