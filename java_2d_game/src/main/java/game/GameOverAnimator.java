@@ -29,7 +29,7 @@ public class GameOverAnimator {
         this.frameDurationSeconds = frameDurationSeconds;
         this.loopsTarget = loopsTarget;
 
-        // 分割ルール: 各方向 2 フレームずつ、最後の 1 枚を倒れ用に使う
+        // 各方向 2 フレームずつ、最後の 1 枚を倒れ用に使う
         dirFrames = new BufferedImage[4][];
         for (int i = 0; i < 4; i++) {
             int start = i * 2;
@@ -39,7 +39,7 @@ public class GameOverAnimator {
                 dirFrames[i][j] = allFrames[start + j];
             }
         }
-        // 倒れ用は最後のフレーム（存在しなければ空配列）
+        // 倒れ用は最後のフレーム
         if (allFrames.length >= 9) {
             fallFrames = new BufferedImage[]{allFrames[8]};
         } else {
@@ -56,6 +56,14 @@ public class GameOverAnimator {
         frameIndex = 0;
         elapsed = 0.0;
         completedLoops = 0;
+    }
+
+    public void stop() {
+        playing = false;
+        // アニメーションの進行状態やフレームを初期化
+        elapsed = 0.0;
+        dirIndex = 0;
+        frameIndex = 0;
     }
 
     public boolean isFinished() {
