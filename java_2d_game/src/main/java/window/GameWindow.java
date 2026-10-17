@@ -21,6 +21,8 @@ import frame.GameFrame;
 import key.KeyHandler;
 import player.ResourceLoader;
 import save.LoadManager;
+import save.SaveManager;
+import save.SaveMeta;
 import sound.SoundManager;
 import tile.Tile;
 import tile.TileManager;
@@ -364,6 +366,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setObjBluePotion();
         assetSetter.setObjPot();
         assetSetter.setObjRock();
+
+        // ニューゲーム時にも既存の各スロット（0〜2）のメタデータをUIに読み込ませる
+        for (int i = 0; i < 3; i++) {
+            try {
+                SaveMeta meta = SaveManager.loadMeta(i);
+                if (meta != null) {
+                    ui.setSaveMeta(i, meta);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
