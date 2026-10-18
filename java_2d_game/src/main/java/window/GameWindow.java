@@ -620,8 +620,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 Entity e = monster[i];
                 if (e == null) continue;
 
-                // 更新は「生存かつ死亡アニメ中でない」かつ「所持されていない」場合のみ
-                if (e.getAlive() && !e.getDying()) {
+                // 更新は生存中のみ
+                if (e.getAlive()) {
                     e.update();
                 }
 

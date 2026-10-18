@@ -3389,8 +3389,10 @@ public class Player extends Entity {
         if (target.getLife() <= 0) {
             Entity monster = target;
 
-            target.setAlive(false);
+            // Aliveは有効に存在している意味
+            target.setAlive(true);
             target.setDying(true);
+            target.setDyingCounter(0);
             getSolidArea().width = 40;
             getSolidArea().height = 40;
             recordSafePosition();

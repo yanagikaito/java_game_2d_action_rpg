@@ -30,6 +30,7 @@ public class MonMintSoldier extends Entity {
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM2 = 60;
     private static final int SPRITE_ATTACKING_THRESHOLD_NUM3 = 80;
     private static final int ATTACK_ANIMATION_FRAMES = SPRITE_ATTACKING_THRESHOLD_NUM3;
+    private static final int SPRITE_DYING_COUNT = 5;
     private int attackCounter;
     private BufferedImage[][] axeSprites = new BufferedImage[AXE_DIRECTIONS.length][SPRITE_COUNT];
     private BufferedImage[][] currentAttackSprites;
@@ -44,7 +45,7 @@ public class MonMintSoldier extends Entity {
     public MonMintSoldier(GameWindow gameWindow) {
 
         super(gameWindow);
-        setType(new GreenSlimeType());
+        setType(new MintSoldierType());
         setName("Mint Soldier");
         setDirection("down");
         setDefaultSpeed(1);
@@ -198,6 +199,16 @@ public class MonMintSoldier extends Entity {
     public void setAction() {
 
         updateMonsterInvincibility();
+
+        if (getDying()) {
+            setDyingCounter(getDyingCounter() + 1);
+            // 8段階の点滅が終わったら消滅
+            if (getDyingCounter() > SPRITE_DYING_COUNT * 8) {
+                setDying(false);
+                setAlive(false);
+            }
+            return; // 死亡中は通常の移動やAI処理を行わない
+        }
 
         // フロー・フィールドの初期化（1回だけ）
         if (!flowFieldInitialized) {
@@ -428,6 +439,18 @@ public class MonMintSoldier extends Entity {
 
         Composite original = g2.getComposite();
         if (getInvincible()) {
+            g2.setComposite(
+                    AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)
+            );
+        }
+
+        if (getDying()) {
+            int step = getDyingCounter() / SPRITE_DYING_COUNT;
+            float alpha = (step % 2 == 0) ? 1.0f : 0.0f; // 偶数：見える、奇数：消える
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        }
+        // 無敵中の半透明処理
+        else if (getInvincible()) {
             g2.setComposite(
                     AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)
             );

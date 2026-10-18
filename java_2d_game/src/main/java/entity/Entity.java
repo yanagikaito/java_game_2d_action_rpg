@@ -45,7 +45,6 @@ public abstract class Entity {
     private int solidAreaDefaultY;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
-    private static final String[] GUARD_DIRECTIONS = {"guardUp", "guardDown", "guardLeft", "guardRight"};
     protected String spriteKey = "entity_default";
     private boolean stackable = false;
     private boolean thrown = false;
@@ -83,7 +82,6 @@ public abstract class Entity {
     private int invincibleCounter = 0;
     private EntityType type;
     private int value = 1;
-    private int lightRadius;
     private boolean attacking = false;
     private boolean guarding = false;
     private boolean alive = true;
@@ -134,10 +132,6 @@ public abstract class Entity {
 
     private Color targetColor;
     protected boolean targetColorOn;
-
-    private double knockBackDx;
-    private double knockBackDy;
-    private int knockbackTimer;
 
     /**
      * Entity を初期化。
@@ -207,6 +201,16 @@ public abstract class Entity {
     public void update() {
         if (gameWindow.getCollisionChecker() == null) {
             throw new IllegalStateException("CollisionChecker の初期化が行われていない");
+        }
+
+        if (getDying()) {
+            dyingCounter++;
+            // 8段階の点滅が終わったら消滅
+            if (dyingCounter > SPRITE_DYING_COUNT * 8) {
+                dying = false;
+                alive = false;
+            }
+            return; // 死亡中は通常の移動やAI処理を行わない
         }
 
         if (knockBack == true) {
@@ -1872,14 +1876,26 @@ public abstract class Entity {
         }
 
         if (getDying()) {
-            dyingAnimation(g2);
+            // カウンターの値に応じて点滅させる（描画のみ）
+            int step = dyingCounter / SPRITE_DYING_COUNT;
+
+            // （1f）からスタートするように反転
+            if (step % 2 == 0) {
+                changeAlpha(g2, 1f); // 偶数ステップ：見える
+            } else {
+                changeAlpha(g2, 0f); // 奇数ステップ：消える
+            }
+        } else if (getInvincible()) {
+            hpBarOn = true;
+            hpBarCounter = 0;
+            changeAlpha(g2, 0.4f);
+        } else {
+            targetColorOn = true;
+            changeAlpha(g2, 1F);
         }
 
         g2.drawImage(image, screenX, screenY, null);
-
         drawHpBarIfNeeded(g2, screenX, screenY);
-
-        changeAlpha(g2, 1F);
     }
 
     protected void drawHpBarIfNeeded(Graphics2D g2, int screenX, int screenY) {
@@ -1905,44 +1921,20 @@ public abstract class Entity {
             g2.fillRect(x, y, tile, 12);
             g2.setColor(new Color(255, 0, 30));
             g2.fillRect(x + 1, y + 1, Math.max(0, Math.min(tile - 2, hpBarValue)), 10);
+
+        } else if (getType() instanceof MintSoldierType) {
+            int x = screenX + 4;
+            int y = screenY - 21;
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(x, y, tile, 12);
+            g2.setColor(new Color(130, 120, 200));
+            g2.fillRect(x + 1, y + 1, Math.max(0, Math.min(tile - 2, hpBarValue)), 10);
         }
 
         hpBarCounter++;
         if (hpBarCounter > 600) {
             hpBarCounter = 0;
             hpBarOn = false;
-        }
-    }
-
-    /**
-     * 死亡中アニメーションを進行し、一定時間後にエンティティを非表示。
-     *
-     * @param g2 描画に使用する Graphics2D オブジェクト（null 不可）
-     * @throws NullPointerException g2 が null の場合
-     */
-
-    public void dyingAnimation(Graphics2D g2) {
-        dyingCounter++;
-
-        if (dyingCounter <= SPRITE_DYING_COUNT) {
-            changeAlpha(g2, 0f);
-        } else if (dyingCounter <= SPRITE_DYING_COUNT * 2) {
-            changeAlpha(g2, 1f);
-        } else if (dyingCounter <= SPRITE_DYING_COUNT * 3) {
-            changeAlpha(g2, 0f);
-        } else if (dyingCounter <= SPRITE_DYING_COUNT * 4) {
-            changeAlpha(g2, 1f);
-        } else if (dyingCounter <= SPRITE_DYING_COUNT * 5) {
-            changeAlpha(g2, 0f);
-        } else if (dyingCounter <= SPRITE_DYING_COUNT * 6) {
-            changeAlpha(g2, 1f);
-        } else if (dyingCounter <= SPRITE_DYING_COUNT * 7) {
-            changeAlpha(g2, 0f);
-        } else if (dyingCounter <= SPRITE_DYING_COUNT * 8) {
-            changeAlpha(g2, 1f);
-        } else {
-            dying = false;
-            alive = false;
         }
     }
 
@@ -2163,5 +2155,13 @@ public abstract class Entity {
     // 光源であれば強度を返す（0.0f〜1.0f）。デフォルトは 0f
     public float getLightIntensity() {
         return 0f;
+    }
+
+    public int getDyingCounter() {
+        return dyingCounter;
+    }
+
+    public void setDyingCounter(int dyingCounter) {
+        this.dyingCounter = dyingCounter;
     }
 }
