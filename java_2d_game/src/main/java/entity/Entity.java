@@ -135,6 +135,10 @@ public abstract class Entity {
     private Color targetColor;
     protected boolean targetColorOn;
 
+    private double knockBackDx;
+    private double knockBackDy;
+    private int knockbackTimer;
+
     /**
      * Entity を初期化。
      *
@@ -285,9 +289,9 @@ public abstract class Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
-        if (getType() instanceof GreenSlimeType && contactPlayer && !gameWindow.getPlayer().getInvincible()) {
+        if (contactPlayer && !gameWindow.getPlayer().getInvincible()) {
             if (!getInvincible()) {
-                damagePlayer(attack, knockBackPower);
+                damagePlayer(this.attack, this.knockBackPower);
                 gameWindow.getPlayer().setInvincible(true);
             }
         }
@@ -379,7 +383,7 @@ public abstract class Entity {
 
                 // ノックバック
                 if (knockBackPower > 0) {
-                    setKnockBack(player, this, knockBackPower);
+                    player.setKnockBack(player, knockBackPower);
                 }
 
                 // ライフ減少・無敵化
@@ -1908,16 +1912,6 @@ public abstract class Entity {
             hpBarCounter = 0;
             hpBarOn = false;
         }
-    }
-
-
-    public void setKnockBack(Entity target, Entity attacker, int knockBackPower) {
-
-        this.attacker = attacker;
-        target.knockBackDirection = attacker.direction;
-        target.knockBackPower = knockBackPower;
-        target.knockBack = true;
-
     }
 
     /**

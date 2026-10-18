@@ -904,19 +904,25 @@ public class Player extends Entity {
             // ノックバック終了なら重なり解消
             if (knockbackTimer == 0) {
                 resolvePenetration();
+
             }
             return;
         }
 
         // 無敵時間・クールダウンなど
         if (getInvincible()) {
-            if (++invincibleCounter > INVINCIBLE_DURATION) {
+            invincibleCounter++;
+            setTransparent(true);
+
+            if (invincibleCounter > INVINCIBLE_DURATION) {
                 setInvincible(false);
-                // 透明フラグを解除して通常表示に戻す
                 setTransparent(false);
                 invincibleCounter = 0;
             }
+        } else {
+            setTransparent(false);
         }
+
         if (bombCooldown > 0) bombCooldown--;
         if (fireCooldown > 0) fireCooldown--;
 
@@ -3234,7 +3240,7 @@ public class Player extends Entity {
             moving = false;
 
             if (knockBackPower > 0) {
-                setKnockBack(gameWindow.getMonster()[monsterIndex], attacker, monster.getKnockBackPower());
+                this.setKnockBack(gameWindow.getMonster()[monsterIndex], monster.getKnockBackPower());
             }
 
             // モンスターのダメージ量
@@ -3300,7 +3306,7 @@ public class Player extends Entity {
         gameWindow.getSoundmanager().damageWAV("sound/damage-sound.wav");
 
         if (knockBackPower > 0) {
-            setKnockBack(target, this, knockBackPower);
+            this.setKnockBack(target, knockBackPower);
         }
 
         long end = System.nanoTime();
@@ -3421,6 +3427,25 @@ public class Player extends Entity {
                 respawnTimer.start();
             }
         }
+    }
+
+    public void setKnockBack(Entity attacker, int knockBackPower) {
+        // 攻撃者（モンスター）からプレイヤーへの相対ベクトルを計算
+        double dx = getWorldX() - attacker.getWorldX();
+        double dy = getWorldY() - attacker.getWorldY();
+        double len = Math.hypot(dx, dy);
+
+        if (len == 0) {
+            dx = 0;
+            dy = -1;
+            len = 1;
+        }
+
+        // プレイヤーのノックバック変数に代入
+        knockBackDx = dx / len * knockBackPower;
+        knockBackDy = dy / len * knockBackPower;
+        knockbackTimer = KNOCKBACK_FRAMES;
+        moving = false;
     }
 
     /**
@@ -3684,8 +3709,6 @@ public class Player extends Entity {
             return;
         }
 
-        g2.setComposite(original);
-
         // ★ 睡眠中の描画
         if (isSleeping) {
             // 1. 現在の向き（direction）から方向のインデックス（0〜3）を取得
@@ -3713,6 +3736,7 @@ public class Player extends Entity {
                 g2.drawImage(sleepImg, screenX, screenY, tileSize, tileSize, null);
             }
 
+            g2.setComposite(original);
             return; // 通常の歩行画像は描画しない
         }
 

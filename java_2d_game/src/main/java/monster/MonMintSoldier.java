@@ -3,6 +3,7 @@ package monster;
 import entity.type.AxeType;
 import entity.Entity;
 import entity.type.GreenSlimeType;
+import entity.type.MintSoldierType;
 import frame.FrameApp;
 import window.GameWindow;
 
@@ -51,6 +52,7 @@ public class MonMintSoldier extends Entity {
         setMaxLife(50);
         setLife(getMaxLife());
         setAttack(5);
+        setKnockBackCounter(2);
         setDefense(0);
         setExp(5);
         setAxe();
@@ -347,7 +349,7 @@ public class MonMintSoldier extends Entity {
         getSolidArea().width = FrameApp.getTileSize();
         getSolidArea().height = FrameApp.getTileSize();
 
-        if (getType() instanceof GreenSlimeType) {
+        if (getType() instanceof MintSoldierType) {
 
             int monsterIndex = getGameWindow().getCollisionChecker().checkEntity(this, getGameWindow().getMonster());
             getGameWindow().getPlayer().damageMonster(monsterIndex, getAttack(), getCurrentWeapon().getKnockBackPower());

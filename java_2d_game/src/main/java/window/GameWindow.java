@@ -693,7 +693,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             ui.getDamagePopupManager().updateAll();
             ui.updateGameOver(deltaSeconds);
 
-        } else if (gameState == GameState.SLEEP) { // または GameState.DIALOGUE など設定している状態
+        } else if (gameState == GameState.SLEEP) {
             if (ui.getSleepCtx() != null) {
                 ui.getSleepCtx().update(deltaSeconds);
             }

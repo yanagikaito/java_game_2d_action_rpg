@@ -43,6 +43,7 @@ public class MonGreenSlime extends Entity {
         setMaxLife(5);
         setLife(getMaxLife());
         setAttack(1);
+        setKnockBackPower(2);
         setDefense(0);
         setExp(5);
         setStone();
