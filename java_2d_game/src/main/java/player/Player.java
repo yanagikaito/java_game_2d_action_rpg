@@ -86,6 +86,7 @@ public class Player extends Entity {
     private static final long SNAP_COOLDOWN_MS = 150; // 100ms
     private static final int COOLDOWN_FRAMES = 60 * 3;
     private static final int FIREBALL_MANA_COST = 20;
+    private static final int BOMB_MANA_COST = 20;
     public static final int SNAP_PENETRATION_THRESHOLD = 4;
     private static final int UNSTUCK_PUSH_MAX = 4; // 最大押し出しpx
     private static final int UNSTUCK_BFS_RADIUS = 6; // BFS 探索半径（タイル単位）
@@ -904,7 +905,6 @@ public class Player extends Entity {
             // ノックバック終了なら重なり解消
             if (knockbackTimer == 0) {
                 resolvePenetration();
-
             }
             return;
         }
@@ -2819,8 +2819,8 @@ public class Player extends Entity {
 
                 System.out.println("DEBUG: Fキーが押されている");
 
-                ObjSwordProjectile fb =
-                        (ObjSwordProjectile) getGameWindow().getEntityFactory().create(new FireballType());
+                ObjFireball fb =
+                        (ObjFireball) getGameWindow().getEntityFactory().create(new FireballType());
                 fb.set(
                         getWorldX(),
                         getWorldY(),
@@ -2847,7 +2847,7 @@ public class Player extends Entity {
         if (kh.isBombKeyPressed() &&
                 !getProjectile().getAlive() &&
                 getShotAvailableCounter() == 30 &&
-                consumeMana(FIREBALL_MANA_COST)) {
+                consumeMana(BOMB_MANA_COST)) {
 
             bombCooldown = COOLDOWN_FRAMES;
 
@@ -2889,23 +2889,24 @@ public class Player extends Entity {
                 int tileTopY = tileY * tileSize;
 
                 // 爆弾オブジェクトを作って world 座標を solidArea に合わせて設定する
-                ObjSwordProjectile b =
-                        (ObjSwordProjectile) getGameWindow().getEntityFactory().create(new BombType());
+                ObjBomb bom =
+                        (ObjBomb) getGameWindow().getEntityFactory().create(new BombType());
+
                 // b.getSolidArea().x/y はローカル（オブジェクト内のオフセット）を想定
-                b.setWorldX(tileLeftX - b.getSolidArea().x);
-                b.setWorldY(tileTopY - b.getSolidArea().y);
+                bom.setWorldX(tileLeftX - bom.getSolidArea().x);
+                bom.setWorldY(tileTopY - bom.getSolidArea().y);
 
                 // 判定：爆弾自身の solidArea を基準にチェック（offset 0,0）
-                if (gameWindow.getCollisionChecker().checkTile(b, 0, 0)) {
+                if (gameWindow.getCollisionChecker().checkTile(bom, 0, 0)) {
                     return;
                 }
 
                 // 置けるなら追加
-                b.setUser(this);
-                b.setPickable(true);
-                b.setThrown(false);
-                b.setAlive(true);
-                gameWindow.addObject(b);
+                bom.setUser(this);
+                bom.setPickable(true);
+                bom.setThrown(false);
+                bom.setAlive(true);
+                gameWindow.addObject(bom);
                 gameWindow.getSoundmanager().explosionWAV("sound/explosion-sound.wav");
             }
         }
