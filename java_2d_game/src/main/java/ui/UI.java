@@ -24,7 +24,6 @@ import window.GameWindow;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UI {
@@ -91,6 +90,10 @@ public class UI {
     private final double gameOverTextDelay = 0.4; // 既存値に合わせる
     private float redAlpha = 0f;
     private final double redFadeDuration = 1.2; // 赤が最大になるまでの秒数
+
+    private int charIndex = 0;
+    private int charCounter = 0;
+    private final int CHAR_SPEED = 2;
 
     public UI(GameWindow gameWindow, EntityFactory entityFactory) {
         this.gameWindow = gameWindow;
@@ -752,22 +755,63 @@ public class UI {
 
     public void drawDialogueScreen(Graphics2D g2) {
 
-        int tileSize = FrameApp.getTileSize();
-
-        int x = tileSize * 2;
-        int y = tileSize / 2;
+        // ダイアログ枠の描画
+        int x = FrameApp.getTileSize() * 2;
+        int y = FrameApp.getTileSize() / 2;
         int width = FrameApp.getScreenWidth() - (FrameApp.getTileSize() * 4);
-        int height = tileSize * 4;
+        int height = FrameApp.getTileSize() * 4;
 
         drawSubWindow(g2, x, y, width, height);
 
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
-        x += tileSize;
-        y += tileSize;
-        String msg = currentDialogueMessage == null ? "" : currentDialogueMessage;
-        g2.drawString(msg, x, y);
+        // 文字列の更新（1文字ずつ増やすタイピング演出）
+        charCounter++;
+        if (charCounter >= CHAR_SPEED) {
+            charCounter = 0;
+            if (charIndex < currentDialogueMessage.length()) {
+                charIndex++;
+                char currentVisibleChar = currentDialogueMessage.charAt(charIndex - 1);
 
-        if (isAwaitingChoice()) {
+                // スペースや改行、句読点以外でピコピコ音を鳴らす
+                if (currentVisibleChar != ' ' && currentVisibleChar != ' ' && currentVisibleChar != '\n' && currentVisibleChar != '、' && currentVisibleChar != '。') {
+                    gameWindow.getSoundmanager().playTextBlip();
+                }
+            }
+        }
+
+        // 表示対象の文字列を取得
+        int safeIndex = Math.min(charIndex, currentDialogueMessage.length());
+        String visibleText = currentDialogueMessage.substring(0, safeIndex);
+
+        // 自動改行しながら描画
+        g2.setFont(g2.getFont().deriveFont(28F));
+        g2.setColor(Color.WHITE);
+
+        int textX = x + FrameApp.getTileSize() / 2;
+        int textY = y + FrameApp.getTileSize();
+
+        // テキスト枠の内幅
+        int maxTextWidth = width - FrameApp.getTileSize();
+
+        FontMetrics fm = g2.getFontMetrics();
+        int lineHeight = fm.getHeight();
+
+        // 1文字ずつ幅をチェックして改行しながら描画
+        StringBuilder line = new StringBuilder();
+        for (char c : visibleText.toCharArray()) {
+            if (c == '\n' || fm.stringWidth(line.toString() + c) > maxTextWidth) {
+                g2.drawString(line.toString(), textX, textY);
+                textY += lineHeight;
+                line = new StringBuilder();
+                if (c == '\n') continue;
+            }
+            line.append(c);
+        }
+        // 残りの文字を描画
+        if (line.length() > 0) {
+            g2.drawString(line.toString(), textX, textY);
+        }
+
+        if (awaitingChoice) {
             drawChoice(g2);
         }
     }

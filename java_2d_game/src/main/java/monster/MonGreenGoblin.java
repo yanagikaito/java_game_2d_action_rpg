@@ -1,6 +1,6 @@
 package monster;
 
-import entity.type.BossMonsterType;
+import entity.type.GreenGoblinType;
 import entity.Entity;
 import frame.FrameApp;
 import player.Player;
@@ -38,7 +38,7 @@ public class MonGreenGoblin extends Entity {
     public MonGreenGoblin(GameWindow gameWindow) {
 
         super(gameWindow);
-        setType(new BossMonsterType());
+        setType(new GreenGoblinType());
         setName("Green Goblin");
         setDefaultSpeed(1);
         setSpeed(getDefaultSpeed());

@@ -291,12 +291,20 @@ public abstract class Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+
+        // 1. プレイヤーとの物理的な接触（すり抜け防止・衝突判定）は常に実行する
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);
 
+        // 2. 「ダメージを与える処理」だけを、特定のモンスター（敵）に限定する
         if (contactPlayer && !gameWindow.getPlayer().getInvincible()) {
-            if (!getInvincible()) {
-                damagePlayer(this.attack, this.knockBackPower);
-                gameWindow.getPlayer().setInvincible(true);
+            if (this.getType() instanceof GreenSlimeType ||
+                    this.getType() instanceof MintSoldierType ||
+                    this.getType() instanceof GreenGoblinType) {
+
+                if (!getInvincible()) {
+                    damagePlayer(this.attack, this.knockBackPower);
+                    gameWindow.getPlayer().setInvincible(true);
+                }
             }
         }
     }
@@ -1906,7 +1914,7 @@ public abstract class Entity {
         double oneScale = (double) tile / Math.max(1, maxLife);
         int hpBarValue = (int) (oneScale * life);
 
-        if (getType() instanceof BossMonsterType) {
+        if (getType() instanceof GreenGoblinType) {
             int x = screenX + 59;
             int y = screenY - 21;
             g2.setColor(new Color(35, 35, 35));

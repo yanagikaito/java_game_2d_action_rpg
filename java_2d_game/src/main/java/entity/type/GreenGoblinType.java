@@ -1,6 +1,6 @@
 package entity.type;
 
-public record BossMonsterType() implements EntityType {
+public record GreenGoblinType() implements EntityType {
 
     @Override
     public int typeId() {
@@ -9,6 +9,6 @@ public record BossMonsterType() implements EntityType {
 
     @Override
     public String name() {
-        return "boss";
+        return "green_goblin";
     }
 }

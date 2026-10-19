@@ -188,6 +188,43 @@ public class SoundManager {
         }, "BgmFadeOut").start();
     }
 
+    public void playTextBlip() {
+
+        // 別スレッドで再生してゲームのフレームレート低下を防ぐ
+        new Thread(() -> {
+            try {
+                float sampleRate = 8000f; // サンプリングレート
+                int durationMs = 35;      // 音の長さ（約35ミリ秒の超短音）
+                int numSamples = (int) (sampleRate * durationMs / 1000);
+                byte[] buffer = new byte[numSamples];
+
+                double frequency = 1200.0; // 音の高さ（高めのファミコン風ピッチ）
+
+                for (int i = 0; i < numSamples; i++) {
+                    double angle = i / (sampleRate / frequency) * 2.0 * Math.PI;
+                    // 矩形波（レトロゲームらしいカクカクした電子音）
+                    double wave = Math.sin(angle) >= 0 ? 1.0 : -1.0;
+
+                    // 減衰エンベロープ（音の終わりの「プチッ」というノイズを防ぐため徐々に小さくする）
+                    double envelope = 1.0 - ((double) i / numSamples);
+
+                    // 波形×エンベロープ×音量（値を小さめにすると耳に優しい音になります）
+                    buffer[i] = (byte) (wave * envelope * 30);
+                }
+
+                AudioFormat format = new AudioFormat(sampleRate, 8, 1, true, true);
+                SourceDataLine line = AudioSystem.getSourceDataLine(format);
+                line.open(format, numSamples);
+                line.start();
+                line.write(buffer, 0, buffer.length);
+                line.drain();
+                line.close();
+            } catch (Exception e) {
+                // オーディオ環境エラーなどは無視してゲーム進行を優先
+            }
+        }).start();
+    }
+
     private void applyBgmVolumeAndMute(Clip clip) {
         if (clip == null) return;
         setClipVolume(clip, muted ? 0f : bgmVolume);

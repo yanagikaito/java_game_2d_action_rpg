@@ -147,6 +147,13 @@ public class NpcChicken extends Entity {
     @Override
     public void setAction() {
 
+        if (getInvincible()) {
+            invincibleCounter--;
+            if (invincibleCounter <= 0) {
+                setInvincible(false);
+            }
+        }
+
         // 優先: ルート追従
         if (following && route != null && !route.isEmpty()) {
             followRouteStep();

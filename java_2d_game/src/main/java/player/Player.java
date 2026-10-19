@@ -4445,8 +4445,13 @@ public class Player extends Entity {
 
     public void takeDamage(int dmg) {
         setLife(getLife() - dmg);
-        if (getLife() <= 0) {
+        // ゲームオーバー判定
+        if (gameWindow.getPlayer().getLife() <= 0) {
+            gameWindow.getPlayer().setLife(0);
             gameWindow.setGameState(GameState.GAME_OVER);
+            gameWindow.getPlayer().setState(Player.PlayerState.GAME_OVER);
+            gameWindow.getUi().showGameOver();
+            gameWindow.getPlayer().startDeathSequence();
         }
     }
 

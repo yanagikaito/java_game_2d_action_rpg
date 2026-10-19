@@ -216,7 +216,7 @@ public class LoadManager {
             case 5 -> new NpcMalonyChickenType();
             case 6 -> new GreenSlimeType();
             case 7 -> new MintSoldierType();
-            case 8 -> new BossMonsterType();
+            case 8 -> new GreenGoblinType();
             case 9 -> new ChickenType();
             case 10 -> new ChestType();
             case 11 -> new SwordType();

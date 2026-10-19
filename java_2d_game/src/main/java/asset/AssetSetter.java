@@ -419,7 +419,7 @@ public class AssetSetter {
 
     private Entity createMonGreenGoblin(int worldX, int worldY) {
 
-        Entity monster = entityFactory.create(new BossMonsterType());
+        Entity monster = entityFactory.create(new GreenGoblinType());
         if (monster != null) {
             monster.setWorldX(worldX);
             monster.setWorldY(worldY);

@@ -1,6 +1,7 @@
 package npc;
 
 import entity.Entity;
+import entity.type.NpcSaveType;
 import frame.FrameApp;
 import game.GameState;
 import window.GameWindow;
@@ -26,6 +27,7 @@ public class NpcSave extends Entity {
             applyMapEvent(ev);
         }
         this.gameWindow = gameWindow;
+        setType(new NpcSaveType());
         setDirection("down");
         setSpeed(0);
         loadNPCImages();

@@ -28,6 +28,7 @@ public class NpcMerChant extends Entity {
             applyMapEvent(ev);
         }
         this.gameWindow = gameWindow;
+        setType(new NpcMerChantType());
         setDirection("down");
         setSpeed(0);
         loadNPCImages();

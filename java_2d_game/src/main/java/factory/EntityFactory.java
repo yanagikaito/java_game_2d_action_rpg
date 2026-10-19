@@ -37,7 +37,7 @@ public class EntityFactory {
             case NpcMalonyChickenType npcMalonyChickenType -> new NpcMalonyChicken(gameWindow, ev);
             case GreenSlimeType greenSlimeType -> new MonGreenSlime(gameWindow);
             case MintSoldierType mintSoldierType -> new MonMintSoldier(gameWindow);
-            case BossMonsterType bossMonsterType -> new MonGreenGoblin(gameWindow);
+            case GreenGoblinType greenGoblinType -> new MonGreenGoblin(gameWindow);
             case ChickenType chicken -> new NpcChicken(gameWindow);
             case RockType rockType -> new ObjRock(gameWindow);
 

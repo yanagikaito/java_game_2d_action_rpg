@@ -1,6 +1,7 @@
 package npc;
 
 import entity.Entity;
+import entity.type.NpcMalonyChickenType;
 import frame.FrameApp;
 import map.GameMap;
 import window.GameWindow;
@@ -37,6 +38,7 @@ public class NpcMalonyChicken extends Entity {
             this.eventId = String.valueOf(ev.getId());
             applyMapEvent(ev);
         }
+        setType(new NpcMalonyChickenType());
         setDirection("right");
         setSpeed(0);
         loadNPCImages();
@@ -136,12 +138,16 @@ public class NpcMalonyChicken extends Entity {
             return;
         }
 
-        // 3. クエスト未受注（受託前）の場合：会話を表示・進める
-        showDialogueAndAdvance();
-
-        // ダイアログが最後まで進み、かつまだ選択肢待ちでない場合のみ選択肢を出す
-        if (isDialogueFinished() && !awaitingChoice) {
-            offerQuest();
+        // 3. クエスト未受注（受託前）の場合
+        // まだダイアログ（セリフ）が最後まで終わっていないなら、次のセリフを進めて表示する
+        if (!isDialogueFinished()) {
+            showDialogueAndAdvance();
+        }
+        // すでに最後のセリフまで読み終わっている状態なら、選択肢（オファー）を出す
+        else {
+            if (!awaitingChoice) {
+                offerQuest();
+            }
         }
     }
 
@@ -163,16 +169,24 @@ public class NpcMalonyChicken extends Entity {
     }
 
     private void showDialogueAndAdvance() {
+
         // 選択待ち中はダイアログを進めない
         if (awaitingChoice) return;
 
         String[] dialogues = getDialogue();
         int dialogueIndex = getDialogueIndex();
 
-        // 安全な境界チェック
         if (dialogues == null || dialogues.length == 0) return;
-        if (dialogueIndex < 0 || dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null) {
+
+        // すでに最後のセリフまで読み終わっている場合は、ここでは何もしない（※リセットもしない）
+        if (dialogueIndex >= dialogues.length) {
+            return;
+        }
+
+        if (dialogues[dialogueIndex] == null) {
             dialogueIndex = 0;
+            setDialogueIndex(dialogueIndex);
+            return;
         }
 
         getGameWindow().getUi().setCurrentDialogueMessage(dialogues[dialogueIndex]);

@@ -2,6 +2,7 @@ package npc;
 
 import collision.CollisionChecker;
 import entity.Entity;
+import entity.type.NpcOldManType;
 import frame.FrameApp;
 import game.GameState;
 import window.GameWindow;
@@ -31,7 +32,6 @@ public class NpcOldMan extends Entity {
     private List<Point> route = Collections.emptyList();
     private int routeIndex = 0;
     private boolean following = false;
-    private final CollisionChecker collisionChecker;
     private String eventId;
 
     public NpcOldMan(GameWindow gameWindow, db.MapEvent ev) {
@@ -40,7 +40,7 @@ public class NpcOldMan extends Entity {
             this.eventId = String.valueOf(ev.getId());
             applyMapEvent(ev);
         }
-        this.collisionChecker = new CollisionChecker(gameWindow);
+        setType(new NpcOldManType());
         setDirection("down");
         setSpeed(1);
         loadNPCImages();
@@ -66,46 +66,36 @@ public class NpcOldMan extends Entity {
     }
 
     public void applyMapEvent(db.MapEvent ev) {
+
         if (ev == null) return;
 
-        // eventId 等の基本情報
         if (ev.getId() != null) this.eventId = ev.getId();
         this.setName(ev.getName());
         this.setTrigger(ev.getTrigger());
 
-        // dialogues を配列にコピー
         java.util.List<String> dlg = ev.getDialogues();
         if (dlg == null || dlg.isEmpty()) {
-            // 空なら空配列をセットしておく（null 回避）
             setDialogueArray(new String[0]);
         } else {
-            String[] arr = new String[dlg.size()];
-            for (int i = 0; i < dlg.size(); i++) {
-                arr[i] = dlg.get(i);
+            // 空文字や null、空白だけの要素を除外した新しいリストを作る
+            java.util.List<String> cleanList = new java.util.ArrayList<>();
+            for (String text : dlg) {
+                if (text != null && !text.trim().isEmpty()) {
+                    cleanList.add(text);
+                }
             }
-            setDialogueArray(arr);
+            setDialogueArray(cleanList.toArray(new String[0]));
         }
+
+        // 新しいダイアログが適用されたら、インデックスを確実に 0 に初期化する
+        setDialogueIndex(0);
     }
 
     @Override
     public void setAction() {
-        if (following) {
-            followRouteStep();
-            checkPlayerCollision();
-        } else {
-            randomWalkStep();
-        }
-    }
 
-    /**
-     * 移動後に必ず呼ぶ衝突判定
-     */
+        randomWalkStep();
 
-    private void checkPlayerCollision() {
-        boolean hit = collisionChecker.checkPlayer(this);
-        if (hit) {
-            onHitPlayer();
-        }
     }
 
     private void onHitPlayer() {
@@ -216,22 +206,28 @@ public class NpcOldMan extends Entity {
     public void speak() {
 
         String[] dialogues = getDialogue();
-
         int dialogueIndex = getDialogueIndex();
 
-        if (dialogues[dialogueIndex] == null) {
-            dialogueIndex = 0;
+        // 1. セリフデータがない場合は安全に終了
+        if (dialogues == null || dialogues.length == 0) return;
+
+        // 2. すでに最後のセリフを超えている、または null に達した場合の処理（会話終了）
+        if (dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null) {
+            setDialogueIndex(0); // 次回話しかけたときのためにインデックスをリセット
+            getGameWindow().getUi().setCurrentDialogueMessage(""); // メッセージを空にする
+            getGameWindow().setGameState(GameState.PLAY); // ゲーム状態を通常に戻してウィンドウを閉じる
+            return;
         }
 
+        // 3. 現在のセリフをUIにセットしてインデックスを進める
         getGameWindow().getUi().setCurrentDialogueMessage(dialogues[dialogueIndex]);
         dialogueIndex++;
         setDialogueIndex(dialogueIndex);
 
-        switch (getGameWindow().getPlayer().getDirection()) {
-            case "up" -> setDirection("down");
-            case "down" -> setDirection("up");
-            case "left" -> setDirection("right");
-            case "right" -> setDirection("left");
+        // 4. プレイヤーの方を向く
+        if (getGameWindow().getPlayer() != null) {
+            String playerDir = getGameWindow().getPlayer().getDirection();
+            setDirection(getOppositeDirection(playerDir));
         }
     }
 

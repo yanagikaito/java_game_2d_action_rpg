@@ -372,12 +372,38 @@ public class MainFrame extends JFrame {
         try (Connection conn = DbManager.getConnection()) {
             conn.setAutoCommit(false);
 
-            // --- タイル保存（既存処理） ---
+            // 既存のタイルデータを一度削除
+            try (PreparedStatement delTile = conn.prepareStatement("DELETE FROM map_tile WHERE map_id=?")) {
+                delTile.setInt(1, mapId);
+                delTile.executeUpdate();
+            }
+
+            // 現在のモデルにある全タイルの情報をデータベースに保存
+            try (PreparedStatement psTile = conn.prepareStatement(
+                    "INSERT INTO map_tile(map_id, x, y, tile_id) VALUES(?,?,?,?)")) {
+                for (int x = 0; x < model.getWidth(); x++) {
+                    for (int y = 0; y < model.getHeight(); y++) {
+                        int tileId = model.getTile(x, y);
+                        psTile.setInt(1, mapId);
+                        psTile.setInt(2, x);
+                        psTile.setInt(3, y);
+                        psTile.setInt(4, tileId);
+                        psTile.addBatch();
+                    }
+                }
+                psTile.executeBatch();
+            }
+
+            // 既存のイベントデータを一度削除
+            try (PreparedStatement delEvent = conn.prepareStatement("DELETE FROM map_event WHERE map_id=?")) {
+                delEvent.setInt(1, mapId);
+                delEvent.executeUpdate();
+            }
+
+            // イベントを一括で保存（MERGE）
             try (PreparedStatement psEv = conn.prepareStatement(
                     "MERGE INTO map_event(id,map_id,x,y,name,trigger_type,json) KEY(id) VALUES(?,?,?,?,?,?,?)")) {
                 for (db.MapEvent ev : model.getAllEvents()) {
-
-                    // ★ JSONに変換する前に、現在の mapId を MapEvent インスタンスに確実に反映させる！
                     ev.setMapId(mapId);
 
                     psEv.setString(1, ev.getId());
@@ -389,51 +415,14 @@ public class MainFrame extends JFrame {
 
                     String json = null;
                     try {
-                        json = om.writeValueAsString(ev); // ここで mapId が正しくJSONに含まれるようになる
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        json = null;
-                    }
-                    if (json == null) {
-                        psEv.setNull(7, java.sql.Types.VARCHAR);
-                    } else {
-                        psEv.setBytes(7, json.getBytes(StandardCharsets.UTF_8));
-                    }
-                    psEv.addBatch();
-                }
-                psEv.executeBatch();
-            }
-
-            // --- イベント保存 ---
-            try (PreparedStatement del = conn.prepareStatement("DELETE FROM map_event WHERE map_id=?")) {
-                del.setInt(1, mapId);
-                del.executeUpdate();
-            }
-
-            // INSERT INTO を MERGE INTO に変更し、KEY(id) で重複を検知したら上書きするようにする
-            try (PreparedStatement psEv = conn.prepareStatement(
-                    "MERGE INTO map_event(id,map_id,x,y,name,trigger_type,json) KEY(id) VALUES(?,?,?,?,?,?,?)")) {
-                for (db.MapEvent ev : model.getAllEvents()) {
-                    psEv.setString(1, ev.getId());
-                    psEv.setInt(2, mapId);
-                    psEv.setInt(3, ev.getX());
-                    psEv.setInt(4, ev.getY());
-                    psEv.setString(5, ev.getName());
-                    psEv.setString(6, ev.getTrigger());
-
-                    String json = null;
-                    try {
-                        // MapEvent を JSON 文字列に変換
                         json = om.writeValueAsString(ev);
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        // 失敗したら null を入れておく（ログは出る）
-                        json = null;
                     }
+
                     if (json == null) {
                         psEv.setNull(7, java.sql.Types.VARCHAR);
                     } else {
-                        // JSON をバイト列で DB に保存
                         psEv.setBytes(7, json.getBytes(StandardCharsets.UTF_8));
                     }
                     psEv.addBatch();
