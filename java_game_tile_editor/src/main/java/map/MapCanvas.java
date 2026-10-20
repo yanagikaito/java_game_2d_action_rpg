@@ -30,19 +30,21 @@ public class MapCanvas extends JPanel implements Scrollable {
                 model.getHeight() * tileSize
         ));
 
-        addMouseListener(new MouseAdapter() {
+        // マウスの操作ハンドラー
+        MouseAdapter mouseHandler = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int x = e.getX() / tileSize;
-                int y = e.getY() / tileSize;
-                model.setTile(x, y, selectedTileId);
-                repaint();
-                handleMouseEvent(e);
+                handleMouseEvent(e); // 押した瞬間
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                handleMouseEvent(e); // 押したまま動かしたとき（なぞる動作）
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                handleMouseEvent(e);
+
             }
 
             private void handleMouseEvent(MouseEvent e) {
@@ -79,10 +81,7 @@ public class MapCanvas extends JPanel implements Scrollable {
                         menu.addSeparator();
                         menu.add(delete);
                         menu.show(MapCanvas.this, e.getX(), e.getY());
-                    } else {
-
                     }
-
                     return;
                 }
 
@@ -97,23 +96,37 @@ public class MapCanvas extends JPanel implements Scrollable {
                     }
 
                     if ("event".equalsIgnoreCase(currentTool)) {
-                        String id = generateEventId();
-                        MapEvent ne = new MapEvent(id, tx, ty);
-                        ne.setName("event_" + id);
-                        ne.setTrigger("interact");
-                        model.addEvent(ne);
-                        selectedEventId = id;
-                        fireSelectionChanged(ne);
-                        repaint();
+                        // イベントツールの場合は、ドラッグ中に意図せず大量生成されないよう
+                        // 「押した瞬間（mousePressed）」のみ新規作成されるようにガードを入れる
+                        if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                            String id = generateEventId();
+                            MapEvent ne = new MapEvent(id, tx, ty);
+                            ne.setName("event_" + id);
+                            ne.setTrigger("interact");
+                            model.addEvent(ne);
+                            selectedEventId = id;
+                            fireSelectionChanged(ne);
+                            repaint();
+                        }
                     } else {
+                        // タイルツールの場合は、すでに同じタイルでなければセットして再描画
+                        if (model.getTile(tx, ty) != selectedTileId) {
+                            model.setTile(tx, ty, selectedTileId);
+                            repaint();
+                        }
                     }
                 }
             }
-        });
+        };
+
+        // クリックとドラッグ（モーション）の両方のリスナーを登録する
+        addMouseListener(mouseHandler);
+        addMouseMotionListener(mouseHandler);
     }
 
-    public void setSelectedTile(int id) {
-        this.selectedTileId = id;
+    public void setSelectedTile(int tileId) {
+        this.selectedTileId = tileId;
+        this.currentTool = "tile";
     }
 
     @Override

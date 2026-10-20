@@ -32,7 +32,6 @@ public class TileManager {
     public static final int FOREST_TILE_ID = 9;
     public static final int STAIRS_DOWN_TILE_ID = 12;
     public static final int STAIRS_UP_TILE_ID = 13;
-    public static final int BED_TILE_ID = 22;
 
     // 水アニメ関連
     private BufferedImage[] waterFrames;
@@ -51,7 +50,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[23];
+        tiles = new Tile[24];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -169,6 +168,9 @@ public class TileManager {
             tiles[22] = new Tile();
             tiles[22].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/bed.gif"));
             tiles[22].collision = true;
+
+            tiles[23] = new Tile();
+            tiles[23].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/mossy_turf.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
