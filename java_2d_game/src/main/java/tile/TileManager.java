@@ -32,6 +32,7 @@ public class TileManager {
     public static final int FOREST_TILE_ID = 9;
     public static final int STAIRS_DOWN_TILE_ID = 12;
     public static final int STAIRS_UP_TILE_ID = 13;
+    public static final int FOREST_TRANSITION_ID = 24;
 
     // 水アニメ関連
     private BufferedImage[] waterFrames;
@@ -50,7 +51,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[24];
+        tiles = new Tile[25];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -65,7 +66,9 @@ public class TileManager {
     }
 
     private void loadTileImages() {
+
         try {
+
             tiles[0] = new Tile();
             tiles[0].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/earth.png"));
             tiles[0].bombCollision = true;
@@ -74,7 +77,6 @@ public class TileManager {
 
             tiles[1] = new Tile();
             tiles[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/meadow.png"));
-            tiles[1].chickenCollision = true;
 
             // 水アニメフレーム読み込み（4フレーム）
             tiles[2] = new Tile();
@@ -171,6 +173,9 @@ public class TileManager {
 
             tiles[23] = new Tile();
             tiles[23].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/mossy_turf.png"));
+
+            tiles[24] = new Tile();
+            tiles[24].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/forest_transition.png"));
 
         } catch (IOException e) {
             e.printStackTrace();

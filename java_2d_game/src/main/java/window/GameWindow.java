@@ -161,6 +161,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         mapBgmMap.put(TileManager.FOREST_TILE_ID, "sound/meadow_G110.wav");
         mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/Beside_the_Hearth.wav");
         mapBgmMap.put(TileManager.STAIRS_UP_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
+        mapBgmMap.put(TileManager.FOREST_TRANSITION_ID, "sound/Over_the_Cresting_Hill.wav");
         mapBgmMap.put(TileManager.STAIRS_DOWN_TILE_ID, "sound/Beneath_the_Wet_Stone.wav");
         // 事前ロードしておく
         for (String path : mapBgmMap.values()) {
@@ -742,9 +743,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             clearSceneState();
             tileManager.loadMap(1);
-            startMapTransition(2);
+            startMapTransition(1);
             getPlayer().setWorldX(tileSize * 23);
-            getPlayer().setWorldY(tileSize * 10);
+            getPlayer().setWorldY(tileSize * 4);
 
             assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
             assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
@@ -765,6 +766,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             startMapTransition(3);
             getPlayer().setWorldX(tileSize * 2);
             getPlayer().setWorldY(tileSize * 48);
+            getPlayer().setDirection("right");
 
             assetSetter.setBossMonster();
 
@@ -788,6 +790,27 @@ public class GameWindow extends JPanel implements Window, Runnable {
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 10);
             getPlayer().setWorldY(tileSize * 9);
+            getPlayer().setDirection("down");
+
+            assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+            assetSetter.setNpcMalonyChicken("event_ev_19f74d4dd02_4941", 36, 13);
+            assetSetter.setMonster();
+            assetSetter.setInteractiveTile();
+            assetSetter.setObjAxe();
+            assetSetter.setObjChest();
+            assetSetter.setObjPot();
+            assetSetter.setObjRock();
+            assetSetter.setObjLantern();
+
+            repaint();
+
+        } else if (currentMapIndex == TileManager.FOREST_TRANSITION_ID) {
+
+            clearSceneState();
+            tileManager.loadMap(1);
+            startMapTransition(2);
+            getPlayer().setWorldX(tileSize * 31);
+            getPlayer().setWorldY(tileSize * 4);
             getPlayer().setDirection("down");
 
             assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
