@@ -42,9 +42,16 @@ public class MainFrame extends JFrame {
                 tmp = ImageIO.read(is);
             }
         }
+        Image tmpChest = null;
+        try (InputStream is = getClass().getResourceAsStream("/objects/chest.png")) {
+            if (is != null) {
+                tmpChest = ImageIO.read(is);
+            }
+        }
         eventIcon = tmp;
         canvas = new MapCanvas(model, tileImages);
         if (eventIcon != null) canvas.setEventIcon(eventIcon);
+        if (tmpChest != null) canvas.setChestImage(tmpChest);
 
         JButton importTxt = new JButton("Import TXT");
         importTxt.addActionListener(e -> {
@@ -69,6 +76,13 @@ public class MainFrame extends JFrame {
         JButton eventTool = new JButton("Event");
         eventTool.addActionListener(e -> canvas.setTool("event"));
         control.add(eventTool);
+
+        // オブジェクト・インタラクティブ配置用ボタン群 ---
+        JButton chestTool = new JButton("Chest");
+        chestTool.addActionListener(e -> {
+            canvas.setTool("object"); // 宝箱モード
+        });
+        control.add(chestTool);
 
         // --- タイルボタン群を横スクロール可能にする ---
         JPanel tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));

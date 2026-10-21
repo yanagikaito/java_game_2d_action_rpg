@@ -133,6 +133,9 @@ public abstract class Entity {
     private Color targetColor;
     protected boolean targetColorOn;
 
+    private String eventId;
+    private boolean opened = false;
+
     /**
      * Entity を初期化。
      *
@@ -748,23 +751,46 @@ public abstract class Entity {
         this.dialogue = dialogueArray;
     }
 
-    public void setDialogueAt(int index, String text) {
-        if (dialogue == null) {
-            dialogue = new String[Math.max(4, index + 1)];
-        } else if (index >= dialogue.length) {
-            String[] tmp = new String[index + 1];
-            System.arraycopy(dialogue, 0, tmp, 0, dialogue.length);
-            dialogue = tmp;
-        }
-        dialogue[index] = text;
-    }
-
-    public String getTrigger() {
-        return trigger;
-    }
-
     public void setTrigger(String trigger) {
         this.trigger = trigger;
+    }
+
+    public void applyMapEvent(db.MapEvent ev) {
+
+        if (ev == null) return;
+
+        // 基本情報（ID、名前、トリガー）の適用
+        if (ev.getId() != null) this.eventId = ev.getId();
+        this.setName(ev.getName());
+        this.setTrigger(ev.getTrigger());
+
+        // 開けたときに表示するメッセージ（dialogues）のセット
+        java.util.List<String> dlg = ev.getDialogues();
+        if (dlg == null || dlg.isEmpty()) {
+            // デフォルトのメッセージ
+            setDialogueArray(new String[]{"宝箱はからっぽだ。"});
+        } else {
+            String[] arr = new String[dlg.size()];
+            for (int i = 0; i < dlg.size(); i++) {
+                arr[i] = dlg.get(i);
+            }
+            setDialogueArray(arr);
+        }
+
+        // メタデータ（報酬や状態）の適用
+        if (ev.getMeta() != null) {
+            // 報酬アイテム情報などの取得
+            Object reward = ev.getMeta().get("reward");
+            if (reward != null) {
+
+            }
+
+            // 開封済みフラグなど
+            Object isOpened = ev.getMeta().get("opened");
+            if (isOpened instanceof Boolean) {
+                this.opened = (Boolean) isOpened;
+            }
+        }
     }
 
     /**
@@ -2003,10 +2029,6 @@ public abstract class Entity {
 
     public String getKnockBackDirection() {
         return knockBackDirection;
-    }
-
-    public void setKnockBackDirection(String knockBackDirection) {
-        this.knockBackDirection = knockBackDirection;
     }
 
     /**
