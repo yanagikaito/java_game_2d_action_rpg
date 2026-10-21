@@ -1,5 +1,6 @@
 package asset;
 
+import db.MapEvent;
 import entity.Entity;
 import entity.type.*;
 import factory.EntityFactory;
@@ -8,6 +9,8 @@ import npc.*;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
+
+import java.util.List;
 
 public class AssetSetter {
 
@@ -301,16 +304,65 @@ public class AssetSetter {
         obj[i] = createObjAxe(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
     }
 
-    public void setObjChest() {
+    public void setObjChest(String startEventId, String endEventId, int arrayStartIndex) {
 
-        Entity[] obj = gameWindow.getObj();
-        int i = 8;
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setObjChest");
+            return;
+        }
 
-        obj[i] = createObjChest(FrameApp.getTileSize() * 30, FrameApp.getTileSize() * 19);
-        i++;
-        obj[i] = createObjChest(FrameApp.getTileSize() * 31, FrameApp.getTileSize() * 19);
-        i++;
-        obj[i] = createObjChest(FrameApp.getTileSize() * 32, FrameApp.getTileSize() * 19);
+        model.loadEventsFromDb(2);
+        int tileSize = FrameApp.getTileSize();
+        int currentIndex = arrayStartIndex;
+
+        try {
+            String[] startParts = startEventId.split("_");
+            String[] endParts = endEventId.split("_");
+
+            int startNum = Integer.parseInt(startParts[1]);
+            int endNum = Integer.parseInt(endParts[1]);
+            int y = Integer.parseInt(startParts[2]);
+
+            // 抽出した番号を使ってループ
+            for (int i = startNum; i <= endNum; i++) {
+                String eventId = "chest_" + i + "_" + y;
+                db.MapEvent ev = model.getEventById(eventId);
+
+                Entity chest = createObjChest(0, 0);
+
+                if (chest != null) {
+                    chest.applyMapEvent(ev);
+
+                    if (ev != null) {
+                        chest.setWorldX(tileSize * ev.getX());
+                        chest.setWorldY(tileSize * ev.getY());
+                    } else {
+                        chest.setWorldX(tileSize * i);
+                        chest.setWorldY(tileSize * y);
+                    }
+
+                    Entity[] objArray = gameWindow.getObj();
+                    if (objArray == null || objArray.length <= currentIndex) {
+                        int newSize = Math.max(currentIndex + 20, (objArray == null ? 50 : objArray.length * 2));
+                        Entity[] newArray = new Entity[newSize];
+                        if (objArray != null) {
+                            System.arraycopy(objArray, 0, newArray, 0, objArray.length);
+                        }
+                        objArray = newArray;
+                        gameWindow.setObj(objArray);
+                    }
+
+                    objArray[currentIndex] = chest;
+                    currentIndex++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to parse eventId range: " + startEventId + " to " + endEventId);
+        }
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
     public void setObjRedPotion() {

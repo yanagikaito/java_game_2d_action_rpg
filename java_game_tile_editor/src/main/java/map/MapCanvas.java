@@ -15,8 +15,10 @@ public class MapCanvas extends JPanel implements Scrollable {
     private final Map<Integer, Image> tileImages;
     private int selectedTileId = 0;
     private final int tileSize = 32;
+    public static final int CHEST_TILE_ID = 99;
 
     private Image eventIcon;
+    private Image chestImage;
     private String selectedEventId = null;
     private java.util.function.Consumer<MapEvent> selectionListener;
     private String currentTool = "tile"; // "tile" or "event"
@@ -48,6 +50,7 @@ public class MapCanvas extends JPanel implements Scrollable {
             }
 
             private void handleMouseEvent(MouseEvent e) {
+
                 // タイル座標
                 int tx = e.getX() / tileSize;
                 int ty = e.getY() / tileSize;
@@ -108,8 +111,27 @@ public class MapCanvas extends JPanel implements Scrollable {
                             fireSelectionChanged(ne);
                             repaint();
                         }
+                    } else if ("object".equalsIgnoreCase(currentTool)) {
+                        // オブジェクト（宝箱等）をタイル座標ベースの固定IDで配置
+                        if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                            // 座標を元にした固定ID
+                            String id = "chest_" + tx + "_" + ty;
+
+                            // すでにこの座標にイベント/オブジェクトがなければ新規作成
+                            if (model.getEventAt(tx, ty) == null) {
+                                MapEvent obj = new MapEvent(id, tx, ty);
+                                obj.setName("chest_" + tx + "_" + ty);
+                                obj.setTrigger("interact");
+                                obj.getMeta().put("type", "chest");
+
+                                model.addEvent(obj);
+                                selectedEventId = id;
+                                fireSelectionChanged(obj);
+                                repaint();
+                            }
+                        }
                     } else {
-                        // タイルツールの場合は、すでに同じタイルでなければセットして再描画
+                        // 通常タイルツール
                         if (model.getTile(tx, ty) != selectedTileId) {
                             model.setTile(tx, ty, selectedTileId);
                             repaint();
@@ -133,60 +155,49 @@ public class MapCanvas extends JPanel implements Scrollable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setFont(new Font("アリアル", Font.PLAIN, 12));
-        g2.setColor(Color.BLACK);
+        g2.setFont(new Font("SansSerif", Font.PLAIN, 10));
 
+        // 1. タイルを描画
         for (int y = 0; y < model.getHeight(); y++) {
             for (int x = 0; x < model.getWidth(); x++) {
                 Image img = tileImages.get(model.getTile(x, y));
                 if (img != null) {
                     g2.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize, null);
                 }
-                g2.setColor(Color.BLACK);
+                g2.setColor(Color.LIGHT_GRAY);
                 g2.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
 
-                g2.setColor(Color.BLACK);
+                // 座標テキストの描画
+                g2.setColor(Color.DARK_GRAY);
                 String coord = x + "," + y;
                 int strX = x * tileSize + 2;
-                int strY = y * tileSize + tileSize - 4;
+                int strY = y * tileSize + 12;
                 g2.drawString(coord, strX, strY);
-
-                g2.setColor(Color.BLACK);
             }
         }
 
+        // 2. イベント・オブジェクトを描画
         for (MapEvent e : model.getAllEvents()) {
             int sx = e.getX() * tileSize;
             int sy = e.getY() * tileSize;
-            g.drawImage(eventIcon, sx, sy, tileSize, tileSize, null);
+
+            // 宝箱の判定（名前が "chest" で始まる、またはメタデータに type=chest がある場合）
+            boolean isChest = (e.getName() != null && e.getName().startsWith("chest"))
+                    || ("chest".equals(e.getMeta().get("type")));
+
+            if (isChest && chestImage != null) {
+                g2.drawImage(chestImage, sx, sy, tileSize, tileSize, null);
+            } else if (eventIcon != null) {
+                g2.drawImage(eventIcon, sx, sy, tileSize, tileSize, null);
+            }
+
+            // 選択中の黄色い枠線
             if (e.getId().equals(selectedEventId)) {
-                g.setColor(Color.YELLOW);
-                g.drawRect(sx, sy, tileSize - 1, tileSize - 1);
+                g2.setColor(Color.YELLOW);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRect(sx, sy, tileSize - 1, tileSize - 1);
             }
         }
-
-        addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent ev) {
-                int tx = ev.getX() / tileSize;
-                int ty = ev.getY() / tileSize;
-                MapEvent hit = model.getEventAt(tx, ty);
-                if (hit != null) {
-                    selectedEventId = hit.getId();
-                    fireSelectionChanged(hit);
-                } else if (currentToolIsEventPlace()) {
-                    MapEvent ne = new MapEvent();
-                    ne.setId(generateEventId());
-                    ne.setX(tx);
-                    ne.setY(ty);
-                    ne.setName("event_" + ne.getId());
-                    model.addEvent(ne);
-                    selectedEventId = ne.getId();
-                    fireSelectionChanged(ne);
-                    repaint();
-                }
-            }
-        });
-
     }
 
     public void setSelectionListener(java.util.function.Consumer<MapEvent> listener) {
@@ -199,10 +210,6 @@ public class MapCanvas extends JPanel implements Scrollable {
 
     public void setTool(String tool) {
         this.currentTool = tool;
-    }
-
-    private boolean currentToolIsEventPlace() {
-        return "event".equalsIgnoreCase(currentTool);
     }
 
     private String generateEventId() {
@@ -237,5 +244,9 @@ public class MapCanvas extends JPanel implements Scrollable {
 
     public void setEventIcon(Image eventIcon) {
         this.eventIcon = eventIcon;
+    }
+
+    public void setChestImage(Image chestImage) {
+        this.chestImage = chestImage;
     }
 }

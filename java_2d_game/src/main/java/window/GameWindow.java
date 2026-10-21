@@ -71,7 +71,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private final MapModel model = new MapModel(50, 50);
     private Entity[] npc = new Entity[10];
     private Entity[] monster = new Entity[50];
-    private Entity[] obj = new Entity[30];
+    private Entity[] obj = new Entity[50];
     private InteractiveTile[] iTile = new InteractiveTile[50];
     private UI ui = new UI(this, entityFactory);
     private ArrayList<Projectile> projectileList = new ArrayList<>();
@@ -146,7 +146,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         // 拾えるアイテム・オブジェクトの再配置
         assetSetter.setObjAxe();
         assetSetter.setObjLantern();
-        assetSetter.setObjChest();
+        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
         assetSetter.setObjPot();
         assetSetter.setObjRock();
 
@@ -370,7 +370,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
-        assetSetter.setObjChest();
+        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
         assetSetter.setObjRedPotion();
         assetSetter.setObjGreenPotion();
         assetSetter.setObjBluePotion();
@@ -752,7 +752,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
-            assetSetter.setObjChest();
+            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
             assetSetter.setObjPot();
             assetSetter.setObjRock();
             assetSetter.setObjLantern();
@@ -767,6 +767,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldX(tileSize * 2);
             getPlayer().setWorldY(tileSize * 48);
             getPlayer().setDirection("right");
+
+            assetSetter.setObjChest("chest_1_44", "chest_6_44", 9);
 
             assetSetter.setBossMonster();
 
@@ -797,7 +799,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
-            assetSetter.setObjChest();
+            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
             assetSetter.setObjPot();
             assetSetter.setObjRock();
             assetSetter.setObjLantern();
@@ -818,7 +820,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
-            assetSetter.setObjChest();
+            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
             assetSetter.setObjPot();
             assetSetter.setObjRock();
             assetSetter.setObjLantern();
@@ -1204,6 +1206,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public Entity[] getObj() {
         return obj;
+    }
+
+    public void setObj(Entity[] obj) {
+        this.obj = obj;
     }
 
     /**
