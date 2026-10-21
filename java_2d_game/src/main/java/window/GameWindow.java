@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static frame.FrameApp.*;
+import static tile.TileManager.*;
 
 /**
  * ゲームのメイン描画パネルを表すクラス。
@@ -115,7 +116,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
      */
 
     public void setUpGame() {
+
         lastUpdateTimeNano = System.nanoTime();
+
+        tileManager.loadMap(MEADOW_TILE_ID);
 
         // オブジェクト類を初期化
         resetGameWorld();
@@ -146,8 +150,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         // 拾えるアイテム・オブジェクトの再配置
         assetSetter.setObjAxe();
         assetSetter.setObjLantern();
-        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
-        assetSetter.setObjPot();
+        assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
+        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
         assetSetter.setObjRock();
 
         // 環境・照明のセットアップ
@@ -157,12 +161,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
     }
 
     private void initMapBgm() {
-        mapBgmMap.put(TileManager.MEADOW_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
-        mapBgmMap.put(TileManager.FOREST_TILE_ID, "sound/Beneath_The_Sunken_Boughs.wav");
+        mapBgmMap.put(MEADOW_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
+        mapBgmMap.put(FOREST_TILE_ID, "sound/Beneath_The_Sunken_Boughs.wav");
         mapBgmMap.put(TileManager.HUT_TILE_ID, "sound/Beside_the_Hearth.wav");
         mapBgmMap.put(TileManager.STAIRS_UP_TILE_ID, "sound/Over_the_Cresting_Hill.wav");
         mapBgmMap.put(TileManager.FOREST_TRANSITION_ID, "sound/Over_the_Cresting_Hill.wav");
-        mapBgmMap.put(TileManager.STAIRS_DOWN_TILE_ID, "sound/Beneath_the_Wet_Stone.wav");
+        mapBgmMap.put(STAIRS_DOWN_TILE_ID, "sound/Beneath_the_Wet_Stone.wav");
         // 事前ロードしておく
         for (String path : mapBgmMap.values()) {
             getSoundmanager().preload(path);
@@ -370,11 +374,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
         assetSetter.setObjAxe();
-        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
-        assetSetter.setObjRedPotion();
-        assetSetter.setObjGreenPotion();
-        assetSetter.setObjBluePotion();
-        assetSetter.setObjPot();
+        assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
+        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
         assetSetter.setObjRock();
         assetSetter.setObjLantern();
 
@@ -739,10 +740,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             repaint();
 
-        } else if (currentMapIndex == TileManager.MEADOW_TILE_ID) {
+        } else if (currentMapIndex == MEADOW_TILE_ID) {
 
             clearSceneState();
-            tileManager.loadMap(1);
+            tileManager.loadMap(MEADOW_TILE_ID);
             startMapTransition(1);
             getPlayer().setWorldX(tileSize * 23);
             getPlayer().setWorldY(tileSize * 4);
@@ -752,14 +753,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
-            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
-            assetSetter.setObjPot();
+            assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
+            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
             assetSetter.setObjRock();
             assetSetter.setObjLantern();
 
             repaint();
 
-        } else if (currentMapIndex == TileManager.FOREST_TILE_ID) {
+        } else if (currentMapIndex == FOREST_TILE_ID) {
 
             clearSceneState();
             tileManager.loadMap(3);
@@ -768,13 +769,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldY(tileSize * 48);
             getPlayer().setDirection("right");
 
-            assetSetter.setObjChest("chest_1_44", "chest_6_44", 9);
+            assetSetter.setObjPot("pot_7_37", "pot_7_42", 0, 3);
+            assetSetter.setObjPot("pot_7_37", "pot_12_37", 6, 3);
+            assetSetter.setObjPot("pot_12_37", "pot_12_42", 11, 3);
+            assetSetter.setObjPot("pot_7_42", "pot_12_42", 17, 3);
+            assetSetter.setObjPot("pot_8_42", "pot_11_42", 18, 3);
+            assetSetter.setObjChest("chest_1_44", "chest_6_44", 22, 3);
 
             assetSetter.setBossMonster();
 
             repaint();
 
-        } else if (currentMapIndex == TileManager.STAIRS_DOWN_TILE_ID) {
+        } else if (currentMapIndex == STAIRS_DOWN_TILE_ID) {
 
             clearSceneState();
             tileManager.loadMap(4);
@@ -785,10 +791,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
             repaint();
 
-        } else if (currentMapIndex == TileManager.STAIRS_UP_TILE_ID) {
+        } else if (currentMapIndex == STAIRS_UP_TILE_ID) {
 
             clearSceneState();
-            tileManager.loadMap(1);
+            tileManager.loadMap(MEADOW_TILE_ID);
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 10);
             getPlayer().setWorldY(tileSize * 9);
@@ -799,8 +805,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
-            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
-            assetSetter.setObjPot();
+            assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
+            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
             assetSetter.setObjRock();
             assetSetter.setObjLantern();
 
@@ -809,7 +815,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
         } else if (currentMapIndex == TileManager.FOREST_TRANSITION_ID) {
 
             clearSceneState();
-            tileManager.loadMap(1);
+            tileManager.loadMap(MEADOW_TILE_ID);
             startMapTransition(2);
             getPlayer().setWorldX(tileSize * 31);
             getPlayer().setWorldY(tileSize * 4);
@@ -820,8 +826,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjAxe();
-            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9);
-            assetSetter.setObjPot();
+            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
+            assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
             assetSetter.setObjRock();
             assetSetter.setObjLantern();
 

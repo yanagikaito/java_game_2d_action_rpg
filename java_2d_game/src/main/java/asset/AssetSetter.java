@@ -6,11 +6,15 @@ import entity.type.*;
 import factory.EntityFactory;
 import frame.FrameApp;
 import npc.*;
+import tile.TileManager;
 import tileInteractive.InteractiveTile;
 import tileInteractive.ItDryTree;
 import window.GameWindow;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static tile.TileManager.WATER_TILE_ID;
 
 public class AssetSetter {
 
@@ -270,22 +274,78 @@ public class AssetSetter {
         gameWindow.setMonster(monsters);
     }
 
-    public void setObjPot() {
+    public void setObjPot(String startEventId, String endEventId, int arrayStartIndex, int currentMapId) {
 
-        Entity[] obj = gameWindow.getObj();
-        int i = 0;
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setObjPot");
+            return;
+        }
 
-        obj[i] = createObjPot(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 15);
-        i++;
-        obj[i] = createObjPot(FrameApp.getTileSize() * 28, FrameApp.getTileSize() * 15);
-        i++;
-        obj[i] = createObjPot(FrameApp.getTileSize() * 29, FrameApp.getTileSize() * 15);
-        i++;
-        obj[i] = createObjPot(FrameApp.getTileSize() * 29, FrameApp.getTileSize() * 16);
-        i++;
-        obj[i] = createObjPot(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 16);
-        i++;
-        obj[i] = createObjPot(FrameApp.getTileSize() * 28, FrameApp.getTileSize() * 16);
+        model.loadEventsFromDb(currentMapId);
+        int tileSize = FrameApp.getTileSize();
+        int currentIndex = arrayStartIndex;
+
+        try {
+
+            String[] startParts = startEventId.split("_");
+            String[] endParts = endEventId.split("_");
+
+            // 開始と終了の X と Y をそれぞれ取得する
+            int startX = Integer.parseInt(startParts[1]);
+            int startY = Integer.parseInt(startParts[2]);
+            int endX = Integer.parseInt(endParts[1]);
+            int endY = Integer.parseInt(endParts[2]);
+
+            // 【二重ループ】Y座標（行）を進めながら、それぞれの行のX座標（列）を順番に処理する
+            for (int y = startY; y <= endY; y++) {
+                for (int x = startX; x <= endX; x++) {
+
+                    int tileId = gameWindow.getTileManager().getTileIdAt(x, y);
+                    System.out.println("DEBUG: x=" + x + ", y=" + y + " -> tileId = " + tileId);
+                    if (tileId == WATER_TILE_ID) {
+                        continue; // 水タイル（ID: 2）なら壺を置かない
+                    }
+
+                    // 正しく "pot_" のイベントIDを組み立てる
+                    String eventId = "pot_" + x + "_" + y;
+                    db.MapEvent ev = model.getEventById(eventId);
+
+                    Entity pot = createObjPot(0, 0);
+
+                    if (pot != null) {
+                        pot.applyMapEvent(ev);
+
+                        if (ev != null) {
+                            pot.setWorldX(tileSize * ev.getX());
+                            pot.setWorldY(tileSize * ev.getY());
+                        } else {
+                            pot.setWorldX(tileSize * x);
+                            pot.setWorldY(tileSize * y);
+                        }
+
+                        Entity[] objArray = gameWindow.getObj();
+                        if (objArray == null || objArray.length <= currentIndex) {
+                            int newSize = Math.max(currentIndex + 20, (objArray == null ? 50 : objArray.length * 2));
+                            Entity[] newArray = new Entity[newSize];
+                            if (objArray != null) {
+                                System.arraycopy(objArray, 0, newArray, 0, objArray.length);
+                            }
+                            objArray = newArray;
+                            gameWindow.setObj(objArray);
+                        }
+
+                        objArray[currentIndex] = pot;
+                        currentIndex++;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to parse eventId range: " + startEventId + " to " + endEventId);
+        }
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
     public void setObjRock() {
@@ -304,7 +364,7 @@ public class AssetSetter {
         obj[i] = createObjAxe(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 21);
     }
 
-    public void setObjChest(String startEventId, String endEventId, int arrayStartIndex) {
+    public void setObjChest(String startEventId, String endEventId, int arrayStartIndex, int currentMapId) {
 
         db.MapModel model = gameWindow.getModel();
         if (model == null) {
@@ -312,7 +372,7 @@ public class AssetSetter {
             return;
         }
 
-        model.loadEventsFromDb(2);
+        model.loadEventsFromDb(currentMapId);
         int tileSize = FrameApp.getTileSize();
         int currentIndex = arrayStartIndex;
 
@@ -320,41 +380,46 @@ public class AssetSetter {
             String[] startParts = startEventId.split("_");
             String[] endParts = endEventId.split("_");
 
-            int startNum = Integer.parseInt(startParts[1]);
-            int endNum = Integer.parseInt(endParts[1]);
-            int y = Integer.parseInt(startParts[2]);
+            // 開始と終了の X と Y をそれぞれ取得する
+            int startX = Integer.parseInt(startParts[1]);
+            int startY = Integer.parseInt(startParts[2]);
+            int endX = Integer.parseInt(endParts[1]);
+            int endY = Integer.parseInt(endParts[2]);
 
-            // 抽出した番号を使ってループ
-            for (int i = startNum; i <= endNum; i++) {
-                String eventId = "chest_" + i + "_" + y;
-                db.MapEvent ev = model.getEventById(eventId);
+            // 【二重ループ】Y座標（行）を進めながら、それぞれの行のX座標（列）を順番に処理する
+            for (int y = startY; y <= endY; y++) {
+                for (int x = startX; x <= endX; x++) {
+                    // 正しく "chest_" のイベントIDを組み立てる
+                    String eventId = "chest_" + x + "_" + y;
+                    db.MapEvent ev = model.getEventById(eventId);
 
-                Entity chest = createObjChest(0, 0);
+                    Entity chest = createObjChest(0, 0);
 
-                if (chest != null) {
-                    chest.applyMapEvent(ev);
+                    if (chest != null) {
+                        chest.applyMapEvent(ev);
 
-                    if (ev != null) {
-                        chest.setWorldX(tileSize * ev.getX());
-                        chest.setWorldY(tileSize * ev.getY());
-                    } else {
-                        chest.setWorldX(tileSize * i);
-                        chest.setWorldY(tileSize * y);
-                    }
-
-                    Entity[] objArray = gameWindow.getObj();
-                    if (objArray == null || objArray.length <= currentIndex) {
-                        int newSize = Math.max(currentIndex + 20, (objArray == null ? 50 : objArray.length * 2));
-                        Entity[] newArray = new Entity[newSize];
-                        if (objArray != null) {
-                            System.arraycopy(objArray, 0, newArray, 0, objArray.length);
+                        if (ev != null) {
+                            chest.setWorldX(tileSize * ev.getX());
+                            chest.setWorldY(tileSize * ev.getY());
+                        } else {
+                            chest.setWorldX(tileSize * x);
+                            chest.setWorldY(tileSize * y);
                         }
-                        objArray = newArray;
-                        gameWindow.setObj(objArray);
-                    }
 
-                    objArray[currentIndex] = chest;
-                    currentIndex++;
+                        Entity[] objArray = gameWindow.getObj();
+                        if (objArray == null || objArray.length <= currentIndex) {
+                            int newSize = Math.max(currentIndex + 20, (objArray == null ? 50 : objArray.length * 2));
+                            Entity[] newArray = new Entity[newSize];
+                            if (objArray != null) {
+                                System.arraycopy(objArray, 0, newArray, 0, objArray.length);
+                            }
+                            objArray = newArray;
+                            gameWindow.setObj(objArray);
+                        }
+
+                        objArray[currentIndex] = chest;
+                        currentIndex++;
+                    }
                 }
             }
         } catch (Exception e) {

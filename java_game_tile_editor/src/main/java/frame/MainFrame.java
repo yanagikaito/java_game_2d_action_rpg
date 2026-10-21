@@ -23,6 +23,11 @@ import java.util.Map;
 public class MainFrame extends JFrame {
 
     private final ObjectMapper om = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    private static final int maxScreenCol = 17;
+    private static final int maxScreenRow = 32;
+    private static final int tileSize = createSize();
+    private static final int screenWidth = tileSize * maxScreenRow;
+    private static final int screenHeight = tileSize * maxScreenCol;
     private final MapModel model = new MapModel(50, 50);
     private final JComboBox<Integer> selector;
     private int currentMapId = 1;
@@ -48,10 +53,17 @@ public class MainFrame extends JFrame {
                 tmpChest = ImageIO.read(is);
             }
         }
+        Image tmpPot = null;
+        try (InputStream is = getClass().getResourceAsStream("/objects/pot.png")) {
+            if (is != null) {
+                tmpPot = ImageIO.read(is);
+            }
+        }
         eventIcon = tmp;
         canvas = new MapCanvas(model, tileImages);
         if (eventIcon != null) canvas.setEventIcon(eventIcon);
         if (tmpChest != null) canvas.setChestImage(tmpChest);
+        if (tmpPot != null) canvas.setPotImage(tmpPot);
 
         JButton importTxt = new JButton("Import TXT");
         importTxt.addActionListener(e -> {
@@ -80,9 +92,15 @@ public class MainFrame extends JFrame {
         // オブジェクト・インタラクティブ配置用ボタン群 ---
         JButton chestTool = new JButton("Chest");
         chestTool.addActionListener(e -> {
-            canvas.setTool("object"); // 宝箱モード
+            canvas.setTool("chest"); // 宝箱モード
         });
         control.add(chestTool);
+
+        JButton potTool = new JButton("Pot");
+        potTool.addActionListener(e -> {
+            canvas.setTool("pot"); // 壺
+        });
+        control.add(potTool);
 
         // --- タイルボタン群を横スクロール可能にする ---
         JPanel tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
@@ -145,7 +163,8 @@ public class MainFrame extends JFrame {
         add(propertyPanel, BorderLayout.EAST);
 
         this.setFocusable(true);
-        pack();
+        setSize(screenWidth, screenHeight);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
@@ -521,5 +540,11 @@ public class MainFrame extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static int createSize() {
+        int originalTileSize = 16;
+        int scale = 3;
+        return originalTileSize * scale;
     }
 }
