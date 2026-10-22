@@ -1,11 +1,8 @@
 package object;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import entity.Entity;
 import entity.loot.LootTableLoader;
 import entity.type.PotType;
-import entity.loot.LootConfigEntry;
 import entity.loot.LootEntry;
 import factory.EntityFactory;
 import frame.FrameApp;
@@ -17,13 +14,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Supplier;
 
 public class ObjPot extends Projectile {
 
@@ -181,15 +174,12 @@ public class ObjPot extends Projectile {
             if (z <= 0) {
                 z = 0;
                 vz = 0;
-                boolean tileCollision = gameWindow.getCollisionChecker().checkTile(this);
-                if (tileCollision) {
-                    // 着地で割る
-                    startShatter();
-                    this.setCollision(false);
-                    if (this.getSolidArea() != null) {
-                        this.getSolidArea().width = 0;
-                        this.getSolidArea().height = 0;
-                    }
+                // 着地で割る
+                startShatter();
+                this.setCollision(false);
+                if (this.getSolidArea() != null) {
+                    this.getSolidArea().width = 0;
+                    this.getSolidArea().height = 0;
                 } else {
                     // 地面に置く（拾える）
                     thrown = false;

@@ -154,46 +154,36 @@ public class ObjBomb extends Projectile {
                 }
             }
 
-            // --- 着地判定（z <= 0 のときだけ床判定を行う） ---
-
-            // 着地判定
+            // --- 着地判定（z <= 0 のとき） ---
             if (z <= 0) {
                 z = 0;
                 vz = 0;
 
-                boolean tileCollision = gameWindow.getCollisionChecker().checkTile(this);
-                if (tileCollision) {
-                    // 即爆発させない。着地してからタイマーで爆発させる
-                    landed = true;
-                    landedAt = System.currentTimeMillis();
-                    thrown = false;      // 空中フラグを下げる
-                    pickable = false;    // 着地直後は拾えない
-                    hasShadow = false;
-                    this.setCollision(false);
-                    if (this.getSolidArea() != null) {
-                        this.getSolidArea().width = 0;
-                        this.getSolidArea().height = 0;
-                    }
+                // 着地完了：空中フラグを落とし、着地タイマーをスタート
+                thrown = false;
+                landed = true;
+                landedAt = System.currentTimeMillis();
+                pickable = false;    // ボムは着地したら拾えない（爆発を待つ）
+                hasShadow = false;
+
+                this.setCollision(false);
+                if (this.getSolidArea() != null) {
+                    this.getSolidArea().width = 0;
+                    this.getSolidArea().height = 0;
                     System.out.println("[BOMB] landed id=" + getType() + " at worldY=" + getWorldY());
-                } else {
-                    // タイルに衝突していなければ地面に置く（拾えるようにする）
-                    thrown = false;
-                    pickable = true;
-                    hasShadow = false;
                 }
-            }
 
-            // 寿命管理（投擲中）
-            setLife(getLife() - 1);
-            if (getLife() <= 0) startExplosion();
-
-            // 投擲中アニメ
-            updateAnimation();
-        } else {
-            // 地面に置かれている状態（着地済みだが fuse が動いているかもしれない）
-            if (!pickable && !landed) {
+                // 投擲中の寿命管理
                 setLife(getLife() - 1);
                 if (getLife() <= 0) startExplosion();
+
+            } else {
+                // ─── 【空中（z > 0）にいるときの処理】 ───
+                setLife(getLife() - 1);
+                if (getLife() <= 0) startExplosion();
+
+                // 投擲中アニメ更新
+                updateAnimation();
             }
         }
     }

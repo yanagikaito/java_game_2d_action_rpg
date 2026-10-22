@@ -85,6 +85,10 @@ public class MapModel {
         }
     }
 
+    public int getTile(int x, int y) {
+        return tiles[y][x];
+    }
+
     public void setTile(int x, int y, int id) {
         if (x < 0 || x >= width || y < 0 || y >= height) return;
         tiles[y][x] = id;
@@ -108,6 +112,10 @@ public class MapModel {
         }
         return null;
     }
+
+    /**
+     * 指定した座標のタイルIDを取得する
+     */
 
     public MapEvent getEventById(String id) {
         if (id == null) return null;
@@ -133,10 +141,6 @@ public class MapModel {
     public void clearEvents() {
         events.clear();
         allEvents.clear();
-    }
-
-    public int getTile(int x, int y) {
-        return tiles[y][x];
     }
 
     public int getWidth() {
