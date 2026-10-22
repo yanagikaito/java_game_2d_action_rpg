@@ -51,7 +51,7 @@ public class TileManager {
 
     public TileManager(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        tiles = new Tile[25];
+        tiles = new Tile[26];
         mapTileNum = new int[FrameApp.getMaxWorldCol()][FrameApp.getMaxWorldRow()];
         loadTileImages();
         loadMap(1);
@@ -176,6 +176,10 @@ public class TileManager {
 
             tiles[24] = new Tile();
             tiles[24].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/forest_transition.png"));
+
+            tiles[25] = new Tile();
+            tiles[25].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tile/primeval_tree.png"));
+            tiles[25].collision = true;
 
         } catch (IOException e) {
             e.printStackTrace();
