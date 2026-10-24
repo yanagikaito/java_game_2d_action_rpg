@@ -7,7 +7,8 @@ import java.sql.Statement;
 
 public class DbManager {
 
-    // H2 データベースのURL（data/mapdb.db に保存、AUTO_SERVERで複数接続可）
+    // 実行時のカレントディレクトリ（user.dir）を基準に絶対パスを自動生成する
+    // 実行時のカレントディレクトリを基準にした「相対パス」にする
     private static final String JDBC_URL = "jdbc:h2:./data/mapdb;AUTO_SERVER=TRUE";
     private static final String JDBC_USER = "sa";
     private static final String JDBC_PASS = "";
@@ -114,7 +115,12 @@ public class DbManager {
     /**
      * データベース接続を取得
      */
+
     public static Connection getConnection() throws SQLException {
+        // 💡 ここで現在の作業ディレクトリをコンソールに表示させてみる
+        System.out.println("Current working directory: " + System.getProperty("user.dir"));
+        System.out.println("Connecting to DB URL: " + JDBC_URL);
+
         return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
     }
 }

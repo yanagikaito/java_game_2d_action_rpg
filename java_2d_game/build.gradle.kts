@@ -9,13 +9,29 @@ application {
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("all") // 出力名に -all をつける
+    archiveClassifier.set("all")
     manifest {
-        attributes["Main-Class"] = application.mainClass
+        attributes["Main-Class"] = application.mainClass.get()
     }
-    mergeServiceFiles() // META-INF/services をマージ（H2などに必要）
-    // H2のパッケージをリネームして衝突を防ぐ
-    relocate("org.h2", "shaded.org.h2")
+    mergeServiceFiles()
+//    relocate("org.h2", "shaded.org.h2")
+
+    // --- メインおよび各サブプロジェクトのクラス出力を同梱 ---
+    from(sourceSets.main.get().output)
+    from(project(":db").sourceSets.main.get().output)
+    from(project(":data_module").sourceSets.main.get().output)
+    from(project(":pathfinding_editor").sourceSets.main.get().output)
+
+    // --- ★ここが最重要：各サブプロジェクトの「リソースディレクトリ（画像等）」自体を確実に同梱する ---
+    from(project(":db").sourceSets.main.get().resources)
+    from(project(":data_module").sourceSets.main.get().resources)
+    from(project(":pathfinding_editor").sourceSets.main.get().resources)
+
+    // エディター関連の除外
+    exclude("**/pathfinding_editor/ui/**")
+    exclude("**/editor/**")
+    exclude("**/TilemapEditor*.class")
+    exclude("**/PathfindingEditor*.class")
 }
 
 group = "org.example"
@@ -34,15 +50,18 @@ repositories {
 
 dependencies {
     implementation(project(":db"))
-    implementation(project(":data"))
+    implementation(project(":data_module"))
+
+    // モジュール自体の依存は維持する（モンスターのAIがcore.PathFinder等を利用するため）
     implementation(project(":pathfinding_editor"))
+
     implementation("com.h2database:h2:2.2.224")
     implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("ch.qos.logback:logback-classic:1.5.25")
 
-    // --- 追加: JUnit 5 の依存関係 ---
+    // --- JUnit 5 の依存関係 ---
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -77,6 +96,7 @@ subprojects {
 }
 
 tasks.named<JavaExec>("run") {
-    workingDir = projectDir.resolve("src/main/resources")
+    // java_2d_game モジュールのディレクトリを基準にする（ここに data フォルダやリソースを置くため）
+    workingDir = projectDir
     jvmArgs("-Dfile.encoding=UTF-8")
 }
