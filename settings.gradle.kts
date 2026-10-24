@@ -5,10 +5,12 @@
  */
 
 rootProject.name = "java_game_2d_action_rpg"
+
 include(":java_2d_game")
 include(":java_game_tile_editor")
-include("pathfinding_editor")
-include("db")
-include("data")
-project(":data").projectDir = file("data")
-project(":db").projectDir   = file("db")
+include(":pathfinding_editor")
+include(":db")
+include(":data_module")
+
+project(":db").projectDir = file("db")
+project(":data_module").projectDir = file("data_module")

@@ -65,9 +65,7 @@ public class ObjRock extends Projectile {
 
     @Override
     protected void loadSprites() {
-
         try {
-
             int ts = FrameApp.getTileSize();
 
             rockSprites = new BufferedImage[DIRS.length][OBJ_ROCK_SPRITE_COUNT];
@@ -75,8 +73,18 @@ public class ObjRock extends Projectile {
 
             for (int i = 0; i < DIRS.length; i++) {
                 for (int j = 0; j < OBJ_ROCK_SPRITE_COUNT; j++) {
-                    String path = String.format("object/image-rock%s-%d.gif", DIRS[i].toLowerCase(), j + 1);
-                    BufferedImage ori = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    // 方向名（例: "down"）の頭文字を大文字（"Down"）に変換する
+                    String lower = DIRS[i].toLowerCase();
+                    String dirName = lower.substring(0, 1).toUpperCase() + lower.substring(1);
+
+                    String path = String.format("/object/image-rock%s-%d.gif", dirName, j + 1);
+
+                    var inputStream = getClass().getResourceAsStream(path);
+                    if (inputStream == null) {
+                        throw new IllegalArgumentException("Rock image not found at path: " + path);
+                    }
+
+                    BufferedImage ori = ImageIO.read(inputStream);
                     BufferedImage buf = new BufferedImage(ts, ts, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g = buf.createGraphics();
                     g.drawImage(ori, 0, 0, ts, ts, null);
@@ -87,8 +95,17 @@ public class ObjRock extends Projectile {
 
             for (int i = 0; i < DIRS.length; i++) {
                 for (int j = 0; j < STONE_SCATTER_SPRITE_COUNT; j++) {
-                    String path = String.format("object/image-stonescatter%s-%d.gif", DIRS[i], j + 1);
-                    BufferedImage ori = ImageIO.read(getClass().getClassLoader().getResourceAsStream(path));
+                    String lower = DIRS[i].toLowerCase();
+                    String dirName = lower.substring(0, 1).toUpperCase() + lower.substring(1);
+
+                    String path = String.format("/object/image-stonescatter%s-%d.gif", dirName, j + 1);
+
+                    var inputStream = getClass().getResourceAsStream(path);
+                    if (inputStream == null) {
+                        throw new IllegalArgumentException("Stone scatter image not found at path: " + path);
+                    }
+
+                    BufferedImage ori = ImageIO.read(inputStream);
                     BufferedImage buf = new BufferedImage(ts, ts, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g = buf.createGraphics();
                     g.drawImage(ori, 0, 0, ts, ts, null);

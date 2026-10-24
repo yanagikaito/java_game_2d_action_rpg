@@ -39,10 +39,20 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Store"data/mapdb.mv.db" 
+.DS_Store
 
-# MapDB のデータベースファイル
-data/mapdb.mv.db
+# --- データベース・セーブデータ・ビルド成果物の除外 ---
+# H2 Database files
+*.mv.db
+*.trace.db
+/data/
+**/data/
+/data_module/
+**/data_module/
 
-# プロジェクト内のすべての data フォルダ内の MapDB ファイルを無視
-**/data/*.mv.db
+# Save files
+/java_2d_game/saves/
+**/java_2d_game/saves/
+
+# --- JARファイルの除外 ---
+*.jar
