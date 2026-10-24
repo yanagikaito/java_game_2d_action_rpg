@@ -53,3 +53,6 @@ build/
 # Save files
 /java_2d_game/saves/
 **/java_2d_game/saves/
+
+# --- JARファイルの除外 ---
+*.jar
