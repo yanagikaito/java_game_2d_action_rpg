@@ -8,11 +8,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/data_module" />
-            <option value="$PROJECT_DIR$/db" />
-            <option value="$PROJECT_DIR$/java_2d_game" />
-            <option value="$PROJECT_DIR$/java_game_tile_editor" />
-            <option value="$PROJECT_DIR$/pathfinding_editor" />
           </set>
         </option>
       </GradleProjectSettings>
