@@ -225,6 +225,51 @@ public class SoundManager {
         }).start();
     }
 
+    public void playDoorBangSE() {
+
+        // 別スレッドで再生してゲームのフレームレート低下を防ぐ
+        new Thread(() -> {
+            try {
+                float sampleRate = 11025f; // サンプリングレート
+                int durationMs = 180;      // 音の長さ（約180ミリ秒）
+                int numSamples = (int) (sampleRate * durationMs / 1000);
+                byte[] buffer = new byte[numSamples];
+
+                for (int i = 0; i < numSamples; i++) {
+                    double progress = (double) i / numSamples;
+
+                    // 周波数：スタート150Hzから終わり50Hzへ低下
+                    double freq = 150.0 - (100.0 * progress);
+
+                    double angle = i / (sampleRate / freq) * 2.0 * Math.PI;
+
+                    // 矩形波とサブ波形をミックスして重厚感のある音に
+                    double squareWave = Math.sin(angle) >= 0 ? 1.0 : -1.0;
+                    double subWave = Math.sin(angle * 0.5) >= 0 ? 0.5 : -0.5;
+                    double wave = (squareWave + subWave) * 0.5;
+
+                    // 減衰エンベロープ
+                    double envelope = 1.0 - (progress * progress);
+
+                    // 8ビットオーディオ（byte型: -128 〜 127）の最大値付近まで音圧を上げるため、
+                    // 係数を 60 から「110」付近にアップ！
+                    double volume = 110.0;
+
+                    buffer[i] = (byte) (wave * envelope * volume);
+                }
+
+                AudioFormat format = new AudioFormat(sampleRate, 8, 1, true, true);
+                SourceDataLine line = AudioSystem.getSourceDataLine(format);
+                line.open(format, numSamples);
+                line.start();
+                line.write(buffer, 0, buffer.length);
+                line.drain();
+                line.close();
+            } catch (Exception e) {
+            }
+        }).start();
+    }
+
     private void applyBgmVolumeAndMute(Clip clip) {
         if (clip == null) return;
         setClipVolume(clip, muted ? 0f : bgmVolume);

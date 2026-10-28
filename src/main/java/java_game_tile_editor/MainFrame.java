@@ -40,6 +40,8 @@ public class MainFrame extends JFrame {
     public MainFrame() throws Exception {
         DbManager.initSchema();
         loadTiles();
+
+        // マップ表示のアイコン
         Image tmp = null;
         try (InputStream is = getClass().getResourceAsStream("/icons/event.png")) {
             if (is != null) {
@@ -47,15 +49,21 @@ public class MainFrame extends JFrame {
             }
         }
         Image tmpChest = null;
-        try (InputStream is = getClass().getResourceAsStream("/objects/chest.png")) {
+        try (InputStream is = getClass().getResourceAsStream("/tile_editor/objects/chest.png")) {
             if (is != null) {
                 tmpChest = ImageIO.read(is);
             }
         }
         Image tmpPot = null;
-        try (InputStream is = getClass().getResourceAsStream("/objects/pot.png")) {
+        try (InputStream is = getClass().getResourceAsStream("/tile_editor/objects/pot.png")) {
             if (is != null) {
                 tmpPot = ImageIO.read(is);
+            }
+        }
+        Image tmpDoor = null;
+        try (InputStream is = getClass().getResourceAsStream("/tile_editor/objects/door_plant_primeval.png")) {
+            if (is != null) {
+                tmpDoor = ImageIO.read(is);
             }
         }
         eventIcon = tmp;
@@ -63,6 +71,7 @@ public class MainFrame extends JFrame {
         if (eventIcon != null) canvas.setEventIcon(eventIcon);
         if (tmpChest != null) canvas.setChestImage(tmpChest);
         if (tmpPot != null) canvas.setPotImage(tmpPot);
+        if (tmpDoor != null) canvas.setDoorImage(tmpDoor);
 
         JButton importTxt = new JButton("Import TXT");
         importTxt.addActionListener(e -> {
@@ -100,6 +109,12 @@ public class MainFrame extends JFrame {
             canvas.setTool("pot"); // 壺
         });
         control.add(potTool);
+
+        JButton doorTool = new JButton("Door");
+        doorTool.addActionListener(e -> {
+            canvas.setTool("door_plant_primeval"); // ドア
+        });
+        control.add(doorTool);
 
         // --- タイルボタン群を横スクロール可能にする ---
         JPanel tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));

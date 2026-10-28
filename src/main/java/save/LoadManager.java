@@ -233,14 +233,15 @@ public class LoadManager {
             case 22 -> new PickupOnlyType();
             case 23 -> new PotType();
             case 24 -> new RockType();
-            case 25 -> new StoneType();
-            case 26 -> new AuraType();
-            case 27 -> new VertBronzeType();
-            case 28 -> new VertGreenType();
-            case 29 -> new VertBlueType();
-            case 30 -> new VertRedType();
-            case 31 -> new VertSilverType();
-            case 32 -> new VertGoldType();
+            case 25 -> new DoorType();
+            case 26 -> new StoneType();
+            case 27 -> new AuraType();
+            case 28 -> new VertBronzeType();
+            case 29 -> new VertGreenType();
+            case 30 -> new VertBlueType();
+            case 31 -> new VertRedType();
+            case 32 -> new VertSilverType();
+            case 33 -> new VertGoldType();
             default -> null;
         };
     }
