@@ -4,7 +4,7 @@ public record StoneType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 25;
+        return 26;
     }
 
     @Override

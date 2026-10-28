@@ -28,7 +28,7 @@ public class EntityFactory {
 
         return switch (type) {
 
-            // キャラクター・モンスター系
+            // キャラクター・モンスター・オブジェクト系
             case PlayerType player -> new Player(gameWindow, gameWindow.getKeyHandler(), this);
             case NpcOldManType npc -> new NpcOldMan(gameWindow, ev);
             case NpcMerChantType npcMerChantType -> new NpcMerChant(gameWindow, ev);
@@ -39,7 +39,9 @@ public class EntityFactory {
             case MintSoldierType mintSoldierType -> new MonMintSoldier(gameWindow);
             case GreenGoblinType greenGoblinType -> new MonGreenGoblin(gameWindow);
             case ChickenType chicken -> new NpcChicken(gameWindow);
+
             case RockType rockType -> new ObjRock(gameWindow);
+            case DoorType doorType -> new ObjDoor(gameWindow);
 
             // 装備・通常アイテム系
             case SwordType sword -> new ObjSwordNormal(gameWindow);

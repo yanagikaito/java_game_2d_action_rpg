@@ -769,7 +769,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldY(tileSize * 48);
             getPlayer().setDirection("right");
 
-            assetSetter.setObjPot("pot_7_37", "pot_7_42", 0, 3);
+            assetSetter.setObjDoor("door_plant_primeval_25_36", "door_plant_primeval_25_36", 0, 3);
+
+            assetSetter.setObjPot("pot_7_37", "pot_7_42", 1, 3);
             assetSetter.setObjPot("pot_7_37", "pot_12_37", 6, 3);
             assetSetter.setObjPot("pot_12_37", "pot_12_42", 11, 3);
             assetSetter.setObjPot("pot_7_42", "pot_12_42", 17, 3);

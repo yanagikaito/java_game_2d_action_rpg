@@ -343,6 +343,78 @@ public class AssetSetter {
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
+    public void setObjDoor(String startEventId, String endEventId, int arrayStartIndex, int currentMapId) {
+
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setObjDoor");
+            return;
+        }
+
+        model.loadEventsFromDb(currentMapId);
+        int tileSize = FrameApp.getTileSize();
+        int currentIndex = arrayStartIndex;
+
+        try {
+            String[] startParts = startEventId.split("_");
+            String[] endParts = endEventId.split("_");
+
+            // "door_plant_primeval_X_Y" インデックスを 3 (X) と 4 (Y)
+            int startX = Integer.parseInt(startParts[3]);
+            int startY = Integer.parseInt(startParts[4]);
+            int endX = Integer.parseInt(endParts[3]);
+            int endY = Integer.parseInt(endParts[4]);
+
+            for (int y = startY; y <= endY; y++) {
+                for (int x = startX; x <= endX; x++) {
+
+                    int tileId = gameWindow.getTileManager().getTileIdAt(x, y);
+                    System.out.println("DEBUG: x=" + x + ", y=" + y + " -> tileId = " + tileId);
+                    if (tileId == WATER_TILE_ID) {
+                        continue; // 水タイルなら置かない
+                    }
+
+                    // 正しく "door_plant_primeval_" のイベントIDを組み立てる
+                    String eventId = "door_plant_primeval_" + x + "_" + y;
+                    db.MapEvent ev = model.getEventById(eventId);
+
+                    Entity door = createObjDoor(0, 0);
+
+                    if (door != null) {
+                        door.applyMapEvent(ev);
+
+                        if (ev != null) {
+                            door.setWorldX(tileSize * ev.getX());
+                            door.setWorldY(tileSize * ev.getY());
+                        } else {
+                            door.setWorldX(tileSize * x);
+                            door.setWorldY(tileSize * y);
+                        }
+
+                        Entity[] objArray = gameWindow.getObj();
+                        if (objArray == null || objArray.length <= currentIndex) {
+                            int newSize = Math.max(currentIndex + 20, (objArray == null ? 50 : objArray.length * 2));
+                            Entity[] newArray = new Entity[newSize];
+                            if (objArray != null) {
+                                System.arraycopy(objArray, 0, newArray, 0, objArray.length);
+                            }
+                            objArray = newArray;
+                            gameWindow.setObj(objArray);
+                        }
+
+                        objArray[currentIndex] = door;
+                        currentIndex++;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to parse eventId range: " + startEventId + " to " + endEventId);
+        }
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
+    }
+
     public void setObjRock() {
 
         Entity[] obj = gameWindow.getObj();
@@ -425,42 +497,6 @@ public class AssetSetter {
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
-    public void setObjRedPotion() {
-
-        Entity[] obj = gameWindow.getObj();
-        int i = 11;
-
-        obj[i] = createObjRedPotion(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 23);
-        i++;
-        obj[i] = createObjRedPotion(FrameApp.getTileSize() * 34, FrameApp.getTileSize() * 24);
-        i++;
-        obj[i] = createObjRedPotion(FrameApp.getTileSize() * 35, FrameApp.getTileSize() * 25);
-    }
-
-    public void setObjGreenPotion() {
-
-        Entity[] obj = gameWindow.getObj();
-        int i = 14;
-
-        obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 36, FrameApp.getTileSize() * 26);
-        i++;
-        obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 37, FrameApp.getTileSize() * 27);
-        i++;
-        obj[i] = createObjGreenPotion(FrameApp.getTileSize() * 38, FrameApp.getTileSize() * 28);
-    }
-
-    public void setObjBluePotion() {
-
-        Entity[] obj = gameWindow.getObj();
-        int i = 17;
-
-        obj[i] = createObjBluePotion(FrameApp.getTileSize() * 39, FrameApp.getTileSize() * 29);
-        i++;
-        obj[i] = createObjBluePotion(FrameApp.getTileSize() * 40, FrameApp.getTileSize() * 30);
-        i++;
-        obj[i] = createObjBluePotion(FrameApp.getTileSize() * 41, FrameApp.getTileSize() * 31);
-    }
-
     public void setObjLantern() {
 
         Entity[] obj = gameWindow.getObj();
@@ -477,36 +513,6 @@ public class AssetSetter {
             lantern.setWorldY(worldY);
         }
         return lantern;
-    }
-
-    private Entity createObjRedPotion(int worldX, int worldY) {
-
-        Entity red = entityFactory.create(new RedPotionType());
-        if (red != null) {
-            red.setWorldX(worldX);
-            red.setWorldY(worldY);
-        }
-        return red;
-    }
-
-    private Entity createObjGreenPotion(int worldX, int worldY) {
-
-        Entity green = entityFactory.create(new GreenPotionType());
-        if (green != null) {
-            green.setWorldX(worldX);
-            green.setWorldY(worldY);
-        }
-        return green;
-    }
-
-    private Entity createObjBluePotion(int worldX, int worldY) {
-
-        Entity blue = entityFactory.create(new BluePotionType());
-        if (blue != null) {
-            blue.setWorldX(worldX);
-            blue.setWorldY(worldY);
-        }
-        return blue;
     }
 
     private Entity createMonGreenSlime(int worldX, int worldY) {
@@ -623,6 +629,27 @@ public class AssetSetter {
             objRock.setAlive(true);
         }
         return objRock;
+    }
+
+    private Entity createObjDoor(int worldX, int worldY) {
+        Entity objDoor = entityFactory.create(new DoorType());
+        if (objDoor != null) {
+            objDoor.getSolidArea().x = 1;
+            objDoor.getSolidArea().y = 1;
+
+            objDoor.setSolidAreaDefaultX(objDoor.getSolidArea().x);
+            objDoor.setSolidAreaDefaultY(objDoor.getSolidArea().y);
+
+            objDoor.getSolidArea().width = (FrameApp.getTileSize() - 8);
+            objDoor.getSolidArea().height = (FrameApp.getTileSize() - 8);
+            objDoor.setWorldX(worldX);
+            objDoor.setWorldY(worldY);
+            objDoor.setPickable(true);
+            objDoor.setUser(gameWindow.getPlayer());
+            objDoor.setThrown(false);
+            objDoor.setAlive(true);
+        }
+        return objDoor;
     }
 
     public void setInteractiveTile() {
