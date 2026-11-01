@@ -66,12 +66,19 @@ public class MainFrame extends JFrame {
                 tmpDoor = ImageIO.read(is);
             }
         }
+        Image tmpKey = null;
+        try (InputStream is = getClass().getResourceAsStream("/tile_editor/objects/primeval_forest_key.png")) {
+            if (is != null) {
+                tmpKey = ImageIO.read(is);
+            }
+        }
         eventIcon = tmp;
         canvas = new MapCanvas(model, tileImages);
         if (eventIcon != null) canvas.setEventIcon(eventIcon);
         if (tmpChest != null) canvas.setChestImage(tmpChest);
         if (tmpPot != null) canvas.setPotImage(tmpPot);
         if (tmpDoor != null) canvas.setDoorImage(tmpDoor);
+        if (tmpKey != null) canvas.setKeyImage(tmpKey);
 
         JButton importTxt = new JButton("Import TXT");
         importTxt.addActionListener(e -> {
@@ -115,6 +122,12 @@ public class MainFrame extends JFrame {
             canvas.setTool("door_plant_primeval"); // ドア
         });
         control.add(doorTool);
+
+        JButton keyTool = new JButton("Key");
+        keyTool.addActionListener(e -> {
+            canvas.setTool("plant_primeval_key"); // 鍵
+        });
+        control.add(keyTool);
 
         // --- タイルボタン群を横スクロール可能にする ---
         JPanel tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
@@ -240,9 +253,9 @@ public class MainFrame extends JFrame {
 
         for (int id = 0; id < 26; id++) {
 
-            try (InputStream is = getClass().getResourceAsStream("/tiles/" + id + ".png")) {
+            try (InputStream is = getClass().getResourceAsStream("/tile_editor/tiles/" + id + ".png")) {
                 if (is == null) {
-                    System.err.println("tiles" + id + ".png");
+                    System.err.println("tile_editor/tiles" + id + ".png");
                 } else {
                     BufferedImage img = ImageIO.read(is);
                     tileImages.put(id, img);

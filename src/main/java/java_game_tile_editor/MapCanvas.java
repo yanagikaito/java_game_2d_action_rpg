@@ -20,6 +20,7 @@ public class MapCanvas extends JPanel implements Scrollable {
     private Image chestImage;
     private Image potImage;
     private Image doorImage;
+    private Image keyImage;
     private String selectedEventId = null;
     private java.util.function.Consumer<MapEvent> selectionListener;
     private String currentTool = "tile"; // "tile" or "event"
@@ -151,7 +152,7 @@ public class MapCanvas extends JPanel implements Scrollable {
                             }
                         }
                     } else if ("door_plant_primeval".equalsIgnoreCase(currentTool)) {
-                        // オブジェクト（宝箱等）をタイル座標ベースの固定IDで配置
+                        // オブジェクト（ドア）をタイル座標ベースの固定IDで配置
                         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
                             // 座標を元にした固定ID
                             String id = "door_plant_primeval_" + tx + "_" + ty;
@@ -162,6 +163,25 @@ public class MapCanvas extends JPanel implements Scrollable {
                                 obj.setName("door_plant_primeval_" + tx + "_" + ty);
                                 obj.setTrigger("interact");
                                 obj.getMeta().put("type", "door_plant_primeval");
+
+                                model.addEvent(obj);
+                                selectedEventId = id;
+                                fireSelectionChanged(obj);
+                                repaint();
+                            }
+                        }
+                    } else if ("plant_primeval_key".equalsIgnoreCase(currentTool)) {
+                        // オブジェクト（鍵）をタイル座標ベースの固定IDで配置
+                        if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                            // 座標を元にした固定ID
+                            String id = "plant_primeval_key" + tx + "_" + ty;
+
+                            // すでにこの座標にイベント/オブジェクトがなければ新規作成
+                            if (model.getEventAt(tx, ty) == null) {
+                                MapEvent obj = new MapEvent(id, tx, ty);
+                                obj.setName("plant_primeval_key" + tx + "_" + ty);
+                                obj.setTrigger("interact");
+                                obj.getMeta().put("type", "plant_primeval_key");
 
                                 model.addEvent(obj);
                                 selectedEventId = id;
@@ -230,12 +250,17 @@ public class MapCanvas extends JPanel implements Scrollable {
             boolean isDoor = (e.getName() != null && e.getName().startsWith("door_plant_primeval"))
                     || ("door_plant_primeval".equals(e.getMeta().get("type")));
 
+            boolean isKey = (e.getName() != null && e.getName().startsWith("plant_primeval_key"))
+                    || ("plant_primeval_key".equals(e.getMeta().get("type")));
+
             if (isChest && chestImage != null) {
                 g2.drawImage(chestImage, sx, sy, tileSize, tileSize, null);
             } else if (isPot && potImage != null) {
                 g2.drawImage(potImage, sx, sy, tileSize, tileSize, null);
             } else if (isDoor && doorImage != null) {
                 g2.drawImage(doorImage, sx, sy, tileSize, tileSize, null);
+            } else if (isKey && keyImage != null) {
+                g2.drawImage(keyImage, sx, sy, tileSize, tileSize, null);
             } else if (eventIcon != null) {
                 g2.drawImage(eventIcon, sx, sy, tileSize, tileSize, null);
             }
@@ -305,5 +330,9 @@ public class MapCanvas extends JPanel implements Scrollable {
 
     public void setDoorImage(Image doorImage) {
         this.doorImage = doorImage;
+    }
+
+    public void setKeyImage(Image keyImage) {
+        this.keyImage = keyImage;
     }
 }

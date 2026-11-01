@@ -234,14 +234,15 @@ public class LoadManager {
             case 23 -> new PotType();
             case 24 -> new RockType();
             case 25 -> new DoorType();
-            case 26 -> new StoneType();
-            case 27 -> new AuraType();
-            case 28 -> new VertBronzeType();
-            case 29 -> new VertGreenType();
-            case 30 -> new VertBlueType();
-            case 31 -> new VertRedType();
-            case 32 -> new VertSilverType();
-            case 33 -> new VertGoldType();
+            case 26 -> new KeyType();
+            case 27 -> new StoneType();
+            case 28 -> new AuraType();
+            case 29 -> new VertBronzeType();
+            case 30 -> new VertGreenType();
+            case 31 -> new VertBlueType();
+            case 32 -> new VertRedType();
+            case 33 -> new VertSilverType();
+            case 34 -> new VertGoldType();
             default -> null;
         };
     }
@@ -249,7 +250,7 @@ public class LoadManager {
     private static int determineMaxStackForType(int typeId) {
         //　各消費アイテム
         return switch (typeId) {
-            case 14, 15, 16 -> 99;
+            case 14, 15, 16, 26 -> 99;
             default -> 1;
         };
     }

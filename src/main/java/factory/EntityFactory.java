@@ -42,6 +42,7 @@ public class EntityFactory {
 
             case RockType rockType -> new ObjRock(gameWindow);
             case DoorType doorType -> new ObjDoor(gameWindow);
+            case KeyType keyType -> new ObjKey(gameWindow);
 
             // 装備・通常アイテム系
             case SwordType sword -> new ObjSwordNormal(gameWindow);

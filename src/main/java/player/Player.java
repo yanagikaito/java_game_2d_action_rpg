@@ -160,6 +160,8 @@ public class Player extends Entity {
     private final double splashCooldown = 0.5;
     private final double stationarySplashCooldown = 0.8;
 
+    private int hasKey = 0;
+
 
     /**
      * プレイヤーを初期化するコンストラクタ。
@@ -528,7 +530,7 @@ public class Player extends Entity {
 
         Entity e = getInventory().get(index);
 
-        if (e instanceof ObjRedPotion) {
+        if (e.getType() instanceof RedPotionType()) {
             System.out.println("アイテムは RedPotion です。処理続行");
             ObjRedPotion potion = (ObjRedPotion) e;
             int heal = potion.getHealAmount();
@@ -577,7 +579,7 @@ public class Player extends Entity {
 
         Entity e = getInventory().get(index);
 
-        if (e instanceof ObjGreenPotion) {
+        if (e.getType() instanceof GreenPotionType()) {
             System.out.println("アイテムは GreenPotion です。処理続行");
             ObjGreenPotion potion = (ObjGreenPotion) e;
             int heal = potion.getHealAmount();
@@ -614,7 +616,7 @@ public class Player extends Entity {
 
         Entity e = getInventory().get(index);
 
-        if (e instanceof ObjBluePotion) {
+        if (e.getType() instanceof BluePotionType()) {
             System.out.println("アイテムは BluePotion です。処理続行");
             ObjBluePotion potion = (ObjBluePotion) e;
             int heal = potion.getHealAmount();
@@ -627,6 +629,52 @@ public class Player extends Entity {
             } else {
                 // 1個だったのでスロットを削除
                 getInventory().remove(index);
+            }
+        }
+    }
+
+    /**
+     * インベントリから鍵を使用したときの処理
+     *
+     * @param index 選択されたインベントリスロットのインデックス
+     */
+
+    public void useKey(int index) {
+
+        Entity e = getInventory().get(index);
+
+        if (e != null && e.getType() instanceof KeyType) {
+            System.out.println("Item is a key. Continuing...");
+
+            // ==========================================
+            // ▼ 1. 目の前（あるいは接触位置）に扉（ObjDoor）があるかチェックする
+            // ==========================================
+            ObjDoor targetDoor = getFacingDoor();
+
+            if (targetDoor != null && !targetDoor.isOpen()) {
+
+                // 扉が開いていない場合のみ鍵を使う
+                targetDoor.openDoor();
+                System.out.println("Opened the door with a key!");
+
+                // ==========================================
+                // ▼ 2. 鍵のスタック・消費処理（Entityの getAmount / setAmount を使用）
+                // ==========================================
+                int current = e.getAmount();
+                if (current > 1) {
+                    e.setAmount(current - 1);
+                } else {
+                    // 1個だったのでスロットを削除
+                    getInventory().remove(index);
+                }
+
+                // 効果音の再生
+                if (gameWindow.getSoundmanager() != null) {
+                    gameWindow.getSoundmanager().playDoorBangSE();
+                }
+
+            } else {
+                System.out.println("There is no door to open here...");
             }
         }
     }
@@ -3003,6 +3051,10 @@ public class Player extends Entity {
                     return;
                 }
 
+                if (obj instanceof object.ObjDoor) {
+                    return;
+                }
+
                 String text;
                 if (canObtainItem(obj)) {
                     text = obj.getName() + " を手に入れた!";
@@ -3554,12 +3606,10 @@ public class Player extends Entity {
 
     public void selectItem(int index) {
 
-        int itemIndex = gameWindow.getUi().getItemIndexOnSlot(gameWindow.getUi().getPlayerSlotCol()
-                , gameWindow.getUi().getPlayerSlotRow());
+        // 引数で受け取った index がインベントリの範囲内かチェック
+        if (index >= 0 && index < getInventory().size()) {
 
-        if (itemIndex < getInventory().size()) {
-
-            Entity selectedItem = getInventory().get(itemIndex);
+            Entity selectedItem = getInventory().get(index);
             System.out.println("selectedItem = " + selectedItem);
 
             if (selectedItem.getType() instanceof SwordType || selectedItem.getType() instanceof AxeType) {
@@ -3590,6 +3640,9 @@ public class Player extends Entity {
             }
             if (selectedItem.getType() instanceof BluePotionType) {
                 useBluePotion(index);
+            }
+            if (selectedItem.getType() instanceof KeyType) {
+                useKey(index); // 鍵の場合
             }
         }
     }
@@ -4513,6 +4566,58 @@ public class Player extends Entity {
         boolean just = now && !lastThrowKey;
         lastThrowKey = now;
         return just;
+    }
+
+    /**
+     * プレイヤーが接触している、または目の前・周囲にある ObjDoor を取得する
+     */
+
+    public ObjDoor getFacingDoor() {
+
+        int tileSize = frame.FrameApp.getTileSize();
+        int playerWorldX = getWorldX();
+        int playerWorldY = getWorldY();
+
+        // ゲーム上の全オブジェクト配列を取得
+        Entity[] objArray = gameWindow.getObj();
+        if (objArray == null) {
+            System.out.println("[DEBUG] objArray is null!");
+            return null;
+        }
+
+        // プレイヤーの周囲の検索エリア（上下左右1タイルずつ拡張）
+        Rectangle playerArea = new Rectangle(
+                playerWorldX - tileSize,
+                playerWorldY - tileSize,
+                tileSize * 3,
+                tileSize * 3
+        );
+
+        int totalDoorsChecked = 0;
+
+        for (int i = 0; i < objArray.length; i++) {
+            Entity obj = objArray[i];
+            if (obj instanceof object.ObjDoor) {
+                totalDoorsChecked++;
+                Rectangle doorRect = new Rectangle(obj.getWorldX(), obj.getWorldY(), tileSize, tileSize);
+
+                // 検索エリアとドアが重なっているかチェック
+                if (playerArea.intersects(doorRect)) {
+                    System.out.println("[DEBUG] Success! ObjDoor found at index: " + i +
+                            " (Door X:" + obj.getWorldX() + ", Y:" + obj.getWorldY() + ")");
+                    return (object.ObjDoor) obj;
+                }
+            }
+        }
+
+        // マップ上にそもそも ObjDoor が存在するか、距離が離れすぎていないか
+        if (totalDoorsChecked == 0) {
+            System.out.println("[DEBUG] Warning: No ObjDoor instances exist in gameWindow.getObj() array at all!");
+        } else {
+            System.out.println("[DEBUG] No ObjDoor found near player. Player coords: (" + playerWorldX + ", " + playerWorldY + "). Total doors on map: " + totalDoorsChecked);
+        }
+
+        return null;
     }
 
     public boolean isBlockingLeft() {

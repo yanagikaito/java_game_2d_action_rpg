@@ -21,8 +21,6 @@ public class ObjDoor extends Entity {
 
         setType(new DoorType());
         setName("扉");
-
-        // 1. 最初は通行不可（当たり判定あり）にする
         setCollision(true);
         try {
             BufferedImage raw = ImageIO.read(getClass().getClassLoader().getResourceAsStream("object/door_plant_primeval.gif"));
@@ -32,14 +30,18 @@ public class ObjDoor extends Entity {
         }
     }
 
-    // 2. プレイヤーが衝突（接触）したときに呼び出されるメソッド
-    // プレイヤーが衝突したときに呼び出されるメソッド
+    /**
+     * 鍵などによって強制的に扉を開けるメソッド
+     */
+
+    public void openDoor() {
+        this.isOpen = true;
+        setCollision(false);
+        setAlive(false);
+    }
+
     @Override
     public void update() {
-
-        int distanceX = Math.abs(getWorldX() - gameWindow.getPlayer().getWorldX());
-        int distanceY = Math.abs(getWorldY() - gameWindow.getPlayer().getWorldY());
-        int threshold = FrameApp.getTileSize(); // 例：3タイル分以上離れたら
 
         if (isOpen) {
             return;
@@ -55,20 +57,40 @@ public class ObjDoor extends Entity {
         );
 
         if (doorRect.intersects(playerRect)) {
-            isOpen = true;
-            setCollision(false);
-            setAlive(false);
 
-            gameWindow.getSoundmanager().playDoorBangSE();
-            System.out.println("バン！と音が鳴ってドアが開いた！");
-        }
+            java.util.ArrayList<Entity> inventory = gameWindow.getPlayer().getInventory();
+            int keyIndex = -1;
 
-        // すでに開いていて、プレイヤーが十分に離れた場合
-        if (isOpen && (distanceX > threshold || distanceY > threshold)) {
-            isOpen = false;
-            setAlive(true);
-            setCollision(true);
-            System.out.println("ドアが自動で閉まった！");
+            for (int i = 0; i < inventory.size(); i++) {
+                Entity item = inventory.get(i);
+                if (item != null && item.getType() instanceof entity.type.KeyType) {
+                    keyIndex = i; // 鍵が見つかった
+                    break;
+                }
+            }
+
+            // 鍵を持っている場合のみ開ける
+            if (keyIndex != -1) {
+
+                isOpen = true;
+                setCollision(false);
+                setAlive(false);
+
+                Entity keyItem = inventory.get(keyIndex);
+                int currentAmount = keyItem.getAmount();
+                if (currentAmount > 1) {
+                    keyItem.setAmount(currentAmount - 1);
+                } else {
+                    inventory.remove(keyIndex);
+                }
+
+                gameWindow.getSoundmanager().playDoorBangSE();
+                System.out.println("Opened the door with a key!");
+
+            } else {
+                // 鍵を持っていない場合
+                System.out.println("The door is locked and won't open...");
+            }
         }
     }
 
@@ -78,11 +100,15 @@ public class ObjDoor extends Entity {
         int screenX = getWorldX() - gameWindow.getPlayer().getWorldX() + gameWindow.getPlayer().getScreenX();
         int screenY = getWorldY() - gameWindow.getPlayer().getWorldY() + gameWindow.getPlayer().getScreenY();
 
-        // すでに開いて（消えて）
+        // すでに開いて（消えて）いる場合は描画しない
         if (!getAlive()) {
             return;
         }
 
         g2.drawImage(this.getImage(), screenX, screenY, null);
+    }
+
+    public boolean isOpen() {
+        return isOpen;
     }
 }

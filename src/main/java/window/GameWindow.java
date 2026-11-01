@@ -770,13 +770,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setDirection("right");
 
             assetSetter.setObjDoor("door_plant_primeval_25_36", "door_plant_primeval_25_36", 0, 3);
+            assetSetter.setObjKey("plant_primeval_key25_42", "plant_primeval_key25_42", 1, 3);
 
-            assetSetter.setObjPot("pot_7_37", "pot_7_42", 1, 3);
-            assetSetter.setObjPot("pot_7_37", "pot_12_37", 6, 3);
-            assetSetter.setObjPot("pot_12_37", "pot_12_42", 11, 3);
-            assetSetter.setObjPot("pot_7_42", "pot_12_42", 17, 3);
-            assetSetter.setObjPot("pot_8_42", "pot_11_42", 18, 3);
-            assetSetter.setObjChest("chest_1_44", "chest_6_44", 22, 3);
+            assetSetter.setObjPot("pot_7_37", "pot_7_42", 2, 3);
+            assetSetter.setObjPot("pot_7_37", "pot_12_37", 7, 3);
+            assetSetter.setObjPot("pot_12_37", "pot_12_42", 12, 3);
+            assetSetter.setObjPot("pot_7_42", "pot_12_42", 18, 3);
+            assetSetter.setObjPot("pot_8_42", "pot_11_42", 19, 3);
+            assetSetter.setObjChest("chest_1_44", "chest_6_44", 24, 3);
 
             assetSetter.setBossMonster();
 
