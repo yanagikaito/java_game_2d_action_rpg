@@ -294,6 +294,7 @@ public abstract class Entity {
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getNPC());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getMonster());
         gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getItile());
+        gameWindow.getCollisionChecker().checkEntity(this, gameWindow.getObj());
 
         // 1. プレイヤーとの物理的な接触（すり抜け防止・衝突判定）は常に実行する
         boolean contactPlayer = gameWindow.getCollisionChecker().checkPlayer(this);

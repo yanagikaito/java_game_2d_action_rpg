@@ -415,6 +415,82 @@ public class AssetSetter {
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
+    public void setObjKey(String startEventId, String endEventId, int arrayStartIndex, int currentMapId) {
+
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setObjKey");
+            return;
+        }
+
+        model.loadEventsFromDb(currentMapId);
+        int tileSize = FrameApp.getTileSize();
+        int currentIndex = arrayStartIndex;
+
+        try {
+            // 例: "plant_primeval_key-0_0" を安全にパースするため、"-" と "_" の両方に対応させるか、適切に分割する
+            // ここでは "-" または "_" で一括分割する例です
+            String[] startParts = startEventId.split("[-_]");
+            String[] endParts = endEventId.split("[-_]");
+
+            // 分割結果の確認用ログ（必要に応じて）
+            // 例: [plant, primeval, key, 0, 0] のようになるため、Xはインデックス3、Yはインデックス4になります
+            int startX = Integer.parseInt(startParts[2].replace("key", ""));
+            int startY = Integer.parseInt(startParts[3]);
+            int endX = Integer.parseInt(endParts[2].replace("key", ""));
+            int endY = Integer.parseInt(endParts[3]);
+
+            for (int y = startY; y <= endY; y++) {
+                for (int x = startX; x <= endX; x++) {
+
+                    int tileId = gameWindow.getTileManager().getTileIdAt(x, y);
+                    System.out.println("DEBUG: x=" + x + ", y=" + y + " -> tileId = " + tileId);
+                    if (tileId == WATER_TILE_ID) {
+                        continue; // 水タイルなら置かない
+                    }
+
+                    // ★修正1: 正しいイベントIDの形式に合わせる（ハイフンやアンダースコアの有無を確認）
+                    String eventId = "plant_primeval_key" + x + "_" + y;
+                    db.MapEvent ev = model.getEventById(eventId);
+
+                    // ★修正2: ドアではなく ObjKey を新規作成する
+                    Entity key = createObjKey(0, 0);
+
+                    if (key != null) {
+                        key.applyMapEvent(ev);
+
+                        if (ev != null) {
+                            key.setWorldX(tileSize * ev.getX());
+                            key.setWorldY(tileSize * ev.getY());
+                        } else {
+                            key.setWorldX(tileSize * x);
+                            key.setWorldY(tileSize * y);
+                        }
+
+                        Entity[] objArray = gameWindow.getObj();
+                        if (objArray == null || objArray.length <= currentIndex) {
+                            int newSize = Math.max(currentIndex + 20, (objArray == null ? 50 : objArray.length * 2));
+                            Entity[] newArray = new Entity[newSize];
+                            if (objArray != null) {
+                                System.arraycopy(objArray, 0, newArray, 0, objArray.length);
+                            }
+                            objArray = newArray;
+                            gameWindow.setObj(objArray);
+                        }
+
+                        objArray[currentIndex] = key;
+                        currentIndex++;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to parse eventId range: " + startEventId + " to " + endEventId);
+        }
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
+    }
+
     public void setObjRock() {
 
         Entity[] obj = gameWindow.getObj();
@@ -650,6 +726,27 @@ public class AssetSetter {
             objDoor.setAlive(true);
         }
         return objDoor;
+    }
+
+    private Entity createObjKey(int worldX, int worldY) {
+        Entity objKey = entityFactory.create(new KeyType());
+        if (objKey != null) {
+            objKey.getSolidArea().x = 1;
+            objKey.getSolidArea().y = 1;
+
+            objKey.setSolidAreaDefaultX(objKey.getSolidArea().x);
+            objKey.setSolidAreaDefaultY(objKey.getSolidArea().y);
+
+            objKey.getSolidArea().width = (FrameApp.getTileSize() - 8);
+            objKey.getSolidArea().height = (FrameApp.getTileSize() - 8);
+            objKey.setWorldX(worldX);
+            objKey.setWorldY(worldY);
+            objKey.setPickable(true);
+            objKey.setUser(gameWindow.getPlayer());
+            objKey.setThrown(false);
+            objKey.setAlive(true);
+        }
+        return objKey;
     }
 
     public void setInteractiveTile() {
