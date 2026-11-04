@@ -4,24 +4,22 @@ import entity.type.HeartType;
 import entity.type.NpcMerChantType;
 import entity.type.VertBronzeType;
 import factory.EntityFactory;
+import object.ObjGreenForceFragment;
 import popup.PopupManager;
 import entity.Entity;
 import entity.type.EntityType;
 import frame.FrameApp;
 import game.GameState;
-import hex.GreenHexPanel;
 import player.Player;
 import player.SpriteManager;
 import save.SaveManager;
 import save.SaveMeta;
-import hex.GreenHexRenderer;
 import ui.state.load.LoadScreenContext;
 import ui.state.save.SaveScreenContext;
 import ui.state.sleep.SleepScreenContext;
 import ui.state.trade.TradeScreenContext;
 import window.GameWindow;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -42,7 +40,7 @@ public class UI {
     // メッセージ表示用
     private boolean messageOn;
     private String currentDialogueMessage;
-    private GreenHexPanel greenHexPanel = new GreenHexPanel();
+    private ObjGreenForceFragment objGreenForceFragment;
     private SpriteManager spriteManager = new SpriteManager();
     private PopupManager popupManager = new PopupManager(64);
 
@@ -101,6 +99,7 @@ public class UI {
         this.saveCtx = new SaveScreenContext(gameWindow, this);
         this.loadCtx = new LoadScreenContext(gameWindow, this);
         this.sleepCtx = new SleepScreenContext(gameWindow, this);
+        this.objGreenForceFragment = new ObjGreenForceFragment(gameWindow);
         this.arial40 = new Font("エリア", Font.PLAIN, 40);
         this.arial80Bold = new Font("エリア", Font.BOLD, 80);
         this.messageOn = false;
@@ -308,7 +307,7 @@ public class UI {
         text = "GreenFantasy";
         g2.setColor(Color.GREEN);
         x = getXForCenteredText(g2, text);
-        y = tileSize * 3;
+        y = tileSize * 2;
         g2.drawString(text, x, y);
 
         g2.setColor(Color.WHITE);
@@ -318,7 +317,7 @@ public class UI {
 
         text = "ロードゲーム";
         x = getXForCenteredText(g2, text);
-        y += tileSize * 5;
+        y += tileSize * 6;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 0) {
             g2.drawString(">", x - 40, y);
@@ -326,7 +325,7 @@ public class UI {
 
         text = "ニューゲーム";
         x = getXForCenteredText(g2, text);
-        y += tileSize + 8;
+        y += tileSize + 10;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 1) {
             g2.drawString(">", x - 40, y);
@@ -334,43 +333,66 @@ public class UI {
 
         text = "終了";
         x = getXForCenteredText(g2, text);
-        y += tileSize + 8;
+        y += tileSize + 10;
         g2.drawString(text, x, y);
         if (gameWindow.getKeyHandler().getCommandNum() == 2) {
             g2.drawString(">", x - 40, y);
         }
 
-        // 六芒星エンブレム描画
-        if (greenHexPanel != null) {
-            greenHexPanel.startAnimation();
-            int triforcePx = FrameApp.getTileSize() * 6;
-            int centerX = FrameApp.getScreenWidth() / 2;
-            int topY = FrameApp.getTileSize() / 2;
+        drawGreenForceFragments(g2);
+    }
 
-            Graphics2D tg = (Graphics2D) g2.create();
+    public void drawGreenForceFragments(Graphics2D g2) {
 
-            try {
-                // 移動：描画領域の中心に合わせる（正規化座標系を想定）
-                tg.translate(centerX, topY + triforcePx / 2);
+        if (objGreenForceFragment == null) {
+            return;
+        }
 
-                // scale は GreenHexRenderer が期待する scale に合わせる
-                // GreenHexPanel と同じ係数
-                double scale = Math.min(triforcePx, triforcePx) / 2.6;
+        // タイトル画面でもアニメーションを進行させる
+        objGreenForceFragment.update();
 
-                // Y反転して正規化座標系にする
-                tg.scale(scale, -scale);
+        BufferedImage fragmentImage = objGreenForceFragment.getImage();
+        if (fragmentImage == null) {
+            return;
+        }
 
-                // Renderer を呼ぶ（GreenHexPanel の状態を渡す）
-                GreenHexRenderer.drawGreenHex(
-                        tg,
-                        greenHexPanel.getTris(),
-                        greenHexPanel.isForming(),
-                        greenHexPanel.getFormTime(),
-                        greenHexPanel.getFormDuration()
-                );
-            } finally {
-                tg.dispose();
-            }
+        int tileSize = FrameApp.getTileSize();
+        int screenWidth = FrameApp.getScreenWidth();
+        int centerX = screenWidth / 2;
+
+        // 描画サイズを定数化
+        final int DRAW_SIZE = tileSize * 2;
+
+        // 6つの欠片の相対的なオフセット配置
+        int[] drawXList = {
+                // 一番上
+                centerX - tileSize,
+                // 2段目
+                // 左から2番目
+                (int) (centerX - (tileSize * 1.5)),
+                // 2段目
+                // 左から3番目
+                (tileSize * 8) - 20,
+                // 3段目
+                // 左から4番目
+                centerX - (tileSize * 2),
+                // 左から5番目
+                (tileSize * 9) - 40,
+                // 一番下
+                centerX - tileSize + 5
+        };
+
+        int[] drawYList = {
+                tileSize * 2,
+                tileSize * 3,
+                tileSize * 3,
+                tileSize * 4,
+                tileSize * 4,
+                tileSize * 5
+        };
+
+        for (int i = 0; i < drawXList.length; i++) {
+            g2.drawImage(fragmentImage, drawXList[i], drawYList[i], DRAW_SIZE, DRAW_SIZE, null);
         }
     }
 
@@ -587,11 +609,6 @@ public class UI {
         if (gameWindow.getSoundmanager() != null) {
             gameWindow.getSoundmanager().stopBGM();
         }
-
-        SwingUtilities.invokeLater(() -> {
-            greenHexPanel.resetAnimation();
-            greenHexPanel.startAnimation();
-        });
     }
 
     public void showGameOver() {
