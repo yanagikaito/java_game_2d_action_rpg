@@ -243,6 +243,7 @@ public class LoadManager {
             case 32 -> new VertRedType();
             case 33 -> new VertSilverType();
             case 34 -> new VertGoldType();
+            case 35 -> new FragmentType();
             default -> null;
         };
     }

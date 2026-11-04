@@ -8,7 +8,7 @@ public sealed interface EntityType permits PlayerType, NpcOldManType,
         LanternType, HeartType, FireballType, SwordProjectileType, PickupOnlyType,
         PotType, RockType, DoorType, KeyType, StoneType,
         AuraType, VertBronzeType, VertGreenType, VertBlueType, VertRedType,
-        VertSilverType, VertGoldType {
+        VertSilverType, VertGoldType, FragmentType {
 
     int typeId();
 

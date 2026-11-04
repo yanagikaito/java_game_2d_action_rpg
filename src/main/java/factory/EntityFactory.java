@@ -69,6 +69,9 @@ public class EntityFactory {
             case VertSilverType silverVert -> new ObjVertSilver(gameWindow);
             case VertGoldType goldVert -> new ObjVertGold(gameWindow);
 
+            // グリーンフォースエンブレムのかけら
+            case FragmentType fragmentType -> new ObjGreenForceFragment(gameWindow);
+
             default -> null;
         };
     }
