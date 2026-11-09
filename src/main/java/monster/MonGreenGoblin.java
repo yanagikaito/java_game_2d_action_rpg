@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Random;
 
 public class MonGreenGoblin extends Entity {
 
@@ -21,21 +20,12 @@ public class MonGreenGoblin extends Entity {
     private Node[][] grid;
     private int goalX, goalY;
     private boolean flowFieldInitialized = false;
-    private static final int ACTION_LOCK_THRESHOLD = 180;
-    private static final int MAX_RANDOM_VALUE = 100;
-    private static final int THRESHOLD_UP = 25;
-    private static final int THRESHOLD_DOWN = 50;
-    private static final int THRESHOLD_LEFT = 75;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right"};
     private static final String[] ATTACK_DIRECTIONS = {"attackUp", "attackDown", "attackLeft", "attackRight"};
     private BufferedImage[][] attackSprites = new BufferedImage[ATTACK_DIRECTIONS.length][SPRITE_COUNT];
     private static final int SPRITE_COUNT = 3;
     private BufferedImage[][] sprites = new BufferedImage[DIRECTIONS.length][SPRITE_COUNT];
-    private Random random = new Random();
     private int actionLockCounter = 0;
-    private static final int ROCK_COOLDOWN_FRAMES = 180;
-    private int shotAvailableCounter = ROCK_COOLDOWN_FRAMES;
-    private static final int SPRITE_ANIMATION_THRESHOLD = 10;
 
     public MonGreenGoblin(GameWindow gameWindow) {
 

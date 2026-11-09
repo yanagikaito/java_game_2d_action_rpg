@@ -34,7 +34,19 @@ public class LoadManager {
             // 基本ステータス設定
             player.setWorldX(rs.getInt("x"));
             player.setWorldY(rs.getInt("y"));
-            player.setMapId(rs.getInt("map_id"));
+            int loadedMapId = 0;
+            try {
+                loadedMapId = rs.getInt("map_id");
+            } catch (SQLException e) {
+                System.err.println("WARNING: Failed to read map_id from ResultSet: " + e.getMessage());
+            }
+            System.out.println("DEBUG LOAD: Retrieved map_id from DB = " + loadedMapId);
+
+            // もし DB から取れなかった場合の安全策（必要に応じて）
+            if (loadedMapId <= 0) {
+                loadedMapId = 1; // デフォルトをマップ1などにする場合
+            }
+            player.setMapId(rs.getInt(loadedMapId));
             player.setLife(rs.getInt("hp"));
             player.setMaxLife(rs.getInt("max_hp"));
             player.setMana(rs.getInt("mp"));
@@ -56,8 +68,8 @@ public class LoadManager {
             ObjAura playerAura = (ObjAura) factory.create(new AuraType());
             if (playerAura != null) {
                 if (player.getLife() == player.getMaxLife()) {
-                    // オーラアクティブ持続時間30秒タイマー開始
-                    playerAura.activate(30_000L);
+                    // オーラアクティブ持続時間3600秒タイマー開始
+                    playerAura.activate(3600_000L);
                 }
                 player.setAura(playerAura);
             }

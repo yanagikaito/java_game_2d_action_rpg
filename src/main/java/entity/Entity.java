@@ -423,6 +423,10 @@ public abstract class Entity {
             gameWindow.getUi().showGameOver();
             player.startDeathSequence();
         }
+
+        if (gameWindow.getKeyHandler() != null) {
+            gameWindow.getKeyHandler().clearAllKeys();
+        }
     }
 
     /**
@@ -1615,7 +1619,11 @@ public abstract class Entity {
      */
 
     public int getMapId() {
-        return mapId;
+        return gameWindow.getCurrentMapIndex();
+    }
+
+    public void setMapID(int mapId) {
+        this.mapId = mapId;
     }
 
     /**
