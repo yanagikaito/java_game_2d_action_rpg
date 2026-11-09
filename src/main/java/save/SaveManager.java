@@ -138,6 +138,8 @@ public class SaveManager {
     }
 
     private static void saveMainData(Connection conn, SaveData data) throws SQLException {
+
+        System.out.println("DEBUG SAVE: Saving to DB -> slot=" + data.id() + ", map_id=" + data.mapId());
         String sql = """
                 MERGE INTO saves (
                     id, x, y, map_id, hp, max_hp, mp, max_mp,

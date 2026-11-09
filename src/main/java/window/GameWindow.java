@@ -247,11 +247,6 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
-    /**
-     * ゲームオーバー後のリトライ処理。
-     * セーブデータがあればそこから再開、なければ新規ゲーム。
-     */
-
     public void retry() {
 
         // メニュー選択をスロット番号に変換
@@ -276,16 +271,49 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 // 成功したら lastLoadedSlot を更新して状態を整える
                 lastLoadedSlot = slotToTry;
 
-                // マップやエンティティを再初期化してからプレイヤーを差し替える
+                // ロードしたプレイヤーからマップID（論理ID）を取得する
+                int targetMapId = loadedPlayer.getMapId();
+                // リトライした時,targetMapId = 23 返す;
+                System.out.println("DEBUG: Resuming from slot " + slotToTry + " Map " + targetMapId);
+
+                // マップIDに応じて背景タイル（物理ID）を正しくロードし直す
+                if (targetMapId == FOREST_TILE_ID) {
+                    tileManager.loadMap(3);
+                } else if (targetMapId == TileManager.HUT_TILE_ID) {
+                    tileManager.loadMap(2);
+                } else {
+                    tileManager.loadMap(MEADOW_TILE_ID);
+                }
+                currentMap = new map.GameMap(this);
+
+                // マップやエンティティを再初期化（マップIDに応じて配置を分岐）
                 if (currentMap != null) {
                     currentMap.resetChickensState();
                     currentMap.removeAllChickens();
-                    assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
-                    assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
-                    assetSetter.setMonster();
-                    assetSetter.setInteractiveTile();
-                    assetSetter.setObjLantern();
+
+                    if (targetMapId == FOREST_TILE_ID) {
+                        // --- ボスマップ用の配置 ---
+                        assetSetter.setObjDoor("door_plant_primeval_25_36", "door_plant_primeval_25_36", 0, 3);
+                        assetSetter.setObjKey("plant_primeval_key25_42", "plant_primeval_key25_42", 1, 3);
+                        assetSetter.setObjPot("pot_7_37", "pot_7_42", 2, 3);
+                        assetSetter.setObjPot("pot_7_37", "pot_12_37", 7, 3);
+                        assetSetter.setObjPot("pot_12_37", "pot_12_42", 12, 3);
+                        assetSetter.setObjPot("pot_7_42", "pot_12_42", 18, 3);
+                        assetSetter.setObjPot("pot_8_42", "pot_11_42", 19, 3);
+                        assetSetter.setObjChest("chest_1_44", "chest_6_44", 24, 3);
+                        assetSetter.setBossMonster();
+                    } else {
+                        // --- 通常マップ（草原など）用の配置 ---
+                        assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
+                        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
+                        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+                        assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
+                        assetSetter.setMonster();
+                        assetSetter.setInteractiveTile();
+                        assetSetter.setObjLantern();
+                    }
                 }
+
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
                 player.setDeathSequenceStarted(false);
@@ -299,9 +327,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     player.getGameOverAnimator().stop();
                 }
 
-
                 getSoundmanager().playBGM("sound/Over_the_Cresting_Hill.wav");
-                System.out.println("Resuming from slot " + slotToTry + " Map" + loadedPlayer.getMapId());
                 return;
             } else {
                 System.out.println("DEBUG: LoadManager.loadPlayer returned null for slot " + slotToTry);
