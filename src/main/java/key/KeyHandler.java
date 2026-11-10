@@ -261,7 +261,6 @@ public class KeyHandler implements KeyListener {
                     gameWindow.setGameState(GameState.SLEEP);
                 } else if (gameWindow.getGameState() == GameState.TRADE) {
                     npcMerChantSpeak();
-                    gameWindow.getUi().setSubState(0);
                 } else if (gameWindow.getGameState() == GameState.SAVE) {
                     npcSaveSpeak();
                 } else if (gameWindow.getGameState() == GameState.SLEEP) {

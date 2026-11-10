@@ -207,10 +207,10 @@ public class NpcOldMan extends Entity {
         String[] dialogues = getDialogue();
         int dialogueIndex = getDialogueIndex();
 
-        // 1. セリフデータがない場合は安全に終了
+        // セリフデータがない場合は安全に終了
         if (dialogues == null || dialogues.length == 0) return;
 
-        // 2. すでに最後のセリフを超えている、または null に達した場合の処理（会話終了）
+        // すでに最後のセリフを超えている、または null に達した場合の処理（会話終了）
         if (dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null) {
             setDialogueIndex(0); // 次回話しかけたときのためにインデックスをリセット
             getGameWindow().getUi().setCurrentDialogueMessage(""); // メッセージを空にする
@@ -218,12 +218,12 @@ public class NpcOldMan extends Entity {
             return;
         }
 
-        // 3. 現在のセリフをUIにセットしてインデックスを進める
+        // 現在のセリフをUIにセットしてインデックスを進める
         getGameWindow().getUi().setCurrentDialogueMessage(dialogues[dialogueIndex]);
         dialogueIndex++;
         setDialogueIndex(dialogueIndex);
 
-        // 4. プレイヤーの方を向く
+        // プレイヤーの方を向く
         if (getGameWindow().getPlayer() != null) {
             String playerDir = getGameWindow().getPlayer().getDirection();
             setDirection(getOppositeDirection(playerDir));

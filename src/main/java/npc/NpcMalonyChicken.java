@@ -93,7 +93,7 @@ public class NpcMalonyChicken extends Entity {
     }
 
     @Override
-    public void setAction() {
+    public void update() {
 
         if (questAccepted && !questCompleted) {
             checkCoopObjective();
