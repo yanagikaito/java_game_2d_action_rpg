@@ -54,6 +54,11 @@ public class NpcMerChant extends Entity {
         }
     }
 
+    @Override
+    public void update() {
+        // 勝手に歩き回ったりランダムに向きを変えないため
+    }
+
     public void applyMapEvent(db.MapEvent ev) {
         if (ev == null) return;
 

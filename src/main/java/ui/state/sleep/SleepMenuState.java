@@ -32,6 +32,7 @@ public final class SleepMenuState implements SleepScreenState {
             keyHandler.clearAllKeys();
             return;
         }
+        skipNextEnter = true;
 
         // カーソル移動（WASD / 矢印キー対応）
         if ((code == KeyEvent.VK_W || code == KeyEvent.VK_UP) && keyHandler.getCommandNum() > 0) {

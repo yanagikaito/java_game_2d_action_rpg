@@ -57,7 +57,6 @@ public class UI {
 
     private boolean dialogueOn = false;
     private Entity npc;
-    private int subState;
 
     private SaveMeta[] saveMetas;
     private final int SLOT_COUNT = 3;
@@ -80,8 +79,6 @@ public class UI {
     private int selectedOption = 0;
 
     private static final long MAX_PLAY_SECONDS = 3_599_999L;
-
-    db.MapEvent ev = null;
 
     private boolean showGameOver = false;
     private double gameOverTimer = 0.0;
@@ -153,7 +150,6 @@ public class UI {
         } else if (gameState == GameState.DIALOGUE) {
 
             gameWindow.setDialogueActive(true);
-            drawPlayerLife(g2);
             drawDialogueScreen(g2);
 
         } else if (gameState == GameState.CHARACTER) {
@@ -1239,10 +1235,6 @@ public class UI {
 
     public void setNpc(Entity npc) {
         this.npc = npc;
-    }
-
-    public void setSubState(int subState) {
-        this.subState = subState;
     }
 
     public BufferedImage getCoin() {
