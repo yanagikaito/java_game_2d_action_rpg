@@ -156,6 +156,7 @@ public class UI {
 
             gameWindow.setDialogueActive(false);
             drawCharacterScreen(g2);
+            drawFragmentScreen(g2);
             drawInventory(g2, gameWindow.getPlayer(), true);
 
         } else if (gameState == GameState.GAME_OVER) {
@@ -939,6 +940,76 @@ public class UI {
         g2.drawString(value, textX, textY);
     }
 
+    private void drawFragmentScreen(Graphics2D g2) {
+
+        int tileSize = FrameApp.getTileSize();
+
+        final int frameX = (tileSize * 6) + 20;
+        final int frameY = (tileSize * 6) - 20;
+        final int frameWidth = (tileSize * 3) - 15;
+        final int frameHeight = tileSize * 5;
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight);
+
+        // プレイヤーが「グリーンフォースのかけら」を1枚も持っていなければ描画しない
+        int fragmentCount = gameWindow.getPlayer().getGreenForceFragmentCount();
+        if (fragmentCount <= 0) {
+            return;
+        }
+
+        if (objGreenForceFragment == null) {
+            return;
+        }
+
+        // タイトル画面やメニュー画面でもアニメーションを進行させる
+        objGreenForceFragment.update();
+
+        BufferedImage fragmentImage = objGreenForceFragment.getImage();
+        if (fragmentImage == null) {
+            return;
+        }
+
+        int screenWidth = FrameApp.getScreenWidth();
+        int centerX = screenWidth / 2;
+
+        // 描画サイズを定数化
+        final int DRAW_SIZE = tileSize;
+
+        // 6つの欠片の相対的なオフセット配置
+        int[] drawXList = {
+                // 一番上
+                (centerX - tileSize) + 15,
+                // 2段目
+                // 左から2番目
+                (int) (centerX - (tileSize * 1.5)),
+                // 2段目
+                // 左から3番目
+                (tileSize * 8) - 20,
+                // 3段目
+                // 左から4番目
+                centerX - (tileSize * 2),
+                // 左から5番目
+                (tileSize * 9) - 40,
+                // 一番下
+                centerX - tileSize + 5
+        };
+
+        int[] drawYList = {
+                tileSize * 6,
+                tileSize * 3,
+                tileSize * 3,
+                tileSize * 4,
+                tileSize * 4,
+                tileSize * 5
+        };
+
+        // 所持数に応じて描画する最大6枚
+        int drawCount = Math.min(fragmentCount, drawXList.length);
+
+        for (int i = 0; i < drawCount; i++) {
+            g2.drawImage(fragmentImage, drawXList[i], drawYList[i], DRAW_SIZE, DRAW_SIZE, null);
+        }
+    }
+
     private String formatPlayTime(long seconds) {
         // 二重チェックでクランプ
         if (seconds < 0) seconds = 0;
@@ -967,7 +1038,7 @@ public class UI {
 
         if (entity == gameWindow.getPlayer()) {
             frameX = tileSize * 9;
-            frameY = tileSize;
+            frameY = tileSize / 2;
             frameWidth = (tileSize * 6) + tileSize / 2;
             frameHeight = tileSize * 5;
             slotCol = playerSlotCol;

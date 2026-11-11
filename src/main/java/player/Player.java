@@ -125,6 +125,7 @@ public class Player extends Entity {
     private int lastAttemptStepX = 0;
     private int lastAttemptStepY = 0;
     private int pixelCounter;
+    private int greenForceFragmentCount = 0;
 
     private long lastFireTime = 0;
     private long playTimeSeconds = 0L;
@@ -3449,37 +3450,35 @@ public class Player extends Entity {
             getSolidArea().height = 40;
             recordSafePosition();
 
-            // モンスター撃破時のドロップ処理
-            List<LootEntry> tempTable = LootTableLoader.loadTable(gameWindow, "items/loot_table.json");
-            Entity dropped = LootTableLoader.rollRandomLoot(tempTable);
+            boolean isGreenGoblin = (target.getType() instanceof GreenGoblinType);
 
-            if (dropped != null) {
-                gameWindow.dropItem(dropped, monster);
-            }
-            System.out.println("dropped = " + dropped);
+            if (isGreenGoblin) {
+                // グリーンフォースのかけらアイテムを生成してドロップ / 所持数追加
+                Entity greenForceFragment = entityFactory.create(new FragmentType());
+                if (greenForceFragment != null) {
+                    // ドロップアイテムを座標に表示
+                    gameWindow.dropItem(greenForceFragment, monster);
+                    gameWindow.getPlayer().addGreenForceFragment();
+                }
+            } else {
 
-            int gainedExp = target.getExp();
-            this.setExp(getExp() + gainedExp);
+                // モンスター撃破時のドロップ処理
+                List<LootEntry> tempTable = LootTableLoader.loadTable(gameWindow, "items/loot_table.json");
+                Entity dropped = LootTableLoader.rollRandomLoot(tempTable);
 
-            variant = PopupVariant.XP;
-            gameWindow.getUi().getDamagePopupManager().pop(String.format("+%d XP", gainedExp), sx, sy, variant, 60);
+                if (dropped != null) {
+                    gameWindow.dropItem(dropped, monster);
+                }
+                System.out.println("dropped = " + dropped);
 
-            checkLevelUp();
-            gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
+                int gainedExp = target.getExp();
+                this.setExp(getExp() + gainedExp);
 
-            // リスボーン
-            int aliveCount = 0;
-            for (Entity m : gameWindow.getMonster()) {
-                if (m == null) continue;
-                NpcChicken npcChicken = (NpcChicken) monster;
-                if (!npcChicken.getType().canRespawn()) continue;
-                if (!m.getDying() && m.getLife() > 0) aliveCount++;
-            }
+                variant = PopupVariant.XP;
+                gameWindow.getUi().getDamagePopupManager().pop(String.format("+%d XP", gainedExp), sx, sy, variant, 60);
 
-            if (aliveCount == 0 && !monster.isRespawning()) {
-                monster.setRespawning(true);
-                Timer respawnTimer = getTimer(monster);
-                respawnTimer.start();
+                checkLevelUp();
+                gameWindow.getSoundmanager().defeatedWAV("sound/defeated-sound.wav");
             }
         }
     }
@@ -4673,5 +4672,19 @@ public class Player extends Entity {
 
     public void setGameOverAnimator(GameOverAnimator gameOverAnimator) {
         this.gameOverAnimator = gameOverAnimator;
+    }
+
+    public int getGreenForceFragmentCount() {
+        return this.greenForceFragmentCount;
+    }
+
+    // 所持数を直接設定するメソッド（セーブデータのロード時など）
+    public void setGreenForceFragmentCount(int count) {
+        this.greenForceFragmentCount = count;
+    }
+
+    // かけらを1枚取得
+    public void addGreenForceFragment() {
+        this.greenForceFragmentCount++;
     }
 }
