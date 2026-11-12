@@ -144,10 +144,10 @@ public class SaveManager {
                 MERGE INTO saves (
                     id, x, y, map_id, hp, max_hp, mp, max_mp,
                     level, strength, dexterity, exp, next_exp, coin,
-                    weapon_type_id, shield_type_id, saved_at
+                    green_force_fragment,weapon_type_id, shield_type_id, saved_at
                 )
                 KEY (id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
                 """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -165,9 +165,10 @@ public class SaveManager {
             pstmt.setInt(12, data.exp());
             pstmt.setInt(13, data.next_exp());
             pstmt.setInt(14, data.coin());
-            pstmt.setInt(15, data.weaponTypeId());
-            pstmt.setInt(16, data.shieldTypeId());
-            pstmt.setTimestamp(17, Timestamp.valueOf(data.savedAt()));
+            pstmt.setInt(15, data.greenForceFragmentCount());
+            pstmt.setInt(16, data.weaponTypeId());
+            pstmt.setInt(17, data.shieldTypeId());
+            pstmt.setTimestamp(18, Timestamp.valueOf(data.savedAt()));
             pstmt.executeUpdate();
         }
     }

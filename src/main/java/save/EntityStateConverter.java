@@ -42,7 +42,7 @@ public class EntityStateConverter {
                 entity.getWorldX(), entity.getWorldY(), entity.getMapId(),
                 entity.getLife(), entity.getMaxLife(), entity.getMana(), entity.getMaxMana(),
                 entity.getLevel(), entity.getStrength(), entity.getDexterity(), entity.getExp(),
-                entity.getNextLevelExp(), entity.getCoin(),
+                entity.getNextLevelExp(), entity.getCoin(), entity.getGreenForceFragmentCount(),
                 weaponId, shieldId,
                 inventoryData,
                 savedAt

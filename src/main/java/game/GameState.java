@@ -11,5 +11,6 @@ public enum GameState {
     GAME_OVER,
     TRADE,
     SAVE,
-    SLEEP;
+    SLEEP,
+    BOSS_CUTSCENE;
 }

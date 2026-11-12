@@ -32,6 +32,7 @@ public class TileManager {
     public static final int FOREST_TILE_ID = 9;
     public static final int STAIRS_DOWN_TILE_ID = 12;
     public static final int STAIRS_UP_TILE_ID = 13;
+    public static final int GREEN_GOBLIN_BOSS_TILE = 23;
     public static final int FOREST_TRANSITION_ID = 24;
 
     // 水アニメ関連

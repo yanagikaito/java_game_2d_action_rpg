@@ -125,7 +125,6 @@ public class Player extends Entity {
     private int lastAttemptStepX = 0;
     private int lastAttemptStepY = 0;
     private int pixelCounter;
-    private int greenForceFragmentCount = 0;
 
     private long lastFireTime = 0;
     private long playTimeSeconds = 0L;
@@ -160,8 +159,6 @@ public class Player extends Entity {
 
     private final double splashCooldown = 0.5;
     private final double stationarySplashCooldown = 0.8;
-
-    private int hasKey = 0;
 
 
     /**
@@ -3458,7 +3455,6 @@ public class Player extends Entity {
                 if (greenForceFragment != null) {
                     // ドロップアイテムを座標に表示
                     gameWindow.dropItem(greenForceFragment, monster);
-                    gameWindow.getPlayer().addGreenForceFragment();
                 }
             } else {
 
@@ -4672,19 +4668,5 @@ public class Player extends Entity {
 
     public void setGameOverAnimator(GameOverAnimator gameOverAnimator) {
         this.gameOverAnimator = gameOverAnimator;
-    }
-
-    public int getGreenForceFragmentCount() {
-        return this.greenForceFragmentCount;
-    }
-
-    // 所持数を直接設定するメソッド（セーブデータのロード時など）
-    public void setGreenForceFragmentCount(int count) {
-        this.greenForceFragmentCount = count;
-    }
-
-    // かけらを1枚取得
-    public void addGreenForceFragment() {
-        this.greenForceFragmentCount++;
     }
 }
