@@ -136,6 +136,8 @@ public abstract class Entity {
     private String eventId;
     private boolean opened = false;
 
+    private int greenForceFragmentCount = 0;
+
     /**
      * Entity を初期化。
      *
@@ -2202,5 +2204,19 @@ public abstract class Entity {
 
     public void setDyingCounter(int dyingCounter) {
         this.dyingCounter = dyingCounter;
+    }
+
+    public int getGreenForceFragmentCount() {
+        return this.greenForceFragmentCount;
+    }
+
+    // 所持数を直接設定するメソッド（セーブデータのロード時など）
+    public void setGreenForceFragmentCount(int count) {
+        this.greenForceFragmentCount = count;
+    }
+
+    // かけらを1枚取得
+    public void addGreenForceFragment() {
+        this.greenForceFragmentCount++;
     }
 }

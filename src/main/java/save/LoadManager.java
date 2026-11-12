@@ -58,6 +58,14 @@ public class LoadManager {
             player.setNextLevelExp(rs.getInt("next_exp"));
             player.setCoin(rs.getInt("coin"));
 
+            try {
+                int fragmentCount = rs.getInt("green_force_fragment");
+                player.setGreenForceFragmentCount(fragmentCount);
+            } catch (SQLException e) {
+                // まだカラムが存在しない古いセーブデータ等のための安全策
+                player.setGreenForceFragmentCount(0);
+            }
+
             // 2. インベントリ復元
             loadInventory(conn, slotNumber, player, gameWindow);
 

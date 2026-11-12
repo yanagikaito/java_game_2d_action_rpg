@@ -4,6 +4,7 @@ import entity.type.HeartType;
 import entity.type.NpcMerChantType;
 import entity.type.VertBronzeType;
 import factory.EntityFactory;
+import monster.MonGreenGoblin;
 import object.ObjGreenForceFragment;
 import popup.PopupManager;
 import entity.Entity;
@@ -90,6 +91,16 @@ public class UI {
     private int charCounter = 0;
     private final int CHAR_SPEED = 2;
 
+    // --- ボス演出用のフィールド ---
+    private boolean isBossCutsceneActive = false;
+    private int bossCutscenePhase = 0;      // 演出の進行段階（フェーズ）
+    private double bossCutsceneTimer = 0.0; // 経過時間を測るタイマー（秒）
+    private MonGreenGoblin targetBoss;      // 演出対象のボス
+
+    // 画面シェイク用のパラメータ
+    private int screenShakeTimer = 0;
+    private int shakeIntensity = 5;
+
     public UI(GameWindow gameWindow, EntityFactory entityFactory) {
         this.gameWindow = gameWindow;
         this.tradeCtx = new TradeScreenContext(gameWindow, this);
@@ -174,6 +185,98 @@ public class UI {
 
         if (messageOn) {
             drawMessage(g2);
+        }
+    }
+
+    // 演出をスタートする
+    public void startBossCutscene(MonGreenGoblin boss) {
+        this.targetBoss = boss;
+        this.isBossCutsceneActive = true;
+        this.bossCutscenePhase = 1; // フェーズ1から開始
+        this.bossCutsceneTimer = 0.0;
+
+        System.out.println("UI: ボス登場演出スタート！");
+    }
+
+    // 毎フレーム呼ばれて演出の進行状況を更新
+    public void updateBossCutscene(double deltaSeconds) {
+
+        if (!isBossCutsceneActive) return;
+
+        bossCutsceneTimer += deltaSeconds;
+
+        switch (bossCutscenePhase) {
+            case 1: // フェーズ1：カメラがボスに寄りつつ、少し静止（約1.5秒）
+                if (bossCutsceneTimer >= 1.5) {
+                    bossCutsceneTimer = 0.0;
+                    bossCutscenePhase = 2; // 画面シェイク
+
+                    // 画面を0.5秒ほど激しく揺らす
+                    startScreenShake(30, 6);
+                }
+                break;
+
+            case 2: // フェーズ2：ボス名カットイン表示（約2.5秒）
+                if (bossCutsceneTimer >= 2.5) {
+                    bossCutsceneTimer = 0.0;
+                    bossCutscenePhase = 3; //（終了処理）
+                }
+                break;
+
+            case 3: // フェーズ3：演出終了、通常のプレイ状態に戻す
+                isBossCutsceneActive = false;
+                bossCutscenePhase = 0;
+
+                if (gameWindow.getKeyHandler() != null) {
+                    gameWindow.getKeyHandler().clearAllKeys();
+                }
+
+                // ゲームステートを PLAY に戻してプレイヤーの操作を再開
+                gameWindow.setGameState(GameState.PLAY);
+                System.out.println("UI: ボス登場演出終了。戦闘開始！");
+                break;
+        }
+
+        // シェイクタイマーの減算
+        if (screenShakeTimer > 0) {
+            screenShakeTimer--;
+        }
+    }
+
+    // ボス演出中の描画
+    public void drawBossCutscene(Graphics2D g2) {
+
+        if (!isBossCutsceneActive) return;
+
+        int screenWidth = FrameApp.getScreenWidth();
+        int screenHeight = FrameApp.getScreenHeight();
+        int tileSize = FrameApp.getTileSize();
+
+        // 上下の黒帯（レターボックス）を描画
+        g2.setColor(Color.black);
+        int barHeight = tileSize * 2; // 帯の太さ
+
+        // シンプルに常時表示
+        g2.fillRect(0, 0, screenWidth, barHeight);                         // 上帯
+        g2.fillRect(0, screenHeight - barHeight, screenWidth, barHeight);  // 下帯
+
+        // B. フェーズ2以降で「ボス名カットイン」を表示
+        if (bossCutscenePhase >= 2) {
+            g2.setColor(Color.white);
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 28f));
+
+            String titleText = "【 始原の森の守護者 】";
+            String nameText = "グリーンゴブリン";
+
+            int x1 = getXForCenteredText(titleText, g2);
+            int y1 = screenHeight / 2 - 20;
+            g2.drawString(titleText, x1, y1);
+
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40f));
+            g2.setColor(new Color(100, 255, 100));
+            int x2 = getXForCenteredText(nameText, g2);
+            int y2 = screenHeight / 2 + 30;
+            g2.drawString(nameText, x2, y2);
         }
     }
 
@@ -1451,5 +1554,31 @@ public class UI {
 
     public SleepScreenContext getSleepCtx() {
         return sleepCtx;
+    }
+
+    // --- シェイク機能の管理 ---
+    public void startScreenShake(int durationFrames, int intensity) {
+        this.screenShakeTimer = durationFrames;
+        this.shakeIntensity = intensity;
+    }
+
+    public int getShakeOffsetX() {
+        if (screenShakeTimer <= 0) return 0;
+        return (int) (Math.random() * (shakeIntensity * 2 + 1)) - shakeIntensity;
+    }
+
+    public int getShakeOffsetY() {
+        if (screenShakeTimer <= 0) return 0;
+        return (int) (Math.random() * (shakeIntensity * 2 + 1)) - shakeIntensity;
+    }
+
+    // 中央揃え用のヘルパー
+    private int getXForCenteredText(String text, Graphics2D g2) {
+        int textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        return (FrameApp.getScreenWidth() - textLength) / 2;
+    }
+
+    public MonGreenGoblin getTargetBoss() {
+        return targetBoss;
     }
 }

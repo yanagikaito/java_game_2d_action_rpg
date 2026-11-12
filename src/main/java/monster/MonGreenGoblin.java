@@ -3,6 +3,7 @@ package monster;
 import entity.type.GreenGoblinType;
 import entity.Entity;
 import frame.FrameApp;
+import game.GameState;
 import pathfinding_editor.Node;
 import pathfinding_editor.PathFinder;
 import player.Player;
@@ -107,6 +108,10 @@ public class MonGreenGoblin extends Entity {
 
     @Override
     public void setAction() {
+
+        if (getGameWindow().getGameState() == GameState.BOSS_CUTSCENE) {
+            return;
+        }
 
         updateMonsterInvincibility();
 

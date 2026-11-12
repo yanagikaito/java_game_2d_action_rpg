@@ -11,6 +11,7 @@ import factory.EntityFactory;
 import frame.FrameApp;
 import game.GameState;
 import map.GameMap;
+import monster.MonGreenGoblin;
 import npc.NpcOldMan;
 import object.*;
 import org.slf4j.Logger;
@@ -96,6 +97,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
     private int initialLoadedSlot = -1; // 最初にロードしたスロット（未設定は -1）
     private int lastLoadedSlot = -1;    // 直前にロード/セーブしたスロット
     private int frameCounter = 0;
+
+    private boolean bossIntroPlayed = false;
 
 
     /**
@@ -626,6 +629,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 return;
             }
 
+            if (currentMapIndex == GREEN_GOBLIN_BOSS_TILE && !bossIntroPlayed) {
+                checkBossRoomTrigger();
+            }
+
+            System.out.println("currentMapIndex =" + currentMapIndex);
+
             environmentManager.update(deltaSeconds);
 
             if (tileManager != null) {
@@ -655,6 +664,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
                 // ワールド上に存在すべきでないなら配列から除去
                 if (!e.getAlive()) {
+                    if (e instanceof MonGreenGoblin) {
+                        System.out.println("Green Goblin defeated! Stopping boss BGM.");
+                        getSoundmanager().stopBGM();
+                    }
                     monster[i] = null;
                 }
             }
@@ -680,6 +693,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
                         player.healRedPotion((ObjRedPotion) item);
                     } else if (item instanceof ObjGreenPotion) {
                         player.healGreenPotion((ObjGreenPotion) item);
+                    } else if (item instanceof ObjGreenForceFragment) {
+                        player.addGreenForceFragment();
                     }
                     item.setAlive(false);
                 }
@@ -727,6 +742,12 @@ public class GameWindow extends JPanel implements Window, Runnable {
             }
         }
 
+        if (gameState == GameState.BOSS_CUTSCENE) {
+            if (ui != null) {
+                ui.updateBossCutscene(deltaSeconds);
+            }
+        }
+
         if (gameState == GameState.GAME_OVER) {
             player.setDeltaSeconds(deltaSeconds);
             player.update(); // 死亡アニメ更新のため
@@ -736,6 +757,57 @@ public class GameWindow extends JPanel implements Window, Runnable {
         if (gameState == GameState.PAUSE) {
 
         }
+    }
+
+    // ボス部屋侵入判定のメソッド
+    private void checkBossRoomTrigger() {
+
+        int tileSize = FrameApp.getTileSize();
+
+        // プレイヤーの現在地（ワールド座標）から、どのタイルにいるかを計算
+        int playerTileX = player.getWorldX() / tileSize;
+        int playerTileY = player.getWorldY() / tileSize;
+
+        // 安全のため、マップの範囲内かチェック
+        TileManager tm = getTileManager();
+        if (tm == null) return;
+
+        int[][] mapTileNum = tm.getMapTileNum();
+        if (playerTileX < 0 || playerTileX >= mapTileNum.length ||
+                playerTileY < 0 || playerTileY >= mapTileNum[0].length) {
+            return;
+        }
+
+        // ボス演出スタート！
+        if (playerTileX == 25 && playerTileY == 22 && !bossIntroPlayed) {
+
+            System.out.println("Boss trigger activated! Starting boss intro cutscene."); // 英語ログ
+
+            // 二重起動を防ぐフラグ
+            bossIntroPlayed = true;
+
+            // ゲームステートをカットシーンに変更（プレイヤーの移動操作をロック）
+            gameState = GameState.BOSS_CUTSCENE;
+
+            getSoundmanager().playBGM("sound/Beneath_the_Moss_Covered_Throne.wav");
+
+            // モンスター配列からグリーンゴブリンを探してUIの演出を開始
+            MonGreenGoblin boss = findGreenGoblinInMonsters();
+            if (ui != null && boss != null) {
+                ui.startBossCutscene(boss);
+            }
+        }
+    }
+
+    // モンスター配列からグリーンゴブリンを探す
+    private MonGreenGoblin findGreenGoblinInMonsters() {
+        for (int i = 0; i < monster.length; i++) {
+            Entity e = monster[i];
+            if (e instanceof MonGreenGoblin) {
+                return (MonGreenGoblin) e;
+            }
+        }
+        return null;
     }
 
     /**
@@ -893,6 +965,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getUi().draw(g2);
         } else {
 
+            // --- ★ 1. シェイクのオフセットを計算して画面全体に適用 ---
+            int shakeX = (ui != null) ? ui.getShakeOffsetX() : 0;
+            int shakeY = (ui != null) ? ui.getShakeOffsetY() : 0;
+            g2.translate(shakeX, shakeY);
+
             if (onTransition) {
                 Composite old = g2.getComposite();
                 g2.setComposite(AlphaComposite.getInstance(
@@ -923,6 +1000,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 g2.setColor(Color.BLACK);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setComposite(old);
+            }
+
+            // --- ★ 2. シェイクを元に戻す（UIの黒帯やデバッグ文字を揺らさないため） ---
+            g2.translate(-shakeX, -shakeY);
+
+            // --- ★ 3. ボス演出用のUI（黒帯や文字カットイン）を一番上に描画 ---
+            if (gameState == GameState.BOSS_CUTSCENE && ui != null) {
+                ui.drawBossCutscene(g2);
             }
 
             if (keyHandler.isShowDebugText()) {

@@ -264,7 +264,7 @@ public class AssetSetter {
         Entity[] monsters = gameWindow.getMonster();
         int i = 0;
 
-        monsters[i] = createMonGreenGoblin(FrameApp.getTileSize() * 27, FrameApp.getTileSize() * 15);
+        monsters[i] = createMonGreenGoblin(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 5);
 
         gameWindow.setMonster(monsters);
     }
