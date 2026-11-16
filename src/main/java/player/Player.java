@@ -3450,11 +3450,14 @@ public class Player extends Entity {
             boolean isGreenGoblin = (target.getType() instanceof GreenGoblinType);
 
             if (isGreenGoblin) {
-                // グリーンフォースのかけらアイテムを生成してドロップ / 所持数追加
-                Entity greenForceFragment = entityFactory.create(new FragmentType());
-                if (greenForceFragment != null) {
-                    // ドロップアイテムを座標に表示
-                    gameWindow.dropItem(greenForceFragment, monster);
+
+                if (this.getGreenForceFragmentCount() <= 0) {
+                    // グリーンフォースのかけらアイテムを生成してドロップ / 所持数追加
+                    Entity greenForceFragment = entityFactory.create(new FragmentType());
+                    if (greenForceFragment != null) {
+                        // ドロップアイテムを座標に表示
+                        gameWindow.dropItem(greenForceFragment, monster);
+                    }
                 }
             } else {
 
