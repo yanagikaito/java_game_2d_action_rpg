@@ -306,18 +306,19 @@ public class AssetSetter {
                     String eventId = "pot_" + x + "_" + y;
                     db.MapEvent ev = model.getEventById(eventId);
 
+                    // エディター側にイベント（データ）が存在しない場合はポットを置かない
+                    if (ev == null) {
+                        continue;
+                    }
+
                     Entity pot = createObjPot(0, 0);
 
                     if (pot != null) {
                         pot.applyMapEvent(ev);
 
-                        if (ev != null) {
-                            pot.setWorldX(tileSize * ev.getX());
-                            pot.setWorldY(tileSize * ev.getY());
-                        } else {
-                            pot.setWorldX(tileSize * x);
-                            pot.setWorldY(tileSize * y);
-                        }
+                        // ev は必ず存在するので、直接ワールド座標にセット
+                        pot.setWorldX(tileSize * ev.getX());
+                        pot.setWorldY(tileSize * ev.getY());
 
                         Entity[] objArray = gameWindow.getObj();
                         if (objArray == null || objArray.length <= currentIndex) {

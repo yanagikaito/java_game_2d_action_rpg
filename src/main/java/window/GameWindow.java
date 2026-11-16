@@ -298,12 +298,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
                         // --- ボスマップ用の配置 ---
                         assetSetter.setObjDoor("door_plant_primeval_25_36", "door_plant_primeval_25_36", 0, 3);
                         assetSetter.setObjKey("plant_primeval_key25_42", "plant_primeval_key25_42", 1, 3);
-                        assetSetter.setObjPot("pot_7_37", "pot_7_42", 2, 3);
-                        assetSetter.setObjPot("pot_7_37", "pot_12_37", 7, 3);
-                        assetSetter.setObjPot("pot_12_37", "pot_12_42", 12, 3);
-                        assetSetter.setObjPot("pot_7_42", "pot_12_42", 18, 3);
-                        assetSetter.setObjPot("pot_8_42", "pot_11_42", 19, 3);
-                        assetSetter.setObjChest("chest_1_44", "chest_6_44", 24, 3);
+                        assetSetter.setObjPot("pot_7_37", "pot_12_42", 2, 3);
+                        assetSetter.setObjChest("chest_1_44", "chest_6_44", 14, 3);
                         assetSetter.setBossMonster();
                     } else {
                         // --- 通常マップ（草原など）用の配置 ---
@@ -870,11 +866,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjDoor("door_plant_primeval_25_36", "door_plant_primeval_25_36", 0, 3);
             assetSetter.setObjKey("plant_primeval_key25_42", "plant_primeval_key25_42", 1, 3);
 
-            assetSetter.setObjPot("pot_7_37", "pot_7_42", 2, 3);
-            assetSetter.setObjPot("pot_7_37", "pot_12_37", 7, 3);
-            assetSetter.setObjPot("pot_12_37", "pot_12_42", 12, 3);
-            assetSetter.setObjPot("pot_7_42", "pot_12_42", 18, 3);
-            assetSetter.setObjPot("pot_8_42", "pot_11_42", 19, 3);
+            assetSetter.setObjPot("pot_7_37", "pot_12_42", 2, 3);
             assetSetter.setObjChest("chest_1_44", "chest_6_44", 24, 3);
 
             assetSetter.setBossMonster();

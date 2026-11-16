@@ -1369,6 +1369,8 @@ public class Player extends Entity {
     private void throwHeldPot() {
 
         if (!holding || heldPot == null) return;
+        // すでに投げモーション中なら無視
+        if (state == PlayerState.THROW) return;
 
         int tiles = 2;
         int tileSize = FrameApp.getTileSize();
@@ -1465,7 +1467,7 @@ public class Player extends Entity {
         holding = false;
         state = PlayerState.THROW;
 
-        // 投げた直後の誤拾い防止（pickupCooldown と入力消費があるなら設定）
+        // 投げた直後の誤拾い防止
         this.pickupCooldown = PICKUP_COOLDOWN_FRAMES;
         gameWindow.getKeyHandler().consumeThrowOnce();
     }
