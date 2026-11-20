@@ -91,7 +91,8 @@ public class MapCanvas extends JPanel implements Scrollable {
                 }
 
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    if (hit != null) {
+                    // "event" ツール以外で既存イベントをクリックした場合は、選択のみ行って終了
+                    if (hit != null && !"event".equalsIgnoreCase(currentTool)) {
                         if (!hit.getId().equals(selectedEventId)) {
                             selectedEventId = hit.getId();
                             fireSelectionChanged(hit);
@@ -272,10 +273,6 @@ public class MapCanvas extends JPanel implements Scrollable {
                 g2.drawRect(sx, sy, tileSize - 1, tileSize - 1);
             }
         }
-    }
-
-    public void setSelectionListener(java.util.function.Consumer<MapEvent> listener) {
-        this.selectionListener = listener;
     }
 
     private void fireSelectionChanged(MapEvent ev) {

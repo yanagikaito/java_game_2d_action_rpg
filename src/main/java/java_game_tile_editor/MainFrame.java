@@ -37,6 +37,10 @@ public class MainFrame extends JFrame {
     private final JPanel propertyPanel = new JPanel();
     private String lastShownEventId = null;
 
+    private JComboBox<MapEvent> eventSelector;
+    private boolean updatingEventSelector = false; // プログラム更新時の無限ループ防止
+    private final JPanel propertyContentPanel = new JPanel(new BorderLayout());
+
     public MainFrame() throws Exception {
         DbManager.initSchema();
         loadTiles();
@@ -148,24 +152,38 @@ public class MainFrame extends JFrame {
         tileScroll.setPreferredSize(new Dimension(600, 60));
         control.add(tileScroll);
 
+        eventSelector = new JComboBox<>();
+        eventSelector.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof db.MapEvent ev) {
+                    String evName = (ev.getName() == null || ev.getName().isBlank()) ? "(no name)" : ev.getName();
+                    setText(evName + " [" + ev.getId() + "] (" + ev.getX() + "," + ev.getY() + ")");
+                }
+                return this;
+            }
+        });
+
+        eventSelector.addActionListener(e -> {
+            if (updatingEventSelector) return;
+            Object selected = eventSelector.getSelectedItem();
+            if (selected instanceof db.MapEvent ev) {
+                lastShownEventId = null;
+                showProperties(ev);
+                canvas.repaint();
+            }
+        });
+
+        propertyPanel.setLayout(new BorderLayout());
         propertyPanel.setPreferredSize(new Dimension(260, 400));
         propertyPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         propertyPanel.setBackground(new Color(0xF7F7F7));
         propertyPanel.setOpaque(true);
-
-        canvas.setSelectionListener(ev -> {
-            System.out.println("selectionListener called: " + (ev == null ? "null" : ev.getId()));
-            SwingUtilities.invokeLater(() -> {
-                try {
-                    showProperties(ev);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    propertyPanel.add(new JLabel("Error showing properties: see console"), BorderLayout.CENTER);
-                    propertyPanel.revalidate();
-                    propertyPanel.repaint();
-                }
-            });
-        });
+        propertyPanel.add(eventSelector, BorderLayout.NORTH);
+        propertyPanel.add(propertyContentPanel, BorderLayout.CENTER);
 
         selector = new JComboBox<>(new Integer[]{1, 2, 3, 4});
         selector.setSelectedItem(currentMapId);
@@ -194,6 +212,41 @@ public class MainFrame extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    private void syncEventSelector(Integer focusX, Integer focusY, String selectEventId) {
+
+        if (eventSelector == null) return;
+        updatingEventSelector = true;
+        try {
+            eventSelector.removeAllItems();
+            java.util.List<db.MapEvent> list = new java.util.ArrayList<>();
+            if (focusX != null && focusY != null) {
+                for (db.MapEvent ev : model.getAllEvents()) {
+                    if (ev.getX() == focusX && ev.getY() == focusY) {
+                        list.add(ev);
+                    }
+                }
+            }
+            if (list.isEmpty()) {
+                list.addAll(model.getAllEvents());
+            }
+
+            db.MapEvent selected = null;
+            for (db.MapEvent ev : list) {
+                eventSelector.addItem(ev);
+                if (selectEventId != null && selectEventId.equals(ev.getId())) {
+                    selected = ev;
+                }
+            }
+            if (selected != null) {
+                eventSelector.setSelectedItem(selected);
+            } else if (eventSelector.getItemCount() > 0) {
+                eventSelector.setSelectedIndex(0);
+            }
+        } finally {
+            updatingEventSelector = false;
+        }
     }
 
     private void importWorldTxtToModel(java.nio.file.Path txtPath) throws Exception {
@@ -269,15 +322,16 @@ public class MainFrame extends JFrame {
     // プロパティ表示メソッド
     // 置き換え用: showProperties
     private void showProperties(MapEvent ev) {
+
         if (ev != null && ev.getId() != null && ev.getId().equals(lastShownEventId)) return;
         lastShownEventId = (ev == null) ? null : ev.getId();
 
-        propertyPanel.removeAll();
+        propertyContentPanel.removeAll();
 
         if (ev == null) {
-            propertyPanel.add(new JLabel("No event selected"), BorderLayout.CENTER);
-            propertyPanel.revalidate();
-            propertyPanel.repaint();
+            propertyContentPanel.add(new JLabel("No event selected"), BorderLayout.CENTER);
+            propertyContentPanel.revalidate();
+            propertyContentPanel.repaint();
             return;
         }
 
@@ -420,11 +474,10 @@ public class MainFrame extends JFrame {
             System.out.println("Applied properties to event: " + ev.getId() + " name=" + ev.getName() + " trigger=" + ev.getTrigger());
         });
 
-        propertyPanel.setLayout(new BorderLayout());
-        propertyPanel.add(form, BorderLayout.CENTER);
-        propertyPanel.add(apply, BorderLayout.SOUTH);
-        propertyPanel.revalidate();
-        propertyPanel.repaint();
+        propertyContentPanel.add(form, BorderLayout.CENTER);
+        propertyContentPanel.add(apply, BorderLayout.SOUTH);
+        propertyContentPanel.revalidate();
+        propertyContentPanel.repaint();
     }
 
     private void saveMap(int mapId) {
@@ -562,8 +615,9 @@ public class MainFrame extends JFrame {
                     }
                 }
             }
-
+            lastShownEventId = null;
             canvas.repaint();
+            syncEventSelector(null, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
