@@ -145,7 +145,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
 
         // NPC・モンスター・ギミックの再配置
-        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+        String oldManEventId = resolveOldManEventId();
+        assetSetter.setNpcOldMan(oldManEventId, 20, 20);
         assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();
@@ -161,6 +162,20 @@ public class GameWindow extends JPanel implements Window, Runnable {
         if (environmentManager != null) {
             environmentManager.setUp();
         }
+    }
+
+    /**
+     * プレイヤーのグリーンフォースのかけら所持数に応じて、
+     * NPCOldMan に割り当てるイベントIDを決定します。
+     */
+
+    private String resolveOldManEventId() {
+        if (player != null && player.getGreenForceFragmentCount() >= 1) {
+            // 1枚以上所持時
+            return "ev_1a1f84ed29b_6b4a";
+        }
+        // 0枚時
+        return "ev_19f0d3eff03_e5c1";
     }
 
     private void initMapBgm() {
@@ -305,7 +320,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
                         // --- 通常マップ（草原など）用の配置 ---
                         assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
                         assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
-                        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+                        String oldManEventId = resolveOldManEventId();
+                        assetSetter.setNpcOldMan(oldManEventId, 20, 20);
                         assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
                         assetSetter.setMonster();
                         assetSetter.setInteractiveTile();
@@ -394,7 +410,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().restoreLifeAndMan();
         getPlayer().setItems();
         getPlayer().setCoin(500);
-        assetSetter.setNpcOldMan("ev_19f0d3eff03_e5c1", 20, 20);
+        String oldManEventId = resolveOldManEventId();
+        assetSetter.setNpcOldMan(oldManEventId, 20, 20);
         assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
         assetSetter.setMonster();
         assetSetter.setInteractiveTile();

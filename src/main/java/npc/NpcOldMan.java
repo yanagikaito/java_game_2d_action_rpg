@@ -32,6 +32,7 @@ public class NpcOldMan extends Entity {
     private int routeIndex = 0;
     private boolean following = false;
     private String eventId;
+    private boolean caveEventApplied = false;
 
     public NpcOldMan(GameWindow gameWindow, db.MapEvent ev) {
         super(gameWindow);
@@ -204,6 +205,8 @@ public class NpcOldMan extends Entity {
     @Override
     public void speak() {
 
+        updateEventByProgress();
+
         String[] dialogues = getDialogue();
         int dialogueIndex = getDialogueIndex();
 
@@ -227,6 +230,26 @@ public class NpcOldMan extends Entity {
         if (getGameWindow().getPlayer() != null) {
             String playerDir = getGameWindow().getPlayer().getDirection();
             setDirection(getOppositeDirection(playerDir));
+        }
+    }
+
+    private void updateEventByProgress() {
+
+        if (caveEventApplied) return;
+        
+        if (getGameWindow() == null || getGameWindow().getPlayer() == null) return;
+
+        int fragmentCount = getGameWindow().getPlayer().getGreenForceFragmentCount();
+        if (fragmentCount >= 1) {
+            db.MapModel model = getGameWindow().getModel();
+            if (model != null) {
+                model.loadEventsFromDb(1);
+                db.MapEvent nextEv = model.getEventById("ev_1a1f84ed29b_6b4a");
+                if (nextEv != null) {
+                    this.applyMapEvent(nextEv);
+                    caveEventApplied = true;
+                }
+            }
         }
     }
 
