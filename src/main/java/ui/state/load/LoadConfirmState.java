@@ -135,11 +135,11 @@ public class LoadConfirmState implements LoadScreenState {
 
                         if (finalOk && finalLoaded instanceof Player) {
 
-                            // ★ ロード成功時にマップ上のオブジェクトやランタンを再配置・復元する
-                            ctx.gw().resetGameWorld();
-
                             // プレイヤーデータのセット
                             ctx.gw().setPlayer((Player) finalLoaded);
+
+                            // ロード成功時にマップ上のオブジェクトやランタンを再配置・復元する
+                            ctx.gw().resetGameWorld();
 
                             ctx.gw().setLastLoadedSlot(slot);
                             if (ctx.gw().getInitialLoadedSlot() < 0) {
