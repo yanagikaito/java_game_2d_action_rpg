@@ -312,7 +312,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     if (targetMapId == FOREST_TILE_ID) {
                         // --- ボスマップ用の配置 ---
                         assetSetter.setObjDoor("door_plant_primeval_25_36", "door_plant_primeval_25_36", 0, 3);
-                        assetSetter.setObjKey("plant_primeval_key25_42", "plant_primeval_key25_42", 1, 3);
+                        assetSetter.setObjKey("plant_primeval_key_25_42", "plant_primeval_key_25_42", 1, 3);
                         assetSetter.setObjPot("pot_7_37", "pot_12_42", 2, 3);
                         assetSetter.setObjChest("chest_1_44", "chest_6_44", 14, 3);
                         assetSetter.setBossMonster();
@@ -410,16 +410,29 @@ public class GameWindow extends JPanel implements Window, Runnable {
         getPlayer().restoreLifeAndMan();
         getPlayer().setItems();
         getPlayer().setCoin(500);
-        String oldManEventId = resolveOldManEventId();
-        assetSetter.setNpcOldMan(oldManEventId, 20, 20);
-        assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
-        assetSetter.setMonster();
-        assetSetter.setInteractiveTile();
-        assetSetter.setObjAxe();
-        assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
-        assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
-        assetSetter.setObjRock();
-        assetSetter.setObjLantern();
+
+        // ニューゲームは常に開始マップ（MEADOW_TILE_ID）からスタート
+        int startMapId = MEADOW_TILE_ID;
+        getPlayer().setMapId(startMapId);
+
+        tileManager.loadMap(startMapId);
+        getSoundmanager().playBGM("sound/Over_the_Cresting_Hill.wav");
+
+        currentMap = new map.GameMap(this);
+        if (currentMap != null) {
+            currentMap.resetChickensState();
+            currentMap.removeAllChickens();
+
+            // --- 開始マップ（MEADOW_TILE_ID）用の配置のみを行う ---
+            assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
+            assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
+            String oldManEventId = resolveOldManEventId();
+            assetSetter.setNpcOldMan(oldManEventId, 20, 20);
+            assetSetter.setNpcMalonyChicken("event_ev_1a13567146a_8251", 36, 13);
+            assetSetter.setMonster();
+            assetSetter.setInteractiveTile();
+            assetSetter.setObjLantern();
+        }
 
         // ニューゲーム時にも既存の各スロット（0〜2）のメタデータをUIに読み込ませる
         for (int i = 0; i < 3; i++) {
@@ -881,7 +894,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setDirection("right");
 
             assetSetter.setObjDoor("door_plant_primeval_25_36", "door_plant_primeval_25_36", 0, 3);
-            assetSetter.setObjKey("plant_primeval_key25_42", "plant_primeval_key25_42", 1, 3);
+            assetSetter.setObjKey("plant_primeval_key_25_42", "plant_primeval_key_25_42", 1, 3);
 
             assetSetter.setObjPot("pot_7_37", "pot_12_42", 2, 3);
             assetSetter.setObjChest("chest_1_44", "chest_6_44", 24, 3);
@@ -898,6 +911,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setWorldX(tileSize * 48);
             getPlayer().setWorldY(tileSize * 2);
             getPlayer().setDirection("down");
+
+            assetSetter.setObjStoneBlock("push_stone_block_38_1", "push_stone_block_48_10", 0, 4);
 
             repaint();
 

@@ -416,6 +416,79 @@ public class AssetSetter {
         javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
     }
 
+    public void setObjStoneBlock(String startEventId, String endEventId, int arrayStartIndex, int currentMapId) {
+
+        db.MapModel model = gameWindow.getModel();
+        if (model == null) {
+            System.err.println("Model is null in setObjStoneBlock");
+            return;
+        }
+
+        model.loadEventsFromDb(currentMapId);
+        int tileSize = FrameApp.getTileSize();
+        int currentIndex = arrayStartIndex;
+
+        try {
+            String[] startParts = startEventId.split("_");
+            String[] endParts = endEventId.split("_");
+
+            // "push_stone_block_X_Y" インデックスを 3 (X) と 4 (Y)
+            int startX = Integer.parseInt(startParts[3]);
+            int startY = Integer.parseInt(startParts[4]);
+            int endX = Integer.parseInt(endParts[3]);
+            int endY = Integer.parseInt(endParts[4]);
+
+            for (int y = startY; y <= endY; y++) {
+                for (int x = startX; x <= endX; x++) {
+
+                    int tileId = gameWindow.getTileManager().getTileIdAt(x, y);
+                    System.out.println("DEBUG: x=" + x + ", y=" + y + " -> tileId = " + tileId);
+                    if (tileId == WATER_TILE_ID) {
+                        continue; // 水タイルなら置かない
+                    }
+
+                    // 正しく "door_plant_primeval_" のイベントIDを組み立てる
+                    String eventId = "push_stone_block_" + x + "_" + y;
+                    db.MapEvent ev = model.getEventById(eventId);
+
+                    // エディター側にイベント（データ）が存在しない場合は石のブロックを置かない
+                    if (ev == null) {
+                        continue;
+                    }
+
+                    Entity stoneBlock = createObjStoneBlock(0, 0);
+
+                    if (stoneBlock != null) {
+                        stoneBlock.applyMapEvent(ev);
+
+                        // ev は必ず存在するので、直接ワールド座標にセット
+                        stoneBlock.setWorldX(tileSize * ev.getX());
+                        stoneBlock.setWorldY(tileSize * ev.getY());
+
+                        Entity[] objArray = gameWindow.getObj();
+                        if (objArray == null || objArray.length <= currentIndex) {
+                            int newSize = Math.max(currentIndex + 20, (objArray == null ? 50 : objArray.length * 2));
+                            Entity[] newArray = new Entity[newSize];
+                            if (objArray != null) {
+                                System.arraycopy(objArray, 0, newArray, 0, objArray.length);
+                            }
+                            objArray = newArray;
+                            gameWindow.setObj(objArray);
+                        }
+
+                        objArray[currentIndex] = stoneBlock;
+                        currentIndex++;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to parse eventId range: " + startEventId + " to " + endEventId);
+        }
+
+        javax.swing.SwingUtilities.invokeLater(() -> gameWindow.repaint());
+    }
+
     public void setObjKey(String startEventId, String endEventId, int arrayStartIndex, int currentMapId) {
 
         db.MapModel model = gameWindow.getModel();
@@ -429,17 +502,15 @@ public class AssetSetter {
         int currentIndex = arrayStartIndex;
 
         try {
-            // 例: "plant_primeval_key-0_0" を安全にパースするため、"-" と "_" の両方に対応させるか、適切に分割する
-            // ここでは "-" または "_" で一括分割する例です
-            String[] startParts = startEventId.split("[-_]");
-            String[] endParts = endEventId.split("[-_]");
 
-            // 分割結果の確認用ログ（必要に応じて）
-            // 例: [plant, primeval, key, 0, 0] のようになるため、Xはインデックス3、Yはインデックス4になります
-            int startX = Integer.parseInt(startParts[2].replace("key", ""));
-            int startY = Integer.parseInt(startParts[3]);
-            int endX = Integer.parseInt(endParts[2].replace("key", ""));
-            int endY = Integer.parseInt(endParts[3]);
+            String[] startParts = startEventId.split("_");
+            String[] endParts = endEventId.split("_");
+
+            // plant_primeval_key_25_42
+            int startX = Integer.parseInt(startParts[3]);
+            int startY = Integer.parseInt(startParts[4]);
+            int endX = Integer.parseInt(endParts[3]);
+            int endY = Integer.parseInt(endParts[4]);
 
             for (int y = startY; y <= endY; y++) {
                 for (int x = startX; x <= endX; x++) {
@@ -451,7 +522,7 @@ public class AssetSetter {
                     }
 
                     // ★修正1: 正しいイベントIDの形式に合わせる（ハイフンやアンダースコアの有無を確認）
-                    String eventId = "plant_primeval_key" + x + "_" + y;
+                    String eventId = "plant_primeval_key_" + x + "_" + y;
                     db.MapEvent ev = model.getEventById(eventId);
 
                     // ★修正2: ドアではなく ObjKey を新規作成する
@@ -727,6 +798,27 @@ public class AssetSetter {
             objDoor.setAlive(true);
         }
         return objDoor;
+    }
+
+    private Entity createObjStoneBlock(int worldX, int worldY) {
+        Entity objStoneBlock = entityFactory.create(new StoneBlockType());
+        if (objStoneBlock != null) {
+            objStoneBlock.getSolidArea().x = 1;
+            objStoneBlock.getSolidArea().y = 1;
+
+            objStoneBlock.setSolidAreaDefaultX(objStoneBlock.getSolidArea().x);
+            objStoneBlock.setSolidAreaDefaultY(objStoneBlock.getSolidArea().y);
+
+            objStoneBlock.getSolidArea().width = (FrameApp.getTileSize() - 8);
+            objStoneBlock.getSolidArea().height = (FrameApp.getTileSize() - 8);
+            objStoneBlock.setWorldX(worldX);
+            objStoneBlock.setWorldY(worldY);
+            objStoneBlock.setPickable(true);
+            objStoneBlock.setUser(gameWindow.getPlayer());
+            objStoneBlock.setThrown(false);
+            objStoneBlock.setAlive(true);
+        }
+        return objStoneBlock;
     }
 
     private Entity createObjKey(int worldX, int worldY) {

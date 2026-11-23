@@ -91,6 +91,7 @@ public class Player extends Entity {
     private static final int UNSTUCK_PUSH_MAX = 4; // 最大押し出しpx
     private static final int UNSTUCK_BFS_RADIUS = 6; // BFS 探索半径（タイル単位）
     private static final int PICKUP_COOLDOWN_FRAMES = 5;
+    private static final int PUSH_FRAMES_REQUIRED = 8;
 
     // 保存・表示する秒単位のプレイ時間
     // フレームの端数（秒）を保持
@@ -125,6 +126,7 @@ public class Player extends Entity {
     private int lastAttemptStepX = 0;
     private int lastAttemptStepY = 0;
     private int pixelCounter;
+    private int pushCounter = 0;
 
     private long lastFireTime = 0;
     private long playTimeSeconds = 0L;
@@ -678,6 +680,89 @@ public class Player extends Entity {
     }
 
     /**
+     * プレイヤーの向いている方向（1マス先）にある ObjStoneBlock を探す
+     */
+
+    private object.ObjStoneBlock findStoneBlockAhead() {
+        Entity[] objs = gameWindow.getObj();
+        if (objs == null) {
+            return null;
+        }
+
+        int ts = FrameApp.getTileSize();
+        int dx = 0;
+        int dy = 0;
+        String dir = getDirection();
+        if (dir == null) {
+            return null;
+        }
+
+        switch (dir.toLowerCase()) {
+            case "up" -> dy = -ts;
+            case "down" -> dy = ts;
+            case "left" -> dx = -ts;
+            case "right" -> dx = ts;
+            default -> {
+                return null;
+            }
+        }
+
+        // プレイヤーの中心から1マス先の座標
+        int probeX = getWorldX() + ts / 2 + dx;
+        int probeY = getWorldY() + ts / 2 + dy;
+
+        for (Entity o : objs) {
+            if (o instanceof object.ObjStoneBlock block && o.getAlive()) {
+                int bx = block.getWorldX();
+                int by = block.getWorldY();
+                if (probeX >= bx && probeX < bx + ts && probeY >= by && probeY < by + ts) {
+                    return block;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 移動中に前方の ObjStoneBlock へ押し当てている場合の処理。
+     * ブロックを押して移動を開始した場合は true を返す。
+     */
+
+    private boolean handleStoneBlockPush() {
+        if (holding || !moving) {
+            pushCounter = 0;
+            return false;
+        }
+
+        object.ObjStoneBlock block = findStoneBlockAhead();
+        if (block == null) {
+            pushCounter = 0;
+            return false;
+        }
+
+        if (block.isMoving()) {
+            pushCounter = 0;
+            setCollision(true);
+            return false;
+        }
+
+        pushCounter++;
+        if (pushCounter >= PUSH_FRAMES_REQUIRED) {
+            boolean pushed = block.tryPush(getDirection());
+            if (pushed) {
+                pushCounter = 0;
+                // ブロックを押した瞬間はプレイヤーがブロックにめり込まないよう足止めする
+                setCollision(true);
+                return true;
+            }
+        }
+
+        // まだ閾値未満、またはブロックが壁際で押せない場合はすり抜け防止
+        setCollision(true);
+        return false;
+    }
+
+    /**
      * 現在の武器種別と向きをもとに攻撃アニメーションを開始する準備を行う。
      * axeなら「axe＋方向」、それ以外は「attack＋方向」を attackDirection に設定し、
      * 対応する攻撃スプライト配列を更新。
@@ -1094,10 +1179,15 @@ public class Player extends Entity {
         }
 
         if (moving) {
+            boolean pushedBlock = handleStoneBlockPush();
             updateMovement();
             updateCollision();
             updateAnimation();
-            updateTileMovement();
+            if (!pushedBlock) {
+                updateTileMovement();
+            }
+        } else {
+            pushCounter = 0;
         }
         updateInvincibility();
     }
