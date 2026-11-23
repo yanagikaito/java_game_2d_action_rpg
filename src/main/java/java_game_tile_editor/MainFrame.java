@@ -76,6 +76,12 @@ public class MainFrame extends JFrame {
                 tmpKey = ImageIO.read(is);
             }
         }
+        Image tmpStoneBlock = null;
+        try (InputStream is = getClass().getResourceAsStream("/tile_editor/objects/push_stone_block.png")) {
+            if (is != null) {
+                tmpStoneBlock = ImageIO.read(is);
+            }
+        }
         eventIcon = tmp;
         canvas = new MapCanvas(model, tileImages);
         if (eventIcon != null) canvas.setEventIcon(eventIcon);
@@ -83,6 +89,7 @@ public class MainFrame extends JFrame {
         if (tmpPot != null) canvas.setPotImage(tmpPot);
         if (tmpDoor != null) canvas.setDoorImage(tmpDoor);
         if (tmpKey != null) canvas.setKeyImage(tmpKey);
+        if (tmpStoneBlock != null) canvas.setStoneBlockImage(tmpStoneBlock);
 
         JButton importTxt = new JButton("Import TXT");
         importTxt.addActionListener(e -> {
@@ -132,6 +139,12 @@ public class MainFrame extends JFrame {
             canvas.setTool("plant_primeval_key"); // 鍵
         });
         control.add(keyTool);
+
+        JButton stoneBlockTool = new JButton("stoneBlock");
+        stoneBlockTool.addActionListener(e -> {
+            canvas.setTool("push_stone_block"); // 石のブロック
+        });
+        control.add(stoneBlockTool);
 
         // --- タイルボタン群を横スクロール可能にする ---
         JPanel tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));

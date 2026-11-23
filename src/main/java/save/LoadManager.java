@@ -256,14 +256,15 @@ public class LoadManager {
             case 25 -> new DoorType();
             case 26 -> new KeyType();
             case 27 -> new StoneType();
-            case 28 -> new AuraType();
-            case 29 -> new VertBronzeType();
-            case 30 -> new VertGreenType();
-            case 31 -> new VertBlueType();
-            case 32 -> new VertRedType();
-            case 33 -> new VertSilverType();
-            case 34 -> new VertGoldType();
-            case 35 -> new FragmentType();
+            case 28 -> new StoneBlockType();
+            case 29 -> new AuraType();
+            case 30 -> new VertBronzeType();
+            case 31 -> new VertGreenType();
+            case 32 -> new VertBlueType();
+            case 33 -> new VertRedType();
+            case 34 -> new VertSilverType();
+            case 35 -> new VertGoldType();
+            case 36 -> new FragmentType();
             default -> null;
         };
     }

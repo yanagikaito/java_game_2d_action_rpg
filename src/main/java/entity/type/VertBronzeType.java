@@ -4,7 +4,7 @@ public record VertBronzeType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 29;
+        return 30;
     }
 
     @Override
