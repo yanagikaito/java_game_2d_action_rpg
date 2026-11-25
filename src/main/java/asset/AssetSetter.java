@@ -650,7 +650,7 @@ public class AssetSetter {
         Entity[] obj = gameWindow.getObj();
         int i = 20;
 
-        obj[i] = createObjLantern(FrameApp.getTileSize() * 23, FrameApp.getTileSize() * 21);
+        obj[i] = createObjLantern(FrameApp.getTileSize() * 33, FrameApp.getTileSize() * 16);
     }
 
     private Entity createObjLantern(int worldX, int worldY) {

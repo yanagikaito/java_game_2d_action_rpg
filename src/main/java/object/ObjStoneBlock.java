@@ -3,6 +3,7 @@ package object;
 import entity.Entity;
 import entity.type.StoneBlockType;
 import frame.FrameApp;
+import tile.TileManager;
 import window.GameWindow;
 
 import javax.imageio.ImageIO;
@@ -153,11 +154,64 @@ public class ObjStoneBlock extends Entity {
     }
 
     private boolean canMoveTo(int nextX, int nextY) {
-        int ts = FrameApp.getTileSize();
+
+        int tileSize = FrameApp.getTileSize();
+
+        // タイル・マップ範囲チェック（14〜21を含む collision = true のタイルをブロック）
+        if (gameWindow != null && gameWindow.getTileManager() != null) {
+            var tileManager = gameWindow.getTileManager();
+
+            int margin = 2;
+            int leftCol = (nextX + margin) / tileSize;
+            int rightCol = (nextX + tileSize - 1 - margin) / tileSize;
+            int topRow = (nextY + margin) / tileSize;
+            int bottomRow = (nextY + tileSize - 1 - margin) / tileSize;
+
+            int[][] corners = {
+                    {leftCol, topRow},
+                    {rightCol, topRow},
+                    {leftCol, bottomRow},
+                    {rightCol, bottomRow}
+            };
+
+            for (int[] c : corners) {
+                int tileId = tileManager.getTileIdAt(c[0], c[1]);
+                // マップ範囲外（-1）なら移動不可
+                if (tileId < 0) {
+                    return false;
+                }
+                // 水タイルまたは壁（14〜21 / collision == true）なら移動不可
+                if (tileId == TileManager.STAIRS_UP_TILE_ID ||
+                        tileId == TileManager.WATER_TILE_ID || isBlockedTile(tileManager, tileId)) {
+                    return false;
+                }
+            }
+        }
+
+        // 他のオブジェクト（別の ObjStoneBlock や障害物）との重なりチェック
+        if (gameWindow != null && gameWindow.getObj() != null) {
+            for (Entity other : gameWindow.getObj()) {
+                if (other == null || other == this || !other.getAlive()) {
+                    continue;
+                }
+                if (isRectOverlap(nextX, nextY, tileSize, tileSize, other.getWorldX(), other.getWorldY(), tileSize, tileSize)) {
+                    return false;
+                }
+            }
+        }
+
+        // プレイヤーとの重なりチェック
+        if (gameWindow != null && gameWindow.getPlayer() != null) {
+            var player = gameWindow.getPlayer();
+            if (isRectOverlap(nextX, nextY, tileSize, tileSize, player.getWorldX(), player.getWorldY(), tileSize, tileSize)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
-    // update() の実装（押し出し）
+    // 押し出し
     @Override
     public void update() {
         ensureTargetInitialized();
@@ -189,6 +243,43 @@ public class ObjStoneBlock extends Entity {
         if (x == targetX && y == targetY) {
             moving = false;
         }
+    }
+
+    private boolean isBlockedTile(TileManager tileManager, int tileId) {
+
+        if (tileManager == null || tileId < 0) {
+            return true;
+        }
+
+        var tiles = tileManager.getTiles();
+        if (tiles == null || tileId >= tiles.length) {
+            return false;
+        }
+
+        var targetTile = tiles[tileId];
+        return targetTile != null && targetTile.collision;
+    }
+
+    /**
+     * 2つの矩形（X軸・Y軸に平行な長方形）が重なっているかを判定。
+     * 辺同士が接しているだけの場合は重なっていないとみなす。
+     *
+     * @param firstX       1つ目の矩形の左端X座標
+     * @param firstY       1つ目の矩形の上端Y座標
+     * @param firstWidth   1つ目の矩形の幅
+     * @param firstHeight  1つ目の矩形の高さ
+     * @param secondX      2つ目の矩形の左端X座標
+     * @param secondY      2つ目の矩形の上端Y座標
+     * @param secondWidth  2つ目の矩形の幅
+     * @param secondHeight 2つ目の矩形の高さ
+     * @return 2つの矩形が重なっている場合は {@code true}、それ以外は {@code false}
+     */
+
+    private boolean isRectOverlap(int firstX, int firstY, int firstWidth, int firstHeight,
+                                  int secondX, int secondY, int secondWidth, int secondHeight) {
+        boolean overlapsHorizontally = firstX < secondX + secondWidth && firstX + firstWidth > secondX;
+        boolean overlapsVertically = firstY < secondY + secondHeight && firstY + firstHeight > secondY;
+        return overlapsHorizontally && overlapsVertically;
     }
 
     public void draw(Graphics2D g2) {
