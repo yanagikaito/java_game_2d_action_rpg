@@ -259,12 +259,22 @@ public class AssetSetter {
         gameWindow.setMonster(monsters);
     }
 
-    public void setBossMonster() {
+    public void setBossMonGreenGoblin() {
 
         Entity[] monsters = gameWindow.getMonster();
         int i = 0;
 
         monsters[i] = createMonGreenGoblin(FrameApp.getTileSize() * 25, FrameApp.getTileSize() * 5);
+
+        gameWindow.setMonster(monsters);
+    }
+
+    public void setBossMonCrabGuardian() {
+
+        Entity[] monsters = gameWindow.getMonster();
+        int i = 0;
+
+        monsters[i] = createMonCrabGuardian(FrameApp.getTileSize() * 1, FrameApp.getTileSize() * 48);
 
         gameWindow.setMonster(monsters);
     }
@@ -417,6 +427,11 @@ public class AssetSetter {
     }
 
     public void setObjStoneBlock(String startEventId, String endEventId, int arrayStartIndex, int currentMapId) {
+
+        System.out.println("DEBUG setObjStoneBlock called: mapId=" + currentMapId
+                + ", range=" + startEventId + ".." + endEventId
+                + ", startIndex=" + arrayStartIndex);
+        new Exception("TRACE setObjStoneBlock").printStackTrace(System.out);
 
         db.MapModel model = gameWindow.getModel();
         if (model == null) {
@@ -686,6 +701,16 @@ public class AssetSetter {
     private Entity createMonGreenGoblin(int worldX, int worldY) {
 
         Entity monster = entityFactory.create(new GreenGoblinType());
+        if (monster != null) {
+            monster.setWorldX(worldX);
+            monster.setWorldY(worldY);
+        }
+        return monster;
+    }
+
+    private Entity createMonCrabGuardian(int worldX, int worldY) {
+
+        Entity monster = entityFactory.create(new CrabGuardianType());
         if (monster != null) {
             monster.setWorldX(worldX);
             monster.setWorldY(worldY);

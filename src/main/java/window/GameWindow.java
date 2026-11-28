@@ -11,6 +11,7 @@ import factory.EntityFactory;
 import frame.FrameApp;
 import game.GameState;
 import map.GameMap;
+import monster.MonCrabGuardian;
 import monster.MonGreenGoblin;
 import npc.NpcOldMan;
 import object.*;
@@ -291,14 +292,18 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
                 // ロードしたプレイヤーからマップID（論理ID）を取得する
                 int targetMapId = loadedPlayer.getMapId();
-                // リトライした時,targetMapId = 23 返す;
-                System.out.println("DEBUG: Resuming from slot " + slotToTry + " Map " + targetMapId);
+                System.out.println("DEBUG retry branch: targetMapId=" + targetMapId
+                        + ", STAIRS_DOWN_TILE_ID=" + STAIRS_DOWN_TILE_ID
+                        + ", FOREST_TILE_ID=" + FOREST_TILE_ID
+                        + ", MEADOW_TILE_ID=" + MEADOW_TILE_ID);
 
                 // マップIDに応じて背景タイル（物理ID）を正しくロードし直す
                 if (targetMapId == FOREST_TILE_ID) {
                     tileManager.loadMap(3);
                 } else if (targetMapId == TileManager.HUT_TILE_ID) {
                     tileManager.loadMap(2);
+                } else if (targetMapId == STAIRS_DOWN_TILE_ID) {
+                    tileManager.loadMap(4);
                 } else {
                     tileManager.loadMap(MEADOW_TILE_ID);
                 }
@@ -306,6 +311,11 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
                 // マップやエンティティを再初期化（マップIDに応じて配置を分岐）
                 if (currentMap != null) {
+                    Entity[] objs = getObj();
+                    if (objs != null) {
+                        java.util.Arrays.fill(objs, null);
+                    }
+                    bossIntroPlayed = false;
                     currentMap.resetChickensState();
                     currentMap.removeAllChickens();
 
@@ -315,9 +325,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
                         assetSetter.setObjKey("plant_primeval_key_25_42", "plant_primeval_key_25_42", 1, 3);
                         assetSetter.setObjPot("pot_7_37", "pot_12_42", 2, 3);
                         assetSetter.setObjChest("chest_1_44", "chest_6_44", 14, 3);
-                        assetSetter.setBossMonster();
+                        assetSetter.setBossMonGreenGoblin();
+                    } else if (targetMapId == STAIRS_DOWN_TILE_ID) {
+                        assetSetter.setObjStoneBlock("push_stone_block_38_1", "push_stone_block_48_10", 0, 4);
+                        assetSetter.setBossMonCrabGuardian();
                     } else {
                         // --- 通常マップ（草原など）用の配置 ---
+                        System.out.println("DEBUG retry -> normal map branch");
                         assetSetter.setObjPot("pot_25_15", "pot_27_16", 0, MEADOW_TILE_ID);
                         assetSetter.setObjChest("chest_25_19", "chest_35_19", 9, MEADOW_TILE_ID);
                         String oldManEventId = resolveOldManEventId();
@@ -329,13 +343,14 @@ public class GameWindow extends JPanel implements Window, Runnable {
                     }
                 }
 
+                getKeyHandler().clearAllKeys();
                 setPlayer((Player) loadedPlayer);
                 setGameState(GameState.PLAY);
                 player.setDeathSequenceStarted(false);
                 player.setDead(false);
                 player.setMoving(false);
                 player.setInvincible(false);
-
+                player.clearObtainedFragmentBossKeys();
                 player.setState(Player.PlayerState.IDLE);
 
                 if (player.getGameOverAnimator() != null) {
@@ -404,7 +419,9 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
     public void restart() {
         lastLoadedSlot = -1;
+        bossIntroPlayed = false;
         getSoundmanager().playBGM("sound/Over_the_Cresting_Hill.wav");
+        getPlayer().clearObtainedFragmentBossKeys();
         getPlayer().setDefaultValues();
         getPlayer().setDefaultPositions();
         getPlayer().restoreLifeAndMan();
@@ -432,6 +449,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setMonster();
             assetSetter.setInteractiveTile();
             assetSetter.setObjLantern();
+            assetSetter.setObjRock();
         }
 
         // ニューゲーム時にも既存の各スロット（0〜2）のメタデータをUIに読み込ませる
@@ -659,6 +677,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 checkBossRoomTrigger();
             }
 
+            if (currentMapIndex == CRAB_GUARDIAN_BOSS_TILE && !bossIntroPlayed) {
+                checkBossRoomTrigger();
+            }
+
             System.out.println("currentMapIndex =" + currentMapIndex);
 
             environmentManager.update(deltaSeconds);
@@ -690,8 +712,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
                 // ワールド上に存在すべきでないなら配列から除去
                 if (!e.getAlive()) {
-                    if (e instanceof MonGreenGoblin) {
-                        System.out.println("Green Goblin defeated! Stopping boss BGM.");
+                    if (e instanceof MonGreenGoblin || e instanceof MonCrabGuardian) {
+                        System.out.println("BOSS! Stopping boss BGM.");
                         getSoundmanager().stopBGM();
                     }
                     monster[i] = null;
@@ -785,16 +807,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
         }
     }
 
-    // ボス部屋侵入判定のメソッド
+    // ボス部屋侵入判定
     private void checkBossRoomTrigger() {
 
         int tileSize = FrameApp.getTileSize();
-
-        // プレイヤーの現在地（ワールド座標）から、どのタイルにいるかを計算
         int playerTileX = player.getWorldX() / tileSize;
         int playerTileY = player.getWorldY() / tileSize;
 
-        // 安全のため、マップの範囲内かチェック
         TileManager tm = getTileManager();
         if (tm == null) return;
 
@@ -804,36 +823,30 @@ public class GameWindow extends JPanel implements Window, Runnable {
             return;
         }
 
-        // ボス演出スタート！
-        if (playerTileX == 25 && playerTileY == 22 && !bossIntroPlayed) {
+        // グリーンゴブリン ボス演出
+        if (!bossIntroPlayed && isGreenGoblinTrigger(playerTileX, playerTileY)) {
+            MonGreenGoblin goblin = findBossInMonsters(MonGreenGoblin.class);
+            if (goblin != null) {
+                startBossIntro(goblin, "sound/Beneath_the_Moss_Covered_Throne.wav");
+                bossIntroPlayed = true;
+                if (ui != null) {
+                    ui.startBossCutscene(goblin);
+                }
+            }
+            return;
+        }
 
-            System.out.println("Boss trigger activated! Starting boss intro cutscene."); // 英語ログ
-
-            // 二重起動を防ぐフラグ
-            bossIntroPlayed = true;
-
-            // ゲームステートをカットシーンに変更（プレイヤーの移動操作をロック）
-            gameState = GameState.BOSS_CUTSCENE;
-
-            getSoundmanager().playBGM("sound/Beneath_the_Moss_Covered_Throne.wav");
-
-            // モンスター配列からグリーンゴブリンを探してUIの演出を開始
-            MonGreenGoblin boss = findGreenGoblinInMonsters();
-            if (ui != null && boss != null) {
-                ui.startBossCutscene(boss);
+        // クラブガーディアン ボス演出
+        if (!bossIntroPlayed && isCrabGuardianTrigger(playerTileX, playerTileY)) {
+            MonCrabGuardian crab = findBossInMonsters(MonCrabGuardian.class);
+            if (crab != null) {
+                startBossIntro(crab, "sound/Beneath_the_Moss_Covered_Throne.wav");
+                bossIntroPlayed = true;
+                if (ui != null) {
+                    ui.startBossCutscene(crab);
+                }
             }
         }
-    }
-
-    // モンスター配列からグリーンゴブリンを探す
-    private MonGreenGoblin findGreenGoblinInMonsters() {
-        for (int i = 0; i < monster.length; i++) {
-            Entity e = monster[i];
-            if (e instanceof MonGreenGoblin) {
-                return (MonGreenGoblin) e;
-            }
-        }
-        return null;
     }
 
     /**
@@ -886,6 +899,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
 
         } else if (currentMapIndex == FOREST_TILE_ID) {
 
+            bossIntroPlayed = false;
             clearSceneState();
             tileManager.loadMap(3);
             startMapTransition(3);
@@ -899,12 +913,13 @@ public class GameWindow extends JPanel implements Window, Runnable {
             assetSetter.setObjPot("pot_7_37", "pot_12_42", 2, 3);
             assetSetter.setObjChest("chest_1_44", "chest_6_44", 24, 3);
 
-            assetSetter.setBossMonster();
+            assetSetter.setBossMonGreenGoblin();
 
             repaint();
 
         } else if (currentMapIndex == STAIRS_DOWN_TILE_ID) {
 
+            bossIntroPlayed = false;
             clearSceneState();
             tileManager.loadMap(4);
             startMapTransition(4);
@@ -913,6 +928,8 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getPlayer().setDirection("down");
 
             assetSetter.setObjStoneBlock("push_stone_block_38_1", "push_stone_block_48_10", 0, 4);
+
+            assetSetter.setBossMonCrabGuardian();
 
             repaint();
 
@@ -989,7 +1006,7 @@ public class GameWindow extends JPanel implements Window, Runnable {
             getUi().draw(g2);
         } else {
 
-            // --- ★ 1. シェイクのオフセットを計算して画面全体に適用 ---
+            // シェイクのオフセットを計算して画面全体に適用
             int shakeX = (ui != null) ? ui.getShakeOffsetX() : 0;
             int shakeY = (ui != null) ? ui.getShakeOffsetY() : 0;
             g2.translate(shakeX, shakeY);
@@ -1026,10 +1043,10 @@ public class GameWindow extends JPanel implements Window, Runnable {
                 g2.setComposite(old);
             }
 
-            // --- ★ 2. シェイクを元に戻す（UIの黒帯やデバッグ文字を揺らさないため） ---
+            // シェイクを元に戻す（UIの黒帯やデバッグ文字を揺らさないため）
             g2.translate(-shakeX, -shakeY);
 
-            // --- ★ 3. ボス演出用のUI（黒帯や文字カットイン）を一番上に描画 ---
+            // ボス演出用のUI（黒帯や文字カットイン）を一番上に描画
             if (gameState == GameState.BOSS_CUTSCENE && ui != null) {
                 ui.drawBossCutscene(g2);
             }
@@ -1570,6 +1587,32 @@ public class GameWindow extends JPanel implements Window, Runnable {
         Executors.newSingleThreadScheduledExecutor().schedule(() -> {
             getSoundmanager().playBGM(newBgm);
         }, 520, TimeUnit.MILLISECONDS);
+    }
+
+    private void startBossIntro(Entity boss, String bgmPath) {
+        System.out.println("Boss trigger activated! Starting boss intro cutscene for: " + boss.getName());
+        gameState = GameState.BOSS_CUTSCENE;
+        if (getSoundmanager() != null && bgmPath != null) {
+            getSoundmanager().playBGM(bgmPath);
+        }
+    }
+
+    private <T extends Entity> T findBossInMonsters(Class<T> bossClass) {
+        if (monster == null) return null;
+        for (Entity e : monster) {
+            if (bossClass.isInstance(e)) {
+                return bossClass.cast(e);
+            }
+        }
+        return null;
+    }
+
+    private boolean isGreenGoblinTrigger(int playerTileX, int playerTileY) {
+        return player.getMapId() == GREEN_GOBLIN_BOSS_TILE && playerTileX == 25 && playerTileY == 22;
+    }
+
+    private boolean isCrabGuardianTrigger(int playerTileX, int playerTileY) {
+        return player.getMapId() == CRAB_GUARDIAN_BOSS_TILE && playerTileX == 29 && playerTileY == 15;
     }
 
     /**

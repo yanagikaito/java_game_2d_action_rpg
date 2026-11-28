@@ -3,6 +3,7 @@ package factory;
 import db.MapEvent;
 import entity.*;
 import entity.type.*;
+import monster.MonCrabGuardian;
 import monster.MonGreenGoblin;
 import monster.MonGreenSlime;
 import monster.MonMintSoldier;
@@ -38,6 +39,7 @@ public class EntityFactory {
             case GreenSlimeType greenSlimeType -> new MonGreenSlime(gameWindow);
             case MintSoldierType mintSoldierType -> new MonMintSoldier(gameWindow);
             case GreenGoblinType greenGoblinType -> new MonGreenGoblin(gameWindow);
+            case CrabGuardianType crabGuardianType -> new MonCrabGuardian(gameWindow);
             case ChickenType chicken -> new NpcChicken(gameWindow);
 
             case RockType rockType -> new ObjRock(gameWindow);

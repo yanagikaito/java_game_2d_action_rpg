@@ -30,6 +30,7 @@ public class TileManager {
     public static final int TREE_TILE_ID = 4;
     public static final int HUT_TILE_ID = 6;
     public static final int FOREST_TILE_ID = 9;
+    public static final int CRAB_GUARDIAN_BOSS_TILE = 11;
     public static final int STAIRS_DOWN_TILE_ID = 12;
     public static final int STAIRS_UP_TILE_ID = 13;
     public static final int GREEN_GOBLIN_BOSS_TILE = 23;

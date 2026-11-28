@@ -13,6 +13,9 @@ import java.util.List;
 
 public class LoadManager {
 
+    private static final int FLAG_GREEN_GOBLIN = 1;
+    private static final int FLAG_CRAB_GUARDIAN = 2;
+
     public static Entity loadPlayer(int slotNumber, GameWindow gameWindow) {
 
         String sql = "SELECT * FROM saves WHERE id = ?";
@@ -46,7 +49,7 @@ public class LoadManager {
             if (loadedMapId <= 0) {
                 loadedMapId = 1; // デフォルトをマップ1などにする場合
             }
-            player.setMapId(rs.getInt(loadedMapId));
+            player.setMapId(loadedMapId);
             player.setLife(rs.getInt("hp"));
             player.setMaxLife(rs.getInt("max_hp"));
             player.setMana(rs.getInt("mp"));
@@ -66,10 +69,24 @@ public class LoadManager {
                 player.setGreenForceFragmentCount(0);
             }
 
-            // 2. インベントリ復元
+            // 取得済みボスかけらキーの復元（INTビットフラグ）
+            try {
+                int bossFlags = rs.getInt("obtained_fragment_boss_keys");
+                restoreObtainedBossKeys(player, bossFlags);
+                System.out.println("DEBUG LOAD: Restored obtainedFragmentBossKeys flags = " + bossFlags);
+            } catch (SQLException e) {
+                try (Statement alterStmt = conn.createStatement()) {
+                    alterStmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS obtained_fragment_boss_keys INT NOT NULL DEFAULT 0");
+                    System.out.println("INFO: Added obtained_fragment_boss_keys column without deleting DB.");
+                } catch (SQLException alterEx) {
+                    System.err.println("WARNING: Failed to add obtained_fragment_boss_keys column: " + alterEx.getMessage());
+                }
+            }
+
+            // インベントリ復元
             loadInventory(conn, slotNumber, player, gameWindow);
 
-            // 3. 装備復元
+            // 装備復元
             loadEquipment(conn, slotNumber, player, gameWindow);
 
             EntityFactory factory = new EntityFactory(gameWindow);
@@ -82,7 +99,7 @@ public class LoadManager {
                 player.setAura(playerAura);
             }
 
-            // 4. メタからプレイ時間を復元（SaveMeta は JSON ファイルに保存されている想定）
+            // メタからプレイ時間を復元（SaveMeta は JSON ファイルに保存）
             try {
                 // SaveManager.loadMeta は 0-based を受ける
                 int metaIndex = slotNumber;
@@ -237,40 +254,50 @@ public class LoadManager {
             case 6 -> new GreenSlimeType();
             case 7 -> new MintSoldierType();
             case 8 -> new GreenGoblinType();
-            case 9 -> new ChickenType();
-            case 10 -> new ChestType();
-            case 11 -> new SwordType();
-            case 12 -> new AxeType();
-            case 13 -> new ShieldType();
-            case 14 -> new RedPotionType();
-            case 15 -> new GreenPotionType();
-            case 16 -> new BluePotionType();
-            case 17 -> new BombType();
-            case 18 -> new LanternType();
-            case 19 -> new HeartType();
-            case 20 -> new FireballType();
-            case 21 -> new SwordProjectileType();
-            case 22 -> new PickupOnlyType();
-            case 23 -> new PotType();
-            case 24 -> new RockType();
-            case 25 -> new DoorType();
-            case 26 -> new KeyType();
-            case 27 -> new StoneType();
-            case 28 -> new StoneBlockType();
-            case 29 -> new AuraType();
-            case 30 -> new VertBronzeType();
-            case 31 -> new VertGreenType();
-            case 32 -> new VertBlueType();
-            case 33 -> new VertRedType();
-            case 34 -> new VertSilverType();
-            case 35 -> new VertGoldType();
-            case 36 -> new FragmentType();
+            case 9 -> new CrabGuardianType();
+            case 10 -> new ChickenType();
+            case 11 -> new ChestType();
+            case 12 -> new SwordType();
+            case 13 -> new AxeType();
+            case 14 -> new ShieldType();
+            case 15 -> new RedPotionType();
+            case 16 -> new GreenPotionType();
+            case 17 -> new BluePotionType();
+            case 18 -> new BombType();
+            case 19 -> new LanternType();
+            case 20 -> new HeartType();
+            case 21 -> new FireballType();
+            case 22 -> new SwordProjectileType();
+            case 23 -> new PickupOnlyType();
+            case 24 -> new PotType();
+            case 25 -> new RockType();
+            case 26 -> new DoorType();
+            case 27 -> new KeyType();
+            case 28 -> new StoneType();
+            case 29 -> new StoneBlockType();
+            case 30 -> new AuraType();
+            case 31 -> new VertBronzeType();
+            case 32 -> new VertGreenType();
+            case 33 -> new VertBlueType();
+            case 34 -> new VertRedType();
+            case 35 -> new VertSilverType();
+            case 36 -> new VertGoldType();
+            case 37 -> new FragmentType();
             default -> null;
         };
     }
 
+    private static void restoreObtainedBossKeys(Player player, int flags) {
+        if ((flags & FLAG_GREEN_GOBLIN) != 0) {
+            player.addObtainedFragmentBossKey("entity.type.GreenGoblinType");
+        }
+        if ((flags & FLAG_CRAB_GUARDIAN) != 0) {
+            player.addObtainedFragmentBossKey("entity.type.CrabGuardianType");
+        }
+    }
+
     private static int determineMaxStackForType(int typeId) {
-        //　各消費アイテム
+        // 各消費アイテム
         return switch (typeId) {
             case 14, 15, 16, 26 -> 99;
             default -> 1;

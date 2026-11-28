@@ -4,7 +4,7 @@ public record KeyType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 26;
+        return 27;
     }
 
     @Override

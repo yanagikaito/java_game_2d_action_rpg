@@ -2,7 +2,7 @@ package entity.type;
 
 public sealed interface EntityType permits PlayerType, NpcOldManType,
         NpcMerChantType, NpcSaveType, NpcInnkeeperType, NpcMalonyChickenType,
-        GreenSlimeType, MintSoldierType, GreenGoblinType, ChickenType,
+        GreenSlimeType, MintSoldierType, GreenGoblinType, CrabGuardianType, ChickenType,
         ChestType, SwordType, AxeType, ShieldType,
         RedPotionType, GreenPotionType, BluePotionType, BombType,
         LanternType, HeartType, FireballType, SwordProjectileType, PickupOnlyType,

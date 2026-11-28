@@ -4,6 +4,7 @@ import entity.type.HeartType;
 import entity.type.NpcMerChantType;
 import entity.type.VertBronzeType;
 import factory.EntityFactory;
+import monster.MonCrabGuardian;
 import monster.MonGreenGoblin;
 import object.ObjGreenForceFragment;
 import popup.PopupManager;
@@ -95,7 +96,7 @@ public class UI {
     private boolean isBossCutsceneActive = false;
     private int bossCutscenePhase = 0;      // 演出の進行段階（フェーズ）
     private double bossCutsceneTimer = 0.0; // 経過時間を測るタイマー（秒）
-    private MonGreenGoblin targetBoss;      // 演出対象のボス
+    private Entity targetBoss;      // 演出対象のボス
 
     // 画面シェイク用のパラメータ
     private int screenShakeTimer = 0;
@@ -189,13 +190,18 @@ public class UI {
     }
 
     // 演出をスタートする
-    public void startBossCutscene(MonGreenGoblin boss) {
+    // 演出をスタートする（Entity を継承した任意のボス型を受け取れるジェネリックスメソッド）
+    public <T extends Entity> void startBossCutscene(T boss) {
+        if (boss == null) {
+            return;
+        }
+
         this.targetBoss = boss;
         this.isBossCutsceneActive = true;
         this.bossCutscenePhase = 1; // フェーズ1から開始
         this.bossCutsceneTimer = 0.0;
 
-        System.out.println("UI: ボス登場演出スタート！");
+        System.out.println("UI: ボス登場演出スタート！ -> " + boss.getName());
     }
 
     // 毎フレーム呼ばれて演出の進行状況を更新
@@ -262,21 +268,54 @@ public class UI {
 
         // B. フェーズ2以降で「ボス名カットイン」を表示
         if (bossCutscenePhase >= 2) {
+            BossCutsceneInfo info = resolveBossCutsceneInfo(targetBoss);
+
             g2.setColor(Color.white);
             g2.setFont(g2.getFont().deriveFont(Font.BOLD, 28f));
 
-            String titleText = "【 始原の森の守護者 】";
-            String nameText = "グリーンゴブリン";
+            String titleText = info.titleText;
+            String nameText = info.nameText;
 
             int x1 = getXForCenteredText(titleText, g2);
             int y1 = screenHeight / 2 - 20;
             g2.drawString(titleText, x1, y1);
 
             g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40f));
-            g2.setColor(new Color(100, 255, 100));
+            g2.setColor(info.nameColor);
             int x2 = getXForCenteredText(nameText, g2);
             int y2 = screenHeight / 2 + 30;
             g2.drawString(nameText, x2, y2);
+        }
+    }
+
+    private BossCutsceneInfo resolveBossCutsceneInfo(Entity boss) {
+        if (boss instanceof MonGreenGoblin) {
+            return new BossCutsceneInfo(
+                    "【 始原の森の守護者 】",
+                    "グリーンゴブリン",
+                    new Color(100, 255, 100)
+            );
+        } else if (boss instanceof MonCrabGuardian) {
+            return new BossCutsceneInfo(
+                    "【 蒼海の洞窟の番人 】",
+                    "クラブガーディアン",
+                    new Color(200, 40, 90)
+            );
+        }
+
+        String fallbackName = (boss != null && boss.getName() != null) ? boss.getName() : "BOSS";
+        return new BossCutsceneInfo("【 ボス 】", fallbackName, Color.WHITE);
+    }
+
+    private static class BossCutsceneInfo {
+        final String titleText;
+        final String nameText;
+        final Color nameColor;
+
+        BossCutsceneInfo(String titleText, String nameText, Color nameColor) {
+            this.titleText = titleText;
+            this.nameText = nameText;
+            this.nameColor = nameColor;
         }
     }
 
@@ -1578,7 +1617,7 @@ public class UI {
         return (FrameApp.getScreenWidth() - textLength) / 2;
     }
 
-    public MonGreenGoblin getTargetBoss() {
+    public Entity getTargetBoss() {
         return targetBoss;
     }
 }

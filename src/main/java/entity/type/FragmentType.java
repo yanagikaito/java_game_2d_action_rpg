@@ -4,7 +4,7 @@ public record FragmentType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 36;
+        return 37;
     }
 
     @Override

@@ -92,6 +92,7 @@ public class Player extends Entity {
     private static final int UNSTUCK_BFS_RADIUS = 6; // BFS 探索半径（タイル単位）
     private static final int PICKUP_COOLDOWN_FRAMES = 5;
     private static final int PUSH_FRAMES_REQUIRED = 8;
+    private static final int MAX_GREEN_FORCE_FRAGMENTS = 6;
 
     // 保存・表示する秒単位のプレイ時間
     // フレームの端数（秒）を保持
@@ -161,6 +162,8 @@ public class Player extends Entity {
 
     private final double splashCooldown = 0.5;
     private final double stationarySplashCooldown = 0.8;
+
+    private Set<String> obtainedFragmentBossKeys = new HashSet<>();
 
 
     /**
@@ -3513,6 +3516,9 @@ public class Player extends Entity {
 
         // モンスター処理
         target.setLife(target.getLife() - damage);
+        System.out.println("[HP_CHECK] name=" + target.getName()
+                + ", life=" + target.getLife()
+                + ", type=" + target.getType());
 
         int tileSize = FrameApp.getTileSize();
         int sx = target.getWorldX() - this.getWorldX() + this.getScreenX();
@@ -3529,6 +3535,11 @@ public class Player extends Entity {
         target.damageReaction();
 
         if (target.getLife() <= 0) {
+            if (target.getLife() <= 0) {
+                System.out.println("[DEAD_CHECK] entered life<=0, isGreenGoblin="
+                        + (target.getType() instanceof GreenGoblinType)
+                        + ", isCrabGuardian=" + (target.getType() instanceof CrabGuardianType));
+            }
             Entity monster = target;
 
             // Aliveは有効に存在している意味
@@ -3540,15 +3551,21 @@ public class Player extends Entity {
             recordSafePosition();
 
             boolean isGreenGoblin = (target.getType() instanceof GreenGoblinType);
+            boolean isCrabGuardian = (target.getType() instanceof CrabGuardianType);
 
-            if (isGreenGoblin) {
+            if (isGreenGoblin || isCrabGuardian) {
+                int count = this.getGreenForceFragmentCount();
+                boolean obtained = this.hasObtainedFragmentFrom(monster);
+                System.out.println("[BOSS_DROP] this=" + System.identityHashCode(this)
+                        + ", count=" + count
+                        + ", obtained=" + obtained
+                        + ", key=" + resolveBossFragmentKey(monster));
 
-                if (this.getGreenForceFragmentCount() <= 0) {
-                    // グリーンフォースのかけらアイテムを生成してドロップ / 所持数追加
+                if (count < MAX_GREEN_FORCE_FRAGMENTS && !obtained) {
                     Entity greenForceFragment = entityFactory.create(new FragmentType());
                     if (greenForceFragment != null) {
-                        // ドロップアイテムを座標に表示
                         gameWindow.dropItem(greenForceFragment, monster);
+                        this.markFragmentObtainedFrom(monster);
                     }
                 }
             } else {
@@ -4708,6 +4725,52 @@ public class Player extends Entity {
         }
 
         return null;
+    }
+
+    private String resolveBossFragmentKey(Entity monster) {
+        if (monster == null || monster.getType() == null) {
+            return null;
+        }
+        if (monster.getType() instanceof GreenGoblinType) {
+            return GreenGoblinType.class.getTypeName();
+        }
+        if (monster.getType() instanceof CrabGuardianType) {
+            return CrabGuardianType.class.getTypeName();
+        }
+        return monster.getType().getClass().getName();
+    }
+
+    public boolean hasObtainedFragmentFrom(Entity monster) {
+        String key = resolveBossFragmentKey(monster);
+        return key != null && obtainedFragmentBossKeys.contains(key);
+    }
+
+    public void markFragmentObtainedFrom(Entity monster) {
+        System.out.println("[MARK_DROP] this=" + System.identityHashCode(this)
+                + ", key=" + resolveBossFragmentKey(monster)
+                + ", size=" + obtainedFragmentBossKeys.size());
+        String key = resolveBossFragmentKey(monster);
+        if (key != null) {
+            obtainedFragmentBossKeys.add(key);
+            System.out.println("[MARK_AFTER] size=" + obtainedFragmentBossKeys.size());
+        }
+    }
+
+    public Set<String> getObtainedFragmentBossKeys() {
+        if (obtainedFragmentBossKeys == null) {
+            obtainedFragmentBossKeys = new HashSet<>();
+        }
+        return obtainedFragmentBossKeys;
+    }
+
+    public void addObtainedFragmentBossKey(String key) {
+        if (key != null && !key.isBlank()) {
+            obtainedFragmentBossKeys.add(key);
+        }
+    }
+
+    public void clearObtainedFragmentBossKeys() {
+        obtainedFragmentBossKeys.clear();
     }
 
     public boolean isBlockingLeft() {

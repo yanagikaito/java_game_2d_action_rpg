@@ -8,7 +8,8 @@ public record SaveData(
         int x, int y, int mapId,
         int hp, int maxHp, int mana, int maxMana,
         int level, int strength, int dexterity, int exp, int next_exp, int coin,
-        int greenForceFragmentCount, int weaponTypeId, int shieldTypeId,
+        int greenForceFragmentCount, int obtainedFragmentBossKeys,
+        int weaponTypeId, int shieldTypeId,
         List<ItemSaveData> inventory,
         LocalDateTime savedAt
 ) {

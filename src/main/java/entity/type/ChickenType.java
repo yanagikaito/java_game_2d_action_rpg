@@ -4,7 +4,7 @@ public record ChickenType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 9;
+        return 10;
     }
 
     @Override
