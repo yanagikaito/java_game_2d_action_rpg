@@ -4,7 +4,7 @@ public record BombType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 17;
+        return 18;
     }
 
     @Override

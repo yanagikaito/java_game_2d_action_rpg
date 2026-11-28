@@ -4,7 +4,7 @@ public record HeartType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 19;
+        return 20;
     }
 
     @Override

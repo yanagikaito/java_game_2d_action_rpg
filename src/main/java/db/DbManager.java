@@ -69,6 +69,7 @@ public class DbManager {
                         next_exp INT NOT NULL,
                         coin INT NOT NULL,
                         green_force_fragment INT NOT NULL DEFAULT 0,
+                        obtained_fragment_boss_keys INT NOT NULL DEFAULT 0,
                         weapon_type_id INT,
                         shield_type_id INT,
                         saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -114,6 +115,14 @@ public class DbManager {
             } catch (SQLException e) {
                 // すでにカラムが存在する場合はエラーになるため、無視（想定内）して続行する
                 System.out.println("green_force_fragment column already exists or skipped.");
+            }
+
+            try {
+                stmt.execute("ALTER TABLE saves ADD COLUMN obtained_fragment_boss_keys INT NOT NULL DEFAULT 0");
+                System.out.println("Successfully added obtained_fragment_boss_keys column to saves table.");
+            } catch (SQLException e) {
+                // すでにカラムが存在する場合はエラーになるため、無視（想定内）して続行する
+                System.out.println("obtained_fragment_boss_keys column already exists or skipped.");
             }
 
             System.out.println("Database schema initialization completed successfully");

@@ -4,7 +4,7 @@ public record FireballType() implements EntityType {
 
     @Override
     public int typeId() {
-        return 20;
+        return 21;
     }
 
     @Override

@@ -305,7 +305,8 @@ public abstract class Entity {
         if (contactPlayer && !gameWindow.getPlayer().getInvincible()) {
             if (this.getType() instanceof GreenSlimeType ||
                     this.getType() instanceof MintSoldierType ||
-                    this.getType() instanceof GreenGoblinType) {
+                    this.getType() instanceof GreenGoblinType ||
+                    this.getType() instanceof CrabGuardianType) {
 
                 if (!getInvincible()) {
                     damagePlayer(this.attack, this.knockBackPower);
@@ -1951,7 +1952,7 @@ public abstract class Entity {
         double oneScale = (double) tile / Math.max(1, maxLife);
         int hpBarValue = (int) (oneScale * life);
 
-        if (getType() instanceof GreenGoblinType) {
+        if (getType() instanceof GreenGoblinType || getType() instanceof CrabGuardianType) {
             int x = screenX + 59;
             int y = screenY - 21;
             g2.setColor(new Color(35, 35, 35));
